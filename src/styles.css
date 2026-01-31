@@ -195,7 +195,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply font-sans bg-background text-foreground;
+    @apply bg-background font-sans text-foreground;
   }
   html {
     @apply font-sans;
@@ -203,10 +203,10 @@
 }
 
 @layer components {
-    .pictures-bento {
-        grid-template-areas:
-          "a b c"
-          "d d c"
-          "e f f";
-    }
+  .pictures-bento {
+    grid-template-areas:
+      'a b c'
+      'd d c'
+      'e f f';
+  }
 }
