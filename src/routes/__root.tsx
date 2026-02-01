@@ -1,9 +1,9 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import appCss from '@/styles.css?url'
+import { RootProvider } from 'fumadocs-ui/provider/tanstack'
 import { Layout } from '@/layout/layout'
+import appCss from '@/styles.css?url'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -37,19 +37,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="dark">
-        <Layout>{children}</Layout>
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
+        <RootProvider>
+          <Layout>{children}</Layout>
+          <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+          <Scripts />
+        </RootProvider>
       </body>
     </html>
   )
