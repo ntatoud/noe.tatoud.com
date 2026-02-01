@@ -2,7 +2,7 @@ import { Section, SectionTitle } from '@/layout/section'
 import { cn } from '@/lib/utils'
 
 function Hero(props: React.ComponentProps<typeof Section>) {
-  return <Section {...props} />
+  return <Section {...props} className={cn('space-y-2', props.className)} />
 }
 
 function HeroTitle(props: React.ComponentProps<typeof SectionTitle>) {
