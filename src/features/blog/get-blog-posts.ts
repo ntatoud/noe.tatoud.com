@@ -1,12 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
+import type { BlogPostFrontmatter } from './schemas'
 import { blog } from '@/lib/source'
 
-export type BlogPost = Awaited<ReturnType<typeof getBlogPosts>>['0']
-export const getBlogPosts = createServerFn({
-  method: 'GET',
-}).handler(() => {
-  const pages = blog.getPages()
-  return pages.map((page) => ({
+export type BlogPost = BlogPostFrontmatter & { slug: string; url: string }
+
+export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
+  blog.getPages().map((page) => ({
     slug: page.slugs.join('/'),
     url: page.url,
     title: page.data.title,
@@ -14,4 +13,4 @@ export const getBlogPosts = createServerFn({
     author: page.data.author,
     date: page.data.date,
   }))
-})
+)

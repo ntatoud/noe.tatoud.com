@@ -3,6 +3,7 @@ import { createServerFn } from '@tanstack/react-start'
 import browserCollections from 'fumadocs-mdx:collections/browser'
 import { Suspense } from 'react'
 import { blog } from '@/lib/source'
+import { formatDate } from '@/features/blog/schemas'
 
 export const Route = createFileRoute('/blog/$')({
   component: Page,
@@ -14,17 +15,12 @@ export const Route = createFileRoute('/blog/$')({
   },
 })
 
-const serverLoader = createServerFn({
-  method: 'GET',
-})
+const serverLoader = createServerFn({ method: 'GET' })
   .inputValidator((slugs: Array<string>) => slugs)
   .handler(({ data: slugs }: { data: Array<string> }) => {
     const page = blog.getPage(slugs)
     if (!page) throw notFound()
-
-    return {
-      path: page.path,
-    }
+    return { path: page.path }
   })
 
 const clientLoader = browserCollections.blogPosts.createClientLoader({
@@ -43,13 +39,7 @@ const clientLoader = browserCollections.blogPosts.createClientLoader({
           <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
             <span>{frontmatter.author}</span>
             <span>·</span>
-            <time>
-              {new Date(frontmatter.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
+            <time>{formatDate(frontmatter.date)}</time>
           </div>
         </header>
         <MDX />
@@ -60,7 +50,6 @@ const clientLoader = browserCollections.blogPosts.createClientLoader({
 
 function Page() {
   const data = Route.useLoaderData()
-
   return (
     <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
       {clientLoader.useContent(data.path)}

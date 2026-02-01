@@ -1,7 +1,16 @@
 import { Link } from '@tanstack/react-router'
 import type { BlogPost } from '@/features/blog/get-blog-posts'
+import { formatDate } from '@/features/blog/schemas'
 
 export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
+  if (posts.length === 0) {
+    return (
+      <p className="text-center text-muted-foreground">
+        No blog posts yet. Check back soon!
+      </p>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-8">
       {posts.map((post) => (
@@ -19,23 +28,11 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
             <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
               <span>{post.author}</span>
               <span>·</span>
-              <time>
-                {new Date(post.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
+              <time>{formatDate(post.date)}</time>
             </div>
           </Link>
         </article>
       ))}
-
-      {posts.length === 0 && (
-        <p className="text-center text-muted-foreground">
-          No blog posts yet. Check back soon!
-        </p>
-      )}
     </div>
   )
 }
