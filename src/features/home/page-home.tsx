@@ -1,5 +1,4 @@
 import { ArticlesSection } from '@/features/home/articles-section'
-import { PicturesBento } from '@/features/home/pictures-bento'
 import { ProjectsSection } from '@/features/home/projects-section'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
@@ -10,9 +9,9 @@ export function PageHome() {
         <HeroTitle className="">Noé Tatoud</HeroTitle>
         <HeroSubtitle>Frontend web developer</HeroSubtitle>
       </Hero>
-      <PicturesBento />
-      <ProjectsSection />
+      {/* <PicturesBento />*/}
       <ArticlesSection />
+      <ProjectsSection />
     </div>
   )
 }

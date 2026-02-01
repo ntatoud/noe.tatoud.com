@@ -1,5 +1,9 @@
+import { DesktopNav } from '@/layout/desktop-nav'
+
 export function Header() {
-  return <header className="flex w-full items-center justify-center">
-    TODO HEADER
-  </header>
+  return (
+    <header className="hidden w-full items-center justify-center sm:flex">
+      <DesktopNav />
+    </header>
+  )
 }

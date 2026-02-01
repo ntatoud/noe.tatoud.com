@@ -19,7 +19,12 @@ export function ArticlesSection() {
       <SectionHeader>
         <SectionTitle>Articles</SectionTitle>
         <SectionActions>
-          <Button variant="ghost" size="lg" render={<Link to="/blog" />}>
+          <Button
+            variant="ghost"
+            size="lg"
+            render={<Link to="/blog" />}
+            nativeButton={false}
+          >
             See more <HugeiconsIcon icon={ArrowRight} />
           </Button>
         </SectionActions>
