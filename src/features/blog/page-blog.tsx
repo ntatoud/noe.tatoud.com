@@ -1,18 +1,24 @@
 import { useLoaderData } from '@tanstack/react-router'
 import { ArticlesList } from '@/features/blog/articles-list'
+import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
+import { Section, SectionContent } from '@/layout/section'
 
 export function PageBlog() {
   const posts = useLoaderData({ from: '/blog/' })
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <header className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+    <div>
+      <Hero>
+        <HeroTitle>Blog</HeroTitle>
+        <HeroSubtitle>
           Thoughts on web development, technology, and more.
-        </p>
-      </header>
+        </HeroSubtitle>
+      </Hero>
 
-      <ArticlesList posts={posts} />
+      <Section>
+        <SectionContent>
+          <ArticlesList posts={posts} />
+        </SectionContent>
+      </Section>
     </div>
   )
 }
