@@ -1,0 +1,13 @@
+pre-commit:
+  commands:
+    format:
+      glob: '*.{ts,tsx,js,jsx,json,css,md,mdx}'
+      run: bunx oxfmt {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    lint:
+      run: bun run lint
+    typecheck:
+      run: bunx fumadocs-mdx && bunx tsc --noEmit

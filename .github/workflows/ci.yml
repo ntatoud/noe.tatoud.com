@@ -1,0 +1,32 @@
+name: 🧹 Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    name: 🔍 Lint, Format & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+        env:
+          LEFTHOOK: '0'
+
+      - name: 🎨 Check formatting
+        run: bunx oxfmt --check .
+
+      - name: 🧹 Lint
+        run: bun run lint
+
+      - name: 🏗️ Generate fumadocs types
+        run: bunx fumadocs-mdx
+
+      - name: 🔎 Typecheck
+        run: bunx tsc --noEmit
