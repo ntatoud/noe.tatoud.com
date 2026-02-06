@@ -5,10 +5,16 @@ export const PARTICIPATION_TYPES = [
   'spoke',
   'organized',
   'volunteered',
-  'mentored',
+  'animated',
 ] as const
 
 export type ParticipationType = (typeof PARTICIPATION_TYPES)[number]
+
+export const EVENT_KINDS = ['meetup', 'conference'] as const
+export type EventKind = (typeof EVENT_KINDS)[number]
+
+export const EVENT_SUBJECTS = ['tech', 'agile', 'science', 'open-source'] as const
+export type EventSubject = (typeof EVENT_SUBJECTS)[number]
 
 export const TechEventSchema = z.object({
   name: z.string(),
@@ -17,6 +23,8 @@ export const TechEventSchema = z.object({
   longitude: z.number(),
   date: z.string().date().or(z.date()),
   participationType: z.enum(PARTICIPATION_TYPES),
+  kind: z.enum(EVENT_KINDS),
+  subject: z.enum(EVENT_SUBJECTS),
   talkTitle: z.string().optional(),
   url: z.string().url().optional(),
 })

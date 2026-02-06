@@ -7,7 +7,7 @@ const FILTER_LABELS: Record<ParticipationType, string> = {
   spoke: 'Spoke',
   organized: 'Organized',
   volunteered: 'Volunteered',
-  mentored: 'Mentored',
+  animated: 'Animated',
 }
 
 interface EventFiltersProps {

@@ -9,14 +9,10 @@ import {
 } from '@/components/ui/map'
 import { formatDate } from '@/features/blog/schemas'
 
-type EventProperties = {
-  slug: string
-  name: string
-  city: string
-  date: string | Date
-  participationType: string
-  talkTitle?: string
-  url?: string
+type LocationProperties = {
+  key: string
+  longitude: number
+  latitude: number
 }
 
 interface EventsMapProps {
@@ -24,39 +20,44 @@ interface EventsMapProps {
 }
 
 export function EventsMap({ events }: EventsMapProps) {
-  const [selectedEvent, setSelectedEvent] = useState<{
+  const [selectedLocation, setSelectedLocation] = useState<{
     coordinates: [number, number]
-    properties: EventProperties
+    events: Array<TechEvent>
   } | null>(null)
 
+  const eventsByLocation = useMemo(() => {
+    const groups: Record<string, Array<TechEvent>> = {}
+    for (const event of events) {
+      const key = `${event.latitude},${event.longitude}`
+      ;(groups[key] ??= []).push(event)
+    }
+    return groups
+  }, [events])
+
   const geojson = useMemo(
-    (): GeoJSON.FeatureCollection<GeoJSON.Point, EventProperties> => ({
+    (): GeoJSON.FeatureCollection<GeoJSON.Point, LocationProperties> => ({
       type: 'FeatureCollection',
-      features: events.map((event) => ({
+      features: Object.entries(eventsByLocation).map(([key, group]) => ({
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [event.longitude, event.latitude],
+          coordinates: [group[0].longitude, group[0].latitude],
         },
         properties: {
-          slug: event.slug,
-          name: event.name,
-          city: event.city,
-          date: event.date,
-          participationType: event.participationType,
-          talkTitle: event.talkTitle,
-          url: event.url,
+          key,
+          longitude: group[0].longitude,
+          latitude: group[0].latitude,
         },
       })),
     }),
-    [events],
+    [eventsByLocation],
   )
 
   return (
     <div className="h-[350px] w-full overflow-hidden rounded-lg border border-border sm:h-[500px]">
       <Map center={[2.3522, 46.6]} zoom={4}>
         <MapControls position="bottom-right" showZoom showCompass />
-        <MapClusterLayer<EventProperties>
+        <MapClusterLayer<LocationProperties>
           data={geojson}
           clusterRadius={50}
           clusterMaxZoom={14}
@@ -66,44 +67,53 @@ export function EventsMap({ events }: EventsMapProps) {
             'hsl(144, 45%, 46%)',
           ]}
           pointColor="hsl(153, 52%, 43%)"
-          onPointClick={(feature, coordinates) => {
-            setSelectedEvent({ coordinates, properties: feature.properties })
+          onPointClick={(feature) => {
+            const key = feature.properties.key
+            const group = eventsByLocation[key]
+
+            setSelectedLocation({
+              coordinates: [
+                feature.properties.longitude,
+                feature.properties.latitude,
+              ],
+              events: group,
+            })
           }}
         />
-        {selectedEvent && (
+        {selectedLocation && (
           <MapPopup
-            longitude={selectedEvent.coordinates[0]}
-            latitude={selectedEvent.coordinates[1]}
-            onClose={() => setSelectedEvent(null)}
+            longitude={selectedLocation.coordinates[0]}
+            latitude={selectedLocation.coordinates[1]}
+            onClose={() => setSelectedLocation(null)}
             className="w-56"
             closeButton
           >
-            <div className="space-y-2">
-              <h3 className="font-semibold">{selectedEvent.properties.name}</h3>
-              <p className="text-sm text-muted-foreground">
-                {selectedEvent.properties.city}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {formatDate(selectedEvent.properties.date)}
-              </p>
-              <Badge variant="secondary" className="text-xs">
-                {selectedEvent.properties.participationType}
-              </Badge>
-              {selectedEvent.properties.talkTitle && (
-                <p className="text-sm italic">
-                  Talk: {selectedEvent.properties.talkTitle}
-                </p>
-              )}
-              {selectedEvent.properties.url && (
-                <a
-                  href={selectedEvent.properties.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-sm text-primary hover:underline"
-                >
-                  Event website
-                </a>
-              )}
+            <div className="space-y-3">
+              {selectedLocation.events.map((event) => (
+                <div key={event.slug} className="space-y-1">
+                  <h3 className="font-semibold">{event.name}</h3>
+                  <p className="text-sm text-muted-foreground">{event.city}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(event.date)}
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    {event.participationType}
+                  </Badge>
+                  {event.talkTitle && (
+                    <p className="text-sm italic">Talk: {event.talkTitle}</p>
+                  )}
+                  {event.url && (
+                    <a
+                      href={event.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-sm text-primary hover:underline"
+                    >
+                      Event website
+                    </a>
+                  )}
+                </div>
+              ))}
             </div>
           </MapPopup>
         )}

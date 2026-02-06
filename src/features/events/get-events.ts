@@ -13,6 +13,8 @@ export const getEvents = createServerFn({ method: 'GET' }).handler(() =>
     longitude: page.data.longitude,
     date: page.data.date,
     participationType: page.data.participationType,
+    kind: page.data.kind,
+    subject: page.data.subject,
     talkTitle: page.data.talkTitle,
     url: page.data.url,
   })),
