@@ -17,10 +17,16 @@ jobs:
 
       - run: bun install --frozen-lockfile
         env:
-          LEFTHOOK: "0"
+          LEFTHOOK: '0'
 
       - name: Check formatting
         run: bunx oxfmt --check .
 
       - name: Lint
         run: bun run lint
+
+      - name: Generate fumadocs types
+        run: bunx fumadocs-mdx
+
+      - name: Typecheck
+        run: bunx tsc --noEmit

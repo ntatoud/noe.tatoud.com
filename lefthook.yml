@@ -1,10 +1,12 @@
 pre-commit:
   commands:
     format:
-      glob: "*.{ts,tsx,js,jsx,json,css,md,mdx}"
+      glob: '*.{ts,tsx,js,jsx,json,css,md,mdx}'
       run: bunx oxfmt {staged_files}
 
 pre-push:
   commands:
     lint:
       run: bun run lint
+    typecheck:
+      run: bunx fumadocs-mdx && bunx tsc --noEmit

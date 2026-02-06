@@ -3,7 +3,6 @@ import type { BlogPost } from '@/features/blog/get-blog-posts'
 import { formatDate } from '@/features/blog/schemas'
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardList,
@@ -38,9 +37,7 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
               <span>·</span>
               <time>{formatDate(post.date)}</time>
             </CardFooter>
-            {post.tags && post.tags.length > 0 && (
-              <CardTags tags={post.tags} />
-            )}
+            {post.tags && post.tags.length > 0 && <CardTags tags={post.tags} />}
           </Link>
         </Card>
       ))}
