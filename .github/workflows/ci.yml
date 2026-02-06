@@ -1,4 +1,4 @@
-name: CI
+name: "\U0001F9F9 Code Quality"
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  check:
-    name: Lint & Format
+  quality:
+    name: "\U0001F50D Lint, Format & Typecheck"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,14 +19,14 @@ jobs:
         env:
           LEFTHOOK: '0'
 
-      - name: Check formatting
+      - name: "\U0001F3A8 Check formatting"
         run: bunx oxfmt --check .
 
-      - name: Lint
+      - name: "\U0001F9F9 Lint"
         run: bun run lint
 
-      - name: Generate fumadocs types
+      - name: "\U0001F3D7\uFE0F Generate fumadocs types"
         run: bunx fumadocs-mdx
 
-      - name: Typecheck
+      - name: "\U0001F50E Typecheck"
         run: bunx tsc --noEmit

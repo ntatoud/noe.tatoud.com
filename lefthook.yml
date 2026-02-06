@@ -2,7 +2,7 @@ pre-commit:
   commands:
     format:
       glob: '*.{ts,tsx,js,jsx,json,css,md,mdx}'
-      run: bunx oxfmt {staged_files}
+      run: bunx oxfmt {staged_files} && git add {staged_files}
 
 pre-push:
   commands:
