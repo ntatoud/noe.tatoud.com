@@ -11,8 +11,8 @@ export function PageHome() {
         <HeroSubtitle>Frontend web developer</HeroSubtitle>
       </Hero>
       {/* <PicturesBento />*/}
-      <ArticlesSection />
       <EventsSection />
+      <ArticlesSection />
       <ProjectsSection />
     </div>
   )

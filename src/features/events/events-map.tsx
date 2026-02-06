@@ -53,8 +53,8 @@ export function EventsMap({ events }: EventsMapProps) {
   )
 
   return (
-    <div className="h-[350px] w-full overflow-hidden rounded-lg border border-border sm:h-[500px]">
-      <Map center={[2.3522, 46.6]} zoom={4}>
+    <div className="h-[350px] w-full overflow-hidden sm:h-[500px]">
+      <Map center={[2, 50.2]} zoom={6}>
         <MapControls position="bottom-right" showZoom showCompass />
         <MapClusterLayer<LocationProperties>
           data={geojson}

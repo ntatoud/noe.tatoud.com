@@ -1,14 +1,9 @@
 import type { ParticipationType } from '@/features/events/schemas'
 import { Badge } from '@/components/ui/badge'
-import { PARTICIPATION_TYPES } from '@/features/events/schemas'
-
-const FILTER_LABELS: Record<ParticipationType, string> = {
-  attended: 'Attended',
-  spoke: 'Spoke',
-  organized: 'Organized',
-  volunteered: 'Volunteered',
-  animated: 'Animated',
-}
+import {
+  PARTICIPATION_LABELS,
+  PARTICIPATION_TYPES,
+} from '@/features/events/schemas'
 
 interface EventFiltersProps {
   activeFilters: Set<ParticipationType>
@@ -33,7 +28,7 @@ export function EventFilters({
             className="cursor-pointer"
             onClick={() => onToggle(type)}
           >
-            {FILTER_LABELS[type]}
+            {PARTICIPATION_LABELS[type]}
           </Badge>
         )
       })}

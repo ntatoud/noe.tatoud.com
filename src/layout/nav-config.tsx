@@ -1,4 +1,4 @@
-import { Book, Home, Location } from '@hugeicons/core-free-icons'
+import { Book, Home } from '@hugeicons/core-free-icons'
 import { linkOptions } from '@tanstack/react-router'
 
 export const nav = linkOptions([
@@ -11,10 +11,5 @@ export const nav = linkOptions([
     label: 'Blog',
     icon: Book,
     to: '/blog',
-  },
-  {
-    label: 'Events',
-    icon: Location,
-    to: '/events',
   },
 ])
