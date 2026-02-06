@@ -1,11 +1,12 @@
+import { useLoaderData } from '@tanstack/react-router'
 import { EventFilters } from '@/features/events/event-filters'
-import { events } from '@/features/events/events-data'
 import { EventsMap } from '@/features/events/events-map'
 import { useEventFilters } from '@/features/events/use-event-filters'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
 
 export function PageEvents() {
+  const events = useLoaderData({ from: '/events/' })
   const { filteredEvents, activeFilters, toggleFilter } =
     useEventFilters(events)
 

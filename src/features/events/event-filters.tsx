@@ -1,6 +1,6 @@
-import type { ParticipationType } from '@/features/events/events-data'
+import type { ParticipationType } from '@/features/events/schemas'
 import { Badge } from '@/components/ui/badge'
-import { PARTICIPATION_TYPES } from '@/features/events/events-data'
+import { PARTICIPATION_TYPES } from '@/features/events/schemas'
 
 const FILTER_LABELS: Record<ParticipationType, string> = {
   attended: 'Attended',

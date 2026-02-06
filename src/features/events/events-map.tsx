@@ -1,7 +1,5 @@
-import type {
-  ParticipationType,
-  TechEvent,
-} from '@/features/events/events-data'
+import type { TechEvent } from '@/features/events/get-events'
+import type { ParticipationType } from '@/features/events/schemas'
 import { Badge } from '@/components/ui/badge'
 import {
   Map,
@@ -32,9 +30,9 @@ export function EventsMap({ events }: EventsMapProps) {
         <MapControls position="bottom-right" showZoom showCompass />
         {events.map((event) => (
           <MapMarker
-            key={event.id}
-            longitude={event.location.longitude}
-            latitude={event.location.latitude}
+            key={event.slug}
+            longitude={event.longitude}
+            latitude={event.latitude}
           >
             <MarkerContent>
               <div

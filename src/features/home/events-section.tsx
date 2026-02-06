@@ -1,6 +1,6 @@
 import { ArrowRight } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Link } from '@tanstack/react-router'
+import { Link, useLoaderData } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,10 +10,10 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/layout/section'
-import { events } from '@/features/events/events-data'
 import { EventsMap } from '@/features/events/events-map'
 
 export function EventsSection() {
+  const { events } = useLoaderData({ from: '/' })
   return (
     <Section className="max-w-5xl">
       <SectionHeader>

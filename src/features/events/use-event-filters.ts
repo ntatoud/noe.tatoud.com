@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react'
-import type {
-  ParticipationType,
-  TechEvent,
-} from '@/features/events/events-data'
+import type { TechEvent } from '@/features/events/get-events'
+import type { ParticipationType } from '@/features/events/schemas'
 
 export function useEventFilters(events: Array<TechEvent>) {
   const [activeFilters, setActiveFilters] = useState<Set<ParticipationType>>(
