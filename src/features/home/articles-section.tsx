@@ -13,7 +13,7 @@ import {
 import { ArticlesList } from '@/features/blog/articles-list'
 
 export function ArticlesSection() {
-  const posts = useLoaderData({ from: '/' })
+  const { posts } = useLoaderData({ from: '/' })
   return (
     <Section>
       <SectionHeader>

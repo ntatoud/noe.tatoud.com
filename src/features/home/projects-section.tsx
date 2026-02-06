@@ -1,5 +1,6 @@
 import { ArrowRight } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useLoaderData } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import {
   Section,
@@ -8,8 +9,10 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/layout/section'
+import { ProjectsList } from '@/features/projects/projects-list'
 
 export function ProjectsSection() {
+  const { projects } = useLoaderData({ from: '/' })
   return (
     <Section>
       <SectionHeader>
@@ -20,7 +23,9 @@ export function ProjectsSection() {
           </Button>
         </SectionActions>
       </SectionHeader>
-      <SectionContent>Some very cool projects I did</SectionContent>
+      <SectionContent>
+        <ProjectsList projects={projects} />
+      </SectionContent>
     </Section>
   )
 }
