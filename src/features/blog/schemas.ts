@@ -16,11 +16,3 @@ export const BlogPostSchema = z.object({
 })
 
 export type BlogPostFrontmatter = z.infer<typeof BlogPostSchema>
-
-export function formatDate(date: string | Date): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}

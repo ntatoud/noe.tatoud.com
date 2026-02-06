@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { BlogPost } from '@/features/blog/get-blog-posts'
-import { formatDate } from '@/features/blog/schemas'
+import { formatDate } from '@/lib/format'
 import {
   Card,
   CardDescription,

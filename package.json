@@ -30,6 +30,7 @@
     "fumadocs-core": "^16.4.11",
     "fumadocs-mdx": "^14.2.6",
     "fumadocs-ui": "^16.4.11",
+    "maplibre-gl": "^5.17.0",
     "nitro": "latest",
     "react": "19.3.0-canary-24d8716e-20260123",
     "react-dom": "19.3.0-canary-24d8716e-20260123",
