@@ -37,11 +37,7 @@ export function EventCard({ event }: { event: TechEvent }) {
           href={event.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={buttonVariants({
-            variant: 'link',
-            size: 'xs',
-            className: 'h-auto gap-1 p-0 text-xs',
-          })}
+          className={buttonVariants({ variant: 'link' })}
         >
           Event website
           <HugeiconsIcon icon={ArrowRight} className="size-3" />
