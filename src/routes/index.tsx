@@ -6,10 +6,7 @@ import { getProjects } from '@/features/projects/get-projects'
 export const Route = createFileRoute('/')({
   component: App,
   loader: async () => {
-    const [posts, projects] = await Promise.all([
-      getBlogPosts(),
-      getProjects(),
-    ])
+    const [posts, projects] = await Promise.all([getBlogPosts(), getProjects()])
     return { posts, projects }
   },
 })
