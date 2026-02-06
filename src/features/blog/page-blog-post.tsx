@@ -7,8 +7,8 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
   component({ frontmatter, hero, default: MDX }) {
     const heroSrc = hero as string | undefined
     return (
-      <article className="prose-neutral dark:prose-invert mx-auto prose max-w-3xl px-4 py-8">
-        <header className="not-prose mb-8">
+      <article className="prose-neutral dark:prose-invert mx-auto prose w-full max-w-3xl min-w-0 px-4 py-6 sm:py-8">
+        <header className="not-prose mb-6 sm:mb-8">
           {heroSrc && (
             <img
               src={heroSrc}
@@ -16,11 +16,11 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
               className="mb-6 aspect-video w-full rounded-lg object-cover"
             />
           )}
-          <h1 className="mb-2 text-3xl font-bold tracking-tight">
+          <h1 className="mb-2 text-2xl font-bold tracking-tight sm:text-3xl">
             {frontmatter.title}
           </h1>
           {frontmatter.description && (
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base text-muted-foreground sm:text-lg">
               {frontmatter.description}
             </p>
           )}
