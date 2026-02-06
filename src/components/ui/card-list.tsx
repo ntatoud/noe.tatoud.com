@@ -40,7 +40,7 @@ export function CardDescription({
   return <p className={cn('mt-2 text-muted-foreground', className)} {...props} />
 }
 
-export function CardTags({ tags, className }: { tags: string[]; className?: string }) {
+export function CardTags({ tags, className }: { tags: Array<string>; className?: string }) {
   if (tags.length === 0) return null
   return (
     <div className={cn('mt-3 flex flex-wrap gap-2', className)}>
