@@ -12,7 +12,7 @@ const config = defineConfig({
   plugins: [
     devtools(),
     mdx(MdxConfig),
-    nitro(),
+    nitro({ preset: 'netlify' }),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],

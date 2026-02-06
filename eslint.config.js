@@ -3,6 +3,6 @@
 import { tanstackConfig } from '@tanstack/eslint-config'
 
 export default [
-  { ignores: ['eslint.config.js', '.source/'] },
+  { ignores: ['eslint.config.js', '.source/', '.netlify/', 'dist/'] },
   ...tanstackConfig,
 ]
