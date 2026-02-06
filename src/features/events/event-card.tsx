@@ -2,14 +2,14 @@ import { ArrowRight, Calendar, Location } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import type { TechEvent } from '@/features/events/get-events'
 import { Badge } from '@/components/ui/badge'
-import { formatDate } from '@/features/blog/schemas'
+import { formatDate } from '@/lib/format'
 import { PARTICIPATION_LABELS } from '@/features/events/schemas'
 
 export function EventCard({ event }: { event: TechEvent }) {
   return (
     <div className="space-y-2 p-3">
       <div className="flex flex-col gap-1.5">
-        <h3 className="font-head text-sm leading-tight font-semibold pr-4">
+        <h3 className="pr-4 font-head text-sm leading-tight font-semibold">
           {event.name}
         </h3>
         <Badge variant="outline" className="w-fit text-[10px]">

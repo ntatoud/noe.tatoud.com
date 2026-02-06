@@ -53,7 +53,7 @@ export function EventsMap({ events }: EventsMapProps) {
   )
 
   return (
-    <div className="h-[350px] w-full overflow-hidden sm:h-[500px]">
+    <div className="h-[350px] w-full max-w-full overflow-hidden sm:h-[500px]">
       <Map center={[2, 50.2]} zoom={6}>
         <MapControls position="bottom-right" showZoom showCompass />
         <MapClusterLayer<LocationProperties>
@@ -62,8 +62,8 @@ export function EventsMap({ events }: EventsMapProps) {
           clusterMaxZoom={14}
           clusterColors={[
             'hsl(153, 52%, 43%)',
-            'hsl(163, 42%, 50%)',
-            'hsl(144, 45%, 46%)',
+            'hsl(45, 93%, 47%)',
+            'hsl(0, 84%, 60%)',
           ]}
           pointColor="hsl(153, 52%, 43%)"
           onPointClick={(feature) => {

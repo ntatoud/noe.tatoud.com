@@ -1,7 +1,7 @@
 import browserCollections from 'fumadocs-mdx:collections/browser'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Suspense } from 'react'
-import { formatDate } from '@/features/blog/schemas'
+import { formatDate } from '@/lib/format'
 
 export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
   component({ frontmatter, hero, default: MDX }) {
