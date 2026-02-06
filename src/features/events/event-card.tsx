@@ -2,6 +2,7 @@ import { ArrowRight, Calendar, Location } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import type { TechEvent } from '@/features/events/get-events'
 import { Badge } from '@/components/ui/badge'
+import { buttonVariants } from '@/components/ui/button'
 import { formatDate } from '@/lib/format'
 import { PARTICIPATION_LABELS } from '@/features/events/schemas'
 
@@ -36,7 +37,11 @@ export function EventCard({ event }: { event: TechEvent }) {
           href={event.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          className={buttonVariants({
+            variant: 'link',
+            size: 'xs',
+            className: 'h-auto gap-1 p-0 text-xs',
+          })}
         >
           Event website
           <HugeiconsIcon icon={ArrowRight} className="size-3" />

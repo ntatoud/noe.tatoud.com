@@ -202,15 +202,15 @@
   html {
     @apply font-sans;
   }
+}
+
+@layer components {
   .maplibregl-popup-content {
     @apply rounded-none! bg-transparent! p-0! shadow-none!;
   }
   .maplibregl-popup-tip {
     @apply hidden!;
   }
-}
-
-@layer components {
   .pictures-bento {
     grid-template-areas:
       'a b c'

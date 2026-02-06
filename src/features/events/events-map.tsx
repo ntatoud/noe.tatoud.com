@@ -8,6 +8,17 @@ import {
 } from '@/components/ui/map'
 import { EventCard } from '@/features/events/event-card'
 
+const CLUSTER_RADIUS = 50
+const CLUSTER_MAX_ZOOM = 14
+const CLUSTER_COLORS: [string, string, string] = [
+  'hsl(153, 52%, 43%)',
+  'hsl(45, 93%, 47%)',
+  'hsl(0, 84%, 60%)',
+]
+const POINT_COLOR = 'hsl(153, 52%, 43%)'
+const INITIAL_CENTER: [number, number] = [2, 50.2]
+const INITIAL_ZOOM = 6
+
 type LocationProperties = {
   key: string
   longitude: number
@@ -28,7 +39,9 @@ export function EventsMap({ events }: EventsMapProps) {
     const groups: Record<string, Array<TechEvent>> = {}
     for (const event of events) {
       const key = `${event.latitude},${event.longitude}`
-      ;(groups[key] ??= []).push(event)
+      const group = groups[key] ?? []
+      group.push(event)
+      groups[key] = group
     }
     return groups
   }, [events])
@@ -54,18 +67,14 @@ export function EventsMap({ events }: EventsMapProps) {
 
   return (
     <div className="h-[350px] w-full max-w-full overflow-hidden sm:h-[500px]">
-      <Map center={[2, 50.2]} zoom={6}>
+      <Map center={INITIAL_CENTER} zoom={INITIAL_ZOOM}>
         <MapControls position="bottom-right" showZoom showCompass />
         <MapClusterLayer<LocationProperties>
           data={geojson}
-          clusterRadius={50}
-          clusterMaxZoom={14}
-          clusterColors={[
-            'hsl(153, 52%, 43%)',
-            'hsl(45, 93%, 47%)',
-            'hsl(0, 84%, 60%)',
-          ]}
-          pointColor="hsl(153, 52%, 43%)"
+          clusterRadius={CLUSTER_RADIUS}
+          clusterMaxZoom={CLUSTER_MAX_ZOOM}
+          clusterColors={CLUSTER_COLORS}
+          pointColor={POINT_COLOR}
           onPointClick={(feature) => {
             const key = feature.properties.key
             const group = eventsByLocation[key]
