@@ -7,7 +7,9 @@ export type TechEvent = TechEventFrontmatter & { slug: string }
 export const getEvents = createServerFn({ method: 'GET' }).handler(() =>
   events.getPages().map((page) => ({
     slug: page.slugs.join('/'),
+    title: page.data.title,
     name: page.data.name,
+    description: page.data.description,
     city: page.data.city,
     latitude: page.data.latitude,
     longitude: page.data.longitude,

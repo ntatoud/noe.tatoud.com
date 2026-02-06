@@ -35,4 +35,5 @@ export const techEvents = defineCollections({
   type: 'doc',
   dir: 'content/events',
   schema: TechEventSchema,
+  mdxOptions: applyMdxPreset({}),
 })

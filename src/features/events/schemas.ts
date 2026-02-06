@@ -21,18 +21,21 @@ export const EVENT_SUBJECTS = [
 ] as const
 export type EventSubject = (typeof EVENT_SUBJECTS)[number]
 
-export const TechEventSchema = z.object({
-  name: z.string(),
-  city: z.string(),
-  latitude: z.number(),
-  longitude: z.number(),
-  date: z.string().date().or(z.date()),
-  participationType: z.enum(PARTICIPATION_TYPES),
-  kind: z.enum(EVENT_KINDS),
-  subject: z.enum(EVENT_SUBJECTS),
-  talkTitle: z.string().optional(),
-  url: z.string().url().optional(),
-})
+export const TechEventSchema = z
+  .object({
+    name: z.string(),
+    description: z.string().optional(),
+    city: z.string(),
+    latitude: z.number(),
+    longitude: z.number(),
+    date: z.string().date().or(z.date()),
+    participationType: z.enum(PARTICIPATION_TYPES),
+    kind: z.enum(EVENT_KINDS),
+    subject: z.enum(EVENT_SUBJECTS),
+    talkTitle: z.string().optional(),
+    url: z.string().url().optional(),
+  })
+  .transform((data) => ({ ...data, title: data.name }))
 
 export type TechEventFrontmatter = z.infer<typeof TechEventSchema>
 
