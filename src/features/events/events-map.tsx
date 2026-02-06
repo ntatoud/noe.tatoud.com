@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react'
 import type { TechEvent } from '@/features/events/get-events'
-import { Badge } from '@/components/ui/badge'
 import {
   Map,
   MapClusterLayer,
   MapControls,
   MapPopup,
 } from '@/components/ui/map'
-import { formatDate } from '@/features/blog/schemas'
+import { EventCard } from '@/features/events/event-card'
 
 type LocationProperties = {
   key: string
@@ -70,7 +69,6 @@ export function EventsMap({ events }: EventsMapProps) {
           onPointClick={(feature) => {
             const key = feature.properties.key
             const group = eventsByLocation[key]
-
             setSelectedLocation({
               coordinates: [
                 feature.properties.longitude,
@@ -85,34 +83,12 @@ export function EventsMap({ events }: EventsMapProps) {
             longitude={selectedLocation.coordinates[0]}
             latitude={selectedLocation.coordinates[1]}
             onClose={() => setSelectedLocation(null)}
-            className="w-56"
+            className="w-64 p-0!"
             closeButton
           >
-            <div className="space-y-3">
+            <div className="divide-y divide-border">
               {selectedLocation.events.map((event) => (
-                <div key={event.slug} className="space-y-1">
-                  <h3 className="font-semibold">{event.name}</h3>
-                  <p className="text-sm text-muted-foreground">{event.city}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {formatDate(event.date)}
-                  </p>
-                  <Badge variant="secondary" className="text-xs">
-                    {event.participationType}
-                  </Badge>
-                  {event.talkTitle && (
-                    <p className="text-sm italic">Talk: {event.talkTitle}</p>
-                  )}
-                  {event.url && (
-                    <a
-                      href={event.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-sm text-primary hover:underline"
-                    >
-                      Event website
-                    </a>
-                  )}
-                </div>
+                <EventCard key={event.slug} event={event} />
               ))}
             </div>
           </MapPopup>
