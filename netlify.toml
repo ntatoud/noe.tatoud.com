@@ -1,8 +1,8 @@
 [build]
-  command = "bun run build"
-  publish = ".output/public"
+command = "bun run build"
+publish = ".output/public"
 
 [[headers]]
-  for = "/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
+for = "/*"
+[headers.values]
+X-Robots-Tag = "noindex, nofollow"
