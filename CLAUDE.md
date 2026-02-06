@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-<!-- TODO: Keep this file up to date. After completing a task, check if anything
+<!-- Keep this file up to date. After completing a task, check if anything
      learned should be captured here (new patterns, gotchas, conventions). -->
 
 ## Project
@@ -9,43 +9,89 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Framework**: TanStack Start (React meta-framework) on Vite 7
-- **React**: 19 (canary)
+- **Framework**: TanStack Start v1.132 (React meta-framework) on Vite 7
+- **React**: 19.3.0-canary
 - **Styling**: Tailwind CSS 4, tw-animate-css
 - **UI components**: shadcn/ui (base-nova style, hugeicons icon library)
-- **Blog/MDX**: fumadocs-mdx with fumadocs-core, content lives in `content/blog/`
+- **Blog/MDX**: fumadocs-mdx with fumadocs-core, content in `content/`
+- **Maps**: MapLibre GL (Carto basemaps)
 - **Package manager**: bun
-- **Formatting**: oxfmt (`bun run format`)
-- **Linting**: ESLint (`bun run lint`)
-- **Testing**: Vitest + Testing Library (`bun run test`)
-- **Language**: TypeScript (strict mode)
-
-## Key paths
-
-- `src/routes/` — TanStack Router file-based routes
-- `src/features/` — feature modules (blog, home, …)
-- `src/components/ui/` — shadcn/ui primitives
-- `src/layout/` — shared layout components (header, footer, nav, hero)
-- `src/lib/` — utilities (`utils.ts`, `source.ts`)
-- `content/blog/` — MDX blog posts
-- `source.config.ts` — fumadocs-mdx collection config
-
-## Path aliases
-
-- `@/*` → `./src/*`
+- **Formatting**: oxfmt (`bun run format`) — no semicolons, single quotes, trailing commas
+- **Linting**: ESLint via `@tanstack/eslint-config` (`bun run lint`)
+- **Testing**: Vitest + Testing Library + jsdom (`bun run test`)
+- **Language**: TypeScript 5.7 (strict mode, noUnusedLocals, noUnusedParameters)
 
 ## Commands
 
 ```sh
 bun run dev       # dev server on port 3000
-bun run build     # production build
+bun run build     # production build (Nitro/Netlify)
 bun run check     # format check + lint fix
-bun run test      # run tests
+bun run test      # run vitest
 ```
+
+## Key paths
+
+```
+src/
+  routes/          # TanStack Router file-based routes (auto-generates routeTree.gen.ts)
+  features/        # feature modules: blog, events, home, projects
+  components/ui/   # shadcn/ui primitives
+  layout/          # shared layout: header, footer, nav, hero, section
+  lib/             # utils.ts (cn), source.ts (fumadocs loaders), format.ts (formatDate)
+  styles.css       # Tailwind imports, CSS variables, fonts, theming
+content/
+  blog/<slug>/index.mdx     # blog posts
+  projects/<slug>/index.mdx  # project showcases
+  events/<slug>/index.mdx    # tech events
+source.config.ts   # fumadocs-mdx collection definitions (blogPosts, projects, techEvents)
+```
+
+## Path aliases
+
+- `@/*` → `./src/*`
+- `fumadocs-mdx:collections/*` → `.source/*` (auto-generated, do not edit `.source/`)
 
 ## Conventions
 
-- Use `@/` path alias for imports from `src/`.
+### Imports & code style
+
+- Always use `@/` path alias for imports from `src/`.
+- oxfmt handles formatting: no semicolons, single quotes, trailing commas, 80-char width.
+- Import order: external deps → TanStack → `@/features/` → `@/components/` → `@/layout/` → `@/lib/`.
+
+### Components
+
 - UI primitives go in `src/components/ui/`; feature-specific components go in `src/features/<feature>/`.
-- Blog posts are MDX files in `content/blog/<slug>/index.mdx`.
 - Prefer small, focused components. Colocate related code within feature folders.
+- Use `cn()` from `@/lib/utils` to merge classNames (clsx + tailwind-merge).
+- Use `cva` from `class-variance-authority` for variant-based styling.
+- Use `data-slot` attributes for styling hooks (shadcn pattern).
+
+### Content & data
+
+- Blog posts are MDX files in `content/blog/<slug>/index.mdx`.
+- All MDX frontmatter is validated with Zod schemas (defined in each feature's `schemas.ts`).
+- Server data fetching uses `createServerFn` from TanStack Start (see `get-*.ts` files in features).
+- Fumadocs sources are loaded via `lib/source.ts` using `toFumadocsSource()` + `loader()`.
+
+### Theming
+
+- Dark mode only (body has `className="dark"`).
+- Colors use oklch color space via CSS variables.
+- Fonts: Public Sans (body), Space Grotesk (headings).
+
+## Git hooks (lefthook)
+
+- **pre-commit**: oxfmt formats staged files, auto-stages fixes.
+- **pre-push**: ESLint lint + fumadocs type generation + tsc typecheck.
+
+## CI (GitHub Actions)
+
+Runs on push/PR to `main`: format check, lint, fumadocs type gen, typecheck.
+
+## Deployment
+
+- **Netlify** with Nitro preset. Config in `netlify.toml`.
+- Build output: `dist/`.
+- Currently blocks search engine indexing (`X-Robots-Tag: noindex, nofollow`).
