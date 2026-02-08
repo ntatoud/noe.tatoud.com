@@ -10,7 +10,8 @@ import * as MdxConfig from './source.config'
 
 const config = defineConfig({
   ssr: {
-    noExternal: ['@takumi-rs/core', '@takumi-rs/image-response'],
+    noExternal: ['@takumi-rs/image-response'],
+    external: ['@takumi-rs/core'],
   },
   optimizeDeps: {
     exclude: ['@takumi-rs/core'],
