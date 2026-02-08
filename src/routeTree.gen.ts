@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
+import { Route as ApiOgRouteImport } from './routes/api/og'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +29,42 @@ const BlogSplatRoute = BlogSplatRouteImport.update({
   path: '/blog/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOgRoute = ApiOgRouteImport.update({
+  id: '/api/og',
+  path: '/api/og',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog/$' | '/blog/'
+  fullPaths: '/' | '/api/og' | '/blog/$' | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog/$' | '/blog'
-  id: '__root__' | '/' | '/blog/$' | '/blog/'
+  to: '/' | '/api/og' | '/blog/$' | '/blog'
+  id: '__root__' | '/' | '/api/og' | '/blog/$' | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiOgRoute: typeof ApiOgRoute
   BlogSplatRoute: typeof BlogSplatRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
@@ -82,11 +92,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/og': {
+      id: '/api/og'
+      path: '/api/og'
+      fullPath: '/api/og'
+      preLoaderRoute: typeof ApiOgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiOgRoute: ApiOgRoute,
   BlogSplatRoute: BlogSplatRoute,
   BlogIndexRoute: BlogIndexRoute,
 }

@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
 import { blog } from '@/lib/source'
+import { SITE_URL } from '@/lib/site'
 
 export const Route = createFileRoute('/blog/$')({
   component: Page,
@@ -11,6 +12,38 @@ export const Route = createFileRoute('/blog/$')({
     await blogPostLoader.preload(data.path)
     return data
   },
+  head: ({ loaderData }) => {
+    if (!loaderData) return {}
+
+    const { title, description, author, tags, url } = loaderData
+
+    const ogImageParams = new URLSearchParams({ title })
+    if (description) ogImageParams.set('description', description)
+    if (author) ogImageParams.set('author', author)
+    if (tags?.length) ogImageParams.set('tags', tags.join(','))
+
+    const ogImageUrl = `${SITE_URL}/api/og?${ogImageParams.toString()}`
+    const pageUrl = `${SITE_URL}${url}`
+
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: description ?? '' },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description ?? '' },
+        { property: 'og:image', content: ogImageUrl },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:url', content: pageUrl },
+        { property: 'og:site_name', content: 'Noe Tatoud' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description ?? '' },
+        { name: 'twitter:image', content: ogImageUrl },
+      ],
+    }
+  },
 })
 
 const serverLoader = createServerFn({ method: 'GET' })
@@ -18,7 +51,14 @@ const serverLoader = createServerFn({ method: 'GET' })
   .handler(({ data: slugs }: { data: Array<string> }) => {
     const page = blog.getPage(slugs)
     if (!page) throw notFound()
-    return { path: page.path }
+    return {
+      path: page.path,
+      title: page.data.title,
+      description: page.data.description,
+      author: page.data.author,
+      tags: page.data.tags,
+      url: page.url,
+    }
   })
 
 function Page() {

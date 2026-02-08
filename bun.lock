@@ -11,6 +11,7 @@
         "@hugeicons/core-free-icons": "^3.1.1",
         "@hugeicons/react": "^1.1.4",
         "@tailwindcss/vite": "^4.0.6",
+        "@takumi-rs/image-response": "^0.67.2",
         "@tanstack/react-devtools": "^0.7.0",
         "@tanstack/react-router": "^1.132.0",
         "@tanstack/react-router-devtools": "^1.132.0",
@@ -620,6 +621,30 @@
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.1.18", "", { "os": "win32", "cpu": "x64" }, "sha512-bJWbyYpUlqamC8dpR7pfjA0I7vdF6t5VpUGMWRkXVE3AXgIZjYUYAK7II1GNaxR8J1SSrSrppRar8G++JekE3Q=="],
 
     "@tailwindcss/vite": ["@tailwindcss/vite@4.1.18", "", { "dependencies": { "@tailwindcss/node": "4.1.18", "@tailwindcss/oxide": "4.1.18", "tailwindcss": "4.1.18" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7" } }, "sha512-jVA+/UpKL1vRLg6Hkao5jldawNmRo7mQYrZtNHMIVpLfLhDml5nMRUo/8MwoX2vNXvnaXNNMedrMfMugAVX1nA=="],
+
+    "@takumi-rs/core": ["@takumi-rs/core@0.67.2", "", { "optionalDependencies": { "@takumi-rs/core-darwin-arm64": "0.67.2", "@takumi-rs/core-darwin-x64": "0.67.2", "@takumi-rs/core-linux-arm64-gnu": "0.67.2", "@takumi-rs/core-linux-arm64-musl": "0.67.2", "@takumi-rs/core-linux-x64-gnu": "0.67.2", "@takumi-rs/core-linux-x64-musl": "0.67.2", "@takumi-rs/core-win32-arm64-msvc": "0.67.2", "@takumi-rs/core-win32-x64-msvc": "0.67.2" } }, "sha512-mcKN0uqKeTSyqZ3mGPLYBkkyB37wRs5r1EwgYTzPGhKgUPmbgH0dIeDHWbXFmTQaXRTujNBzZa8AdjQPImou6w=="],
+
+    "@takumi-rs/core-darwin-arm64": ["@takumi-rs/core-darwin-arm64@0.67.2", "", { "os": "darwin", "cpu": "arm64" }, "sha512-PrjOsCMMJivaujMbtYV047gZ/rkr1B/MlepZ8Tz4KU1PCGFSPKeJaJetVy8q6NZgK3+g4CONgPwd/TBJBX8uKA=="],
+
+    "@takumi-rs/core-darwin-x64": ["@takumi-rs/core-darwin-x64@0.67.2", "", { "os": "darwin", "cpu": "x64" }, "sha512-psk3j2I/wXt5mV0DGoh1g09TpRwoOWveJ0ww9nLISatJuwHpKavEffxgLngZv6v/4zWyp6tvUVROsONg2GpKuQ=="],
+
+    "@takumi-rs/core-linux-arm64-gnu": ["@takumi-rs/core-linux-arm64-gnu@0.67.2", "", { "os": "linux", "cpu": "arm64" }, "sha512-av59eA7pCFg31Eniwj1M41mlPqjwvn+llB936R3EXoc/IF5x6+R5YcLtSIHgnvEb3qbvCMq28NCOHAiodNvxAA=="],
+
+    "@takumi-rs/core-linux-arm64-musl": ["@takumi-rs/core-linux-arm64-musl@0.67.2", "", { "os": "linux", "cpu": "arm64" }, "sha512-k3RMthn//aYKvkIzvLLcBFe1vjhghDMUoH2MBBpNDwUTpT3GI3zNBOY8jfgszNSY8bmYgIv3Ugsc6Yqy7hUMbQ=="],
+
+    "@takumi-rs/core-linux-x64-gnu": ["@takumi-rs/core-linux-x64-gnu@0.67.2", "", { "os": "linux", "cpu": "x64" }, "sha512-rLLYpuGjQOfqq5y47PMIQXL8Q3n+4d/X2WLbibNZBP6vTxSS+2eRcBlXulLe/90TEnu6zlQd0xhcCYYZlebJKw=="],
+
+    "@takumi-rs/core-linux-x64-musl": ["@takumi-rs/core-linux-x64-musl@0.67.2", "", { "os": "linux", "cpu": "x64" }, "sha512-5hmjnQY1/PKt+zgWmsNjxOpLHUhfFOiwG8xGlGHBg+9jpLkR58F8eXcfIWEARLtLesT0/9RjJMglm95SlGLuXA=="],
+
+    "@takumi-rs/core-win32-arm64-msvc": ["@takumi-rs/core-win32-arm64-msvc@0.67.2", "", { "os": "win32", "cpu": "arm64" }, "sha512-xaKpT+mE9QS2V9DSqHMxl2M/GoO47bSQbjg6bZuKlrWLq5OQNZ/TuvF7MQ7bn1qStSIVetLvM9qXtv9V0Dv5jw=="],
+
+    "@takumi-rs/core-win32-x64-msvc": ["@takumi-rs/core-win32-x64-msvc@0.67.2", "", { "os": "win32", "cpu": "x64" }, "sha512-HYJ7p8yWDj3O/iDkN4umR8WPEX+BAbL5qhi7/LzYD4DNFGCyi9iOKyIshpkiX1yOFyjEL+UVKM+38bSZQCRjQg=="],
+
+    "@takumi-rs/helpers": ["@takumi-rs/helpers@0.67.2", "", {}, "sha512-/ivcWp2b42YnZ5PFxLHTeNt2LAS9kuCnukP++N6jvWN/J0MzSmarQQzsdZ6ze1/oBiAW28kOAG2iT5uD5kkW4Q=="],
+
+    "@takumi-rs/image-response": ["@takumi-rs/image-response@0.67.2", "", { "dependencies": { "@takumi-rs/core": "0.67.2", "@takumi-rs/helpers": "0.67.2", "@takumi-rs/wasm": "0.67.2" } }, "sha512-ilVQ1G30HKpof53E/R5hsvRwOryPHJZUpYjKyoKwH+YsQHiIU1YEVKDxp5Zf/IRhG5H3xAfXoViWRrO6eorEcg=="],
+
+    "@takumi-rs/wasm": ["@takumi-rs/wasm@0.67.2", "", {}, "sha512-OunJyVUPr8iy/wct8afRjGQhIJGsd0wzU3PwFialcrPn9RKOpX1U57SZQrhzeAi7k6Q0tP+5C/a1UqH9l/CmAg=="],
 
     "@tanstack/devtools": ["@tanstack/devtools@0.7.0", "", { "dependencies": { "@solid-primitives/event-listener": "^2.4.3", "@solid-primitives/keyboard": "^1.3.3", "@solid-primitives/resize-observer": "^2.1.3", "@tanstack/devtools-client": "0.0.3", "@tanstack/devtools-event-bus": "0.3.3", "@tanstack/devtools-ui": "0.4.4", "clsx": "^2.1.1", "goober": "^2.1.16", "solid-js": "^1.9.9" } }, "sha512-AlAoCqJhWLg9GBEaoV1g/j+X/WA1aJSWOsekxeuZpYeS2hdVuKAjj04KQLUMJhtLfNl2s2E+TCj7ZRtWyY3U4w=="],
 
