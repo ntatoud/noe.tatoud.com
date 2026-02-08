@@ -6,6 +6,7 @@ interface OgImageProps {
   hero?: string | null
 }
 
+// TODO: Fix the styling later
 export function OgImage({
   title,
   description,
