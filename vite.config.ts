@@ -6,26 +6,12 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import mdx from 'fumadocs-mdx/vite'
 import netlify from '@netlify/vite-plugin-tanstack-start'
+import arraybuffer from 'vite-plugin-arraybuffer'
 import * as MdxConfig from './source.config'
 
 const config = defineConfig({
-  optimizeDeps: {
-    exclude: [
-      '@takumi-rs/image-response',
-      '@takumi-rs/core',
-      '@takumi-rs/helpers',
-    ],
-  },
-  ssr: {
-    external: [
-      '@takumi-rs/image-response',
-      '@takumi-rs/core',
-      '@takumi-rs/helpers',
-      '@takumi-rs/core-linux-x64-gnu',
-      '@takumi-rs/core-darwin-arm64',
-    ],
-  },
   plugins: [
+    arraybuffer(),
     devtools(),
     mdx(MdxConfig),
     netlify(),
