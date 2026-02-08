@@ -47,10 +47,7 @@ const serverLoader = createServerFn({ method: 'GET' })
   .handler(({ data: slugs }: { data: Array<string> }) => {
     const page = blog.getPage(slugs)
     if (!page) throw notFound()
-    const hero = (page.data as unknown as Record<string, unknown>)._exports as
-      | Record<string, unknown>
-      | undefined
-    const heroUrl = hero?.hero as string | undefined
+
     return {
       path: page.path,
       title: page.data.title,
@@ -58,7 +55,7 @@ const serverLoader = createServerFn({ method: 'GET' })
       author: page.data.author,
       tags: page.data.tags,
       url: page.url,
-      hero: heroUrl ?? null,
+      hero: page.data._exports.hero as string | undefined,
     }
   })
 
