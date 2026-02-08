@@ -1,0 +1,171 @@
+---
+title: 'How AI Is Changing the Way I Work as a Developer'
+description: I went from writing every line by hand to letting agents generate 80% of my code. I will tell what actually changed, how I review, how I test, why I'm less afraid of refactoring, and what I think junior developers need to hear about building a career alongside AI.
+date: 2025-02-08
+published: true
+author: Noé Tatoud
+tags:
+  - AI
+  - Juniors
+  - TypeScript
+---
+
+Six months ago, I wrote maybe 80% of my code by hand.
+Today, that number is closer to 20%. And I think I am a better developer for it.
+
+## Who I Am
+
+I have two years of professional experience as a web developer,
+and a master's degree that I completed mostly without AI.
+I've always been the kind of person who loves writing code.
+The kind who would spend hours on a tricky problem just for the satisfaction of
+solving it myself, feeling like I'd genuinely learned something in the process.
+
+So believe me when I say this is not an easy shift for me at all.
+Which is why I wanted to share my view on this subject, hoping it would help some fellow junior developer go forward.
+
+When I first started using AI, I treated it as a peer.
+I'd ask it to challenge my opinions and decisions.
+I'd turn to it when I was stuck on a hard problem or wanted to move faster,
+but I would never blindly copy-paste code. It was a sounding board, not a crutch.
+
+That's changed... and I think for the better.
+
+## How I Work Now
+
+### I generate code, but I still own it
+
+Most of my code is now generated through coding agents.
+Tools like Claude Code acting as a conductor for my work.
+But here's the distinction I want to emphasise:
+**Not writing code doesn't mean not owning the code.**
+I still review every output carefully, the same way I'd review a colleague's pull request.
+The authorship model has shifted, but the accountability hasn't.
+
+I also use agents for a first pass on code review.
+They catch the silly mistakes: typos, formatting issues, obvious logic errors,
+so that when I ask a colleague to review my work, their attention goes toward
+the things that actually matter.
+
+### It frees up headspace for higher-value work
+
+This is perhaps the biggest shift.
+I used to spend roughly 60% of my time writing code and maybe 20% actually thinking about the problem.
+Those numbers have flipped. When an agent is running a task, I'm not sitting idle.
+I'm writing specs for the next piece of work, diving deeper into business logic,
+or thinking through constraints that no AI is going to figure out for me:
+What are the DX painpoints we could not address until now ?
+
+### Testing matters more than ever
+
+When you're not writing every line yourself, tests become your safety net _and_ your specification.
+But not just any tests — you have to be clever about what you test.
+The goal isn't coverage for coverage's sake; it's writing tests that actually validate behaviour
+and catch the kinds of mistakes agents are prone to making.
+
+In practice, this has changed my approach in a few ways. I now write tests _before_ generating code,
+so the agent has a clear target to hit. I lean more on integration-level tests rather than just unit tests,
+because agents can produce code that works in isolation but breaks in context.
+
+### I'm less afraid of breaking things
+
+Want to change a function signature that's used everywhere in the codebase?
+That used to be a mountain of work: find every call site, update them all, hope you didn't miss one.
+Now it can be done in minutes. AI has dramatically lowered the cost of large-scale refactoring,
+which means I'm more willing to improve the codebase instead of working around its flaws.
+
+There's a broader point here: AI lowers the cost of doing things the right way.
+Technical debt becomes cheaper to pay off, so there's less reason to accumulate it.
+That refactor you've been putting off for months? It's now an afternoon's work, not a sprint-long commitment.
+
+### I still read the docs
+
+Even with AI, I make a point of reading documentation, or at the very least,
+asking the AI to point me to the relevant docs when it does something I don't fully understand.
+Understanding _why_ something works a certain way is just as important as getting it to work.
+
+### My setup
+
+For those curious about the specifics:
+
+- Claude code
+- Conductor app for ochestrating (briefly introduce conductor)
+
+## What I'm Watching Out For
+
+I don't want to paint an entirely rosy picture. There are real risks to this way of working, and I think about them often.
+
+**Skill atrophy** is the one that keeps me up at night.
+Am I losing the ability to debug deeply because I let agents handle it?
+I try to stay sharp by occasionally working through problems manually.
+Not because it's efficient, but because it's exercise.
+The same way a pilot still needs to know how to fly without autopilot.
+
+**Over-trust** is another trap. Agents produce confident, plausible code that can be subtly wrong.
+I've caught bugs that looked perfectly reasonable at first glance: correct syntax, sensible variable names, coherent logic
+but that handled an edge case in exactly the wrong way. The review step isn't optional; it's the whole point.
+
+**The dependency question** is worth asking too. If the tools disappear tomorrow, or the pricing changes dramatically,
+how quickly could I revert to my old workflow? I think the answer is "fairly quickly",
+but only because I built foundational skills before relying on AI.
+Which brings me to my advice for people earlier in their careers or just finishing their studies.
+
+## Advices for Students and sJunior Developers
+
+If you're early in your career, the landscape has shifted, and it's worth thinking about what that means for you.
+I dont pretend I've got it all sorted out, but I think I can come in with a few tips to help!
+
+### Ask yourself: what can I bring that an AI can't?
+
+AI can write code. It can write it fast, and often it can write it well.
+So the question becomes: what's your edge? The answer lies in everything _around_ the code:
+understanding the problem, communicating with stakeholders, making judgment calls under uncertainty,
+and building trust with your team.
+
+### Soft skills matter more than ever
+
+Communication, collaboration, empathy, the ability to navigate ambiguity.
+These have always been important, but they're becoming the primary differentiator.
+The developer who can translate a vague business need into a clear technical plan is more valuable
+than the one who can write a perfect algorithm from memory.
+
+### Be proactive
+
+The era of waiting for a senior to hand you a ticket, working on it, and waiting for the next one is over.
+Take initiative. Propose improvements. Identify problems before they're assigned to you.
+AI has compressed the execution cycle, which means the bottleneck has shifted from "can you build it?"
+to "do you know what to build and why?"
+
+### Use AI to go deeper, not just faster
+
+It's tempting to use AI purely as an accelerator. get the code out the door quicker, move on. But the real leverage is in using it as a learning tool. Ask it to explain _why_ it made certain choices. Ask it to show you alternatives. Use it to explore areas you wouldn't have had time to explore otherwise.
+
+### Challenge senior decisions
+
+This might feel uncomfortable, but it's important. AI gives you access to information and perspectives
+that used to require years of experience to accumulate.
+Use that to have informed opinions. Go deeper into your subjects.
+In a healthy work environment, a well-reasoned challenge from a junior developer is a sign of growth, not insubordination.
+
+### What to avoid
+
+But there's a tension here I want to be honest about: if you use AI to skip the struggle phase entirely,
+will you develop the intuition needed to review AI output effectively?
+I don't think the answer is to avoid AI. That ship has sailed.
+But I do think you need to be intentional about when you let the tool do the work and when you push through the difficulty yourself.
+The _struggle isn't the point_, but the _understanding that comes from it_ is.
+
+## Where This Is Heading
+
+I started my career believing that writing code was the craft.
+I still believe that! But I've come to understand "writing code" more broadly.
+It includes knowing what to build, why to build it, and how to verify it's right.
+The act of typing characters into an editor was never the valuable part. It was the thinking behind it.
+
+AI hasn't replaced me. It's compressed the parts of my job that were mechanical and expanded the parts that require judgment.
+I spend less time fighting syntax and more time understanding systems.
+Less time on boilerplate and more time on architecture. Less time alone with my editor and more time with my team.
+
+I don't know exactly where this goes.
+But I know that the developers who will thrive are the ones who treat AI as a shift in _how_ they work,
+not a replacement for _what_ they do.
