@@ -17,10 +17,12 @@ const config = defineConfig({
     ],
   },
   ssr: {
-    noExternal: [
+    external: [
       '@takumi-rs/image-response',
       '@takumi-rs/core',
       '@takumi-rs/helpers',
+      '@takumi-rs/core-linux-x64-gnu',
+      '@takumi-rs/core-darwin-arm64',
     ],
   },
   plugins: [
