@@ -86,10 +86,23 @@ Understanding _why_ something works a certain way is just as important as gettin
 
 ### My setup
 
-For those curious about the specifics:
+For those curious about the specifics, here's what my daily toolkit looks like:
 
-- Claude code
-- Conductor app for ochestrating (briefly introduce conductor)
+[**Claude Code**](https://docs.anthropic.com/en/docs/claude-code) is the engine.
+It's Anthropic's command-line coding agent. I use it for generating code, running first-pass reviews,
+and working through implementation tasks. I define the constraints, it executes, and I review the output.
+
+[**Conductor**](https://www.conductor.build/) is what ties it all together.
+Built by Melty Labs, it's a Mac app that lets you run multiple Claude Code agents in parallel,
+each in its own isolated copy of your codebase.
+Think of it as a dashboard for your AI team: you can see what each agent is working on, review their diffs,
+and merge changes. All without the agents stepping on each other's toes.
+It's what makes the "work on specs while the agent codes" workflow actually practical.
+
+[**Zed**](https://zed.dev/) is my editor. It's built from scratch in Rust, so it's blazingly fast and lightweight,
+which matters when your workflow is mostly reviewing and editing code rather than writing it from scratch.
+Its built-in AI features (inline transformations, an agent panel, edit predictions)
+make it a natural fit for quickly reviewing and refining what the agents produce.
 
 ## What I'm Watching Out For
 
