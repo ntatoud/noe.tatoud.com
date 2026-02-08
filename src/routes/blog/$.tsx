@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
+import { serializeOgSearchParams } from '@/features/og/search-params'
 import { blog } from '@/lib/source'
 import { SITE_URL } from '@/lib/site'
 
@@ -15,14 +16,9 @@ export const Route = createFileRoute('/blog/$')({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
 
-    const { title, description, author, tags, url } = loaderData
+    const { title, description, author, tags, url, hero } = loaderData
 
-    const ogImageParams = new URLSearchParams({ title })
-    if (description) ogImageParams.set('description', description)
-    if (author) ogImageParams.set('author', author)
-    if (tags?.length) ogImageParams.set('tags', tags.join(','))
-
-    const ogImageUrl = `${SITE_URL}/api/og?${ogImageParams.toString()}`
+    const ogImageUrl = `${SITE_URL}/api/og${serializeOgSearchParams({ title, description, author, tags, hero })}`
     const pageUrl = `${SITE_URL}${url}`
 
     return {
@@ -51,6 +47,10 @@ const serverLoader = createServerFn({ method: 'GET' })
   .handler(({ data: slugs }: { data: Array<string> }) => {
     const page = blog.getPage(slugs)
     if (!page) throw notFound()
+    const hero = (page.data as unknown as Record<string, unknown>)._exports as
+      | Record<string, unknown>
+      | undefined
+    const heroUrl = hero?.hero as string | undefined
     return {
       path: page.path,
       title: page.data.title,
@@ -58,6 +58,7 @@ const serverLoader = createServerFn({ method: 'GET' })
       author: page.data.author,
       tags: page.data.tags,
       url: page.url,
+      hero: heroUrl ?? null,
     }
   })
 

@@ -1,14 +1,9 @@
 import { ImageResponse } from '@takumi-rs/image-response'
+import { loadOgSearchParams } from '@/features/og/search-params'
 import { OgImage } from '@/features/og/og-image'
 
 export function handleOgImage(request: Request) {
-  const url = new URL(request.url)
-
-  const title = url.searchParams.get('title') || 'Noe Tatoud'
-  const description = url.searchParams.get('description') || undefined
-  const author = url.searchParams.get('author') || undefined
-  const tagsParam = url.searchParams.get('tags')
-  const tags = tagsParam ? tagsParam.split(',') : undefined
+  const { title, description, author, tags, hero } = loadOgSearchParams(request)
 
   return new ImageResponse(
     <OgImage
@@ -16,6 +11,7 @@ export function handleOgImage(request: Request) {
       description={description}
       author={author}
       tags={tags}
+      hero={hero}
     />,
     {
       width: 1200,

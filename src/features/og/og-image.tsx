@@ -1,16 +1,32 @@
 interface OgImageProps {
   title: string
-  description?: string
-  author?: string
-  tags?: Array<string>
+  description?: string | null
+  author?: string | null
+  tags?: Array<string> | null
+  hero?: string | null
 }
 
-export function OgImage({ title, description, author, tags }: OgImageProps) {
+export function OgImage({
+  title,
+  description,
+  author,
+  tags,
+  hero,
+}: OgImageProps) {
   return (
     <div
       tw="flex h-full w-full flex-col justify-between p-16"
       style={{ backgroundColor: '#1a2e28', fontFamily: 'Geist' }}
     >
+      {/* Hero background */}
+      {hero && (
+        <img
+          src={hero}
+          tw="absolute inset-0 h-full w-full"
+          style={{ objectFit: 'cover', opacity: 0.25 }}
+        />
+      )}
+
       {/* Accent bar */}
       <div
         tw="absolute left-0 top-0 h-full w-2"
