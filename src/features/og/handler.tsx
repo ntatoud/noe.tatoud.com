@@ -1,4 +1,5 @@
-import { ImageResponse } from '@takumi-rs/image-response'
+import { ImageResponse } from '@takumi-rs/image-response/wasm'
+import wasmModule from '@takumi-rs/wasm/takumi_wasm_bg.wasm?url'
 import { loadOgSearchParams } from '@/features/og/search-params'
 import { OgImage } from '@/features/og/og-image'
 
@@ -16,6 +17,7 @@ export function handleOgImage(request: Request) {
       hero={heroUrl}
     />,
     {
+      module: wasmModule,
       width: 1200,
       height: 630,
       headers: {
