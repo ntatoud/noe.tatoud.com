@@ -9,12 +9,19 @@ import { nitro } from 'nitro/vite'
 import * as MdxConfig from './source.config'
 
 const config = defineConfig({
-  ssr: {
-    noExternal: ['@takumi-rs/image-response'],
-    external: ['@takumi-rs/core'],
-  },
   optimizeDeps: {
-    exclude: ['@takumi-rs/core'],
+    exclude: [
+      '@takumi-rs/image-response',
+      '@takumi-rs/core',
+      '@takumi-rs/helpers',
+    ],
+  },
+  ssr: {
+    noExternal: [
+      '@takumi-rs/image-response',
+      '@takumi-rs/core',
+      '@takumi-rs/helpers',
+    ],
   },
   plugins: [
     devtools(),
