@@ -8,6 +8,7 @@ interface OgMetaOptions {
   tags?: Array<string> | null
   url: string
   hero?: string | null
+  origin: string
 }
 
 export function ogMeta({
@@ -17,11 +18,13 @@ export function ogMeta({
   tags,
   url,
   hero,
+  origin,
 }: OgMetaOptions) {
   const ogImageUrl = siteUrl(
+    origin,
     `/api/og${serializeOgSearchParams({ title, description, author, tags, hero })}`,
   )
-  const pageUrl = siteUrl(url)
+  const pageUrl = siteUrl(origin, url)
 
   return [
     { title },

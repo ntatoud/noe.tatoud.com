@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { getRequestUrl } from '@tanstack/react-start/server'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
 import { blog } from '@/lib/source'
@@ -23,6 +24,7 @@ const serverLoader = createServerFn({ method: 'GET' })
   .handler(({ data: slugs }: { data: Array<string> }) => {
     const page = blog.getPage(slugs)
     if (!page) throw notFound()
+    const origin = getRequestUrl({ xForwardedHost: true }).origin
 
     return {
       path: page.path,
@@ -32,6 +34,7 @@ const serverLoader = createServerFn({ method: 'GET' })
       tags: page.data.tags,
       url: page.url,
       hero: page.data._exports.hero as string | undefined,
+      origin,
     }
   })
 
