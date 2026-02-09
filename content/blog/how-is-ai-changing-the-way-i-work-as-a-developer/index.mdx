@@ -27,7 +27,7 @@ Which is why I wanted to share my view on this subject, hoping it would help som
 When I first started using AI, I treated it as a peer.
 I'd ask it to challenge my opinions and decisions.
 I'd turn to it when I was stuck on a hard problem or wanted to move faster,
-but I would never blindly copy-paste code. It was a sounding board, not a crutch.
+but I would never blindly copy-paste code.
 
 That's changed... and I think for the better.
 
@@ -36,7 +36,7 @@ That's changed... and I think for the better.
 ### I generate code, but I still own it
 
 Most of my code is now generated through coding agents.
-Tools like Claude Code acting as a conductor for my work.
+Tools like Claude Code helping me through most of my work.
 But here's the distinction I want to emphasise:
 **Not writing code doesn't mean not owning the code.**
 I still review every output carefully, the same way I'd review a colleague's pull request.
@@ -54,16 +54,16 @@ I used to spend roughly 60% of my time writing code and maybe 20% actually think
 Those numbers have flipped. When an agent is running a task, I'm not sitting idle.
 I'm writing specs for the next piece of work, diving deeper into business logic,
 or thinking through constraints that no AI is going to figure out for me:
-What are the DX painpoints we could not address until now ?
+What are the DX painpoints we could not address until now ? What part of our workflow could we improve ?
 
 ### Testing matters more than ever
 
 When you're not writing every line yourself, tests become your safety net _and_ your specification.
-But not just any tests — you have to be clever about what you test.
-The goal isn't coverage for coverage's sake; it's writing tests that actually validate behaviour
+But not just any tests. You have to be clever about what you test.
+The goal isn't coverage for coverage's sake. It never was. It's writing tests that actually validate behaviour
 and catch the kinds of mistakes agents are prone to making.
 
-In practice, this has changed my approach in a few ways. I now write tests _before_ generating code,
+In practice, this has changed my approach in a few ways. I now try to write tests _before_ generating code,
 so the agent has a clear target to hit. I lean more on integration-level tests rather than just unit tests,
 because agents can produce code that works in isolation but breaks in context.
 
@@ -93,7 +93,7 @@ It's Anthropic's command-line coding agent. I use it for generating code, runnin
 and working through implementation tasks. I define the constraints, it executes, and I review the output.
 
 [**Conductor**](https://www.conductor.build/) is what ties it all together.
-Built by Melty Labs, it's a Mac app that lets you run multiple Claude Code agents in parallel,
+Built by Melty Labs, it's a Mac app that lets you run multiple coding agents in parallel,
 each in its own isolated copy of your codebase.
 Think of it as a dashboard for your AI team: you can see what each agent is working on, review their diffs,
 and merge changes. All without the agents stepping on each other's toes.
@@ -106,7 +106,7 @@ make it a natural fit for quickly reviewing and refining what the agents produce
 
 ## What I'm Watching Out For
 
-I don't want to paint an entirely rosy picture. There are real risks to this way of working, and I think about them often.
+I don't want to make it sound like it's a perfect way of doing things. There are real risks to this way of working, and I think about them often.
 
 **Skill atrophy** is the one that keeps me up at night.
 Am I losing the ability to debug deeply because I let agents handle it?
@@ -119,11 +119,13 @@ I've caught bugs that looked perfectly reasonable at first glance: correct synta
 but that handled an edge case in exactly the wrong way. The review step isn't optional; it's the whole point.
 
 **The dependency question** is worth asking too. If the tools disappear tomorrow, or the pricing changes dramatically,
-how quickly could I revert to my old workflow? I think the answer is "fairly quickly",
+how quickly could I revert to my old workflow? I think the answer is "fairly quickly"
+(I would still have to deal with the feeling of being absurdly slow...),
 but only because I built foundational skills before relying on AI.
+
 Which brings me to my advice for people earlier in their careers or just finishing their studies.
 
-## Advices for Students and sJunior Developers
+## Advices for Students and Junior Developers
 
 If you're early in your career, the landscape has shifted, and it's worth thinking about what that means for you.
 I dont pretend I've got it all sorted out, but I think I can come in with a few tips to help!
@@ -164,18 +166,18 @@ In a healthy work environment, a well-reasoned challenge from a junior developer
 
 But there's a tension here I want to be honest about: if you use AI to skip the struggle phase entirely,
 will you develop the intuition needed to review AI output effectively?
-I don't think the answer is to avoid AI. That ship has sailed.
+I don't think the answer is to avoid AI. That is not an option anymore.
 But I do think you need to be intentional about when you let the tool do the work and when you push through the difficulty yourself.
 The _struggle isn't the point_, but the _understanding that comes from it_ is.
 
-## Where This Is Heading
+## Where this is heading
 
 I started my career believing that writing code was the craft.
 I still believe that! But I've come to understand "writing code" more broadly.
 It includes knowing what to build, why to build it, and how to verify it's right.
-The act of typing characters into an editor was never the valuable part. It was the thinking behind it.
+I let go off the act of typing characters into an editor, to fully focus on what matters: The thinking behind it.
 
-AI hasn't replaced me. It's compressed the parts of my job that were mechanical and expanded the parts that require judgment.
+AI hasn't replaced me (yet). It has compressed the parts of my job that were mechanical and expanded the parts that require judgment.
 I spend less time fighting syntax and more time understanding systems.
 Less time on boilerplate and more time on architecture. Less time alone with my editor and more time with my team.
 
