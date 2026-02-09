@@ -15,6 +15,7 @@ export const Route = createFileRoute('/blog/$')({
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {}
+
     return { meta: ogMeta(loaderData) }
   },
 })

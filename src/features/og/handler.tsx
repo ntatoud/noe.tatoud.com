@@ -1,5 +1,4 @@
-import { ImageResponse } from '@takumi-rs/image-response/wasm'
-import wasmBuffer from '@takumi-rs/wasm/takumi_wasm_bg.wasm?arraybuffer'
+import { ImageResponse } from '@takumi-rs/image-response'
 import { loadOgSearchParams } from '@/features/og/search-params'
 import { OgImage } from '@/features/og/og-image'
 
@@ -17,7 +16,6 @@ export function handleOgImage(request: Request) {
       hero={heroUrl}
     />,
     {
-      module: wasmBuffer,
       width: 1200,
       height: 630,
       headers: {
