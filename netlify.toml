@@ -6,3 +6,8 @@ publish = "dist"
 for = "/*"
 [headers.values]
 X-Robots-Tag = "noindex, nofollow"
+
+[functions]
+node_bundler = "esbuild"
+directory = "netlify/functions"
+included_files = ["node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*"]
