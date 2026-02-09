@@ -30,11 +30,11 @@ const serverLoader = createServerFn({ method: 'GET' })
     return {
       path: page.path,
       title: page.data.title,
-      description: page.data.description,
+      description: page.data.description ?? null,
       author: page.data.author,
-      tags: page.data.tags,
+      tags: page.data.tags ?? null,
       url: page.url,
-      hero: page.data._exports.hero as string | undefined,
+      hero: (page.data._exports.hero as string | undefined) ?? null,
       origin,
     }
   })

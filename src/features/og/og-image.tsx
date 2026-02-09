@@ -1,10 +1,6 @@
-interface OgImageProps {
-  title: string
-  description?: string | null
-  author?: string | null
-  tags?: Array<string> | null
-  hero?: string | null
-}
+import type { loadOgSearchParams } from '@/features/og/search-params'
+
+export type OgImageProps = Awaited<ReturnType<typeof loadOgSearchParams>>
 
 // TODO: Fix the styling later
 export function OgImage({

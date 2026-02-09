@@ -1,15 +1,8 @@
+import type { OgImageProps } from '@/features/og/og-image'
 import { serializeOgSearchParams } from '@/features/og/search-params'
 import { siteUrl } from '@/lib/site'
 
-interface OgMetaOptions {
-  title: string
-  description?: string | null
-  author?: string | null
-  tags?: Array<string> | null
-  url: string
-  hero?: string | null
-  origin: string
-}
+type OgMetaOptions = OgImageProps & { url: string; origin: string }
 
 export function ogMeta({
   title,
