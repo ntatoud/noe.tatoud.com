@@ -1,6 +1,7 @@
 import browserCollections from 'fumadocs-mdx:collections/browser'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Suspense } from 'react'
+import { CardTags } from '@/components/ui/card-list'
 import { formatDate } from '@/lib/format'
 
 export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
@@ -30,16 +31,7 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
             <time>{formatDate(frontmatter.date)}</time>
           </div>
           {frontmatter.tags && frontmatter.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {frontmatter.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <CardTags tags={frontmatter.tags} className="mt-4" />
           )}
           {frontmatter.translations && frontmatter.translations.length > 0 && (
             <div className="mt-4 text-sm text-muted-foreground">

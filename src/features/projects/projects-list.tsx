@@ -1,4 +1,5 @@
 import type { Project } from '@/features/projects/get-projects'
+import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
@@ -8,6 +9,8 @@ import {
   CardTags,
   CardTitle,
 } from '@/components/ui/card-list'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 export function ProjectsList({ projects }: { projects: Array<Project> }) {
   if (projects.length === 0) {
@@ -21,13 +24,25 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
   return (
     <CardList>
       {projects.map((project) => (
-        <Card key={project.slug}>
+        <Card
+          key={project.slug}
+          className={cn(
+            'border-t-2',
+            project.kind === 'contribution'
+              ? 'border-t-primary'
+              : 'border-t-accent',
+          )}
+        >
           <CardContent>
             <div className="flex items-center gap-3">
               <CardTitle>{project.title}</CardTitle>
-              <span className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground">
+              <Badge
+                variant={
+                  project.kind === 'contribution' ? 'default' : 'secondary'
+                }
+              >
                 {project.kind === 'contribution' ? 'Contribution' : 'Personal'}
-              </span>
+              </Badge>
             </div>
             {project.description && (
               <CardDescription>{project.description}</CardDescription>
@@ -38,24 +53,34 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
             {(project.url || project.repo) && (
               <CardFooter className="gap-4">
                 {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-primary"
+                  <Button
+                    variant="link"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    }
                   >
                     Visit
-                  </a>
+                  </Button>
                 )}
                 {project.repo && (
-                  <a
-                    href={project.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-primary"
+                  <Button
+                    variant="link"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href={project.repo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    }
                   >
                     Source
-                  </a>
+                  </Button>
                 )}
               </CardFooter>
             )}

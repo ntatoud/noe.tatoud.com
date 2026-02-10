@@ -1,15 +1,24 @@
 import type { ComponentProps } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 export function CardList({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('flex flex-col gap-8', className)} {...props} />
+  return (
+    <div
+      className={cn('grid grid-cols-1 gap-6 sm:grid-cols-2', className)}
+      {...props}
+    />
+  )
 }
 
 export function Card({ className, ...props }: ComponentProps<'article'>) {
   return (
     <article
       className={cn(
-        'group relative overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted/50',
+        'group relative rounded-xl border border-border',
+        'has-[>a]:transition-all has-[>a]:duration-200',
+        'has-[>a]:hover:-translate-y-0.5 has-[>a]:hover:border-primary/30 has-[>a]:hover:border-b-primary',
+        'has-[>a]:focus-within:-translate-y-0.5 has-[>a]:focus-within:border-primary/30 has-[>a]:focus-within:border-b-primary',
         className,
       )}
       {...props}
@@ -17,15 +26,37 @@ export function Card({ className, ...props }: ComponentProps<'article'>) {
   )
 }
 
+export function CardImage({
+  src,
+  alt = '',
+  className,
+}: {
+  src: string
+  alt?: string
+  className?: string
+}) {
+  return (
+    <div className={cn('absolute inset-0 -z-10', className)}>
+      <img src={src} alt={alt} className="h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-linear-to-t from-card via-card/90 to-card/40" />
+    </div>
+  )
+}
+
 export function CardContent({ className, ...props }: ComponentProps<'div'>) {
-  return <div className={cn('block p-6', className)} {...props} />
+  return (
+    <div
+      className={cn('relative flex h-full flex-col p-6', className)}
+      {...props}
+    />
+  )
 }
 
 export function CardTitle({ className, ...props }: ComponentProps<'h2'>) {
   return (
     <h2
       className={cn(
-        'text-xl font-semibold tracking-tight group-hover:text-primary',
+        'font-head text-xl font-semibold tracking-tight',
         className,
       )}
       {...props}
@@ -50,12 +81,9 @@ export function CardTags({
   return (
     <div className={cn('mt-3 flex flex-wrap gap-2', className)}>
       {tags.map((tag) => (
-        <span
-          key={tag}
-          className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground"
-        >
+        <Badge key={tag} variant="outline">
           {tag}
-        </span>
+        </Badge>
       ))}
     </div>
   )
@@ -65,7 +93,7 @@ export function CardFooter({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       className={cn(
-        'mt-4 flex items-center gap-2 text-sm text-muted-foreground',
+        'mt-auto flex items-center gap-2 pt-4 text-sm text-muted-foreground',
         className,
       )}
       {...props}
