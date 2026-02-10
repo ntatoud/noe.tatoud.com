@@ -7,7 +7,7 @@ export function PageBlog() {
   const posts = useLoaderData({ from: '/blog/' })
   return (
     <div>
-      <Hero>
+      <Hero className="pb-16">
         <HeroTitle>Blog</HeroTitle>
         <HeroSubtitle>
           Thoughts on web development, technology, and more.

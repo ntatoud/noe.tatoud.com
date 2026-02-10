@@ -1,17 +1,20 @@
+import { Button } from '@/components/ui/button'
 import { ArticlesSection } from '@/features/home/articles-section'
-import { EventsSection } from '@/features/home/events-section'
 import { ProjectsSection } from '@/features/home/projects-section'
-import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
+import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
 export function PageHome() {
   return (
     <div>
-      <Hero>
-        <HeroTitle className="">Noé Tatoud</HeroTitle>
+      <Hero className="pb-16">
+        <HeroTitle>Noé Tatoud</HeroTitle>
         <HeroSubtitle>Frontend web developer</HeroSubtitle>
+        <HeroActions>
+          <Button size="lg" render={<a href="mailto:noe.tatoud@gmail.com" />}>
+            Get in touch
+          </Button>
+        </HeroActions>
       </Hero>
-      {/* <PicturesBento />*/}
-      <EventsSection />
       <ArticlesSection />
       <ProjectsSection />
     </div>
