@@ -6,6 +6,7 @@ export const nav = linkOptions([
     label: 'Home',
     icon: Home,
     to: '/',
+    activeOptions: { exact: true },
   },
   {
     label: 'Blog',

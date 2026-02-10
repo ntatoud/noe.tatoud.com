@@ -1,9 +1,39 @@
+import { useEffect, useState } from 'react'
 import { DesktopNav } from '@/layout/desktop-nav'
+import { cn } from '@/lib/utils'
+
+const SCROLL_THRESHOLD = 50
 
 export function Header() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const scroller = document.body
+    function onScroll() {
+      setScrolled(scroller.scrollTop > SCROLL_THRESHOLD)
+    }
+    onScroll()
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    return () => scroller.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="absolute z-10 hidden w-full items-center justify-center sm:flex">
-      <DesktopNav />
+    <header
+      className={cn(
+        'fixed top-0 z-50 hidden w-full items-center justify-center sm:flex',
+        'transition-all duration-100',
+        scrolled && 'pointer-events-none top-2',
+      )}
+    >
+      <div
+        className={cn(
+          'pointer-events-auto transition-all duration-100',
+          scrolled &&
+            'rounded-md border border-border bg-card shadow-lg backdrop-blur-lg',
+        )}
+      >
+        <DesktopNav />
+      </div>
     </header>
   )
 }
