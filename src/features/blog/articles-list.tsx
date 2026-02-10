@@ -1,14 +1,16 @@
 import { Link } from '@tanstack/react-router'
 import type { BlogPost } from '@/features/blog/get-blog-posts'
-import { formatDate } from '@/lib/format'
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
+  CardImage,
   CardList,
   CardTags,
   CardTitle,
 } from '@/components/ui/card-list'
+import { formatDate } from '@/lib/format'
 
 export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
   if (posts.length === 0) {
@@ -22,22 +24,30 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
   return (
     <CardList>
       {posts.map((post) => (
-        <Card key={post.slug}>
+        <Card
+          key={post.slug}
+          className={post.hero ? 'min-h-[280px] overflow-hidden' : ''}
+        >
+          {post.hero && <CardImage src={post.hero} alt={post.title} />}
           <Link
             to="/blog/$"
             params={{ _splat: post.slug }}
-            className="block p-6"
+            className="flex h-full"
           >
-            <CardTitle>{post.title}</CardTitle>
-            {post.description && (
-              <CardDescription>{post.description}</CardDescription>
-            )}
-            <CardFooter>
-              <span>{post.author}</span>
-              <span>·</span>
-              <time>{formatDate(post.date)}</time>
-            </CardFooter>
-            {post.tags && post.tags.length > 0 && <CardTags tags={post.tags} />}
+            <CardContent className={post.hero ? 'justify-end' : ''}>
+              <CardTitle>{post.title}</CardTitle>
+              {post.description && (
+                <CardDescription>{post.description}</CardDescription>
+              )}
+              {post.tags && post.tags.length > 0 && (
+                <CardTags tags={post.tags} />
+              )}
+              <CardFooter>
+                <span>{post.author}</span>
+                <span>·</span>
+                <time>{formatDate(post.date)}</time>
+              </CardFooter>
+            </CardContent>
           </Link>
         </Card>
       ))}
