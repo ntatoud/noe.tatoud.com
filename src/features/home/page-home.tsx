@@ -6,7 +6,7 @@ import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
 export function PageHome() {
   return (
     <div>
-      <Hero>
+      <Hero className="pb-16">
         <HeroTitle>Noé Tatoud</HeroTitle>
         <HeroSubtitle>Frontend web developer</HeroSubtitle>
         <HeroActions>

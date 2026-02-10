@@ -6,11 +6,11 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
   return (
     <div
       className={cn(
-        'relative flex min-h-[50vh] flex-col items-center justify-center overflow-x-clip md:pt-16',
+        'relative flex min-h-[50vh] flex-col items-center justify-center overflow-hidden md:pt-16',
         className,
       )}
     >
-      <div className="absolute -top-[50vh] right-0 bottom-0 left-0 z-0 flex w-full flex-1 [mask-image:linear-gradient(to_bottom,black_30%,transparent)]">
+      <div className="absolute inset-0 z-0 flex w-full flex-1 mask-[linear-gradient(to_bottom,black_60%,transparent)]">
         <Grainient
           color1="#00D1FF"
           color2="#FFB8F2"
