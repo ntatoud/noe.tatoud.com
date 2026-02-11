@@ -93,7 +93,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
       if (!startTimeRef.current) {
         startTimeRef.current = timestamp
       }
-      ctx?.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       sparksRef.current = sparksRef.current.filter((spark: Spark) => {
         const elapsed = timestamp - spark.startTime
