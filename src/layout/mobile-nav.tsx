@@ -1,38 +1,23 @@
-import { Link } from '@tanstack/react-router'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { nav } from '@/layout/nav-config'
 import { cn } from '@/lib/utils'
+import { NavLink, nav, navGlassStyles } from '@/layout/nav-config'
 
 export function MobileNav() {
   return (
     <nav
       aria-label="Main"
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 sm:hidden',
-        'border-t border-border/50',
-        'bg-background/80 backdrop-blur-lg',
+        'fixed inset-x-0 bottom-4 z-50 flex justify-center sm:hidden',
         'pb-[env(safe-area-inset-bottom)]',
       )}
     >
-      <div className="flex flex-row items-center justify-around px-4 pt-2 pb-2">
+      <div
+        className={cn(
+          'flex flex-row items-center gap-2 rounded-lg border border-border/50 px-3 py-1.5',
+          navGlassStyles,
+        )}
+      >
         {nav.map((item) => (
-          <Link
-            key={item.to}
-            {...item}
-            activeProps={{ className: 'text-primary' }}
-            className={cn(
-              'flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-lg px-3 py-1.5',
-              'text-muted-foreground',
-              'transition-colors duration-200',
-              'hover:text-foreground',
-              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-            )}
-          >
-            <HugeiconsIcon icon={item.icon} size={22} />
-            <span className="text-[0.625rem] leading-none font-medium">
-              {item.label}
-            </span>
-          </Link>
+          <NavLink key={item.to} variant="mobile" {...item} />
         ))}
       </div>
     </nav>

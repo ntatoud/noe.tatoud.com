@@ -2,6 +2,43 @@ import Grainient from '@/components/ui/grainient'
 import { Section, SectionTitle } from '@/layout/section'
 import { cn } from '@/lib/utils'
 
+function HeroEdgeMask() {
+  return (
+    <>
+      <svg className="absolute size-0" aria-hidden="true">
+        <defs>
+          <filter
+            id="hero-edge-warp"
+            x="-15%"
+            y="-15%"
+            width="130%"
+            height="130%"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.005 0.002"
+              numOctaves="2"
+              seed="2"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              scale="50"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="displaced"
+            />
+            <feGaussianBlur in="displaced" stdDeviation="14" />
+          </filter>
+        </defs>
+      </svg>
+      <div
+        className="pointer-events-none absolute -inset-x-6 top-0 -bottom-8 z-1 bg-[linear-gradient(to_bottom,oklch(0_0_0/0)_25%,oklch(0_0_0/0.03)_45%,oklch(0_0_0/0.15)_60%,oklch(0_0_0/0.5)_72%,oklch(0_0_0)_88%)]"
+        style={{ filter: 'url(#hero-edge-warp)' }}
+      />
+    </>
+  )
+}
+
 function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
   return (
     <div
@@ -10,7 +47,7 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
         className,
       )}
     >
-      <div className="absolute inset-0 z-0 flex w-full flex-1 mask-[linear-gradient(to_bottom,black_60%,transparent)]">
+      <div className="absolute inset-0 z-0 flex w-full flex-1">
         <Grainient
           color1="#00D1FF"
           color2="#FFB8F2"
@@ -36,7 +73,8 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
           zoom={0.9}
         />
       </div>
-      <Section {...props} className="relative space-y-4 py-0" />
+      <HeroEdgeMask />
+      <Section {...props} className="relative z-2 space-y-4 py-0" />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { SoundToggle } from '@/components/sound-toggle'
 import { DesktopNav } from '@/layout/desktop-nav'
+import { navGlassStyles } from '@/layout/nav-config'
 import { cn } from '@/lib/utils'
 
 const SCROLL_THRESHOLD = 50
@@ -21,16 +22,15 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 sm:flex',
-        'transition-all duration-100',
-        scrolled && 'pointer-events-none top-2',
+        'fixed top-2 z-50 hidden w-full items-center justify-center px-5 sm:flex',
+        'transition-all duration-100 ease-out',
+        scrolled && 'pointer-events-none',
       )}
     >
       <div
         className={cn(
-          'pointer-events-auto transition-all duration-100',
-          scrolled &&
-            'rounded-md border border-border bg-card shadow-lg backdrop-blur-lg',
+          'pointer-events-auto transition-all duration-100 ease-out',
+          scrolled && cn(navGlassStyles, 'rounded-lg border border-border/50'),
         )}
       >
         <DesktopNav />
