@@ -44,7 +44,7 @@
   --font-sans: Inter, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
-  --radius: 0.5rem;
+  --radius: 0.325rem;
   --shadow-x: 0px;
   --shadow-y: 2px;
   --shadow-blur: 10px;
@@ -101,10 +101,16 @@
   --sidebar-accent-foreground: oklch(0.866 0.1101 333.0936);
   --sidebar-border: oklch(0.252 0 0);
   --sidebar-ring: oklch(0.7972 0.1465 221.3109);
+  --shelf-primary: oklch(0.45 0.12 221);
+  --shelf-secondary: oklch(0.55 0.14 99);
+  --shelf-accent: oklch(0.52 0.09 333);
+  --shelf-destructive: oklch(0.18 0.04 29);
+  --shelf-neutral: oklch(0.15 0 0);
+  --shelf-card: oklch(0.08 0 0);
   --font-sans: Inter, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
-  --radius: 0.5rem;
+  --radius: 0.325rem;
   --shadow-x: 0px;
   --shadow-y: 4px;
   --shadow-blur: 15px;

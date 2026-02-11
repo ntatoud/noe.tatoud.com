@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { SoundToggle } from '@/components/sound-toggle'
 import { DesktopNav } from '@/layout/desktop-nav'
 import { cn } from '@/lib/utils'
 
@@ -20,7 +21,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 hidden w-full items-center justify-center sm:flex',
+        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 sm:flex',
         'transition-all duration-100',
         scrolled && 'pointer-events-none top-2',
       )}
@@ -33,6 +34,9 @@ export function Header() {
         )}
       >
         <DesktopNav />
+      </div>
+      <div className="pointer-events-auto absolute right-5">
+        <SoundToggle />
       </div>
     </header>
   )
