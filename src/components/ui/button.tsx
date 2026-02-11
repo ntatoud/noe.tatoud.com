@@ -2,6 +2,7 @@ import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { cva } from 'class-variance-authority'
 import type { VariantProps } from 'class-variance-authority'
 
+import { playClickSound } from '@/lib/sound'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
@@ -42,16 +43,27 @@ const buttonVariants = cva(
   },
 )
 
+const SILENT_VARIANTS = new Set(['link'])
+
 function Button({
   className,
   variant = 'default',
   size = 'default',
+  onClick,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  const handleClick: typeof onClick = SILENT_VARIANTS.has(variant ?? 'default')
+    ? onClick
+    : (e) => {
+        playClickSound()
+        onClick?.(e)
+      }
+
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      onClick={handleClick}
       {...props}
     />
   )
