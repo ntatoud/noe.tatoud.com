@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
+import ClickSpark from '@/components/click-spark'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
 import { MobileNav } from '@/layout/mobile-nav'
-import ClickSpark from '@/components/ClickSpark'
 
 function ScrollToTop() {
   const router = useRouter()

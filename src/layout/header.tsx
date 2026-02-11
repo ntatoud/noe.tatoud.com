@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { SoundToggle } from '@/components/sound-toggle'
 import { DesktopNav } from '@/layout/desktop-nav'
-import { SoundToggle } from '@/layout/sound-toggle'
 import { cn } from '@/lib/utils'
 
 const SCROLL_THRESHOLD = 50

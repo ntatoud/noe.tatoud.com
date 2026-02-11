@@ -17,9 +17,6 @@ export function PageHome() {
           >
             Get in touch
           </Button>
-          <Button size="lg" variant="secondary">
-            Test
-          </Button>
         </HeroActions>
       </Hero>
       <ArticlesSection />
