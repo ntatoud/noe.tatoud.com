@@ -10,8 +10,15 @@ export function PageHome() {
         <HeroTitle>Noé Tatoud</HeroTitle>
         <HeroSubtitle>Frontend web developer</HeroSubtitle>
         <HeroActions>
-          <Button size="lg" render={<a href="mailto:noe.tatoud@gmail.com" />}>
+          <Button
+            size="lg"
+            render={<a href="mailto:noe.tatoud@gmail.com" />}
+            nativeButton={false}
+          >
             Get in touch
+          </Button>
+          <Button size="lg" variant="secondary">
+            Test
           </Button>
         </HeroActions>
       </Hero>
