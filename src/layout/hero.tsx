@@ -15,7 +15,7 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
           color1="#00D1FF"
           color2="#FFB8F2"
           color3="#00D1FF"
-          timeSpeed={0.25}
+          timeSpeed={0.5}
           colorBalance={0}
           warpStrength={1}
           warpFrequency={5}
@@ -25,7 +25,7 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
           blendSoftness={0.05}
           rotationAmount={500}
           noiseScale={2}
-          grainAmount={0.2}
+          grainAmount={0}
           grainScale={2}
           grainAnimated
           contrast={1.5}
