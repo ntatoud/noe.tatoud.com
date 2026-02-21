@@ -26,7 +26,7 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
           {heroSrc && (
             <img
               src={heroSrc}
-              alt=""
+              alt={frontmatter.title}
               className="aspect-video w-full max-w-2xl rounded-lg object-cover"
             />
           )}

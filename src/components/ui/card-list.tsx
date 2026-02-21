@@ -15,11 +15,11 @@ export function Card({ className, ...props }: ComponentProps<'article'>) {
   return (
     <article
       className={cn(
-        'group relative rounded-xl border border-border',
+        'group relative rounded-xl border border-border ring-1 ring-foreground/15',
         'shadow-[0_4px_0_0_var(--shelf-card)]',
         'has-[>a]:transition-all has-[>a]:duration-200',
-        'has-[>a]:hover:-translate-y-0.5 has-[>a]:hover:border-primary/30 has-[>a]:hover:border-b-primary has-[>a]:hover:shadow-[0_6px_0_0_var(--shelf-card)]',
-        'has-[>a]:focus-within:-translate-y-0.5 has-[>a]:focus-within:border-primary/30 has-[>a]:focus-within:border-b-primary has-[>a]:focus-within:shadow-[0_6px_0_0_var(--shelf-card)]',
+        'has-[>a]:hover:-translate-y-[2px] has-[>a]:hover:border-primary/30 has-[>a]:hover:border-b-primary has-[>a]:hover:shadow-[0_6px_0_0_var(--shelf-card)]',
+        'has-[>a]:focus-within:-translate-y-[2px] has-[>a]:focus-within:border-primary/30 has-[>a]:focus-within:border-b-primary has-[>a]:focus-within:shadow-[0_6px_0_0_var(--shelf-card)]',
         'has-[>a]:active:translate-y-[2px] has-[>a]:active:shadow-[0_2px_0_0_var(--shelf-card)]',
         className,
       )}
@@ -39,7 +39,7 @@ export function CardImage({
 }) {
   return (
     <div className={cn('absolute inset-0 -z-10', className)}>
-      <img src={src} alt={alt} className="h-full w-full object-cover" />
+      <img src={src} alt={alt} className="size-full object-cover" />
       <div className="absolute inset-0 bg-linear-to-t from-card via-card/90 to-card/40" />
     </div>
   )
@@ -57,10 +57,7 @@ export function CardContent({ className, ...props }: ComponentProps<'div'>) {
 export function CardTitle({ className, ...props }: ComponentProps<'h2'>) {
   return (
     <h2
-      className={cn(
-        'font-head text-xl font-semibold tracking-tight',
-        className,
-      )}
+      className={cn('font-head text-xl font-semibold text-balance', className)}
       {...props}
     />
   )
@@ -68,7 +65,10 @@ export function CardTitle({ className, ...props }: ComponentProps<'h2'>) {
 
 export function CardDescription({ className, ...props }: ComponentProps<'p'>) {
   return (
-    <p className={cn('mt-2 text-muted-foreground', className)} {...props} />
+    <p
+      className={cn('mt-2 text-pretty text-muted-foreground', className)}
+      {...props}
+    />
   )
 }
 

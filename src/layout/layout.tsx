@@ -21,7 +21,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <ClickSpark>
         <ScrollToTop />
         <Header />
-        <main className="flex min-w-0 flex-1 flex-col pb-20 sm:pb-0">
+        <main className="flex min-w-0 flex-1 flex-col pb-[calc(5rem+var(--spacing-safe-bottom))] sm:pb-0">
           {children}
         </main>
         <Footer />
