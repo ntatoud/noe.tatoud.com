@@ -5,7 +5,6 @@ import type { Person, WebSite } from 'schema-dts'
 import { PageHome } from '@/features/home/page-home'
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { getProjects } from '@/features/projects/get-projects'
-import { getEvents } from '@/features/events/get-events'
 import { ogMeta } from '@/features/og/meta'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
@@ -49,13 +48,12 @@ export const Route = createFileRoute('/')({
     }
   },
   loader: async () => {
-    const [posts, projects, events, origin] = await Promise.all([
+    const [posts, projects, origin] = await Promise.all([
       getBlogPosts(),
       getProjects(),
-      getEvents(),
       getOrigin(),
     ])
-    return { posts, projects, events, origin }
+    return { posts, projects, origin }
   },
 })
 

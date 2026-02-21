@@ -31,7 +31,6 @@
     "fumadocs-core": "16.4.11",
     "fumadocs-mdx": "14.2.6",
     "fumadocs-ui": "16.4.11",
-    "maplibre-gl": "5.17.0",
     "nuqs": "2.8.8",
     "ogl": "1.0.11",
     "react": "19.3.0-canary-24d8716e-20260123",

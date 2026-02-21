@@ -25,7 +25,7 @@ export function ArticlesSection() {
             render={<Link to="/blog" />}
             nativeButton={false}
           >
-            See more <HugeiconsIcon icon={ArrowRight} />
+            All articles <HugeiconsIcon icon={ArrowRight} aria-hidden />
           </Button>
         </SectionActions>
       </SectionHeader>
