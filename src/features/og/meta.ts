@@ -2,7 +2,11 @@ import type { OgImageProps } from '@/features/og/og-image'
 import { serializeOgSearchParams } from '@/features/og/search-params'
 import { siteUrl } from '@/lib/site'
 
-type OgMetaOptions = OgImageProps & { url: string; origin: string }
+type OgMetaOptions = OgImageProps & {
+  url: string
+  origin: string
+  type?: 'article' | 'website'
+}
 
 export function ogMeta({
   title,
@@ -12,6 +16,7 @@ export function ogMeta({
   url,
   hero,
   origin,
+  type = 'article',
 }: OgMetaOptions) {
   const ogImageUrl = siteUrl(
     origin,
@@ -22,7 +27,7 @@ export function ogMeta({
   return [
     { title },
     { name: 'description', content: description ?? '' },
-    { property: 'og:type', content: 'article' },
+    { property: 'og:type', content: type },
     { property: 'og:title', content: title },
     { property: 'og:description', content: description ?? '' },
     { property: 'og:image', content: ogImageUrl },
