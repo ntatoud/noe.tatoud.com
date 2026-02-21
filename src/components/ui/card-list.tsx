@@ -39,7 +39,7 @@ export function CardImage({
 }) {
   return (
     <div className={cn('absolute inset-0 -z-10', className)}>
-      <img src={src} alt={alt} className="h-full w-full object-cover" />
+      <img src={src} alt={alt} className="size-full object-cover" />
       <div className="absolute inset-0 bg-linear-to-t from-card via-card/90 to-card/40" />
     </div>
   )
@@ -57,10 +57,7 @@ export function CardContent({ className, ...props }: ComponentProps<'div'>) {
 export function CardTitle({ className, ...props }: ComponentProps<'h2'>) {
   return (
     <h2
-      className={cn(
-        'font-head text-xl font-semibold tracking-tight',
-        className,
-      )}
+      className={cn('font-head text-xl font-semibold text-balance', className)}
       {...props}
     />
   )
@@ -68,7 +65,10 @@ export function CardTitle({ className, ...props }: ComponentProps<'h2'>) {
 
 export function CardDescription({ className, ...props }: ComponentProps<'p'>) {
   return (
-    <p className={cn('mt-2 text-muted-foreground', className)} {...props} />
+    <p
+      className={cn('mt-2 text-pretty text-muted-foreground', className)}
+      {...props}
+    />
   )
 }
 

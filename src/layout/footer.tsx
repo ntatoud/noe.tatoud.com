@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="border-t border-border bg-card">
       <div className="container mx-auto flex max-w-3xl flex-col items-center gap-8 px-4 py-12 md:px-0">
         <div className="flex flex-col items-center gap-4">
-          <p className="font-head text-lg font-semibold tracking-tight">
+          <p className="font-head text-lg font-semibold text-balance">
             Let&apos;s connect
           </p>
           <div className="flex items-center gap-1">
@@ -39,7 +39,7 @@ export function Footer() {
             <HugeiconsIcon icon={SourceCodeIcon} size={16} />
             <span>Built with React, TanStack & Tailwind</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-pretty text-muted-foreground">
             &copy; {new Date().getFullYear()} Noe Tatoud. All rights reserved.
           </p>
         </div>
@@ -74,9 +74,9 @@ function FooterLink({
       <HugeiconsIcon icon={icon} size={22} />
       <span
         className={cn(
-          'absolute -bottom-1 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-primary',
-          'transition-all duration-200',
-          'group-hover:w-5',
+          'absolute -bottom-1 left-1/2 h-0.5 w-5 origin-center -translate-x-1/2 scale-x-0 rounded-full bg-primary',
+          'transition-transform duration-200',
+          'group-hover:scale-x-100',
         )}
       />
     </a>

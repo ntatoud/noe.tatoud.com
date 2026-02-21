@@ -15,7 +15,7 @@ import { formatDate } from '@/lib/format'
 export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
   if (posts.length === 0) {
     return (
-      <p className="text-center text-muted-foreground">
+      <p className="text-center text-pretty text-muted-foreground">
         No blog posts yet. Check back soon!
       </p>
     )

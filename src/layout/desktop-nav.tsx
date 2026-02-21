@@ -23,10 +23,10 @@ export function DesktopNav() {
           {item.label}
           <span
             className={cn(
-              'absolute -bottom-0.5 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-primary',
-              'transition-all duration-200',
-              'group-hover:w-5',
-              'group-data-[status=active]:w-5',
+              'absolute -bottom-0.5 left-1/2 h-0.5 w-5 origin-center -translate-x-1/2 scale-x-0 rounded-full bg-primary',
+              'transition-transform duration-200',
+              'group-hover:scale-x-100',
+              'group-data-[status=active]:scale-x-100',
             )}
           />
         </Link>

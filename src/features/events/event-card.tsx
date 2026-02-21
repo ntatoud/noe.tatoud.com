@@ -10,7 +10,7 @@ export function EventCard({ event }: { event: TechEvent }) {
   return (
     <div className="space-y-2 p-3">
       <div className="flex flex-col gap-1.5">
-        <h3 className="pr-4 font-head text-sm leading-tight font-semibold">
+        <h3 className="pr-4 font-head text-sm leading-tight font-semibold text-balance">
           {event.name}
         </h3>
         <Badge variant="outline" className="w-fit text-[10px]">
@@ -28,7 +28,7 @@ export function EventCard({ event }: { event: TechEvent }) {
         </span>
       </div>
       {event.talkTitle && (
-        <p className="text-xs text-muted-foreground italic">
+        <p className="text-xs text-pretty text-muted-foreground italic">
           {event.talkTitle}
         </p>
       )}

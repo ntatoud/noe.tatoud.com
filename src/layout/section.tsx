@@ -19,7 +19,10 @@ function SectionTitle(props: React.ComponentProps<typeof Text>) {
       render={<h2 />}
       data-slot="section-title"
       {...props}
-      className={cn('font-head text-3xl font-bold uppercase', props.className)}
+      className={cn(
+        'font-head text-3xl font-bold text-balance uppercase',
+        props.className,
+      )}
     />
   )
 }

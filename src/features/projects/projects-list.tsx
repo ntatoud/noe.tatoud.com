@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 export function ProjectsList({ projects }: { projects: Array<Project> }) {
   if (projects.length === 0) {
     return (
-      <p className="text-center text-muted-foreground">
+      <p className="text-center text-pretty text-muted-foreground">
         No projects yet. Check back soon!
       </p>
     )

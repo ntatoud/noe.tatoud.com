@@ -10,7 +10,7 @@ export function MobileNav() {
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 sm:hidden',
         'border-t border-border/50',
-        'bg-background/80 backdrop-blur-lg',
+        'bg-background/95 backdrop-blur-sm',
         'pb-[env(safe-area-inset-bottom)]',
       )}
     >
