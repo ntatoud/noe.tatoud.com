@@ -21,13 +21,14 @@ export function MobileNav() {
             {...item}
             activeProps={{ className: 'text-primary' }}
             className={cn(
-              'flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-lg px-3 py-1.5',
+              'group relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-lg px-3 py-1.5',
               'text-muted-foreground',
               'transition-colors duration-200',
               'hover:text-foreground',
               'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
             )}
           >
+            <span className="absolute top-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-primary opacity-0 transition-opacity duration-200 group-[.text-primary]:opacity-100" />
             <HugeiconsIcon icon={item.icon} size={22} />
             <span className="text-[0.625rem] leading-none font-medium">
               {item.label}
