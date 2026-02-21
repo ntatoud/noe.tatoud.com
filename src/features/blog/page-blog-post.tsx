@@ -2,6 +2,7 @@ import browserCollections from 'fumadocs-mdx:collections/browser'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Suspense } from 'react'
 import { CardTags } from '@/components/ui/card-list'
+import { Image } from '@/components/ui/image'
 import { formatDate } from '@/lib/format'
 import { Hero, HeroMeta, HeroTitle } from '@/layout/hero'
 
@@ -24,10 +25,12 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
           </HeroMeta>
 
           {heroSrc && (
-            <img
+            <Image
               src={heroSrc}
               alt={frontmatter.title}
               className="aspect-video w-full max-w-2xl rounded-lg object-cover"
+              sizes="(max-width: 672px) 100vw, 672px"
+              priority
             />
           )}
 

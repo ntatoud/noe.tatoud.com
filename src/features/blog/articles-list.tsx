@@ -28,12 +28,18 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
 
   return (
     <CardList>
-      {posts.map((post) => (
+      {posts.map((post, index) => (
         <Card
           key={post.slug}
           className={post.hero ? 'min-h-[280px] overflow-hidden' : ''}
         >
-          {post.hero && <CardImage src={post.hero} alt={post.title} />}
+          {post.hero && (
+            <CardImage
+              src={post.hero}
+              alt={post.title}
+              priority={index === 0}
+            />
+          )}
           <Link
             to="/blog/$"
             params={{ _splat: post.slug }}

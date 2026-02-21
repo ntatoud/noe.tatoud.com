@@ -36,12 +36,12 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body className="dark">
-        <RootProvider>
+        <RootProvider theme={{ enabled: false }}>
           <Layout>{children}</Layout>
           <TanStackDevtools
             config={{

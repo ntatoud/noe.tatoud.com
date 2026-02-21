@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { Image } from '@/components/ui/image'
 import { cn } from '@/lib/utils'
 
 export function CardList({ className, ...props }: ComponentProps<'div'>) {
@@ -32,14 +33,22 @@ export function CardImage({
   src,
   alt = '',
   className,
+  priority = false,
 }: {
   src: string
   alt?: string
   className?: string
+  priority?: boolean
 }) {
   return (
     <div className={cn('absolute inset-0 -z-10', className)}>
-      <img src={src} alt={alt} className="size-full object-cover" />
+      <Image
+        src={src}
+        alt={alt}
+        className="size-full object-cover"
+        sizes="(max-width: 640px) 100vw, 50vw"
+        priority={priority}
+      />
       <div className="absolute inset-0 bg-linear-to-t from-card via-card/90 to-card/40" />
     </div>
   )
