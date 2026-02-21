@@ -11,7 +11,7 @@ export function MobileNav() {
         'fixed inset-x-0 bottom-0 z-50 sm:hidden',
         'border-t border-border/50',
         'bg-background/95 backdrop-blur-sm',
-        'pb-[env(safe-area-inset-bottom)]',
+        'pb-safe-bottom',
       )}
     >
       <div className="flex flex-row items-center justify-around px-4 pt-2 pb-2">
