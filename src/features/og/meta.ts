@@ -39,5 +39,6 @@ export function ogMeta({
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description ?? '' },
     { name: 'twitter:image', content: ogImageUrl },
+    { name: 'twitter:url', content: pageUrl },
   ]
 }
