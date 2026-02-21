@@ -1,8 +1,11 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
+import type { BlogPosting } from 'schema-dts'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
+import { jsonLd } from '@/lib/json-ld'
+import { siteUrl } from '@/lib/site'
 import { blog } from '@/lib/source'
 
 export const Route = createFileRoute('/blog/$')({
@@ -16,7 +19,22 @@ export const Route = createFileRoute('/blog/$')({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
 
-    return { meta: ogMeta(loaderData) }
+    return {
+      meta: [
+        ...ogMeta(loaderData),
+        jsonLd<BlogPosting>({
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: loaderData.title,
+          ...(loaderData.description && {
+            description: loaderData.description,
+          }),
+          author: { '@type': 'Person', name: loaderData.author },
+          datePublished: loaderData.date,
+          url: siteUrl(loaderData.origin, loaderData.url),
+        }),
+      ],
+    }
   },
 })
 
@@ -32,6 +50,7 @@ const serverLoader = createServerFn({ method: 'GET' })
       title: page.data.title,
       description: page.data.description ?? null,
       author: page.data.author,
+      date: new Date(page.data.date).toISOString().split('T')[0],
       tags: page.data.tags ?? null,
       url: page.url,
       hero: (page.data._exports.hero as string | undefined) ?? null,

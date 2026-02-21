@@ -18,12 +18,16 @@ export const Route = createRootRoute({
       {
         title: 'Noé Tatoud',
       },
+      { name: 'theme-color', content: '#000000' },
     ],
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
       },
+      { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+      { rel: 'apple-touch-icon', href: '/logo192.png' },
+      { rel: 'manifest', href: '/manifest.json' },
     ],
   }),
 
