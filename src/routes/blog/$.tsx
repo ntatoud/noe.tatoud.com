@@ -1,8 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
+import type { BlogPosting } from 'schema-dts'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
+import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 import { blog } from '@/lib/source'
 
@@ -20,19 +22,17 @@ export const Route = createFileRoute('/blog/$')({
     return {
       meta: [
         ...ogMeta(loaderData),
-        {
-          'script:ld+json': {
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: loaderData.title,
-            ...(loaderData.description && {
-              description: loaderData.description,
-            }),
-            author: { '@type': 'Person', name: loaderData.author },
-            datePublished: loaderData.date,
-            url: siteUrl(loaderData.origin, loaderData.url),
-          },
-        } as never,
+        jsonLd<BlogPosting>({
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: loaderData.title,
+          ...(loaderData.description && {
+            description: loaderData.description,
+          }),
+          author: { '@type': 'Person', name: loaderData.author },
+          datePublished: loaderData.date,
+          url: siteUrl(loaderData.origin, loaderData.url),
+        }),
       ],
     }
   },

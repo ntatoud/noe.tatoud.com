@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
+import type { Person, WebSite } from 'schema-dts'
 import { PageHome } from '@/features/home/page-home'
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { getProjects } from '@/features/projects/get-projects'
 import { getEvents } from '@/features/events/get-events'
 import { ogMeta } from '@/features/og/meta'
+import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
 const getOrigin = createServerFn({ method: 'GET' }).handler(
@@ -30,23 +32,19 @@ export const Route = createFileRoute('/')({
           origin: loaderData.origin,
           type: 'website',
         }),
-        {
-          'script:ld+json': {
-            '@context': 'https://schema.org',
-            '@type': 'Person',
-            name: 'Noé Tatoud',
-            url: homeUrl,
-            jobTitle: 'Frontend Developer',
-          },
-        } as never,
-        {
-          'script:ld+json': {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: 'Noé Tatoud',
-            url: homeUrl,
-          },
-        } as never,
+        jsonLd<Person>({
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: 'Noé Tatoud',
+          url: homeUrl,
+          jobTitle: 'Frontend Developer',
+        }),
+        jsonLd<WebSite>({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Noé Tatoud',
+          url: homeUrl,
+        }),
       ],
     }
   },
