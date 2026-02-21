@@ -15,11 +15,11 @@ export function Card({ className, ...props }: ComponentProps<'article'>) {
   return (
     <article
       className={cn(
-        'group relative rounded-xl border border-border',
+        'group relative rounded-xl border border-border ring-1 ring-foreground/15',
         'shadow-[0_4px_0_0_var(--shelf-card)]',
         'has-[>a]:transition-all has-[>a]:duration-200',
-        'has-[>a]:hover:-translate-y-0.5 has-[>a]:hover:border-primary/30 has-[>a]:hover:border-b-primary has-[>a]:hover:shadow-[0_6px_0_0_var(--shelf-card)]',
-        'has-[>a]:focus-within:-translate-y-0.5 has-[>a]:focus-within:border-primary/30 has-[>a]:focus-within:border-b-primary has-[>a]:focus-within:shadow-[0_6px_0_0_var(--shelf-card)]',
+        'has-[>a]:hover:-translate-y-[2px] has-[>a]:hover:border-primary/30 has-[>a]:hover:border-b-primary has-[>a]:hover:shadow-[0_6px_0_0_var(--shelf-card)]',
+        'has-[>a]:focus-within:-translate-y-[2px] has-[>a]:focus-within:border-primary/30 has-[>a]:focus-within:border-b-primary has-[>a]:focus-within:shadow-[0_6px_0_0_var(--shelf-card)]',
         'has-[>a]:active:translate-y-[2px] has-[>a]:active:shadow-[0_2px_0_0_var(--shelf-card)]',
         className,
       )}

@@ -30,7 +30,7 @@ function HeroSubtitle(props: React.ComponentProps<'p'>) {
     <p
       {...props}
       className={cn(
-        'text-center text-xl text-pretty text-accent',
+        'text-center text-xl text-pretty text-primary',
         props.className,
       )}
     />

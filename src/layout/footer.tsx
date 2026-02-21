@@ -36,7 +36,7 @@ export function Footer() {
 
         <div className="flex w-full flex-col items-center gap-4 border-t border-border pt-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <HugeiconsIcon icon={SourceCodeIcon} size={16} />
+            <HugeiconsIcon icon={SourceCodeIcon} size={16} aria-hidden="true" />
             <span>Built with React, TanStack & Tailwind</span>
           </div>
           <p className="text-sm text-pretty text-muted-foreground">

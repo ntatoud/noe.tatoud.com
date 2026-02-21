@@ -21,14 +21,14 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 pt-[env(safe-area-inset-top)] sm:flex',
-        'transition-transform duration-100',
+        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 pt-safe-top sm:flex',
+        'transition-transform duration-200',
         scrolled && 'pointer-events-none translate-y-2',
       )}
     >
       <div
         className={cn(
-          'pointer-events-auto transition-[border,background-color,box-shadow,backdrop-filter] duration-100',
+          'pointer-events-auto transition-[border,background-color,box-shadow,backdrop-filter] duration-200',
           scrolled &&
             'rounded-md border border-border bg-card shadow-lg backdrop-blur-sm',
         )}
