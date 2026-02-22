@@ -8,6 +8,7 @@ export function OgImage({
   author,
   tags,
   hero,
+  avatar,
 }: OgImageProps) {
   return (
     <div
@@ -87,12 +88,23 @@ export function OgImage({
             </div>
           ))}
         </div>
-        {author && (
-          <div
-            tw="text-xl font-medium"
-            style={{ color: '#999999', letterSpacing: '0.05em' }}
-          >
-            {author}
+        {(avatar || author) && (
+          <div tw="flex items-center">
+            {avatar && (
+              <img
+                src={avatar}
+                tw="h-12 w-12 mr-3"
+                style={{ imageRendering: 'pixelated' }}
+              />
+            )}
+            {author && (
+              <div
+                tw="text-xl font-medium"
+                style={{ color: '#999999', letterSpacing: '0.05em' }}
+              >
+                {author}
+              </div>
+            )}
           </div>
         )}
       </div>

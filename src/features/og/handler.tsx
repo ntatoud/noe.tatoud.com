@@ -3,9 +3,11 @@ import { loadOgSearchParams } from '@/features/og/search-params'
 import { OgImage } from '@/features/og/og-image'
 
 export async function handleOgImage(request: Request) {
-  const { title, description, author, tags, hero } = loadOgSearchParams(request)
+  const { title, description, author, tags, hero, avatar } =
+    loadOgSearchParams(request)
   const origin = new URL(request.url).origin
   const heroUrl = hero ? `${origin}${hero}` : null
+  const avatarUrl = `${origin}${avatar ?? '/pixel-avatar.png'}`
 
   const fontData = await fetch(
     new URL('/fonts/GeistPixel-Square.woff2', origin),
@@ -18,6 +20,7 @@ export async function handleOgImage(request: Request) {
       author={author}
       tags={tags}
       hero={heroUrl}
+      avatar={avatarUrl}
     />,
     {
       width: 1200,

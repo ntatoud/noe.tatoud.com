@@ -2,10 +2,11 @@ import type { OgImageProps } from '@/features/og/og-image'
 import { serializeOgSearchParams } from '@/features/og/search-params'
 import { siteUrl } from '@/lib/site'
 
-type OgMetaOptions = OgImageProps & {
+type OgMetaOptions = Omit<OgImageProps, 'avatar'> & {
   url: string
   origin: string
   type?: 'article' | 'website'
+  avatar?: string | null
 }
 
 export function ogMeta({
@@ -15,12 +16,13 @@ export function ogMeta({
   tags,
   url,
   hero,
+  avatar = null,
   origin,
   type = 'article',
 }: OgMetaOptions) {
   const ogImageUrl = siteUrl(
     origin,
-    `/api/og${serializeOgSearchParams({ title, description, author, tags, hero })}`,
+    `/api/og${serializeOgSearchParams({ title, description, author, tags, hero, avatar })}`,
   )
   const pageUrl = siteUrl(origin, url)
 

@@ -11,6 +11,7 @@ export const ogSearchParams = {
   author: parseAsString,
   tags: parseAsArrayOf(parseAsString),
   hero: parseAsString,
+  avatar: parseAsString,
 }
 
 export const loadOgSearchParams = createLoader(ogSearchParams)

@@ -28,6 +28,7 @@ export const Route = createFileRoute('/')({
           author: 'Noé Tatoud',
           tags: null,
           hero: null,
+          avatar: '/pixel-avatar.png',
           url: '/',
           origin: loaderData.origin,
           type: 'website',
