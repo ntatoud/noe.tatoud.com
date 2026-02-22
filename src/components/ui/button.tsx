@@ -6,34 +6,30 @@ import { playClickSound } from '@/lib/sound'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button relative inline-flex shrink-0 cursor-pointer items-center justify-center border-2 border-transparent bg-clip-padding font-mono text-sm font-medium tracking-wide whitespace-nowrap uppercase transition-[filter,transform] duration-75 outline-none select-none clip-pixel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-40 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground shadow-[0_3px_0_0_var(--shelf-primary)] active:translate-y-[2px] active:shadow-[0_1px_0_0_var(--shelf-primary)] [a]:hover:bg-primary/80',
+          'border-primary bg-primary text-primary-foreground [filter:drop-shadow(0_4px_0_var(--shelf-secondary))] hover:-translate-y-0.5 hover:brightness-90 hover:[filter:drop-shadow(0_6px_0_var(--shelf-secondary))] active:translate-y-[3px] active:[filter:drop-shadow(0_1px_0_var(--shelf-secondary))]',
         outline:
-          'border-border bg-background shadow-[0_3px_0_0_var(--shelf-neutral)] hover:bg-muted hover:text-foreground active:translate-y-[2px] active:shadow-[0_1px_0_0_var(--shelf-neutral)] aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+          'bg-border bg-clip-border text-foreground [filter:drop-shadow(0_4px_0_var(--shelf-neutral))] before:absolute before:inset-0 before:-z-10 before:bg-background before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:[filter:drop-shadow(0_6px_0_var(--shelf-neutral))] hover:before:bg-muted active:translate-y-[3px] active:[filter:drop-shadow(0_1px_0_var(--shelf-neutral))]',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-[0_3px_0_0_var(--shelf-secondary)] hover:bg-secondary/80 active:translate-y-[2px] active:shadow-[0_1px_0_0_var(--shelf-secondary)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
-        ghost:
-          'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
+          'bg-border bg-clip-border text-secondary-foreground [filter:drop-shadow(0_4px_0_var(--shelf-neutral))] before:absolute before:inset-0 before:-z-10 before:bg-secondary before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:[filter:drop-shadow(0_6px_0_var(--shelf-neutral))] hover:before:bg-secondary/80 active:translate-y-[3px] active:[filter:drop-shadow(0_1px_0_var(--shelf-neutral))]',
+        ghost: 'border-transparent hover:bg-muted active:bg-muted/80',
         destructive:
-          'bg-destructive text-destructive-foreground shadow-[0_3px_0_0_var(--shelf-destructive)] hover:bg-destructive/90 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 active:translate-y-[2px] active:shadow-[0_1px_0_0_var(--shelf-destructive)]',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'border-destructive bg-destructive text-destructive-foreground [filter:drop-shadow(0_4px_0_var(--shelf-destructive))] hover:-translate-y-0.5 hover:bg-destructive/90 hover:[filter:drop-shadow(0_6px_0_var(--shelf-destructive))] active:translate-y-[3px] active:[filter:drop-shadow(0_1px_0_var(--shelf-destructive))]',
+        link: 'clip-none border-transparent text-primary underline-offset-4 hover:underline',
       },
       size: {
-        default:
-          'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
-        icon: 'size-8',
-        'icon-xs':
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        'icon-sm':
-          'size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg',
-        'icon-lg': 'size-9',
+        default: 'h-9 gap-2 px-4',
+        xs: 'h-6 gap-1 px-2 text-xs',
+        sm: 'h-7 gap-1.5 px-3 text-xs',
+        lg: 'h-11 gap-2 px-6 text-base',
+        icon: 'size-9',
+        'icon-xs': 'size-6',
+        'icon-sm': 'size-7',
+        'icon-lg': 'size-11',
       },
     },
     defaultVariants: {

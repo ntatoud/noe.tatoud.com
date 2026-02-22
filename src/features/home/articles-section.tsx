@@ -1,6 +1,5 @@
-import { ArrowRight } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { Link, useLoaderData } from '@tanstack/react-router'
+import { PixelArrowRight } from '@/components/icons'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -25,7 +24,7 @@ export function ArticlesSection() {
             render={<Link to="/blog" />}
             nativeButton={false}
           >
-            All articles <HugeiconsIcon icon={ArrowRight} aria-hidden />
+            All articles <PixelArrowRight size={16} aria-hidden />
           </Button>
         </SectionActions>
       </SectionHeader>

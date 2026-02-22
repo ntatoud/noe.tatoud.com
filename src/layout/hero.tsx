@@ -5,7 +5,7 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
   return (
     <div
       className={cn(
-        'relative flex min-h-[50vh] flex-col items-center justify-center overflow-hidden pt-12 md:pt-16',
+        'relative flex flex-col items-center justify-center overflow-hidden pt-20 pb-12 md:pt-24 md:pb-16',
         className,
       )}
     >
@@ -20,7 +20,10 @@ function HeroTitle(props: React.ComponentProps<typeof SectionTitle>) {
       render={<h1 />}
       data-slot="hero-title"
       {...props}
-      className={cn('text-5xl text-balance', props.className)}
+      className={cn(
+        'text-4xl leading-tight tracking-wide text-balance sm:text-5xl',
+        props.className,
+      )}
     />
   )
 }
@@ -30,7 +33,7 @@ function HeroSubtitle(props: React.ComponentProps<'p'>) {
     <p
       {...props}
       className={cn(
-        'text-center text-xl text-pretty text-primary',
+        'text-center font-mono text-base text-pretty text-muted-foreground',
         props.className,
       )}
     />
