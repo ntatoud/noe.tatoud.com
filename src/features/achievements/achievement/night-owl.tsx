@@ -50,7 +50,7 @@ export function useNightOwlAchievement() {
           timeZone: tz,
         }).format(new Date()),
       ) % 24 // Intl may return 24 for midnight; normalise to 0
-    if (hour > FROM && hour < TO)
+    if (hour >= FROM && hour < TO)
       useAchievementsStore.getState().actions.unlock('night-owl')
   }, [])
 }
