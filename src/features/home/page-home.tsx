@@ -9,6 +9,21 @@ export function PageHome() {
   return (
     <div>
       <Hero className="pb-16">
+        <img
+          src="/pixel-avatar.png"
+          alt="Pixel art portrait of Noé Tatoud"
+          width={160}
+          height={160}
+          className="mb-1 select-none"
+          style={{
+            imageRendering: 'pixelated',
+            maskImage:
+              'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
+          }}
+          draggable={false}
+        />
         <HeroTitle>Noé Tatoud</HeroTitle>
         <HeroSubtitle>
           Frontend developer crafting pixel-perfect interfaces
