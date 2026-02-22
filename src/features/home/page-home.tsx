@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { Image } from '@/components/ui/image'
 import { ExperiencesSection } from '@/features/experiences/experiences-section'
 import { ArticlesSection } from '@/features/home/articles-section'
 import { ProjectsSection } from '@/features/home/projects-section'
@@ -9,11 +10,14 @@ export function PageHome() {
   return (
     <div>
       <Hero className="pb-16">
-        <img
+        <Image
           src="/pixel-avatar.png"
           alt="Pixel art portrait of Noé Tatoud"
           width={160}
           height={160}
+          priority
+          widths={[160, 320]}
+          sizes="160px"
           className="mb-1 select-none"
           style={{
             imageRendering: 'pixelated',
