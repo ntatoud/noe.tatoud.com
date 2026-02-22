@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
 import type { BlogPosting } from 'schema-dts'
+import { PageError } from '@/components/page-error'
 import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
 import { jsonLd } from '@/lib/json-ld'
@@ -10,6 +11,13 @@ import { blog } from '@/lib/source'
 
 export const Route = createFileRoute('/blog/$')({
   component: Page,
+  notFoundComponent: () => (
+    <PageError
+      code="404"
+      title="Article not found"
+      description="This article doesn't exist or has been removed."
+    />
+  ),
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/') ?? []
     const data = await serverLoader({ data: slugs })

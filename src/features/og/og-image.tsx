@@ -12,40 +12,39 @@ export function OgImage({
   return (
     <div
       tw="flex h-full w-full flex-col justify-between p-16"
-      style={{ backgroundColor: '#000000', fontFamily: 'Geist' }}
+      style={{
+        backgroundColor: '#000000',
+        fontFamily: 'Geist Pixel',
+        letterSpacing: '0.05em',
+      }}
     >
-      {/* Pink tinted overlay */}
-      <div
-        tw="absolute inset-0"
-        style={{ backgroundColor: '#FFB8F2', opacity: 0.06 }}
-      />
-
       {/* Hero background */}
       {hero && (
         <img
           src={hero}
           tw="absolute inset-0 h-full w-full"
-          style={{ objectFit: 'cover', opacity: 0.2 }}
+          style={{ objectFit: 'cover', opacity: 0.15 }}
         />
       )}
 
-      {/* Accent bar — gradient from primary blue to accent pink */}
+      {/* White accent bar — solid, pixel-style */}
       <div
         tw="absolute left-0 top-0 h-full w-2"
-        style={{
-          backgroundImage: 'linear-gradient(to bottom, #00D1FF, #FFB8F2)',
-        }}
+        style={{ backgroundColor: '#FFFFFF' }}
       />
 
       {/* Top: site branding */}
       <div tw="flex items-center">
         <div
-          tw="text-2xl font-bold tracking-tight"
-          style={{ color: '#00D1FF' }}
+          tw="text-2xl font-bold"
+          style={{ color: '#FFFFFF', letterSpacing: '0.05em' }}
         >
           noe.tatoud.com
         </div>
-        <div tw="ml-3 text-xl" style={{ color: '#DEDEDE' }}>
+        <div
+          tw="ml-3 text-xl"
+          style={{ color: '#666666', letterSpacing: '0.05em' }}
+        >
           / blog
         </div>
       </div>
@@ -53,13 +52,16 @@ export function OgImage({
       {/* Middle: title + description */}
       <div tw="flex flex-col">
         <div
-          tw="text-6xl font-bold leading-tight tracking-tight"
-          style={{ color: '#FFFFFF' }}
+          tw="text-6xl font-bold leading-tight"
+          style={{ color: '#FFFFFF', letterSpacing: '0.05em' }}
         >
           {title.length > 80 ? title.slice(0, 80) + '...' : title}
         </div>
         {description && (
-          <div tw="mt-6 text-2xl leading-relaxed" style={{ color: '#DEDEDE' }}>
+          <div
+            tw="mt-6 text-2xl leading-relaxed"
+            style={{ color: '#999999', letterSpacing: '0.02em' }}
+          >
             {description.length > 140
               ? description.slice(0, 140) + '...'
               : description}
@@ -73,15 +75,23 @@ export function OgImage({
           {tags?.slice(0, 4).map((tag) => (
             <div
               key={tag}
-              tw="mr-3 flex rounded-full px-4 py-2 text-sm font-medium"
-              style={{ backgroundColor: '#1A1A1A', color: '#00D1FF' }}
+              tw="mr-3 flex px-4 py-2 text-sm font-medium"
+              style={{
+                backgroundColor: '#1A1A1A',
+                color: '#FFFFFF',
+                border: '1px solid #333333',
+                letterSpacing: '0.05em',
+              }}
             >
               {tag}
             </div>
           ))}
         </div>
         {author && (
-          <div tw="text-xl font-medium" style={{ color: '#DEDEDE' }}>
+          <div
+            tw="text-xl font-medium"
+            style={{ color: '#999999', letterSpacing: '0.05em' }}
+          >
             {author}
           </div>
         )}

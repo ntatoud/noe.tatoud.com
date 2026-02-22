@@ -2,11 +2,6 @@
 command = "bun run build"
 publish = "dist/client"
 
-[[headers]]
-for = "/*"
-[headers.values]
-X-Robots-Tag = "noindex, nofollow"
-
 # Hashed Vite bundles — safe to cache forever
 [[headers]]
 for = "/assets/*"
