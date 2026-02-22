@@ -168,6 +168,18 @@
 
   --spacing-safe-top: env(safe-area-inset-top);
   --spacing-safe-bottom: env(safe-area-inset-bottom);
+
+  --animate-page-loading: page-loading 10s cubic-bezier(0.1, 0.7, 0.1, 1)
+    forwards;
+
+  @keyframes page-loading {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(0.85);
+    }
+  }
 }
 
 @layer base {
