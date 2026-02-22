@@ -1,5 +1,6 @@
+import { Icon } from './icon'
+import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
-import { Icon, type IconProps } from './icon'
 
 function IconBook(props: IconProps) {
   return (
