@@ -1,5 +1,5 @@
-import { PixelHome, PixelQuoteLeft } from '@/components/icons'
 import { linkOptions } from '@tanstack/react-router'
+import { PixelHome, PixelQuoteLeft } from '@/components/icons'
 
 export const nav = linkOptions([
   {

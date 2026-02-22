@@ -1,3 +1,4 @@
+import type { ReactElement, SVGProps } from 'react'
 import {
   PixelGitHub,
   PixelLinkedIn,
@@ -5,7 +6,6 @@ import {
   PixelSourceCode,
 } from '@/components/icons'
 import { cn } from '@/lib/utils'
-import type { ReactElement, SVGProps } from 'react'
 
 export function Footer() {
   return (
