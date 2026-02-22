@@ -5,9 +5,12 @@ import {
   PixelMail,
   PixelSourceCode,
 } from '@/components/icons'
+import { useAchievements } from '@/features/achievements/use-achievements'
 import { cn } from '@/lib/utils'
 
 export function Footer() {
+  const { unlock } = useAchievements()
+
   return (
     <footer className="border-t-2 border-border bg-card">
       <div className="container mx-auto flex max-w-3xl flex-col items-center gap-8 px-4 py-12 md:px-0">
@@ -20,16 +23,19 @@ export function Footer() {
               href="https://github.com/ntatoud"
               label="GitHub"
               icon={PixelGitHub}
+              onClick={() => unlock('social')}
             />
             <FooterLink
               href="https://linkedin.com/in/noetatoud"
               label="LinkedIn"
               icon={PixelLinkedIn}
+              onClick={() => unlock('social')}
             />
             <FooterLink
               href="mailto:noe.tatoud@gmail.com"
               label="Email"
               icon={PixelMail}
+              onClick={() => unlock('social')}
             />
           </div>
         </div>
@@ -56,10 +62,12 @@ function FooterLink({
   href,
   label,
   icon: Icon,
+  onClick,
 }: {
   href: string
   label: string
   icon: PixelIconComponent
+  onClick?: () => void
 }) {
   return (
     <a
@@ -67,6 +75,7 @@ function FooterLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
+      onClick={onClick}
       className={cn(
         'group relative flex size-10 items-center justify-center border-2 border-transparent',
         'text-muted-foreground',

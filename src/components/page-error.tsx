@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
+import { useAchievements } from '@/features/achievements/use-achievements'
 import { Button } from '@/components/ui/button'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
@@ -13,6 +15,12 @@ export function PageError({
   title,
   description,
 }: PageErrorProps) {
+  const { unlock } = useAchievements()
+
+  useEffect(() => {
+    if (String(code) === '404') unlock('lost')
+  }, [code, unlock])
+
   return (
     <div className="flex flex-1 items-center justify-around">
       <Hero>
