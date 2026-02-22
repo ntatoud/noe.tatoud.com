@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import ClickSpark from '@/components/click-spark'
+import { PageLoader } from '@/components/page-loader'
 import { AchievementProvider } from '@/features/achievements/achievement-provider'
 import { useFirstVisitAchievement } from '@/features/achievements/achievement/first-visit'
 import { useReturningAchievement } from '@/features/achievements/achievement/returning'
@@ -60,6 +61,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-dvh flex-1 flex-col sm:h-auto sm:min-h-dvh">
       <ClickSpark className="relative flex flex-1 flex-col">
+        <PageLoader />
         <ScrollToTop mainRef={mainRef} />
         <ClickSound />
         <AchievementTriggers />
