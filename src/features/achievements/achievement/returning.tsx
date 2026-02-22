@@ -28,5 +28,6 @@ export const returning: AchievementDef = {
   label: "I'm Back",
   description: 'Returned for a second visit.',
   hidden: false,
+  hint: false,
   icon: IconArrows,
 }

@@ -29,5 +29,6 @@ export const firstVisit: AchievementDef = {
   label: 'Welcome',
   description: 'Visited the site for the first time.',
   hidden: false,
+  hint: false,
   icon: IconFlag,
 }

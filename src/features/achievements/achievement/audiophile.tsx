@@ -27,5 +27,6 @@ export const audiophile: AchievementDef = {
   label: 'Audiophile',
   description: 'Toggled the sound on.',
   hidden: false,
+  hint: false,
   icon: IconNote,
 }

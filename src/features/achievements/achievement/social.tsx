@@ -33,5 +33,6 @@ export const social: AchievementDef = {
   label: 'Social Butterfly',
   description: 'Clicked a social link.',
   hidden: false,
+  hint: false,
   icon: IconBubble,
 }
