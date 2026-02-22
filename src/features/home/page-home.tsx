@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useAchievements } from '@/features/achievements/use-achievements'
 import { Button } from '@/components/ui/button'
 import { Image } from '@/components/ui/image'
 import { ExperiencesSection } from '@/features/experiences/experiences-section'
@@ -7,27 +8,37 @@ import { ProjectsSection } from '@/features/home/projects-section'
 import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
 export function PageHome() {
+  const { unlock } = useAchievements()
+
   return (
     <div>
       <Hero className="pb-16">
-        <Image
-          src="/pixel-avatar.png"
-          alt="Pixel art portrait of Noé Tatoud"
-          width={160}
-          height={160}
-          priority
-          widths={[160, 320]}
-          sizes="160px"
-          className="mb-1 select-none"
-          style={{
-            imageRendering: 'pixelated',
-            maskImage:
-              'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
-            WebkitMaskImage:
-              'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
-          }}
-          draggable={false}
-        />
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden="true"
+          onClick={() => unlock('pixel-clicker')}
+          className="cursor-pointer appearance-none border-0 bg-transparent p-0"
+        >
+          <Image
+            src="/pixel-avatar.png"
+            alt="Pixel art portrait of Noé Tatoud"
+            width={160}
+            height={160}
+            priority
+            widths={[160, 320]}
+            sizes="160px"
+            className="mb-1 select-none"
+            style={{
+              imageRendering: 'pixelated',
+              maskImage:
+                'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
+              WebkitMaskImage:
+                'radial-gradient(ellipse 55% 60% at 50% 40%, black 40%, transparent 100%)',
+            }}
+            draggable={false}
+          />
+        </button>
         <HeroTitle>Noé Tatoud</HeroTitle>
         <HeroSubtitle>
           Frontend developer crafting pixel-perfect interfaces
@@ -47,6 +58,7 @@ export function PageHome() {
             size="lg"
             render={<a href="mailto:noe.tatoud@gmail.com" />}
             nativeButton={false}
+            onClick={() => unlock('social')}
           >
             Get in touch
           </Button>
@@ -57,6 +69,7 @@ export function PageHome() {
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono tracking-widest uppercase transition-colors hover:text-foreground"
+            onClick={() => unlock('social')}
           >
             GitHub
           </a>
@@ -66,6 +79,7 @@ export function PageHome() {
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono tracking-widest uppercase transition-colors hover:text-foreground"
+            onClick={() => unlock('social')}
           >
             LinkedIn
           </a>
@@ -73,6 +87,7 @@ export function PageHome() {
           <a
             href="mailto:noe.tatoud@gmail.com"
             className="font-mono tracking-widest uppercase transition-colors hover:text-foreground"
+            onClick={() => unlock('social')}
           >
             Email
           </a>

@@ -1,5 +1,5 @@
 import { linkOptions } from '@tanstack/react-router'
-import { PixelHome, PixelQuoteLeft } from '@/components/icons'
+import { PixelHome, PixelQuoteLeft, PixelTrophy } from '@/components/icons'
 
 export const nav = linkOptions([
   {
@@ -12,5 +12,10 @@ export const nav = linkOptions([
     label: 'Blog',
     icon: PixelQuoteLeft,
     to: '/blog',
+  },
+  {
+    label: 'Achievements',
+    icon: PixelTrophy,
+    to: '/achievements',
   },
 ])

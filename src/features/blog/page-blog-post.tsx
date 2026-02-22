@@ -1,8 +1,12 @@
 import browserCollections from 'fumadocs-mdx:collections/browser'
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import type { ComponentProps } from 'react'
+import {
+  addReadPost,
+  useAchievements,
+} from '@/features/achievements/use-achievements'
 import { CardTags } from '@/components/ui/card-list'
 import { Image } from '@/components/ui/image'
 import { formatDate } from '@/lib/format'
@@ -77,10 +81,37 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
   },
 })
 
-export function PageBlogPost({ path }: { path: string }) {
+function ScrollTracker({ slug }: { slug: string }) {
+  const { unlock } = useAchievements()
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const firedRef = useRef(false)
+
+  useEffect(() => {
+    firedRef.current = false
+  }, [slug])
+
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !firedRef.current) {
+        firedRef.current = true
+        unlock('reader')
+        addReadPost(slug)
+      }
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [slug, unlock])
+
+  return <div ref={sentinelRef} />
+}
+
+export function PageBlogPost({ path, slug }: { path: string; slug: string }) {
   return (
     <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
       {blogPostLoader.useContent(path)}
+      <ScrollTracker slug={slug} />
     </Suspense>
   )
 }

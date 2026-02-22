@@ -68,5 +68,6 @@ const serverLoader = createServerFn({ method: 'GET' })
 
 function Page() {
   const { path } = Route.useLoaderData()
-  return <PageBlogPost path={path} />
+  const params = Route.useParams()
+  return <PageBlogPost path={path} slug={params._splat ?? ''} />
 }
