@@ -28,15 +28,18 @@ export function Header() {
     >
       <div
         className={cn(
-          'pointer-events-auto transition-[border,background-color,box-shadow,backdrop-filter] duration-200',
-          scrolled &&
-            'rounded-md border border-border bg-card shadow-lg backdrop-blur-sm',
+          'pointer-events-auto relative transition-[background-color,filter] duration-200 clip-pixel-lg',
+          scrolled
+            ? 'bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[""] before:clip-pixel-lg'
+            : 'bg-transparent',
         )}
       >
-        <DesktopNav />
-      </div>
-      <div className="pointer-events-auto absolute right-5">
-        <SoundToggle />
+        <div className="flex items-center">
+          <DesktopNav />
+          <div className="pr-2">
+            <SoundToggle />
+          </div>
+        </div>
       </div>
     </header>
   )

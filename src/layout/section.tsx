@@ -6,7 +6,7 @@ function Section(props: React.ComponentProps<'section'>) {
     <section
       {...props}
       className={cn(
-        'container mx-auto flex max-w-3xl flex-col items-center justify-center px-4 py-20 md:px-0',
+        'container mx-auto flex max-w-3xl flex-col items-center justify-center px-4 py-12 md:px-0',
         props.className,
       )}
     />
