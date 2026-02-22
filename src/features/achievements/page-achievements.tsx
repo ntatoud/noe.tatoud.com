@@ -1,4 +1,3 @@
-import { Route } from '@/routes/achievements/index'
 import { AchievementCard } from './achievement-card'
 import { ACHIEVEMENTS } from './achievements'
 import {
@@ -10,6 +9,7 @@ import {
 import { PixelProgress } from '@/components/ui/progress'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
+import { Route } from '@/routes/achievements/index'
 import { Section, SectionContent } from '@/layout/section'
 
 export function PageAchievements() {
