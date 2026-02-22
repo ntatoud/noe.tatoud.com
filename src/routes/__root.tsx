@@ -28,6 +28,10 @@ export const Route = createRootRoute({
         title: 'Noé Tatoud',
       },
       { name: 'theme-color', content: '#000000' },
+      {
+        name: 'google-site-verification',
+        content: '51070d23f73e75a0',
+      },
     ],
     links: [
       {
