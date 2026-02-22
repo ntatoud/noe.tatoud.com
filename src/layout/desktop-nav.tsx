@@ -17,6 +17,7 @@ function NavButton({ item }: { item: (typeof nav)[number] }) {
   const exact = (item as { activeOptions?: { exact?: boolean } }).activeOptions
     ?.exact
   const isActive = !!matchRoute({ to: item.to, fuzzy: !exact })
+  const { icon: Icon, ...linkProps } = item
 
   return (
     <Button
@@ -24,9 +25,9 @@ function NavButton({ item }: { item: (typeof nav)[number] }) {
       size="sm"
       nativeButton={false}
       className="text-muted-foreground hover:text-foreground data-[status=active]:bg-muted data-[status=active]:text-foreground"
-      render={<Link {...item} />}
+      render={<Link {...linkProps} />}
     >
-      <item.icon size={16} filled={isActive} />
+      <Icon size={16} filled={isActive} />
       {item.label}
     </Button>
   )

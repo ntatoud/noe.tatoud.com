@@ -20,7 +20,7 @@ export function ArticlesSection() {
         <SectionActions>
           <Button
             variant="ghost"
-            size="lg"
+            className="px-2"
             render={<Link to="/blog" />}
             nativeButton={false}
           >

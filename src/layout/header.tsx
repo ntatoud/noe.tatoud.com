@@ -34,10 +34,12 @@ export function Header() {
             : 'bg-transparent',
         )}
       >
-        <DesktopNav />
-      </div>
-      <div className="pointer-events-auto absolute right-5">
-        <SoundToggle />
+        <div className="flex items-center">
+          <DesktopNav />
+          <div className="pr-2">
+            <SoundToggle />
+          </div>
+        </div>
       </div>
     </header>
   )
