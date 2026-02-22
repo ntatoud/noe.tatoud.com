@@ -13,6 +13,7 @@ export type AchievementId =
   | 'keyboard'
   | 'secret'
   | 'click-frenzy'
+  | 'lost'
 
 export type Achievement = {
   id: AchievementId

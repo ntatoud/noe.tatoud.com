@@ -10,6 +10,7 @@ import { social } from './social'
 import { keyboard } from './keyboard'
 import { secret } from './secret'
 import { clickFrenzy } from './click-frenzy'
+import { lost } from './lost'
 import type { AchievementDef, AchievementId } from './types'
 
 export type { Achievement, AchievementDef, AchievementId } from './types'
@@ -27,6 +28,7 @@ const ALL: Array<AchievementDef> = [
   keyboard,
   secret,
   clickFrenzy,
+  lost,
 ]
 
 export const ACHIEVEMENTS: Array<AchievementDef> = ALL
