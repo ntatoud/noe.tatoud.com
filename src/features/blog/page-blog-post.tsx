@@ -27,7 +27,7 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
     const heroSrc = hero as string | undefined
     return (
       <>
-        <Hero className="text-center">
+        <Hero className="pt-12 text-center">
           {frontmatter.tags && frontmatter.tags.length > 0 && (
             <CardTags tags={frontmatter.tags} />
           )}

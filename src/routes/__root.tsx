@@ -2,10 +2,19 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { RootProvider } from 'fumadocs-ui/provider/tanstack'
+import { PageError } from '@/components/page-error'
 import { Layout } from '@/layout/layout'
 import appCss from '@/styles.css?url'
 
 export const Route = createRootRoute({
+  notFoundComponent: () => (
+    <PageError
+      code="404"
+      title="Page not found"
+      description="This page doesn't exist or has been moved."
+    />
+  ),
+
   head: () => ({
     meta: [
       {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import ClickSpark from '@/components/click-spark'
 import { click8bitSound } from '@/lib/click-8bit'
@@ -8,13 +8,18 @@ import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
 import { MobileNav } from '@/layout/mobile-nav'
 
-function ScrollToTop() {
+function ScrollToTop({
+  mainRef,
+}: {
+  mainRef: React.RefObject<HTMLElement | null>
+}) {
   const router = useRouter()
   useEffect(() => {
     return router.subscribe('onResolved', () => {
+      mainRef.current?.scrollTo(0, 0)
       document.body.scrollTo(0, 0)
     })
-  }, [router])
+  }, [router, mainRef])
   return null
 }
 
@@ -31,16 +36,21 @@ function ClickSound() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const mainRef = useRef<HTMLElement>(null)
+
   return (
-    <div className="flex min-h-dvh flex-1 flex-col">
-      <ClickSpark>
-        <ScrollToTop />
+    <div className="flex h-dvh flex-1 flex-col sm:h-auto sm:min-h-dvh">
+      <ClickSpark className="relative flex flex-1 flex-col">
+        <ScrollToTop mainRef={mainRef} />
         <ClickSound />
         <Header />
-        <main className="flex min-w-0 flex-1 flex-col pb-[calc(5rem+var(--spacing-safe-bottom))] sm:pb-0">
+        <main
+          ref={mainRef}
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto pb-[calc(5rem+var(--spacing-safe-bottom))] sm:overflow-visible sm:pb-0"
+        >
           {children}
+          <Footer />
         </main>
-        <Footer />
         <MobileNav />
       </ClickSpark>
     </div>
