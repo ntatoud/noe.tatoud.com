@@ -1,12 +1,12 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { getAudioContext, decodeAudioData } from '@/lib/sound-engine'
 import type {
   SoundAsset,
   UseSoundOptions,
   UseSoundReturn,
 } from '@/lib/sound-types'
+import { decodeAudioData, getAudioContext } from '@/lib/sound-engine'
 
 export function useSound(
   sound: SoundAsset,
@@ -25,7 +25,7 @@ export function useSound(
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState<number | null>(
-    sound.duration ?? null,
+    sound.duration ?? null, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
   )
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
   const gainRef = useRef<GainNode | null>(null)
