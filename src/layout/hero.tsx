@@ -5,7 +5,7 @@ function Hero({ className, ...props }: React.ComponentProps<typeof Section>) {
   return (
     <div
       className={cn(
-        'relative flex flex-col items-center justify-center overflow-hidden pt-20 pb-12 md:pt-24 md:pb-16',
+        'relative flex flex-col items-center justify-center overflow-hidden pt-28 pb-12 md:pt-36 md:pb-16',
         className,
       )}
     >

@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { ExperiencesSection } from '@/features/experiences/experiences-section'
 import { ArticlesSection } from '@/features/home/articles-section'
 import { ProjectsSection } from '@/features/home/projects-section'
 import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
@@ -60,6 +61,7 @@ export function PageHome() {
       </Hero>
       <ArticlesSection />
       <ProjectsSection />
+      <ExperiencesSection />
     </div>
   )
 }
