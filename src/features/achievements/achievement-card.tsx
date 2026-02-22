@@ -57,11 +57,6 @@ export function AchievementCard({
           />
         )}
       </div>
-      {unlocked && (
-        <div className="shrink-0 font-mono text-[10px] tracking-widest text-primary uppercase">
-          ✓
-        </div>
-      )}
     </div>
   )
 }
