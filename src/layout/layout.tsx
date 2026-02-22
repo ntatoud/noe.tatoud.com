@@ -3,9 +3,11 @@ import { useRouter } from '@tanstack/react-router'
 import ClickSpark from '@/components/click-spark'
 import { AchievementProvider } from '@/features/achievements/achievement-provider'
 import {
+  CLICK_FRENZY_TARGET,
   EXPLORER_SECTIONS,
   addVisitedSection,
   getVisitedSections,
+  incrementClickCount,
   useAchievements,
   useAchievementsStore,
 } from '@/features/achievements/use-achievements'
@@ -98,6 +100,16 @@ function AchievementTriggers() {
     }
     document.addEventListener('keydown', handleKeydown)
     return () => document.removeEventListener('keydown', handleKeydown)
+  }, [unlock])
+
+  // click frenzy — 100 clicks
+  useEffect(() => {
+    function handleClick() {
+      const count = incrementClickCount()
+      if (count >= CLICK_FRENZY_TARGET) unlock('click-frenzy')
+    }
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
   }, [unlock])
 
   // explorer — track visited sections (initial load + navigations)

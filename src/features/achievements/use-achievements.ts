@@ -4,6 +4,7 @@ import type { AchievementId } from './achievements'
 const STORAGE_KEY = 'achievements'
 const READ_POSTS_KEY = 'read-posts'
 const VISITED_SECTIONS_KEY = 'visited-sections'
+const CLICK_COUNT_KEY = 'click-count'
 
 function readSet<T extends string>(key: string): Set<T> {
   if (typeof window === 'undefined') return new Set()
@@ -79,4 +80,25 @@ export function addVisitedSection(section: string) {
   const sections = getVisitedSections()
   sections.add(section)
   writeSet(VISITED_SECTIONS_KEY, sections)
+}
+
+export const CLICK_FRENZY_TARGET = 100
+
+export function getClickCount(): number {
+  if (typeof window === 'undefined') return 0
+  try {
+    return Number(localStorage.getItem(CLICK_COUNT_KEY)) || 0
+  } catch {
+    return 0
+  }
+}
+
+export function incrementClickCount(): number {
+  const count = getClickCount() + 1
+  try {
+    localStorage.setItem(CLICK_COUNT_KEY, String(count))
+  } catch {
+    // storage unavailable
+  }
+  return count
 }

@@ -1,7 +1,9 @@
 import { AchievementCard } from './achievement-card'
 import { ACHIEVEMENTS } from './achievements'
 import {
+  CLICK_FRENZY_TARGET,
   EXPLORER_SECTIONS,
+  getClickCount,
   getReadPosts,
   getVisitedSections,
   useAchievements,
@@ -20,6 +22,9 @@ export function PageAchievements() {
   const unlockedCount = hydrated ? unlockedIds.size : 0
   const visitedCount = hydrated ? getVisitedSections().size : 0
   const readCount = hydrated ? getReadPosts().size : 0
+  const clickCount = hydrated
+    ? Math.min(getClickCount(), CLICK_FRENZY_TARGET)
+    : 0
 
   function getProgress(id: string) {
     if (id === 'explorer') {
@@ -34,6 +39,13 @@ export function PageAchievements() {
         value: readCount,
         max: totalBlogPosts,
         label: `${readCount} / ${totalBlogPosts} posts`,
+      }
+    }
+    if (id === 'click-frenzy') {
+      return {
+        value: clickCount,
+        max: CLICK_FRENZY_TARGET,
+        label: `${clickCount} / ${CLICK_FRENZY_TARGET} clicks`,
       }
     }
     return undefined

@@ -10,6 +10,7 @@ export type AchievementId =
   | 'social'
   | 'keyboard'
   | 'secret'
+  | 'click-frenzy'
 
 export type Achievement = {
   id: AchievementId
@@ -84,5 +85,11 @@ export const ACHIEVEMENTS: Array<Achievement> = [
     label: 'Konami',
     description: '↑ ↑ ↓ ↓ ← → ← → B A',
     hidden: true,
+  },
+  {
+    id: 'click-frenzy',
+    label: 'Click Frenzy',
+    description: 'Clicked 100 times on the site.',
+    hidden: false,
   },
 ]
