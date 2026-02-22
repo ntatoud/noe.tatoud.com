@@ -8,6 +8,7 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/layout/section'
+import { cn } from '@/lib/utils'
 
 const KIND_LABEL: Record<Experience['kind'], string> = {
   work: 'Work',
@@ -21,8 +22,20 @@ function ExperienceItem({ experience }: { experience: Experience }) {
     ? new Date(experience.endDate).getFullYear()
     : 'Present'
 
-  const inner = (
-    <>
+  const Wrapper = experience.url ? 'a' : 'div'
+
+  return (
+    <Wrapper
+      {...(experience.url && {
+        href: experience.url,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      })}
+      className={cn(
+        'flex items-start gap-4 py-4 first:pt-0 last:pb-0',
+        experience.url && 'transition-opacity hover:opacity-70',
+      )}
+    >
       {experience.logo ? (
         <img
           src={experience.logo}
@@ -54,26 +67,7 @@ function ExperienceItem({ experience }: { experience: Experience }) {
       <span className="shrink-0 font-mono text-xs text-muted-foreground/60">
         {start} — {end}
       </span>
-    </>
-  )
-
-  if (experience.url) {
-    return (
-      <a
-        href={experience.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-start gap-4 py-4 transition-opacity first:pt-0 last:pb-0 hover:opacity-70"
-      >
-        {inner}
-      </a>
-    )
-  }
-
-  return (
-    <div className="flex items-start gap-4 py-4 first:pt-0 last:pb-0">
-      {inner}
-    </div>
+    </Wrapper>
   )
 }
 
