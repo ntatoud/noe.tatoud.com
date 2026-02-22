@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
   SoundAsset,
@@ -24,9 +22,7 @@ export function useSound(
   } = options
 
   const [isPlaying, setIsPlaying] = useState(false)
-  const [duration, setDuration] = useState<number | null>(
-    sound.duration ?? null, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-  )
+  const [duration, setDuration] = useState<number | null>(sound.duration)
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
   const gainRef = useRef<GainNode | null>(null)
   const bufferRef = useRef<AudioBuffer | null>(null)
@@ -49,7 +45,7 @@ export function useSound(
       try {
         sourceRef.current.stop()
       } catch {
-        // Already stopped
+        // already stopped
       }
       sourceRef.current = null
     }

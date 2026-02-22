@@ -56,9 +56,7 @@ export async function playSound(
   source.connect(gain)
   gain.connect(ctx.destination)
 
-  source.onended = () => {
-    onEnd?.()
-  }
+  if (onEnd) source.onended = onEnd
 
   source.start(0)
 
@@ -67,7 +65,7 @@ export async function playSound(
       try {
         source.stop()
       } catch {
-        // No-op if already stopped.
+        // already stopped
       }
     },
   }

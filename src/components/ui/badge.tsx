@@ -17,7 +17,7 @@ const badgeVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground [filter:drop-shadow(0_2px_0_var(--shelf-destructive))] [a]:hover:bg-destructive/90',
         outline:
-          'bg-muted text-foreground [filter:drop-shadow(0_1px_0_var(--shelf-neutral))] [a]:hover:bg-muted/80',
+          'relative bg-border text-foreground [filter:drop-shadow(0_2px_0_var(--shelf-neutral))] before:absolute before:inset-[1px] before:-z-10 before:bg-muted before:content-[""] before:clip-pixel-xs [a]:hover:before:bg-muted/80',
         ghost: 'hover:bg-muted hover:text-muted-foreground',
         link: 'clip-none text-primary underline-offset-4 hover:underline',
       },

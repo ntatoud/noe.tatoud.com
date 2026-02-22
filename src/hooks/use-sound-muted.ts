@@ -31,7 +31,7 @@ export function useSoundMuted() {
     try {
       localStorage.setItem(STORAGE_KEY, String(next))
     } catch {
-      // storage blocked
+      // storage unavailable
     }
     setMutedState(next)
   }, [])
