@@ -1,3 +1,11 @@
+import { useEffect } from 'react'
+import { useRouter } from '@tanstack/react-router'
+import {
+  EXPLORER_SECTIONS,
+  addVisitedSection,
+  getVisitedSections,
+  useAchievementsStore,
+} from '../use-achievements'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -36,4 +44,24 @@ export const explorer: AchievementDef = {
   description: 'Visited every section of the site.',
   hidden: false,
   icon: IconPin,
+}
+
+export function useExplorerAchievement() {
+  const router = useRouter()
+  useEffect(() => {
+    function trackSection(pathname: string) {
+      const section = EXPLORER_SECTIONS.find(
+        (s) => pathname === s || pathname.startsWith(s + '/'),
+      )
+      if (!section) return
+      addVisitedSection(section)
+      if (EXPLORER_SECTIONS.every((s) => getVisitedSections().has(s))) {
+        useAchievementsStore.getState().actions.unlock('explorer')
+      }
+    }
+    trackSection(window.location.pathname)
+    return router.subscribe('onResolved', () => {
+      trackSection(window.location.pathname)
+    })
+  }, [router])
 }

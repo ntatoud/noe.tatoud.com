@@ -1,6 +1,21 @@
+import { useEffect } from 'react'
+import { useAchievementsStore } from '../use-achievements'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
+
+const KONAMI = [
+  'ArrowUp',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'b',
+  'a',
+]
 
 function IconQuestion(props: IconProps) {
   return (
@@ -31,4 +46,23 @@ export const secret: AchievementDef = {
   description: '↑ ↑ ↓ ↓ ← → ← → B A',
   hidden: true,
   icon: IconQuestion,
+}
+
+export function useSecretAchievement() {
+  useEffect(() => {
+    let progress = 0
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key === KONAMI[progress]) {
+        progress++
+        if (progress === KONAMI.length) {
+          useAchievementsStore.getState().actions.unlock('secret')
+          progress = 0
+        }
+      } else {
+        progress = 0
+      }
+    }
+    document.addEventListener('keydown', onKeydown)
+    return () => document.removeEventListener('keydown', onKeydown)
+  }, [])
 }
