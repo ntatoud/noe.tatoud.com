@@ -1,5 +1,6 @@
 export type { PixelIconProps } from './types'
 export { PixelArrowRight } from './pixel-arrow-right'
+export { PixelExternalLink } from './pixel-external-link'
 export { PixelGitHub } from './pixel-github'
 export { PixelHome } from './pixel-home'
 export { PixelLinkedIn } from './pixel-linkedin'

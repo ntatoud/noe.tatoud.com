@@ -15,7 +15,7 @@ export const Route = createFileRoute('/blog/')({
     if (!loaderData) return {}
     return {
       meta: ogMeta({
-        title: 'Blog — Noé Tatoud',
+        title: 'Blog | Noé Tatoud',
         description:
           'Articles about frontend development, design, and technology by Noé Tatoud.',
         author: 'Noé Tatoud',

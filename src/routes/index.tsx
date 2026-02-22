@@ -4,6 +4,7 @@ import { getRequestUrl } from '@tanstack/react-start/server'
 import type { Person, WebSite } from 'schema-dts'
 import { PageHome } from '@/features/home/page-home'
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
+import { getExperiences } from '@/features/experiences/get-experiences'
 import { getProjects } from '@/features/projects/get-projects'
 import { ogMeta } from '@/features/og/meta'
 import { jsonLd } from '@/lib/json-ld'
@@ -21,7 +22,7 @@ export const Route = createFileRoute('/')({
     return {
       meta: [
         ...ogMeta({
-          title: 'Noé Tatoud — Frontend Developer',
+          title: 'Noé Tatoud | Frontend Developer',
           description:
             'Personal website and blog of Noé Tatoud, a frontend developer.',
           author: 'Noé Tatoud',
@@ -48,12 +49,13 @@ export const Route = createFileRoute('/')({
     }
   },
   loader: async () => {
-    const [posts, projects, origin] = await Promise.all([
+    const [posts, projects, experiences, origin] = await Promise.all([
       getBlogPosts(),
       getProjects(),
+      getExperiences(),
       getOrigin(),
     ])
-    return { posts, projects, origin }
+    return { posts, projects, experiences, origin }
   },
 })
 
