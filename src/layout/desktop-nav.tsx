@@ -1,36 +1,34 @@
-import { Link } from '@tanstack/react-router'
-import { HugeiconsIcon } from '@hugeicons/react'
+import { Link, useMatchRoute } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 import { nav } from '@/layout/nav-config'
-import { cn } from '@/lib/utils'
 
 export function DesktopNav() {
   return (
-    <nav aria-label="Main" className="flex flex-row items-center gap-1 p-2">
+    <nav aria-label="Main" className="flex flex-row items-center gap-0 p-2">
       {nav.map((item) => (
-        <Link
-          key={item.to}
-          {...item}
-          activeProps={{ className: 'text-primary' }}
-          className={cn(
-            'group relative flex flex-row items-center gap-2 rounded-lg px-3 py-2',
-            'text-sm font-medium text-muted-foreground',
-            'transition-colors duration-200',
-            'hover:text-foreground',
-            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-          )}
-        >
-          <HugeiconsIcon icon={item.icon} size={18} />
-          {item.label}
-          <span
-            className={cn(
-              'absolute -bottom-0.5 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-primary',
-              'transition-all duration-200',
-              'group-hover:w-5',
-              'group-data-[status=active]:w-5',
-            )}
-          />
-        </Link>
+        <NavButton key={item.to} item={item} />
       ))}
     </nav>
+  )
+}
+
+function NavButton({ item }: { item: (typeof nav)[number] }) {
+  const matchRoute = useMatchRoute()
+  const exact = (item as { activeOptions?: { exact?: boolean } }).activeOptions
+    ?.exact
+  const isActive = !!matchRoute({ to: item.to, fuzzy: !exact })
+  const { icon: Icon, ...linkProps } = item
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      nativeButton={false}
+      className="text-muted-foreground hover:text-foreground data-[status=active]:bg-muted data-[status=active]:text-foreground"
+      render={<Link {...linkProps} />}
+    >
+      <Icon size={16} filled={isActive} />
+      {item.label}
+    </Button>
   )
 }

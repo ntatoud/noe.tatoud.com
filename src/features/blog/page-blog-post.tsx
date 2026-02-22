@@ -1,9 +1,26 @@
 import browserCollections from 'fumadocs-mdx:collections/browser'
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Suspense } from 'react'
+import type { ComponentProps } from 'react'
 import { CardTags } from '@/components/ui/card-list'
+import { Image } from '@/components/ui/image'
 import { formatDate } from '@/lib/format'
 import { Hero, HeroMeta, HeroTitle } from '@/layout/hero'
+
+const mdxComponents = {
+  ...defaultMdxComponents,
+  pre: (props: ComponentProps<'pre'>) => (
+    <div className="relative my-4 bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] clip-pixel-lg before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[''] before:clip-pixel-lg">
+      <CodeBlock
+        {...props}
+        className="!my-0 !rounded-none !border-none !bg-transparent !shadow-none"
+      >
+        <Pre>{props.children}</Pre>
+      </CodeBlock>
+    </div>
+  ),
+}
 
 export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
   component({ frontmatter, hero, default: MDX }) {
@@ -24,10 +41,12 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
           </HeroMeta>
 
           {heroSrc && (
-            <img
+            <Image
               src={heroSrc}
-              alt=""
-              className="aspect-video w-full max-w-2xl rounded-lg object-cover"
+              alt={frontmatter.title}
+              className="inset-0 clip-pixel-lg"
+              sizes="(max-width: 672px) 100vw, 672px"
+              priority
             />
           )}
 
@@ -50,8 +69,8 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
             </div>
           )}
         </Hero>
-        <article className="prose-neutral dark:prose-invert mx-auto prose w-full max-w-3xl px-4 py-6 sm:py-8 md:px-0 [&]:max-w-3xl">
-          <MDX components={defaultMdxComponents} />
+        <article className="mx-auto prose w-full max-w-3xl px-4 py-6 *:mx-auto *:max-w-2xl sm:py-8 md:px-0">
+          <MDX components={mdxComponents} />
         </article>
       </>
     )

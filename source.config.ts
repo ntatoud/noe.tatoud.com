@@ -1,7 +1,7 @@
 import { applyMdxPreset, defineCollections } from 'fumadocs-mdx/config'
 import { BlogPostSchema } from './src/features/blog/schemas'
+import { ExperienceSchema } from './src/features/experiences/schemas'
 import { ProjectSchema } from './src/features/projects/schemas'
-import { TechEventSchema } from './src/features/events/schemas'
 
 export const blogPosts = defineCollections({
   type: 'doc',
@@ -31,9 +31,8 @@ export const projects = defineCollections({
   }),
 })
 
-export const techEvents = defineCollections({
+export const experiences = defineCollections({
   type: 'doc',
-  dir: 'content/events',
-  schema: TechEventSchema,
-  mdxOptions: applyMdxPreset({}),
+  dir: 'content/experiences',
+  schema: ExperienceSchema,
 })

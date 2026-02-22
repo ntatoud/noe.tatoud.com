@@ -4,7 +4,7 @@ import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
 
 export function PageBlog() {
-  const posts = useLoaderData({ from: '/blog/' })
+  const { posts } = useLoaderData({ from: '/blog/' })
   return (
     <div>
       <Hero className="pb-16">

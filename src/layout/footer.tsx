@@ -1,45 +1,45 @@
+import type { ReactElement, SVGProps } from 'react'
 import {
-  Github01Icon,
-  Linkedin01Icon,
-  Mail01Icon,
-  SourceCodeIcon,
-} from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
+  PixelGitHub,
+  PixelLinkedIn,
+  PixelMail,
+  PixelSourceCode,
+} from '@/components/icons'
 import { cn } from '@/lib/utils'
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-t-2 border-border bg-card">
       <div className="container mx-auto flex max-w-3xl flex-col items-center gap-8 px-4 py-12 md:px-0">
         <div className="flex flex-col items-center gap-4">
-          <p className="font-head text-lg font-semibold tracking-tight">
+          <p className="font-head text-sm tracking-widest text-muted-foreground uppercase">
             Let&apos;s connect
           </p>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0">
             <FooterLink
               href="https://github.com/ntatoud"
               label="GitHub"
-              icon={Github01Icon}
+              icon={PixelGitHub}
             />
             <FooterLink
               href="https://linkedin.com/in/noetatoud"
               label="LinkedIn"
-              icon={Linkedin01Icon}
+              icon={PixelLinkedIn}
             />
             <FooterLink
               href="mailto:noe.tatoud@gmail.com"
               label="Email"
-              icon={Mail01Icon}
+              icon={PixelMail}
             />
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-4 border-t border-border pt-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <HugeiconsIcon icon={SourceCodeIcon} size={16} />
-            <span>Built with React, TanStack & Tailwind</span>
+        <div className="flex w-full flex-col items-center gap-4 border-t-2 border-border pt-8">
+          <div className="flex items-center gap-2 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+            <PixelSourceCode size={14} aria-hidden="true" />
+            <span>Built with React, TanStack &amp; Tailwind</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="font-mono text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} Noe Tatoud. All rights reserved.
           </p>
         </div>
@@ -48,14 +48,18 @@ export function Footer() {
   )
 }
 
+type PixelIconComponent = (
+  props: SVGProps<SVGSVGElement> & { size?: number },
+) => ReactElement
+
 function FooterLink({
   href,
   label,
-  icon,
+  icon: Icon,
 }: {
   href: string
   label: string
-  icon: typeof Github01Icon
+  icon: PixelIconComponent
 }) {
   return (
     <a
@@ -64,21 +68,14 @@ function FooterLink({
       rel="noopener noreferrer"
       aria-label={label}
       className={cn(
-        'group relative flex size-10 items-center justify-center',
+        'group relative flex size-10 items-center justify-center border-2 border-transparent',
         'text-muted-foreground',
-        'transition-colors duration-200',
-        'hover:text-primary',
+        'transition-colors duration-100',
+        'hover:border-border hover:bg-muted hover:text-foreground',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
       )}
     >
-      <HugeiconsIcon icon={icon} size={22} />
-      <span
-        className={cn(
-          'absolute -bottom-1 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-primary',
-          'transition-all duration-200',
-          'group-hover:w-5',
-        )}
-      />
+      <Icon size={20} />
     </a>
   )
 }

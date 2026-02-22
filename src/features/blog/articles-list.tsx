@@ -15,20 +15,31 @@ import { formatDate } from '@/lib/format'
 export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
   if (posts.length === 0) {
     return (
-      <p className="text-center text-muted-foreground">
-        No blog posts yet. Check back soon!
-      </p>
+      <div className="flex flex-col items-center gap-3 py-20 text-center">
+        <span className="font-head text-8xl font-bold text-muted-foreground/20 select-none">
+          ∅
+        </span>
+        <p className="text-pretty text-muted-foreground">
+          No blog posts yet. Check back soon!
+        </p>
+      </div>
     )
   }
 
   return (
     <CardList>
-      {posts.map((post) => (
+      {posts.map((post, index) => (
         <Card
           key={post.slug}
           className={post.hero ? 'min-h-[280px] overflow-hidden' : ''}
         >
-          {post.hero && <CardImage src={post.hero} alt={post.title} />}
+          {post.hero && (
+            <CardImage
+              src={post.hero}
+              alt={post.title}
+              priority={index === 0}
+            />
+          )}
           <Link
             to="/blog/$"
             params={{ _splat: post.slug }}

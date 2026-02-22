@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { ArrowRight, Book, Home } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
+import { PixelArrowRight, PixelHome, PixelQuoteLeft } from '@/components/icons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -102,7 +101,7 @@ function ButtonsTab() {
         <div className="flex flex-wrap items-center gap-4">
           {iconSizes.map((size) => (
             <Button key={size} size={size} variant="outline">
-              <HugeiconsIcon icon={Home} />
+              <PixelHome size={16} />
             </Button>
           ))}
         </div>
@@ -112,20 +111,20 @@ function ButtonsTab() {
         <h3 className="font-head text-lg font-semibold">With Icons</h3>
         <div className="flex flex-wrap items-center gap-4">
           <Button>
-            <HugeiconsIcon icon={Book} data-icon="inline-start" />
+            <PixelQuoteLeft size={16} data-icon="inline-start" />
             Blog
           </Button>
           <Button variant="secondary">
             Continue
-            <HugeiconsIcon icon={ArrowRight} data-icon="inline-end" />
+            <PixelArrowRight size={16} data-icon="inline-end" />
           </Button>
           <Button variant="outline">
-            <HugeiconsIcon icon={Home} data-icon="inline-start" />
+            <PixelHome size={16} data-icon="inline-start" />
             Home
           </Button>
           <Button variant="ghost">
             See more
-            <HugeiconsIcon icon={ArrowRight} data-icon="inline-end" />
+            <PixelArrowRight size={16} data-icon="inline-end" />
           </Button>
         </div>
       </div>

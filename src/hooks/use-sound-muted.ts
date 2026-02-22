@@ -1,13 +1,38 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { getMuted, setMuted } from '@/lib/sound'
+const STORAGE_KEY = 'sound-muted'
+let _muted: boolean | null = null
+
+function readMuted(): boolean {
+  if (_muted !== null) return _muted
+  if (typeof window === 'undefined') return false
+  try {
+    _muted = localStorage.getItem(STORAGE_KEY) === 'true'
+  } catch {
+    _muted = false
+  }
+  return _muted
+}
+
+export function getSoundMuted(): boolean {
+  return readMuted()
+}
 
 export function useSoundMuted() {
-  const [muted, setMutedState] = useState(() => getMuted())
+  const [muted, setMutedState] = useState(false)
+
+  useEffect(() => {
+    setMutedState(readMuted())
+  }, [])
 
   const toggleMuted = useCallback(() => {
-    const next = !getMuted()
-    setMuted(next)
+    const next = !readMuted()
+    _muted = next
+    try {
+      localStorage.setItem(STORAGE_KEY, String(next))
+    } catch {
+      // storage unavailable
+    }
     setMutedState(next)
   }, [])
 

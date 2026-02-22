@@ -15,9 +15,14 @@ import { Button } from '@/components/ui/button'
 export function ProjectsList({ projects }: { projects: Array<Project> }) {
   if (projects.length === 0) {
     return (
-      <p className="text-center text-muted-foreground">
-        No projects yet. Check back soon!
-      </p>
+      <div className="flex flex-col items-center gap-3 py-20 text-center">
+        <span className="font-head text-8xl font-bold text-muted-foreground/20 select-none">
+          ∅
+        </span>
+        <p className="text-pretty text-muted-foreground">
+          No projects yet. Check back soon!
+        </p>
+      </div>
     )
   }
 

@@ -2,8 +2,8 @@ import { loader } from 'fumadocs-core/source'
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server'
 import {
   blogPosts,
+  experiences as experiencesCollection,
   projects as projectsCollection,
-  techEvents,
 } from 'fumadocs-mdx:collections/server'
 
 export const blog = loader({
@@ -16,7 +16,7 @@ export const projects = loader({
   source: toFumadocsSource(projectsCollection, []),
 })
 
-export const events = loader({
-  baseUrl: '/events',
-  source: toFumadocsSource(techEvents, []),
+export const experiences = loader({
+  baseUrl: '/experiences',
+  source: toFumadocsSource(experiencesCollection, []),
 })

@@ -21,22 +21,25 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 sm:flex',
-        'transition-all duration-100',
-        scrolled && 'pointer-events-none top-2',
+        'fixed top-0 z-50 hidden w-full items-center justify-center px-5 pt-safe-top sm:flex',
+        'transition-transform duration-200',
+        scrolled && 'pointer-events-none translate-y-2',
       )}
     >
       <div
         className={cn(
-          'pointer-events-auto transition-all duration-100',
-          scrolled &&
-            'rounded-md border border-border bg-card shadow-lg backdrop-blur-lg',
+          'pointer-events-auto relative transition-[background-color,filter] duration-200 clip-pixel-lg',
+          scrolled
+            ? 'bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[""] before:clip-pixel-lg'
+            : 'bg-transparent',
         )}
       >
-        <DesktopNav />
-      </div>
-      <div className="pointer-events-auto absolute right-5">
-        <SoundToggle />
+        <div className="flex items-center">
+          <DesktopNav />
+          <div className="pr-2">
+            <SoundToggle />
+          </div>
+        </div>
       </div>
     </header>
   )
