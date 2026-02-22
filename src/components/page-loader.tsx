@@ -4,16 +4,20 @@ import { cn } from '@/lib/utils'
 
 type Phase = 'idle' | 'loading' | 'completing'
 
+// Only show the bar if navigation takes longer than this threshold.
+// Cache hits typically resolve in <100ms so the bar never appears.
+const SHOW_DELAY_MS = 150
+
 export function PageLoader() {
   const isLoading = useRouterState({ select: (s) => s.isLoading })
   const [phase, setPhase] = useState<Phase>('idle')
 
-  // Transition to loading/completing based on router state
   useEffect(() => {
     if (isLoading) {
-      setPhase('loading')
+      const t = setTimeout(() => setPhase('loading'), SHOW_DELAY_MS)
+      return () => clearTimeout(t)
     } else {
-      setPhase((prev) => (prev === 'loading' ? 'completing' : prev))
+      setPhase((prev) => (prev === 'loading' ? 'completing' : 'idle'))
     }
   }, [isLoading])
 
