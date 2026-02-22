@@ -19,7 +19,10 @@ export type Achievement = {
   id: AchievementId
   label: string
   description: string
+  /** Hide the entire card (name, icon, description). Defaults to false. */
   hidden: boolean
+  /** Hide only the description until unlocked. Defaults to true. */
+  hint?: boolean
 }
 
 export type AchievementDef = Achievement & {

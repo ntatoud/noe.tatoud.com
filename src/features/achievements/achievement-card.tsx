@@ -14,6 +14,7 @@ export function AchievementCard({
   progress?: { value: number; max: number; label: string }
 }) {
   const isHidden = achievement.hidden && !unlocked
+  const showHint = unlocked || achievement.hint !== false
   const Icon = isHidden ? PixelLock : getAchievementIcon(achievement.id)
 
   return (
@@ -46,7 +47,9 @@ export function AchievementCard({
         <div className="mt-0.5 font-mono text-xs text-muted-foreground">
           {isHidden
             ? 'Keep exploring to unlock this.'
-            : achievement.description}
+            : showHint
+              ? achievement.description
+              : '???'}
         </div>
         {!unlocked && progress && (
           <PixelProgress
