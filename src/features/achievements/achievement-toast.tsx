@@ -20,7 +20,7 @@ export function AchievementToast({
   return (
     <section
       aria-label="Notifications"
-      className="fixed bottom-24 left-3 z-[60] flex flex-col gap-2 sm:bottom-5"
+      className="fixed bottom-24 left-3 z-60 flex flex-col gap-2 sm:bottom-5"
     >
       <ol aria-live="polite" aria-relevant="additions" className="contents">
         {queue.map((id) => (

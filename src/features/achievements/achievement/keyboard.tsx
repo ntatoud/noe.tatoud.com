@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useAchievementsStore } from '../use-achievements'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -36,4 +38,18 @@ export const keyboard: AchievementDef = {
   description: 'Navigated the site with the keyboard.',
   hidden: true,
   icon: IconKeyboard,
+}
+
+export function useKeyboardAchievement() {
+  useEffect(() => {
+    let triggered = false
+    function onKeydown(e: KeyboardEvent) {
+      if (!triggered && e.key === 'Tab') {
+        triggered = true
+        useAchievementsStore.getState().actions.unlock('keyboard')
+      }
+    }
+    document.addEventListener('keydown', onKeydown)
+    return () => document.removeEventListener('keydown', onKeydown)
+  }, [])
 }

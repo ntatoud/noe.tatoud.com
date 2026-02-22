@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useAchievementsStore } from '../use-achievements'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -32,4 +34,23 @@ export const nightOwl: AchievementDef = {
   description: 'Visited between midnight and 5 AM.',
   hidden: false,
   icon: IconMoon,
+}
+
+const FROM = 0
+const TO = 5
+
+export function useNightOwlAchievement() {
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const hour =
+      Number(
+        new Intl.DateTimeFormat('en-US', {
+          hour: 'numeric',
+          hour12: false,
+          timeZone: tz,
+        }).format(new Date()),
+      ) % 24 // Intl may return 24 for midnight; normalise to 0
+    if (hour > FROM && hour < TO)
+      useAchievementsStore.getState().actions.unlock('night-owl')
+  }, [])
 }
