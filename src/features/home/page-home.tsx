@@ -75,7 +75,7 @@ export function PageHome() {
           </a>
           <span className="text-border">·</span>
           <a
-            href="https://linkedin.com/in/noe-tatoud"
+            href="https://linkedin.com/in/noetatoud"
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono tracking-widest uppercase transition-colors hover:text-foreground"
