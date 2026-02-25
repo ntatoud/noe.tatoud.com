@@ -72,14 +72,17 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
       const { correct } = await checkAnswer({ data: guess })
 
       if (correct) {
-        if (!getSoundMuted()) {
-          void playSound(notificationPopSound.dataUri, { volume: 0.5 })
-        }
+        const wasAlreadySolved = getSolvedRiddles().has(day)
         const newSolved = addSolvedRiddle(day)
-        if (newSolved.size >= RIDDLE_COUNT) {
-          useAchievementsStore.getState().actions.unlock('riddle')
-        } else {
-          showProgressToast(newSolved.size)
+        if (!wasAlreadySolved) {
+          if (!getSoundMuted()) {
+            void playSound(notificationPopSound.dataUri, { volume: 0.5 })
+          }
+          if (newSolved.size >= RIDDLE_COUNT) {
+            useAchievementsStore.getState().actions.unlock('riddle')
+          } else {
+            showProgressToast(newSolved.size)
+          }
         }
         setStatus('correct')
       } else {
