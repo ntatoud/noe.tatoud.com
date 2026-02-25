@@ -68,7 +68,9 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
     if (status === 'correct' || !guess.trim()) return
 
     startTransition(async () => {
-      setOptimisticSolvedCount(solvedCount + 1)
+      if (!getSolvedRiddles().has(day)) {
+        setOptimisticSolvedCount(solvedCount + 1)
+      }
       const { correct } = await checkAnswer({ data: guess })
 
       if (correct) {
