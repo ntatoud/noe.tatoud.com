@@ -3,28 +3,25 @@ import { ACHIEVEMENTS } from './achievements'
 import {
   CLICK_FRENZY_TARGET,
   EXPLORER_SECTIONS,
-  getClickCount,
-  getReadPosts,
-  getVisitedSections,
-  useAchievements,
+  useAchievementCounts,
 } from './use-achievements'
+import { RIDDLE_COUNT } from './achievement/riddle'
 import { PixelProgress } from '@/components/ui/progress'
-import { useHydrated } from '@/hooks/use-hydrated'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Route } from '@/routes/achievements/index'
 import { Section, SectionContent } from '@/layout/section'
 
 export function PageAchievements() {
-  const { unlockedIds } = useAchievements()
   const { totalBlogPosts } = Route.useLoaderData()
-  const hydrated = useHydrated()
-
-  const unlockedCount = hydrated ? unlockedIds.size : 0
-  const visitedCount = hydrated ? getVisitedSections().size : 0
-  const readCount = hydrated ? getReadPosts().size : 0
-  const clickCount = hydrated
-    ? Math.min(getClickCount(), CLICK_FRENZY_TARGET)
-    : 0
+  const {
+    unlockedIds,
+    hydrated,
+    unlockedCount,
+    visitedCount,
+    readCount,
+    clickCount,
+    solvedRiddleCount,
+  } = useAchievementCounts(totalBlogPosts)
 
   function getProgress(id: string) {
     if (id === 'explorer') {
@@ -46,6 +43,13 @@ export function PageAchievements() {
         value: clickCount,
         max: CLICK_FRENZY_TARGET,
         label: `${clickCount} / ${CLICK_FRENZY_TARGET} clicks`,
+      }
+    }
+    if (id === 'riddle') {
+      return {
+        value: solvedRiddleCount,
+        max: RIDDLE_COUNT,
+        label: `${solvedRiddleCount} / ${RIDDLE_COUNT} days`,
       }
     }
     return undefined

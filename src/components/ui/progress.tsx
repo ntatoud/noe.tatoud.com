@@ -26,8 +26,9 @@ export function PixelProgress({
         {Array.from({ length: segments }).map((_, i) => (
           <div
             key={i}
+            data-checked={i < value}
             className={cn(
-              'h-1.5 flex-1 transition-colors duration-300',
+              'h-1.5 flex-1 transition-colors duration-300 not-data-checked:opacity-50 data-checked:opacity-100',
               i < value ? 'bg-primary' : 'bg-muted',
             )}
           />

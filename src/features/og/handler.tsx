@@ -3,7 +3,7 @@ import { loadOgSearchParams } from '@/features/og/search-params'
 import { OgImage } from '@/features/og/og-image'
 
 export async function handleOgImage(request: Request) {
-  const { title, description, author, tags, hero, avatar } =
+  const { title, description, author, tags, hero, avatar, section } =
     loadOgSearchParams(request)
   const origin = new URL(request.url).origin
   const heroUrl = hero ? `${origin}${hero}` : null
@@ -21,6 +21,7 @@ export async function handleOgImage(request: Request) {
       tags={tags}
       hero={heroUrl}
       avatar={avatarUrl}
+      section={section}
     />,
     {
       width: 1200,
