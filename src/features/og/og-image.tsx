@@ -9,6 +9,7 @@ export function OgImage({
   tags,
   hero,
   avatar,
+  section,
 }: OgImageProps) {
   return (
     <div
@@ -42,12 +43,14 @@ export function OgImage({
         >
           noe.tatoud.com
         </div>
-        <div
-          tw="ml-3 text-xl"
-          style={{ color: '#666666', letterSpacing: '0.05em' }}
-        >
-          / blog
-        </div>
+        {section && (
+          <div
+            tw="ml-3 text-xl"
+            style={{ color: '#666666', letterSpacing: '0.05em' }}
+          >
+            / {section}
+          </div>
+        )}
       </div>
 
       {/* Middle: title + description */}

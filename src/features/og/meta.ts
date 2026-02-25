@@ -20,9 +20,10 @@ export function ogMeta({
   origin,
   type = 'article',
 }: OgMetaOptions) {
+  const section = url.split('/').filter(Boolean)[0] ?? null
   const ogImageUrl = siteUrl(
     origin,
-    `/api/og${serializeOgSearchParams({ title, description, author, tags, hero, avatar })}`,
+    `/api/og${serializeOgSearchParams({ title, description, author, tags, hero, avatar, section })}`,
   )
   const pageUrl = siteUrl(origin, url)
 
