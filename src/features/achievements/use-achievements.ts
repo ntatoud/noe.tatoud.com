@@ -1,6 +1,6 @@
 import { create } from 'zustand'
+import { getSolvedRiddles } from './achievement/riddle'
 import type { AchievementId } from './achievements'
-import { getSolvedRiddles, RIDDLE_COUNT } from './achievement/riddle'
 import { useHydrated } from '@/hooks/use-hydrated'
 
 const STORAGE_KEY = 'achievements'
