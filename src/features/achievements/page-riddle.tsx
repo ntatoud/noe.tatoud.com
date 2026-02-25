@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
-import { Route } from '@/routes/shrine'
 
 const DAY_NAMES = [
   'Sunday',
@@ -35,8 +34,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
   )
 }
 
-export function PageRiddle() {
-  const { riddle, day } = Route.useLoaderData()
+export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
   const hydrated = useHydrated()
 
   const alreadySolved = hydrated && getSolvedRiddles().has(day)
