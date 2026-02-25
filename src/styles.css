@@ -187,7 +187,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply h-full overflow-y-auto overscroll-none bg-background font-sans text-foreground;
+    @apply h-full overflow-y-auto overscroll-y-none bg-background font-sans text-foreground;
     /* Subtle scanline overlay */
     background-image: repeating-linear-gradient(
       0deg,
