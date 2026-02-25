@@ -11,6 +11,7 @@ import { keyboard } from './keyboard'
 import { secret } from './secret'
 import { clickFrenzy } from './click-frenzy'
 import { lost } from './lost'
+import { riddle } from './riddle'
 import type { AchievementDef, AchievementId } from './types'
 
 export type { Achievement, AchievementDef, AchievementId } from './types'
@@ -29,6 +30,7 @@ const ALL: Array<AchievementDef> = [
   secret,
   clickFrenzy,
   lost,
+  riddle,
 ]
 
 export const ACHIEVEMENTS: Array<AchievementDef> = ALL

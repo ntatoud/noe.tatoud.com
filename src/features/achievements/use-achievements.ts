@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import type { AchievementId } from './achievements'
+import { getSolvedRiddles, RIDDLE_COUNT } from './achievement/riddle'
+import { useHydrated } from '@/hooks/use-hydrated'
 
 const STORAGE_KEY = 'achievements'
 const READ_POSTS_KEY = 'read-posts'
@@ -101,4 +103,28 @@ export function incrementClickCount(): number {
     // storage unavailable
   }
   return count
+}
+
+export function useAchievementCounts(totalBlogPosts: number) {
+  const { unlockedIds } = useAchievements()
+  const hydrated = useHydrated()
+
+  const unlockedCount = hydrated ? unlockedIds.size : 0
+  const visitedCount = hydrated ? getVisitedSections().size : 0
+  const readCount = hydrated ? getReadPosts().size : 0
+  const clickCount = hydrated
+    ? Math.min(getClickCount(), CLICK_FRENZY_TARGET)
+    : 0
+  const solvedRiddleCount = hydrated ? getSolvedRiddles().size : 0
+
+  return {
+    unlockedIds,
+    hydrated,
+    unlockedCount,
+    visitedCount,
+    readCount,
+    clickCount,
+    solvedRiddleCount,
+    totalBlogPosts,
+  }
 }
