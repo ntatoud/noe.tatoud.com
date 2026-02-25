@@ -2,7 +2,7 @@ import type { OgImageProps } from '@/features/og/og-image'
 import { serializeOgSearchParams } from '@/features/og/search-params'
 import { siteUrl } from '@/lib/site'
 
-type OgMetaOptions = Omit<OgImageProps, 'avatar'> & {
+type OgMetaOptions = Omit<OgImageProps, 'avatar' | 'section'> & {
   url: string
   origin: string
   type?: 'article' | 'website'
