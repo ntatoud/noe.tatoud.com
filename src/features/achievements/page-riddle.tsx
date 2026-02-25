@@ -49,7 +49,7 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
   const [status, setStatus] = useState<'idle' | 'wrong' | 'correct'>(
     alreadySolved ? 'correct' : 'idle',
   )
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [optimisticSolvedCount, setOptimisticSolvedCount] =
     useOptimistic(solvedCount)
   const [progressToast, setProgressToast] = useState<number | null>(null)
