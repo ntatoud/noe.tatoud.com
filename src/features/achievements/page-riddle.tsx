@@ -148,10 +148,7 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
               value={optimisticSolvedCount}
               max={RIDDLE_COUNT}
               label={`${optimisticSolvedCount} / ${RIDDLE_COUNT} days`}
-              className={cn(
-                'w-full transition-opacity',
-                isPending && 'opacity-50',
-              )}
+              className="w-full"
             />
           </div>
         </SectionContent>
