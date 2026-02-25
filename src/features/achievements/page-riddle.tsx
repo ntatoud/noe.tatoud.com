@@ -1,4 +1,4 @@
-import { useOptimistic, useState, useTransition } from 'react'
+import { useOptimistic, useRef, useState, useTransition } from 'react'
 import { useFormStatus } from 'react-dom'
 import { checkAnswer } from './check-riddle'
 import {
@@ -12,6 +12,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useHydrated } from '@/hooks/use-hydrated'
+import { getSoundMuted } from '@/hooks/use-sound-muted'
+import { notificationPopSound } from '@/lib/notification-pop'
+import { playSound } from '@/lib/sound-engine'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
 
@@ -24,6 +27,8 @@ const DAY_NAMES = [
   'Friday',
   'Saturday',
 ]
+
+const TOAST_DURATION_MS = 4000
 
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus()
@@ -47,6 +52,17 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
   const [isPending, startTransition] = useTransition()
   const [optimisticSolvedCount, setOptimisticSolvedCount] =
     useOptimistic(solvedCount)
+  const [progressToast, setProgressToast] = useState<number | null>(null)
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function showProgressToast(solved: number) {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    setProgressToast(solved)
+    toastTimerRef.current = setTimeout(
+      () => setProgressToast(null),
+      TOAST_DURATION_MS,
+    )
+  }
 
   function formAction() {
     if (status === 'correct' || !guess.trim()) return
@@ -56,9 +72,14 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
       const { correct } = await checkAnswer({ data: guess })
 
       if (correct) {
+        if (!getSoundMuted()) {
+          void playSound(notificationPopSound.dataUri, { volume: 0.5 })
+        }
         const newSolved = addSolvedRiddle(day)
         if (newSolved.size >= RIDDLE_COUNT) {
           useAchievementsStore.getState().actions.unlock('riddle')
+        } else {
+          showProgressToast(newSolved.size)
         }
         setStatus('correct')
       } else {
@@ -130,6 +151,32 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
           </div>
         </SectionContent>
       </Section>
+
+      {progressToast !== null && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-24 left-3 z-60 sm:bottom-5"
+        >
+          <div
+            className={cn(
+              'relative flex cursor-default items-center gap-4 px-4 py-3 clip-pixel-lg',
+              'bg-border [filter:drop-shadow(2px_2px_0_var(--shelf-card))]',
+              'before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:bg-card before:content-[""] before:clip-pixel-lg',
+              'animate-in duration-200 fade-in slide-in-from-left-4',
+            )}
+          >
+            <div>
+              <div className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
+                Riddlemaster progress
+              </div>
+              <div className="font-mono text-base font-medium text-foreground">
+                {progressToast} / {RIDDLE_COUNT} days
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
