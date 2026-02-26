@@ -27,7 +27,7 @@
     "@tanstack/react-router-ssr-query": "1.157.2",
     "@tanstack/react-start": "1.157.2",
     "@tanstack/router-plugin": "1.157.2",
-    "achievements-react": "0.2.0",
+    "achievements-react": "0.3.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "fumadocs-core": "16.4.11",
