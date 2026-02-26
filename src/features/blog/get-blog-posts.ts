@@ -12,6 +12,10 @@ export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
   blog
     .getPages()
     .filter((page) => page.data.published)
+    .sort(
+      (a, b) =>
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+    )
     .map((page) => ({
       slug: page.slugs.join('/'),
       url: page.url,
