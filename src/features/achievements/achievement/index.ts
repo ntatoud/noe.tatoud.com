@@ -1,3 +1,4 @@
+import { definitions } from '../engine'
 import { firstVisit } from './first-visit'
 import { returning } from './returning'
 import { nightOwl } from './night-owl'
@@ -12,7 +13,6 @@ import { secret } from './secret'
 import { clickFrenzy } from './click-frenzy'
 import { lost } from './lost'
 import { riddle } from './riddle'
-import { definitions } from '../engine'
 import type { AchievementDef, AchievementId } from './types'
 
 export type { Achievement, AchievementDef, AchievementId } from './types'
