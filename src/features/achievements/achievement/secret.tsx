@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 const KONAMI = [
   'ArrowUp',
@@ -40,13 +39,7 @@ function IconQuestion(props: IconProps) {
   )
 }
 
-export const secret: AchievementDef = {
-  id: 'secret',
-  label: 'Konami',
-  description: '↑ ↑ ↓ ↓ ← → ← → B A',
-  hidden: true,
-  icon: IconQuestion,
-}
+export const secret = { id: 'secret' as const, icon: IconQuestion }
 
 export function useSecretAchievement() {
   useEffect(() => {

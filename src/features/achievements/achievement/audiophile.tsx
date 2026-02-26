@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconNote(props: IconProps) {
   return (
@@ -22,11 +21,4 @@ function IconNote(props: IconProps) {
   )
 }
 
-export const audiophile: AchievementDef = {
-  id: 'audiophile',
-  label: 'Audiophile',
-  description: 'Toggled the sound on.',
-  hidden: false,
-  hint: false,
-  icon: IconNote,
-}
+export const audiophile = { id: 'audiophile' as const, icon: IconNote }

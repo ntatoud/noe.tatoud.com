@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconClickFrenzy(props: IconProps) {
   return (
@@ -28,11 +27,8 @@ function IconClickFrenzy(props: IconProps) {
   )
 }
 
-export const clickFrenzy: AchievementDef = {
-  id: 'click-frenzy',
-  label: 'Click Frenzy',
-  description: 'Clicked 100 times on the site.',
-  hidden: false,
+export const clickFrenzy = {
+  id: 'click-frenzy' as const,
   icon: IconClickFrenzy,
 }
 

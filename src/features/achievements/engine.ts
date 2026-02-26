@@ -105,6 +105,8 @@ const definitions = defineAchievements([
 
 export type AchievementId = (typeof definitions)[number]['id']
 
+export { definitions }
+
 export const {
   engine,
   Provider,

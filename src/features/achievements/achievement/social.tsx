@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconBubble(props: IconProps) {
   return (
@@ -28,11 +27,4 @@ function IconBubble(props: IconProps) {
   )
 }
 
-export const social: AchievementDef = {
-  id: 'social',
-  label: 'Social Butterfly',
-  description: 'Clicked a social link.',
-  hidden: false,
-  hint: false,
-  icon: IconBubble,
-}
+export const social = { id: 'social' as const, icon: IconBubble }

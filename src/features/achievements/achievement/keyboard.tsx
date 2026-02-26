@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconKeyboard(props: IconProps) {
   return (
@@ -32,13 +31,7 @@ function IconKeyboard(props: IconProps) {
   )
 }
 
-export const keyboard: AchievementDef = {
-  id: 'keyboard',
-  label: 'Keyboard Warrior',
-  description: 'Navigated the site with the keyboard.',
-  hidden: true,
-  icon: IconKeyboard,
-}
+export const keyboard = { id: 'keyboard' as const, icon: IconKeyboard }
 
 export function useKeyboardAchievement() {
   useEffect(() => {

@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconBook(props: IconProps) {
   return (
@@ -29,10 +28,4 @@ function IconBook(props: IconProps) {
   )
 }
 
-export const reader: AchievementDef = {
-  id: 'reader',
-  label: 'Reader',
-  description: 'Read a blog post all the way through.',
-  hidden: false,
-  icon: IconBook,
-}
+export const reader = { id: 'reader' as const, icon: IconBook }

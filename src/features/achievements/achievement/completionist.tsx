@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconCrown(props: IconProps) {
   return (
@@ -24,10 +23,4 @@ function IconCrown(props: IconProps) {
   )
 }
 
-export const completionist: AchievementDef = {
-  id: 'completionist',
-  label: 'Completionist',
-  description: 'Read every blog post.',
-  hidden: false,
-  icon: IconCrown,
-}
+export const completionist = { id: 'completionist' as const, icon: IconCrown }

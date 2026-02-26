@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconLost(props: IconProps) {
   return (
@@ -34,10 +33,4 @@ function IconLost(props: IconProps) {
   )
 }
 
-export const lost: AchievementDef = {
-  id: 'lost',
-  label: 'How did I get here??',
-  description: 'Stumbled onto a 404 page.',
-  hidden: true,
-  icon: IconLost,
-}
+export const lost = { id: 'lost' as const, icon: IconLost }

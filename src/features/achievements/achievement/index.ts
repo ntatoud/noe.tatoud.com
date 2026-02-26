@@ -12,11 +12,12 @@ import { secret } from './secret'
 import { clickFrenzy } from './click-frenzy'
 import { lost } from './lost'
 import { riddle } from './riddle'
+import { definitions } from '../engine'
 import type { AchievementDef, AchievementId } from './types'
 
 export type { Achievement, AchievementDef, AchievementId } from './types'
 
-const ALL: Array<AchievementDef> = [
+const icons = [
   firstVisit,
   returning,
   nightOwl,
@@ -33,13 +34,16 @@ const ALL: Array<AchievementDef> = [
   riddle,
 ]
 
-export const ACHIEVEMENTS: Array<AchievementDef> = ALL
-
-const ICON_MAP = Object.fromEntries(ALL.map((a) => [a.id, a.icon])) as Record<
+const iconMap = Object.fromEntries(icons.map((e) => [e.id, e.icon])) as Record<
   AchievementId,
   AchievementDef['icon']
 >
 
+export const ACHIEVEMENTS: Array<AchievementDef> = definitions.map((def) => ({
+  ...def,
+  icon: iconMap[def.id],
+}))
+
 export function getAchievementIcon(id: AchievementId) {
-  return ICON_MAP[id]
+  return iconMap[id]
 }

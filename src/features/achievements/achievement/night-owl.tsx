@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconMoon(props: IconProps) {
   return (
@@ -28,13 +27,7 @@ function IconMoon(props: IconProps) {
   )
 }
 
-export const nightOwl: AchievementDef = {
-  id: 'night-owl',
-  label: 'Night Owl',
-  description: 'Visited between midnight and 5 AM.',
-  hidden: false,
-  icon: IconMoon,
-}
+export const nightOwl = { id: 'night-owl' as const, icon: IconMoon }
 
 const FROM = 0
 const TO = 5

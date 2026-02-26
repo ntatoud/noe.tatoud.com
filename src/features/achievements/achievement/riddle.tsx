@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 const SOLVED_RIDDLES_KEY = 'solved-riddles'
 
@@ -42,12 +41,4 @@ function IconTerminal(props: IconProps) {
   )
 }
 
-export const riddle: AchievementDef = {
-  id: 'riddle',
-  label: 'Riddlemaster',
-  description:
-    'Make an offering to the shrine by solving the riddle for 7 days.',
-  hidden: false,
-  hint: true,
-  icon: IconTerminal,
-}
+export const riddle = { id: 'riddle' as const, icon: IconTerminal }

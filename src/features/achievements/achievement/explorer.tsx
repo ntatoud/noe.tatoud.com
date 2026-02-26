@@ -3,7 +3,6 @@ import { useRouter } from '@tanstack/react-router'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 const EXPLORER_SECTIONS = ['/', '/blog', '/achievements'] as const
 
@@ -35,13 +34,7 @@ function IconPin(props: IconProps) {
   )
 }
 
-export const explorer: AchievementDef = {
-  id: 'explorer',
-  label: 'Explorer',
-  description: 'Visited every section of the site.',
-  hidden: false,
-  icon: IconPin,
-}
+export const explorer = { id: 'explorer' as const, icon: IconPin }
 
 export function useExplorerAchievement() {
   const router = useRouter()

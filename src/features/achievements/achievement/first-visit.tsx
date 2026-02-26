@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconFlag(props: IconProps) {
   return (
@@ -26,14 +25,7 @@ function IconFlag(props: IconProps) {
   )
 }
 
-export const firstVisit: AchievementDef = {
-  id: 'first-visit',
-  label: 'Welcome',
-  description: 'Visited the site for the first time.',
-  hidden: false,
-  hint: false,
-  icon: IconFlag,
-}
+export const firstVisit = { id: 'first-visit' as const, icon: IconFlag }
 
 export function useFirstVisitAchievement() {
   useEffect(() => {

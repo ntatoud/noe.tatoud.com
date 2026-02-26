@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 function IconCursor(props: IconProps) {
   return (
@@ -25,10 +24,4 @@ function IconCursor(props: IconProps) {
   )
 }
 
-export const pixelClicker: AchievementDef = {
-  id: 'pixel-clicker',
-  label: 'Pixel Perfect',
-  description: 'Found the clickable avatar.',
-  hidden: true,
-  icon: IconCursor,
-}
+export const pixelClicker = { id: 'pixel-clicker' as const, icon: IconCursor }
