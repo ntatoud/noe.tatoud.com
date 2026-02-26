@@ -1,11 +1,8 @@
 import { AchievementCard } from './achievement-card'
 import { ACHIEVEMENTS } from './achievements'
-import {
-  CLICK_FRENZY_TARGET,
-  EXPLORER_SECTIONS,
-  useAchievementCounts,
-} from './use-achievements'
-import { RIDDLE_COUNT } from './achievement/riddle'
+import { engine, useProgress, useUnlockedCount } from './engine'
+import type { AchievementId } from './engine'
+import { useHydrated } from '@/hooks/use-hydrated'
 import { PixelProgress } from '@/components/ui/progress'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Route } from '@/routes/achievements/index'
@@ -13,23 +10,22 @@ import { Section, SectionContent } from '@/layout/section'
 
 export function PageAchievements() {
   const { totalBlogPosts } = Route.useLoaderData()
-  const {
-    unlockedIds,
-    hydrated,
-    unlockedCount,
-    visitedCount,
-    readCount,
-    clickCount,
-    solvedRiddleCount,
-  } = useAchievementCounts(totalBlogPosts)
+  const hydrated = useHydrated()
+  const unlockedCount = useUnlockedCount()
+  const { progress: visitedCount, max: explorerMax } = useProgress('explorer')
+  const { progress: clickCount, max: clickMax } = useProgress('click-frenzy')
+  const { progress: solvedRiddleCount, max: riddleMax } = useProgress('riddle')
+
+  const unlockedIds = hydrated
+    ? (engine.getUnlocked() as Set<AchievementId>)
+    : new Set<AchievementId>()
+  const readCount = hydrated ? engine.getItems('completionist').size : 0
 
   function getProgress(id: string) {
     if (id === 'explorer') {
-      return {
-        value: visitedCount,
-        max: EXPLORER_SECTIONS.length,
-        label: `${visitedCount} / ${EXPLORER_SECTIONS.length} sections`,
-      }
+      const max = explorerMax ?? 3
+      const value = hydrated ? visitedCount : 0
+      return { value, max, label: `${value} / ${max} sections` }
     }
     if (id === 'completionist') {
       return {
@@ -39,33 +35,31 @@ export function PageAchievements() {
       }
     }
     if (id === 'click-frenzy') {
-      return {
-        value: clickCount,
-        max: CLICK_FRENZY_TARGET,
-        label: `${clickCount} / ${CLICK_FRENZY_TARGET} clicks`,
-      }
+      const max = clickMax ?? 100
+      const value = hydrated ? clickCount : 0
+      return { value, max, label: `${value} / ${max} clicks` }
     }
     if (id === 'riddle') {
-      return {
-        value: solvedRiddleCount,
-        max: RIDDLE_COUNT,
-        label: `${solvedRiddleCount} / ${RIDDLE_COUNT} days`,
-      }
+      const max = riddleMax ?? 7
+      const value = hydrated ? solvedRiddleCount : 0
+      return { value, max, label: `${value} / ${max} days` }
     }
     return undefined
   }
+
+  const displayUnlockedCount = hydrated ? unlockedCount : 0
 
   return (
     <div>
       <Hero className="pb-12">
         <HeroTitle>Achievements</HeroTitle>
         <HeroSubtitle>
-          {unlockedCount} / {ACHIEVEMENTS.length} unlocked
+          {displayUnlockedCount} / {ACHIEVEMENTS.length} unlocked
         </HeroSubtitle>
         <PixelProgress
-          value={unlockedCount}
+          value={displayUnlockedCount}
           max={ACHIEVEMENTS.length}
-          label={`${unlockedCount} of ${ACHIEVEMENTS.length} achievements unlocked`}
+          label={`${displayUnlockedCount} of ${ACHIEVEMENTS.length} achievements unlocked`}
           className="w-full max-w-xs"
         />
       </Hero>

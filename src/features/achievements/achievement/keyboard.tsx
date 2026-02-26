@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -46,7 +46,7 @@ export function useKeyboardAchievement() {
     function onKeydown(e: KeyboardEvent) {
       if (!triggered && e.key === 'Tab') {
         triggered = true
-        useAchievementsStore.getState().actions.unlock('keyboard')
+        engine.unlock('keyboard')
       }
     }
     document.addEventListener('keydown', onKeydown)

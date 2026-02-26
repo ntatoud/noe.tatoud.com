@@ -1,18 +1,20 @@
+import { Provider, useAchievementToast } from './engine'
 import { AchievementToast } from './achievement-toast'
-import { useAchievementsStore } from './use-achievements'
+
+function Toasts() {
+  const { queue, dismiss } = useAchievementToast()
+  return <AchievementToast queue={queue} onDismiss={dismiss} />
+}
 
 export function AchievementProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const toastQueue = useAchievementsStore((s) => s.toastQueue)
-  const dismissToast = useAchievementsStore((s) => s.actions.dismissToast)
-
   return (
-    <>
+    <Provider>
       {children}
-      <AchievementToast queue={toastQueue} onDismiss={dismissToast} />
-    </>
+      <Toasts />
+    </Provider>
   )
 }

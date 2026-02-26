@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -55,7 +55,7 @@ export function useSecretAchievement() {
       if (e.key === KONAMI[progress]) {
         progress++
         if (progress === KONAMI.length) {
-          useAchievementsStore.getState().actions.unlock('secret')
+          engine.unlock('secret')
           progress = 0
         }
       } else {

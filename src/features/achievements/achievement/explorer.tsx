@@ -1,14 +1,11 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import {
-  EXPLORER_SECTIONS,
-  addVisitedSection,
-  getVisitedSections,
-  useAchievementsStore,
-} from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
+
+const EXPLORER_SECTIONS = ['/', '/blog', '/achievements'] as const
 
 function IconPin(props: IconProps) {
   return (
@@ -54,10 +51,7 @@ export function useExplorerAchievement() {
         (s) => pathname === s || pathname.startsWith(s + '/'),
       )
       if (!section) return
-      addVisitedSection(section)
-      if (EXPLORER_SECTIONS.every((s) => getVisitedSections().has(s))) {
-        useAchievementsStore.getState().actions.unlock('explorer')
-      }
+      engine.collectItem('explorer', section)
     }
     trackSection(window.location.pathname)
     return router.subscribe('onResolved', () => {

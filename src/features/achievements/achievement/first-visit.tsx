@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -37,6 +37,6 @@ export const firstVisit: AchievementDef = {
 
 export function useFirstVisitAchievement() {
   useEffect(() => {
-    useAchievementsStore.getState().actions.unlock('first-visit')
+    engine.unlock('first-visit')
   }, [])
 }

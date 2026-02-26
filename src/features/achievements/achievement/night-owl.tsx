@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 import type { AchievementDef } from './types'
@@ -50,7 +50,6 @@ export function useNightOwlAchievement() {
           timeZone: tz,
         }).format(new Date()),
       ) % 24 // Intl may return 24 for midnight; normalise to 0
-    if (hour >= FROM && hour < TO)
-      useAchievementsStore.getState().actions.unlock('night-owl')
+    if (hour >= FROM && hour < TO) engine.unlock('night-owl')
   }, [])
 }

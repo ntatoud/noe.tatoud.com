@@ -3,10 +3,7 @@ import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Suspense, useEffect, useRef } from 'react'
 import type { ComponentProps } from 'react'
-import {
-  addReadPost,
-  useAchievements,
-} from '@/features/achievements/use-achievements'
+import { engine, useAchievements } from '@/features/achievements/engine'
 import { CardTags } from '@/components/ui/card-list'
 import { Image } from '@/components/ui/image'
 import { formatDate } from '@/lib/format'
@@ -97,7 +94,7 @@ function ScrollTracker({ slug }: { slug: string }) {
       if (entry.isIntersecting && !firedRef.current) {
         firedRef.current = true
         unlock('reader')
-        addReadPost(slug)
+        engine.collectItem('completionist', slug)
       }
     })
     observer.observe(el)
