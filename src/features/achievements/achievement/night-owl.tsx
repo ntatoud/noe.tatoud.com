@@ -3,7 +3,7 @@ import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconMoon(props: IconProps) {
+export function IconMoon(props: IconProps) {
   return (
     <Icon {...props}>
       <rect x={11} y={3} width={3} height={1} />
@@ -26,8 +26,6 @@ function IconMoon(props: IconProps) {
     </Icon>
   )
 }
-
-export const nightOwl = { id: 'night-owl' as const, icon: IconMoon }
 
 const FROM = 0
 const TO = 5

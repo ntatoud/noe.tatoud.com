@@ -1,7 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconBook(props: IconProps) {
+export function IconBook(props: IconProps) {
   return (
     <Icon {...props}>
       {/* left page */}
@@ -27,5 +27,3 @@ function IconBook(props: IconProps) {
     </Icon>
   )
 }
-
-export const reader = { id: 'reader' as const, icon: IconBook }

@@ -3,7 +3,7 @@ import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconFlag(props: IconProps) {
+export function IconFlag(props: IconProps) {
   return (
     <Icon {...props}>
       {/* pole */}
@@ -24,8 +24,6 @@ function IconFlag(props: IconProps) {
     </Icon>
   )
 }
-
-export const firstVisit = { id: 'first-visit' as const, icon: IconFlag }
 
 export function useFirstVisitAchievement() {
   useEffect(() => {

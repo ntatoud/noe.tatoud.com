@@ -1,7 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconCrown(props: IconProps) {
+export function IconCrown(props: IconProps) {
   return (
     <Icon {...props}>
       {/* three crown points */}
@@ -22,5 +22,3 @@ function IconCrown(props: IconProps) {
     </Icon>
   )
 }
-
-export const completionist = { id: 'completionist' as const, icon: IconCrown }

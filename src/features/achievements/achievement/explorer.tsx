@@ -6,7 +6,7 @@ import type { IconProps } from './icon'
 
 const EXPLORER_SECTIONS = ['/', '/blog', '/achievements'] as const
 
-function IconPin(props: IconProps) {
+export function IconPin(props: IconProps) {
   return (
     <Icon {...props}>
       {/* pin head (circle) */}
@@ -33,8 +33,6 @@ function IconPin(props: IconProps) {
     </Icon>
   )
 }
-
-export const explorer = { id: 'explorer' as const, icon: IconPin }
 
 export function useExplorerAchievement() {
   const router = useRouter()

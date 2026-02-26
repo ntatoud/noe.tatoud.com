@@ -16,7 +16,7 @@ const KONAMI = [
   'a',
 ]
 
-function IconQuestion(props: IconProps) {
+export function IconQuestion(props: IconProps) {
   return (
     <Icon {...props}>
       {/* top of question mark */}
@@ -38,8 +38,6 @@ function IconQuestion(props: IconProps) {
     </Icon>
   )
 }
-
-export const secret = { id: 'secret' as const, icon: IconQuestion }
 
 export function useSecretAchievement() {
   useEffect(() => {

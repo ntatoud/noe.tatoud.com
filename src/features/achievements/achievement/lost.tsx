@@ -1,7 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconLost(props: IconProps) {
+export function IconLost(props: IconProps) {
   return (
     <Icon {...props}>
       {/* compass circle */}
@@ -32,5 +32,3 @@ function IconLost(props: IconProps) {
     </Icon>
   )
 }
-
-export const lost = { id: 'lost' as const, icon: IconLost }

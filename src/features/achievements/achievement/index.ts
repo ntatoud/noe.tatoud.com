@@ -1,43 +1,38 @@
 import { definitions } from '../engine'
-import { firstVisit } from './first-visit'
-import { returning } from './returning'
-import { nightOwl } from './night-owl'
-import { audiophile } from './audiophile'
-import { explorer } from './explorer'
-import { reader } from './reader'
-import { completionist } from './completionist'
-import { pixelClicker } from './pixel-clicker'
-import { social } from './social'
-import { keyboard } from './keyboard'
-import { secret } from './secret'
-import { clickFrenzy } from './click-frenzy'
-import { lost } from './lost'
-import { riddle } from './riddle'
+import { IconFlag } from './first-visit'
+import { IconArrows } from './returning'
+import { IconMoon } from './night-owl'
+import { IconNote } from './audiophile'
+import { IconPin } from './explorer'
+import { IconBook } from './reader'
+import { IconCrown } from './completionist'
+import { IconCursor } from './pixel-clicker'
+import { IconBubble } from './social'
+import { IconKeyboard } from './keyboard'
+import { IconQuestion } from './secret'
+import { IconClickFrenzy } from './click-frenzy'
+import { IconLost } from './lost'
+import { IconTerminal } from './riddle'
 import type { AchievementDef, AchievementId } from './types'
 
 export type { Achievement, AchievementDef, AchievementId } from './types'
 
-const icons = [
-  firstVisit,
-  returning,
-  nightOwl,
-  audiophile,
-  explorer,
-  reader,
-  completionist,
-  pixelClicker,
-  social,
-  keyboard,
-  secret,
-  clickFrenzy,
-  lost,
-  riddle,
-]
-
-const iconMap = Object.fromEntries(icons.map((e) => [e.id, e.icon])) as Record<
-  AchievementId,
-  AchievementDef['icon']
->
+const iconMap: Record<AchievementId, AchievementDef['icon']> = {
+  'first-visit': IconFlag,
+  returning: IconArrows,
+  'night-owl': IconMoon,
+  audiophile: IconNote,
+  explorer: IconPin,
+  reader: IconBook,
+  completionist: IconCrown,
+  'pixel-clicker': IconCursor,
+  social: IconBubble,
+  keyboard: IconKeyboard,
+  secret: IconQuestion,
+  'click-frenzy': IconClickFrenzy,
+  lost: IconLost,
+  riddle: IconTerminal,
+}
 
 export const ACHIEVEMENTS: Array<AchievementDef> = definitions.map((def) => ({
   ...def,

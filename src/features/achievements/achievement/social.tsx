@@ -1,7 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconBubble(props: IconProps) {
+export function IconBubble(props: IconProps) {
   return (
     <Icon {...props}>
       {/* bubble */}
@@ -26,5 +26,3 @@ function IconBubble(props: IconProps) {
     </Icon>
   )
 }
-
-export const social = { id: 'social' as const, icon: IconBubble }

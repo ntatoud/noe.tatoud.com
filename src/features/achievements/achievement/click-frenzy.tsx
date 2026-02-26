@@ -3,7 +3,7 @@ import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconClickFrenzy(props: IconProps) {
+export function IconClickFrenzy(props: IconProps) {
   return (
     <Icon {...props}>
       {/* index finger */}
@@ -25,11 +25,6 @@ function IconClickFrenzy(props: IconProps) {
       <rect x={2} y={9} width={3} height={1} />
     </Icon>
   )
-}
-
-export const clickFrenzy = {
-  id: 'click-frenzy' as const,
-  icon: IconClickFrenzy,
 }
 
 export function useClickFrenzyAchievement() {

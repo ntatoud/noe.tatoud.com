@@ -27,7 +27,7 @@ export function addSolvedRiddle(day: number): Set<number> {
   return solved
 }
 
-function IconTerminal(props: IconProps) {
+export function IconTerminal(props: IconProps) {
   return (
     <Icon {...props}>
       <rect x={1} y={3} width={22} height={16} />
@@ -40,5 +40,3 @@ function IconTerminal(props: IconProps) {
     </Icon>
   )
 }
-
-export const riddle = { id: 'riddle' as const, icon: IconTerminal }

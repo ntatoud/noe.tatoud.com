@@ -3,7 +3,7 @@ import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconArrows(props: IconProps) {
+export function IconArrows(props: IconProps) {
   return (
     <Icon {...props}>
       {/* top arrow → */}
@@ -23,8 +23,6 @@ function IconArrows(props: IconProps) {
     </Icon>
   )
 }
-
-export const returning = { id: 'returning' as const, icon: IconArrows }
 
 export function useReturningAchievement() {
   useEffect(() => {

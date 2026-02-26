@@ -3,7 +3,7 @@ import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconKeyboard(props: IconProps) {
+export function IconKeyboard(props: IconProps) {
   return (
     <Icon {...props}>
       {/* keyboard outline */}
@@ -30,8 +30,6 @@ function IconKeyboard(props: IconProps) {
     </Icon>
   )
 }
-
-export const keyboard = { id: 'keyboard' as const, icon: IconKeyboard }
 
 export function useKeyboardAchievement() {
   useEffect(() => {

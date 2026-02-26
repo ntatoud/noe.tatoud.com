@@ -1,7 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
 
-function IconCursor(props: IconProps) {
+export function IconCursor(props: IconProps) {
   return (
     <Icon {...props}>
       {/* cursor arrow */}
@@ -23,5 +23,3 @@ function IconCursor(props: IconProps) {
     </Icon>
   )
 }
-
-export const pixelClicker = { id: 'pixel-clicker' as const, icon: IconCursor }
