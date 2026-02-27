@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconKeyboard(props: IconProps) {
+export function IconKeyboard(props: IconProps) {
   return (
     <Icon {...props}>
       {/* keyboard outline */}
@@ -32,21 +31,13 @@ function IconKeyboard(props: IconProps) {
   )
 }
 
-export const keyboard: AchievementDef = {
-  id: 'keyboard',
-  label: 'Keyboard Warrior',
-  description: 'Navigated the site with the keyboard.',
-  hidden: true,
-  icon: IconKeyboard,
-}
-
 export function useKeyboardAchievement() {
   useEffect(() => {
     let triggered = false
     function onKeydown(e: KeyboardEvent) {
       if (!triggered && e.key === 'Tab') {
         triggered = true
-        useAchievementsStore.getState().actions.unlock('keyboard')
+        engine.unlock('keyboard')
       }
     }
     document.addEventListener('keydown', onKeydown)

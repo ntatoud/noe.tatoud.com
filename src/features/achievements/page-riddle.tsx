@@ -6,7 +6,7 @@ import {
   addSolvedRiddle,
   getSolvedRiddles,
 } from './achievement/riddle'
-import { useAchievementsStore } from './use-achievements'
+import { engine } from './engine'
 import { PixelProgress } from '@/components/ui/progress'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -80,9 +80,8 @@ export function PageRiddle({ riddle, day }: { riddle: string; day: number }) {
           if (!getSoundMuted()) {
             void playSound(notificationPopSound.dataUri, { volume: 0.5 })
           }
-          if (newSolved.size >= RIDDLE_COUNT) {
-            useAchievementsStore.getState().actions.unlock('riddle')
-          } else {
+          engine.setProgress('riddle', newSolved.size)
+          if (newSolved.size < RIDDLE_COUNT) {
             showProgressToast(newSolved.size)
           }
         }

@@ -1,14 +1,9 @@
 import { useEffect } from 'react'
-import {
-  CLICK_FRENZY_TARGET,
-  incrementClickCount,
-  useAchievementsStore,
-} from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconClickFrenzy(props: IconProps) {
+export function IconClickFrenzy(props: IconProps) {
   return (
     <Icon {...props}>
       {/* index finger */}
@@ -32,20 +27,10 @@ function IconClickFrenzy(props: IconProps) {
   )
 }
 
-export const clickFrenzy: AchievementDef = {
-  id: 'click-frenzy',
-  label: 'Click Frenzy',
-  description: 'Clicked 100 times on the site.',
-  hidden: false,
-  icon: IconClickFrenzy,
-}
-
 export function useClickFrenzyAchievement() {
   useEffect(() => {
     function onDocumentClick() {
-      const count = incrementClickCount()
-      if (count >= CLICK_FRENZY_TARGET)
-        useAchievementsStore.getState().actions.unlock('click-frenzy')
+      engine.incrementProgress('click-frenzy')
     }
     document.addEventListener('click', onDocumentClick)
     return () => document.removeEventListener('click', onDocumentClick)

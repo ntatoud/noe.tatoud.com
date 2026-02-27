@@ -1,6 +1,5 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
 const SOLVED_RIDDLES_KEY = 'solved-riddles'
 
@@ -28,7 +27,7 @@ export function addSolvedRiddle(day: number): Set<number> {
   return solved
 }
 
-function IconTerminal(props: IconProps) {
+export function IconTerminal(props: IconProps) {
   return (
     <Icon {...props}>
       <rect x={1} y={3} width={22} height={16} />
@@ -40,14 +39,4 @@ function IconTerminal(props: IconProps) {
       <rect x={6} y={9} width={4} height={2} />
     </Icon>
   )
-}
-
-export const riddle: AchievementDef = {
-  id: 'riddle',
-  label: 'Riddlemaster',
-  description:
-    'Make an offering to the shrine by solving the riddle for 7 days.',
-  hidden: false,
-  hint: true,
-  icon: IconTerminal,
 }

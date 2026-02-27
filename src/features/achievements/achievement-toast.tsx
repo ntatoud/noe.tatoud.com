@@ -2,9 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { ACHIEVEMENTS } from './achievements'
 import { getAchievementIcon } from './achievement-icons'
 import type { AchievementId } from './achievements'
-import { notificationPopSound } from '@/lib/notification-pop'
-import { getSoundMuted } from '@/hooks/use-sound-muted'
-import { playSound } from '@/lib/sound-engine'
 import { cn } from '@/lib/utils'
 
 const AUTO_DISMISS_MS = 7000
@@ -14,7 +11,7 @@ export function AchievementToast({
   queue,
   onDismiss,
 }: {
-  queue: Array<AchievementId>
+  queue: ReadonlyArray<AchievementId>
   onDismiss: (id: AchievementId) => void
 }) {
   return (
@@ -45,12 +42,6 @@ function ToastItem({
     setExiting(true)
     setTimeout(() => onDismiss(id), EXIT_DURATION_MS)
   }, [id, onDismiss])
-
-  useEffect(() => {
-    if (!getSoundMuted()) {
-      void playSound(notificationPopSound.dataUri, { volume: 0.3 })
-    }
-  }, [])
 
   useEffect(() => {
     let remaining = AUTO_DISMISS_MS

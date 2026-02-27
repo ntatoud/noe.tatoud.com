@@ -1,8 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconBook(props: IconProps) {
+export function IconBook(props: IconProps) {
   return (
     <Icon {...props}>
       {/* left page */}
@@ -27,12 +26,4 @@ function IconBook(props: IconProps) {
       <rect x={15} y={14} width={5} height={1} />
     </Icon>
   )
-}
-
-export const reader: AchievementDef = {
-  id: 'reader',
-  label: 'Reader',
-  description: 'Read a blog post all the way through.',
-  hidden: false,
-  icon: IconBook,
 }

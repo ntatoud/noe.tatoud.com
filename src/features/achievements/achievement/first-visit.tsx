@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconFlag(props: IconProps) {
+export function IconFlag(props: IconProps) {
   return (
     <Icon {...props}>
       {/* pole */}
@@ -26,17 +25,8 @@ function IconFlag(props: IconProps) {
   )
 }
 
-export const firstVisit: AchievementDef = {
-  id: 'first-visit',
-  label: 'Welcome',
-  description: 'Visited the site for the first time.',
-  hidden: false,
-  hint: false,
-  icon: IconFlag,
-}
-
 export function useFirstVisitAchievement() {
   useEffect(() => {
-    useAchievementsStore.getState().actions.unlock('first-visit')
+    engine.unlock('first-visit')
   }, [])
 }

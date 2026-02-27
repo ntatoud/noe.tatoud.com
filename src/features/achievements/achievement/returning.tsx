@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconArrows(props: IconProps) {
+export function IconArrows(props: IconProps) {
   return (
     <Icon {...props}>
       {/* top arrow → */}
@@ -25,21 +24,11 @@ function IconArrows(props: IconProps) {
   )
 }
 
-export const returning: AchievementDef = {
-  id: 'returning',
-  label: "I'm Back",
-  description: 'Returned for a second visit.',
-  hidden: false,
-  hint: false,
-  icon: IconArrows,
-}
-
 export function useReturningAchievement() {
   useEffect(() => {
-    const { unlockedIds, actions } = useAchievementsStore.getState()
-    if (!unlockedIds.has('first-visit')) return
+    if (!engine.isUnlocked('first-visit')) return
     if (sessionStorage.getItem('returning-fired')) return
     sessionStorage.setItem('returning-fired', '1')
-    actions.unlock('returning')
+    engine.unlock('returning')
   }, [])
 }

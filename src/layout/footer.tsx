@@ -5,7 +5,7 @@ import {
   PixelMail,
   PixelSourceCode,
 } from '@/components/icons'
-import { useAchievements } from '@/features/achievements/use-achievements'
+import { useAchievements } from '@/features/achievements/engine'
 import { cn } from '@/lib/utils'
 
 export function Footer() {

@@ -1,8 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconNote(props: IconProps) {
+export function IconNote(props: IconProps) {
   return (
     <Icon {...props}>
       {/* stem */}
@@ -20,13 +19,4 @@ function IconNote(props: IconProps) {
       <rect x={9} y={18} width={7} height={1} />
     </Icon>
   )
-}
-
-export const audiophile: AchievementDef = {
-  id: 'audiophile',
-  label: 'Audiophile',
-  description: 'Toggled the sound on.',
-  hidden: false,
-  hint: false,
-  icon: IconNote,
 }

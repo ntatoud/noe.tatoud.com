@@ -1,8 +1,7 @@
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconLost(props: IconProps) {
+export function IconLost(props: IconProps) {
   return (
     <Icon {...props}>
       {/* compass circle */}
@@ -32,12 +31,4 @@ function IconLost(props: IconProps) {
       <rect x={11} y={9} width={2} height={2} />
     </Icon>
   )
-}
-
-export const lost: AchievementDef = {
-  id: 'lost',
-  label: 'How did I get here??',
-  description: 'Stumbled onto a 404 page.',
-  hidden: true,
-  icon: IconLost,
 }

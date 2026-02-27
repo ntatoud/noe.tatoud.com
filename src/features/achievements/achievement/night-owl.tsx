@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { useAchievementsStore } from '../use-achievements'
+import { engine } from '../engine'
 import { Icon } from './icon'
 import type { IconProps } from './icon'
-import type { AchievementDef } from './types'
 
-function IconMoon(props: IconProps) {
+export function IconMoon(props: IconProps) {
   return (
     <Icon {...props}>
       <rect x={11} y={3} width={3} height={1} />
@@ -28,14 +27,6 @@ function IconMoon(props: IconProps) {
   )
 }
 
-export const nightOwl: AchievementDef = {
-  id: 'night-owl',
-  label: 'Night Owl',
-  description: 'Visited between midnight and 5 AM.',
-  hidden: false,
-  icon: IconMoon,
-}
-
 const FROM = 0
 const TO = 5
 
@@ -50,7 +41,6 @@ export function useNightOwlAchievement() {
           timeZone: tz,
         }).format(new Date()),
       ) % 24 // Intl may return 24 for midnight; normalise to 0
-    if (hour >= FROM && hour < TO)
-      useAchievementsStore.getState().actions.unlock('night-owl')
+    if (hour >= FROM && hour < TO) engine.unlock('night-owl')
   }, [])
 }
