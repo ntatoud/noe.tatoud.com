@@ -276,6 +276,20 @@ figure.shiki pre {
   font-family: var(--font-mono);
 }
 
+/* View Transitions — simple crossfade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 150ms;
+}
+
+/* Header & mobile nav persist across navigations */
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-old(mobile-nav),
+::view-transition-new(mobile-nav) {
+  animation: none;
+}
+
 /*
   Pixel-rounded corners via clip-path staircase.
   Defined as @utility so Tailwind modifiers (before:, hover:, etc.) work.

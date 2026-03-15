@@ -8,6 +8,7 @@ export function MobileNav() {
   return (
     <nav
       aria-label="Main"
+      style={{ viewTransitionName: 'mobile-nav' }}
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 sm:hidden',
         'bg-card [filter:drop-shadow(0_-4px_0_var(--shelf-card))]',

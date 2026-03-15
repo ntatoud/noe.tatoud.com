@@ -20,6 +20,7 @@ export function Header() {
 
   return (
     <header
+      style={{ viewTransitionName: 'site-header' }}
       className={cn(
         'fixed top-0 z-50 hidden w-full items-center justify-center px-5 pt-safe-top sm:flex',
         'transition-transform duration-200',
