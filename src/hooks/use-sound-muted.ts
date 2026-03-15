@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'sound-muted'
+const SYNC_EVENT = 'sound-muted-changed'
 let _muted: boolean | null = null
 
 function readMuted(): boolean {
@@ -23,6 +24,12 @@ export function useSoundMuted() {
 
   useEffect(() => {
     setMutedState(readMuted())
+
+    function handleSync() {
+      setMutedState(readMuted())
+    }
+    window.addEventListener(SYNC_EVENT, handleSync)
+    return () => window.removeEventListener(SYNC_EVENT, handleSync)
   }, [])
 
   const toggleMuted = useCallback(() => {
@@ -34,6 +41,7 @@ export function useSoundMuted() {
       // storage unavailable
     }
     setMutedState(next)
+    window.dispatchEvent(new Event(SYNC_EVENT))
   }, [])
 
   return [muted, toggleMuted] as const

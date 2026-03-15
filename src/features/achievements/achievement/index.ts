@@ -12,6 +12,7 @@ import { IconKeyboard } from './keyboard'
 import { IconQuestion } from './secret'
 import { IconClickFrenzy } from './click-frenzy'
 import { IconLost } from './lost'
+import { IconCommandPalette } from './command-palette'
 import { IconTerminal } from './riddle'
 import type { AchievementDef, AchievementId } from './types'
 
@@ -31,6 +32,7 @@ const iconMap: Record<AchievementId, AchievementDef['icon']> = {
   secret: IconQuestion,
   'click-frenzy': IconClickFrenzy,
   lost: IconLost,
+  'command-palette': IconCommandPalette,
   riddle: IconTerminal,
 }
 
