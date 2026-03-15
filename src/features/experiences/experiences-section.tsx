@@ -32,7 +32,7 @@ function ExperienceItem({ experience }: { experience: Experience }) {
         rel: 'noopener noreferrer',
       })}
       className={cn(
-        'flex items-start gap-4 py-4 first:pt-0 last:pb-0',
+        'flex items-center gap-4 py-4',
         experience.url && 'transition-opacity hover:opacity-70',
       )}
     >
@@ -42,11 +42,11 @@ function ExperienceItem({ experience }: { experience: Experience }) {
           alt={experience.organization}
           width={40}
           height={40}
-          className="mt-0.5 shrink-0 object-contain clip-pixel"
+          className="shrink-0 object-contain clip-pixel"
           style={{ imageRendering: 'pixelated' }}
         />
       ) : (
-        <div className="mt-0.5 size-10 shrink-0 bg-muted clip-pixel" />
+        <div className="size-10 shrink-0 bg-muted clip-pixel" />
       )}
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex flex-wrap items-center gap-2">
@@ -79,7 +79,7 @@ export function ExperiencesSection() {
         <SectionTitle className="mr-auto">Experiences</SectionTitle>
       </SectionHeader>
       <SectionContent>
-        <div className="flex w-full flex-col divide-y divide-border">
+        <div className="-my-4 flex w-full flex-col divide-y divide-border">
           {experiences.map((experience) => (
             <ExperienceItem key={experience.slug} experience={experience} />
           ))}

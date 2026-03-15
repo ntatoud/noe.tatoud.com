@@ -2,10 +2,11 @@ import { createServerFn } from '@tanstack/react-start'
 import type { BlogPostFrontmatter } from './schemas'
 import { blog } from '@/lib/source'
 
-export type BlogPost = BlogPostFrontmatter & {
+export type BlogPost = Omit<BlogPostFrontmatter, 'externalUrl'> & {
   slug: string
   url: string
   hero: string | null
+  externalUrl: string | null
 }
 
 export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
@@ -27,6 +28,7 @@ export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
       published: page.data.published,
       translations: page.data.translations,
       tags: page.data.tags,
+      externalUrl: page.data.externalUrl ?? null,
       hero: (page.data._exports.hero as string | undefined) ?? null,
     })),
 )
