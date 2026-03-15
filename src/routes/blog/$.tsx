@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
 import type { BlogPosting } from 'schema-dts'
@@ -21,6 +21,9 @@ export const Route = createFileRoute('/blog/$')({
   loader: async ({ params }) => {
     const slugs = params._splat?.split('/') ?? []
     const data = await serverLoader({ data: slugs })
+    if (data.externalUrl) {
+      throw redirect({ href: data.externalUrl })
+    }
     await blogPostLoader.preload(data.path)
     return data
   },
@@ -62,6 +65,7 @@ const serverLoader = createServerFn({ method: 'GET' })
       tags: page.data.tags ?? null,
       url: page.url,
       hero: (page.data._exports.hero as string | undefined) ?? null,
+      externalUrl: page.data.externalUrl ?? null,
       origin,
     }
   })

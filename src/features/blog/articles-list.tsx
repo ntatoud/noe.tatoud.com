@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { BlogPost } from '@/features/blog/get-blog-posts'
+import { PixelExternalLink } from '@/components/icons'
 import {
   Card,
   CardContent,
@@ -40,26 +41,57 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
               priority={index === 0}
             />
           )}
-          <Link
-            to="/blog/$"
-            params={{ _splat: post.slug }}
-            className="flex h-full"
-          >
-            <CardContent className={post.hero ? 'justify-end' : ''}>
-              <CardTitle>{post.title}</CardTitle>
-              {post.description && (
-                <CardDescription>{post.description}</CardDescription>
-              )}
-              {post.tags && post.tags.length > 0 && (
-                <CardTags tags={post.tags} />
-              )}
-              <CardFooter>
-                <span>{post.author}</span>
-                <span>·</span>
-                <time>{formatDate(post.date)}</time>
-              </CardFooter>
-            </CardContent>
-          </Link>
+          {post.externalUrl ? (
+            <a
+              href={post.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-full"
+            >
+              <CardContent className={post.hero ? 'justify-end' : ''}>
+                <CardTitle className="flex items-center gap-2">
+                  {post.title}
+                  <PixelExternalLink
+                    size={12}
+                    aria-hidden
+                    className="shrink-0 text-muted-foreground"
+                  />
+                </CardTitle>
+                {post.description && (
+                  <CardDescription>{post.description}</CardDescription>
+                )}
+                {post.tags && post.tags.length > 0 && (
+                  <CardTags tags={post.tags} />
+                )}
+                <CardFooter>
+                  <span>{post.author}</span>
+                  <span>·</span>
+                  <time>{formatDate(post.date)}</time>
+                </CardFooter>
+              </CardContent>
+            </a>
+          ) : (
+            <Link
+              to="/blog/$"
+              params={{ _splat: post.slug }}
+              className="flex h-full"
+            >
+              <CardContent className={post.hero ? 'justify-end' : ''}>
+                <CardTitle>{post.title}</CardTitle>
+                {post.description && (
+                  <CardDescription>{post.description}</CardDescription>
+                )}
+                {post.tags && post.tags.length > 0 && (
+                  <CardTags tags={post.tags} />
+                )}
+                <CardFooter>
+                  <span>{post.author}</span>
+                  <span>·</span>
+                  <time>{formatDate(post.date)}</time>
+                </CardFooter>
+              </CardContent>
+            </Link>
+          )}
         </Card>
       ))}
     </CardList>
