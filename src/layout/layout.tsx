@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from '@tanstack/react-router'
+import { ClientOnly } from '@/components/client-only'
 import ClickSpark from '@/components/click-spark'
 import { PageLoader } from '@/components/page-loader'
 import { AchievementProvider } from '@/features/achievements/achievement-provider'
@@ -13,6 +14,7 @@ import { useExplorerAchievement } from '@/features/achievements/achievement/expl
 import { click8bitSound } from '@/lib/click-8bit'
 import { getSoundMuted } from '@/hooks/use-sound-muted'
 import { playSound } from '@/lib/sound-engine'
+import { CommandPalette } from '@/layout/command-palette'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
 import { MobileNav } from '@/layout/mobile-nav'
@@ -65,6 +67,9 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         <ScrollToTop mainRef={mainRef} />
         <ClickSound />
         <AchievementTriggers />
+        <ClientOnly>
+          <CommandPalette />
+        </ClientOnly>
         <Header />
         <main
           ref={mainRef}

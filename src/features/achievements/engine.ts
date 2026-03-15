@@ -93,6 +93,12 @@ const definitions = defineAchievements([
     hidden: true,
   },
   {
+    id: 'command-palette',
+    label: 'Power User',
+    description: 'Opened the command palette.',
+    hidden: true,
+  },
+  {
     id: 'riddle',
     label: 'Riddlemaster',
     description:

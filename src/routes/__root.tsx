@@ -54,7 +54,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="dark">
-        <RootProvider>
+        <RootProvider search={{ enabled: false }}>
           <Layout>{children}</Layout>
           <TanStackDevtools
             config={{
