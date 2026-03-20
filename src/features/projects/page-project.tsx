@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PixelExternalLink, PixelSourceCode } from '@/components/icons'
 import { Hero, HeroTitle } from '@/layout/hero'
+import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 import {
   ProjectCta,
   ProjectInlineLink,
@@ -38,6 +39,11 @@ export const projectLoader = browserCollections.projects.createClientLoader({
     return (
       <>
         <Hero className="pt-12 text-center">
+          <PageBreadcrumb
+            href="/projects"
+            label="Projects"
+            current={frontmatter.title}
+          />
           {frontmatter.tags && frontmatter.tags.length > 0 && (
             <CardTags tags={frontmatter.tags} />
           )}

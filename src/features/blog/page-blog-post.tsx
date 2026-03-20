@@ -8,6 +8,7 @@ import { CardTags } from '@/components/ui/card-list'
 import { Image } from '@/components/ui/image'
 import { formatDate } from '@/lib/format'
 import { Hero, HeroMeta, HeroTitle } from '@/layout/hero'
+import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 
 const mdxComponents = {
   ...defaultMdxComponents,
@@ -29,6 +30,11 @@ export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
     return (
       <>
         <Hero className="pt-12 text-center">
+          <PageBreadcrumb
+            href="/blog"
+            label="Blog"
+            current={frontmatter.title}
+          />
           {frontmatter.tags && frontmatter.tags.length > 0 && (
             <CardTags tags={frontmatter.tags} />
           )}
