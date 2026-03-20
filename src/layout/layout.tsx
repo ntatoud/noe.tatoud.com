@@ -14,6 +14,7 @@ import { useExplorerAchievement } from '@/features/achievements/achievement/expl
 import { click8bitSound } from '@/lib/click-8bit'
 import { getSoundMuted } from '@/hooks/use-sound-muted'
 import { playSound } from '@/lib/sound-engine'
+import { SoundToggle } from '@/components/sound-toggle'
 import { CommandPalette } from '@/layout/command-palette'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
@@ -79,6 +80,9 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
           <Footer />
         </main>
         <MobileNav />
+        <div className="fixed top-3 right-3 z-50 pt-safe-top sm:hidden">
+          <SoundToggle />
+        </div>
       </ClickSpark>
     </div>
   )

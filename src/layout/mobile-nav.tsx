@@ -1,5 +1,4 @@
 import { Link, useMatchRoute } from '@tanstack/react-router'
-import { SoundToggle } from '@/components/sound-toggle'
 import { Button } from '@/components/ui/button'
 import { nav } from '@/layout/nav-config'
 import { cn } from '@/lib/utils'
@@ -14,13 +13,10 @@ export function MobileNav() {
         'pb-safe-bottom',
       )}
     >
-      <div className="relative flex flex-row items-center justify-around px-4 pt-2 pb-2">
+      <div className="flex flex-row items-center justify-around px-4 pt-2 pb-2">
         {nav.map((item) => (
           <NavButton key={item.to} item={item} />
         ))}
-        <div className="absolute top-1/2 right-3 -translate-y-1/2">
-          <SoundToggle />
-        </div>
       </div>
     </nav>
   )
@@ -41,7 +37,7 @@ function NavButton({ item }: { item: (typeof nav)[number] }) {
       render={<Link {...linkProps} />}
     >
       <Icon size={20} filled={isActive} />
-      <span className="font-mono text-[0.55rem] leading-none tracking-widest uppercase">
+      <span className="max-w-14 truncate font-mono text-[0.55rem] leading-none tracking-widest uppercase">
         {item.label}
       </span>
     </Button>

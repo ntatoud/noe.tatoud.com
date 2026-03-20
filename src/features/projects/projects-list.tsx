@@ -1,16 +1,14 @@
+import { Link } from '@tanstack/react-router'
 import type { Project } from '@/features/projects/get-projects'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
-  CardList,
   CardTags,
   CardTitle,
 } from '@/components/ui/card-list'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 
 export function ProjectsList({ projects }: { projects: Array<Project> }) {
   if (projects.length === 0) {
@@ -27,7 +25,7 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
   }
 
   return (
-    <CardList>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {projects.map((project) => (
         <Card
           key={project.slug}
@@ -38,60 +36,34 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
               : 'border-t-accent',
           )}
         >
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <CardTitle>{project.title}</CardTitle>
-              <Badge
-                variant={
-                  project.kind === 'contribution' ? 'default' : 'secondary'
-                }
-              >
-                {project.kind === 'contribution' ? 'Contribution' : 'Personal'}
-              </Badge>
-            </div>
-            {project.description && (
-              <CardDescription>{project.description}</CardDescription>
-            )}
-            {project.tags && project.tags.length > 0 && (
-              <CardTags tags={project.tags} />
-            )}
-            {(project.url || project.repo) && (
-              <CardFooter className="gap-4">
-                {project.url && (
-                  <Button
-                    variant="link"
-                    nativeButton={false}
-                    render={
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    }
-                  >
-                    Visit
-                  </Button>
-                )}
-                {project.repo && (
-                  <Button
-                    variant="link"
-                    nativeButton={false}
-                    render={
-                      <a
-                        href={project.repo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    }
-                  >
-                    Source
-                  </Button>
-                )}
-              </CardFooter>
-            )}
-          </CardContent>
+          <Link
+            to="/projects/$"
+            params={{ _splat: project.slug }}
+            className="flex h-full"
+          >
+            <CardContent>
+              <div className="flex items-center gap-3">
+                <CardTitle>{project.title}</CardTitle>
+                <Badge
+                  variant={
+                    project.kind === 'contribution' ? 'default' : 'secondary'
+                  }
+                >
+                  {project.kind === 'contribution'
+                    ? 'Contribution'
+                    : 'Personal'}
+                </Badge>
+              </div>
+              {project.description && (
+                <CardDescription>{project.description}</CardDescription>
+              )}
+              {project.tags && project.tags.length > 0 && (
+                <CardTags tags={project.tags} />
+              )}
+            </CardContent>
+          </Link>
         </Card>
       ))}
-    </CardList>
+    </div>
   )
 }

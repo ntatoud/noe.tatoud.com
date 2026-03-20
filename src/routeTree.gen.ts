@@ -13,8 +13,10 @@ import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShrineRouteImport } from './routes/shrine'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
+import { Route as ProjectsSplatRouteImport } from './routes/projects/$'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 
@@ -38,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -46,6 +53,11 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
 const AchievementsIndexRoute = AchievementsIndexRouteImport.update({
   id: '/achievements/',
   path: '/achievements/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsSplatRoute = ProjectsSplatRouteImport.update({
+  id: '/projects/$',
+  path: '/projects/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSplatRoute = BlogSplatRouteImport.update({
@@ -66,8 +78,10 @@ export interface FileRoutesByFullPath {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/projects/$': typeof ProjectsSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +90,10 @@ export interface FileRoutesByTo {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/projects/$': typeof ProjectsSplatRoute
   '/achievements': typeof AchievementsIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +103,10 @@ export interface FileRoutesById {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/projects/$': typeof ProjectsSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +117,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/projects/$'
     | '/achievements/'
     | '/blog/'
+    | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +129,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/projects/$'
     | '/achievements'
     | '/blog'
+    | '/projects'
   id:
     | '__root__'
     | '/'
@@ -119,8 +141,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/projects/$'
     | '/achievements/'
     | '/blog/'
+    | '/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,8 +154,10 @@ export interface RootRouteChildren {
   StyleguideRoute: typeof StyleguideRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSplatRoute: typeof BlogSplatRoute
+  ProjectsSplatRoute: typeof ProjectsSplatRoute
   AchievementsIndexRoute: typeof AchievementsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -176,6 +209,13 @@ declare module '@tanstack/react-router' {
       path: '/achievements'
       fullPath: '/achievements/'
       preLoaderRoute: typeof AchievementsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/$': {
+      id: '/projects/$'
+      path: '/projects/$'
+      fullPath: '/projects/$'
+      preLoaderRoute: typeof ProjectsSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$': {
@@ -202,8 +242,10 @@ const rootRouteChildren: RootRouteChildren = {
   StyleguideRoute: StyleguideRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSplatRoute: BlogSplatRoute,
+  ProjectsSplatRoute: ProjectsSplatRoute,
   AchievementsIndexRoute: AchievementsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
