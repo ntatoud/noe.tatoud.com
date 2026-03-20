@@ -1,7 +1,9 @@
-import { useLoaderData } from '@tanstack/react-router'
-
+import { Link, useLoaderData } from '@tanstack/react-router'
+import { PixelArrowRight } from '@/components/icons'
+import { Button } from '@/components/ui/button'
 import {
   Section,
+  SectionActions,
   SectionContent,
   SectionHeader,
   SectionTitle,
@@ -13,7 +15,17 @@ export function ProjectsSection() {
   return (
     <Section>
       <SectionHeader>
-        <SectionTitle className="mr-auto">Projects</SectionTitle>
+        <SectionTitle>Projects</SectionTitle>
+        <SectionActions>
+          <Button
+            variant="ghost"
+            className="px-2"
+            render={<Link to="/projects" />}
+            nativeButton={false}
+          >
+            All projects <PixelArrowRight size={16} aria-hidden />
+          </Button>
+        </SectionActions>
       </SectionHeader>
       <SectionContent>
         <ProjectsList projects={projects} />

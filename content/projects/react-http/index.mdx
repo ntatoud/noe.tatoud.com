@@ -10,4 +10,47 @@ tags:
   - Node.js
 ---
 
-A React renderer for HTTP servers. Define your backend routes declaratively with JSX.
+## The idea
+
+What if you could define an HTTP server the same way you define a UI, with JSX components?
+
+That's the premise of react-http: a custom React renderer that maps a component tree to a fully functional Node.js HTTP server. It started as a fun experiment to explore React internals, and partly as a tongue-in-cheek jab at the "React for everything" crowd.
+
+## How it works
+
+Instead of chaining method calls like you would with Express or Fastify, you declare your routes as nested JSX:
+
+```jsx
+const App = () => (
+  <Server port={3000}>
+    <Route path="/api/todos">
+      <Get handler={() => ({ todos: [] })} />
+      <Post handler={(ctx) => ({ created: ctx.body })} />
+    </Route>
+  </Server>
+)
+
+createServer(<App />).listen()
+```
+
+Under the hood, a custom `react-reconciler` transforms this component tree into a real HTTP server. No Express, no Koa, no Fastify. Just React and Node's built-in `http` module.
+
+## What it supports
+
+Despite being a side project, it handles more than you'd expect:
+
+- **All HTTP methods**:GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD
+- **Path parameters**:`/users/:id` with typed `ctx.params`
+- **Query strings**:parsed and available via `ctx.query`
+- **Middleware**:composable handlers with `next()` support
+- **Full TypeScript**:typed request context, handlers, and middleware
+
+## Why build this?
+
+Two reasons: **curiosity and comedy.**
+
+I wanted to understand how React reconcilers work from the inside:how `createElement`, host configs, and the fiber tree come together. Building a renderer for something completely unrelated to the DOM turned out to be the best way to learn.
+
+And honestly, the idea of writing `<Get handler={...} />` to define an API endpoint is just funny.
+
+> Not intended for production use. Please use a real framework.
