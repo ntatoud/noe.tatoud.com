@@ -11,8 +11,8 @@ import { Hero, HeroTitle } from '@/layout/hero'
 import {
   ProjectCta,
   ProjectInlineLink,
-  ProjectLinks,
   ProjectLinkItem,
+  ProjectLinks,
 } from '@/features/projects/project-cta'
 
 const mdxComponents = {
