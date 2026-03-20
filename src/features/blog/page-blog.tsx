@@ -24,7 +24,7 @@ export function PageBlog() {
 
       <Section>
         <SectionContent>
-          <ArticlesList posts={posts} />
+          <ArticlesList posts={posts} enableKeyboardNav />
         </SectionContent>
       </Section>
     </div>

@@ -17,7 +17,7 @@ export function PageProjects() {
 
       <Section>
         <SectionContent>
-          <ProjectsList projects={projects} />
+          <ProjectsList projects={projects} enableKeyboardNav />
         </SectionContent>
       </Section>
     </div>

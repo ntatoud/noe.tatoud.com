@@ -15,28 +15,42 @@ import {
 } from '@/components/ui/card-list'
 import { formatDate } from '@/lib/format'
 
-export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
+export function ArticlesList({
+  posts,
+  enableKeyboardNav = false,
+}: {
+  posts: Array<BlogPost>
+  enableKeyboardNav?: boolean
+}) {
   const listRef = useRef<HTMLDivElement>(null)
 
-  useHotkey('J', () => {
-    const links = listRef.current?.querySelectorAll<HTMLAnchorElement>('a')
-    if (!links?.length) return
-    const current = Array.from(links).findIndex(
-      (link) => link === document.activeElement,
-    )
-    const next = current < links.length - 1 ? current + 1 : 0
-    links[next].focus()
-  })
+  useHotkey(
+    'J',
+    () => {
+      const links = listRef.current?.querySelectorAll<HTMLAnchorElement>('a')
+      if (!links?.length) return
+      const current = Array.from(links).findIndex(
+        (link) => link === document.activeElement,
+      )
+      const next = current < links.length - 1 ? current + 1 : 0
+      links[next].focus()
+    },
+    { enabled: enableKeyboardNav },
+  )
 
-  useHotkey('K', () => {
-    const links = listRef.current?.querySelectorAll<HTMLAnchorElement>('a')
-    if (!links?.length) return
-    const current = Array.from(links).findIndex(
-      (link) => link === document.activeElement,
-    )
-    const prev = current > 0 ? current - 1 : links.length - 1
-    links[prev].focus()
-  })
+  useHotkey(
+    'K',
+    () => {
+      const links = listRef.current?.querySelectorAll<HTMLAnchorElement>('a')
+      if (!links?.length) return
+      const current = Array.from(links).findIndex(
+        (link) => link === document.activeElement,
+      )
+      const prev = current > 0 ? current - 1 : links.length - 1
+      links[prev].focus()
+    },
+    { enabled: enableKeyboardNav },
+  )
 
   if (posts.length === 0) {
     return (
@@ -120,11 +134,13 @@ export function ArticlesList({ posts }: { posts: Array<BlogPost> }) {
           </Card>
         ))}
       </CardList>
-      <p className="flex items-center justify-center gap-2 font-mono text-xs text-muted-foreground/50">
-        <kbd className="border border-border bg-muted px-1.5 py-0.5">J</kbd>
-        <kbd className="border border-border bg-muted px-1.5 py-0.5">K</kbd>
-        <span>to navigate</span>
-      </p>
+      {enableKeyboardNav && (
+        <p className="flex items-center justify-center gap-2 font-mono text-xs text-muted-foreground/50">
+          <kbd className="border border-border bg-muted px-1.5 py-0.5">J</kbd>
+          <kbd className="border border-border bg-muted px-1.5 py-0.5">K</kbd>
+          <span>to navigate</span>
+        </p>
+      )}
     </div>
   )
 }
