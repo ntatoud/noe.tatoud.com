@@ -6,13 +6,14 @@ const BASE_URL = 'https://noe.tatoud.com'
 // Derive public page paths from the router — excludes API, dynamic, and meta routes
 type StaticPagePath = Exclude<
   keyof FileRoutesByPath,
-  '/api/og' | '/sitemap.xml' | '/styleguide' | '/blog/$'
+  '/api/og' | '/sitemap.xml' | '/styleguide' | '/blog/$' | '/projects/$'
 >
 
 // satisfies ensures every entry is a valid route from routeTree.gen.ts
 const staticRoutes = [
   '/',
   '/blog/',
+  '/projects/',
   '/achievements/',
 ] satisfies Array<StaticPagePath>
 
@@ -30,10 +31,15 @@ export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
-        const { blog } = await import('@/lib/source')
+        const { blog, projects } = await import('@/lib/source')
         const blogSlugs = blog.getPages().map((page) => page.url)
+        const projectSlugs = projects.getPages().map((page) => page.url)
 
-        const xml = buildSitemap([...staticRoutes, ...blogSlugs])
+        const xml = buildSitemap([
+          ...staticRoutes,
+          ...blogSlugs,
+          ...projectSlugs,
+        ])
 
         return new Response(xml, {
           headers: { 'Content-Type': 'application/xml; charset=utf-8' },
