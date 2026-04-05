@@ -1,11 +1,9 @@
-import { useLoaderData } from '@tanstack/react-router'
+import type { Project } from '@/features/projects/get-projects'
 import { ProjectsList } from '@/features/projects/projects-list'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
 
-export function PageProjects() {
-  const { projects } = useLoaderData({ from: '/projects/' })
-
+export function PageProjects({ projects }: { projects: Array<Project> }) {
   return (
     <div>
       <Hero className="pb-16">
@@ -17,7 +15,7 @@ export function PageProjects() {
 
       <Section>
         <SectionContent>
-          <ProjectsList projects={projects} enableKeyboardNav />
+          <ProjectsList projects={projects} />
         </SectionContent>
       </Section>
     </div>
