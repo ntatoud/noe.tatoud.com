@@ -50,7 +50,7 @@ That made the idea of migrating my site feel much less risky.
 
 I expected more friction, but the migration went surprisingly well.
 
-A big part of that was full TypeScript integration.
+The main reason for that was the full TypeScript integration and true type safety.
 
 At the same time, I was leaning more into AI-assisted development, and something really clicked. When your codebase is strongly typed, AI becomes much more reliable.
 
@@ -69,15 +69,16 @@ Nothing too painful though. Just a small bump.
 Once everything was migrated, the day-to-day experience felt noticeably better:
 
 - Everything is TSX so no more context switching
-- Routes are typed out of the box so no extra setup
+- Routes are typed out of the box so no extra setup, and so are the route loaders
 - Dev server feels faster so tighter feedback loop
 - No more weird cache issues so things just behave
+- Strong typing made LLM modifications more accurate and reliable, ultimately allowing me to be more creative, faster
 
 It is not a massive transformation, but it is a lot of small wins that add up.
 
 ## Where `Astro` still shines
 
-To do not be mistaken. Astro is still really solid, especially when it comes to complex content setups and advanced schema relationships. Proof is, we used it for building the [Fork it! Community](https://forkit.community) and [BearStudio](https://bearstudio.fr) websites!
+Do not be mistaken. Astro is still really solid, especially when it comes to complex content setups and advanced schema relationships. Proof is, we used it for building the [Fork it! Community](https://forkit.community) and [BearStudio](https://bearstudio.fr) websites!
 If your project leans heavily on that, Astro probably still has the edge.
 
 In my case, for a simple blog and portfolio, that extra complexity was not needed.
