@@ -1,6 +1,6 @@
 ---
 title: 'Why I migrated My Website from Astro to TanStack Start'
-description: A few small frictions with Astro built up over time. Here is what pushed me to migrate my personal site to TanStack Start and what I gained/lost from it.
+description: A few friction points with Astro built up over time. Here is what pushed me to migrate my personal site to TanStack Start and what I gained/lost from it.
 date: 2026-04-08
 published: true
 author: Noé Tatoud
@@ -14,9 +14,9 @@ export { default as hero } from './hero.png'
 
 My personal website is really just a playground. A portfolio, a blog, nothing fancy. No pressure, no deadlines, no team. Just something I come back to when I feel like it. It is the kind of project where you want things to feel smooth and effortless.
 
-For a while, Astro delivered that. But over time, a few small frictions started creeping in. Nothing dramatic on its own, but enough to make the experience feel a bit off.
+For a while, Astro delivered that. But over time, a few friction points started creeping in. Nothing dramatic on its own, but enough to make the experience feel a bit off.
 
-## The frictions that built up
+## The friction points that built up
 
 ### Untyped routes
 
@@ -38,13 +38,11 @@ Not blocking, but just enough friction to make me hesitate before opening the pr
 
 ## The trigger: `fumadocs` at the right time
 
-The actual trigger came from a random discovery. I was reading the docs for [nuqs](https://nuqs.47ng.com/) and noticed it was using [Fumadocs](https://fumadocs.vercel.app/).
+The actual trigger came from a random discovery. I was reading the docs for [nuqs](https://nuqs.47ng.com/) and noticed it was using [Fumadocs](https://fumadocs.vercel.app/) both for the documentation but also for the blog part.
 
-That caught my attention because Fumadocs had just added support for TanStack Start.
+That caught my attention because `fumadocs` had just added support for TanStack Start.
 
-TanStack Start was not new to me. I had already been using it in production since we migrated [Start UI](https://github.com/BearStudio/start-ui-web) earlier in 2025. So I already knew how it behaved and where it shines.
-
-That made the idea of migrating my site feel much less risky.
+TanStack Start was not new to me. I had already been using it in production since we migrated [Start UI](https://github.com/BearStudio/start-ui-web) earlier in 2025, so I already knew how it behaved and where it could shine. That made the idea of migrating my site feel much less risky.
 
 ## A surprisingly smooth migration
 
@@ -61,8 +59,7 @@ Types act like guardrails. Less guessing, fewer hallucinations, better suggestio
 The only part that took a bit of effort was migrating content schemas.
 
 Astro has its own schema layer on top of Zod, and it does not always match the latest Zod APIs. Moving to native Zod required a few adjustments, especially around schema references and image handling.
-
-Nothing too painful though. Just a small bump.
+But that was a hurdle I could easily handle.
 
 ## What I gained
 
@@ -78,8 +75,7 @@ It is not a massive transformation, but it is a lot of small wins that add up.
 
 ## Where `Astro` still shines
 
-Do not be mistaken. Astro is still really solid, especially when it comes to complex content setups and advanced schema relationships. Proof is, we used it for building the [Fork it! Community](https://forkit.community) and [BearStudio](https://bearstudio.fr) websites!
-If your project leans heavily on that, Astro probably still has the edge.
+Make no mistake, `Astro` is still really solid, especially when it comes to complex content setups and advanced schema relationships. Proof is, we used it for building the [Fork it! Community](https://forkit.community) and [BearStudio](https://bearstudio.fr) websites! If your project leans heavily on that, Astro probably still has the edge.
 
 In my case, for a simple blog and portfolio, that extra complexity was not needed.
 
@@ -93,9 +89,9 @@ It is probably overkill for my current site, but I am curious to experiment with
 
 ## Should you migrate?
 
-Probably not just for the sake of it.
+I would not recommend migrating just for the sake of it.
 
-But if you have run into similar frictions like untyped routes, mental overhead, or cache issues, and especially if you are already using React and TanStack Start elsewhere, then it is worth considering.
+But if you have run into similar sources of friction like untyped routes, mental overhead, or cache issues, and especially if you are already using React and TanStack Start elsewhere, then it is worth considering.
 
 Otherwise, if Astro works well for you, there is no strong reason to move. It is a great tool. It just was not the right fit for my use case anymore.
 
