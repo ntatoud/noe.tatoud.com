@@ -7,6 +7,7 @@ type OgMetaOptions = Omit<OgImageProps, 'avatar' | 'section'> & {
   origin: string
   type?: 'article' | 'website'
   avatar?: string | null
+  ogImageUrl?: string
 }
 
 export function ogMeta({
@@ -19,12 +20,15 @@ export function ogMeta({
   avatar = null,
   origin,
   type = 'article',
+  ogImageUrl: ogImageUrlOverride,
 }: OgMetaOptions) {
   const section = url.split('/').filter(Boolean)[0] ?? null
-  const ogImageUrl = siteUrl(
-    origin,
-    `/api/og${serializeOgSearchParams({ title, description, author, tags, hero, avatar, section })}`,
-  )
+  const ogImageUrl =
+    ogImageUrlOverride ??
+    siteUrl(
+      origin,
+      `/api/og${serializeOgSearchParams({ title, description, author, tags, hero, avatar, section })}`,
+    )
   const pageUrl = siteUrl(origin, url)
 
   return [

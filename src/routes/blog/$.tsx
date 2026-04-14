@@ -34,7 +34,13 @@ export const Route = createFileRoute('/blog/$')({
 
     return {
       meta: [
-        ...ogMeta(loaderData),
+        ...ogMeta({
+          ...loaderData,
+          ogImageUrl: siteUrl(
+            loaderData.origin,
+            `${loaderData.url}/assets/og-image`,
+          ),
+        }),
         jsonLd<BlogPosting>({
           '@context': 'https://schema.org',
           '@type': 'BlogPosting',
