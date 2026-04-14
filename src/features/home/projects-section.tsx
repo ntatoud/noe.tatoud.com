@@ -1,11 +1,12 @@
 import { useLoaderData } from '@tanstack/react-router'
+
+import { ProjectsList } from '@/features/projects/projects-list'
 import {
   Section,
   SectionContent,
   SectionHeader,
   SectionTitle,
 } from '@/layout/section'
-import { ProjectsList } from '@/features/projects/projects-list'
 
 export function ProjectsSection() {
   const { projects } = useLoaderData({ from: '/' })

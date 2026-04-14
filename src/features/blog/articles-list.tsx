@@ -1,7 +1,8 @@
 import { useRef } from 'react'
-import { Link } from '@tanstack/react-router'
+
 import { useHotkey } from '@tanstack/react-hotkeys'
-import type { BlogPost } from '@/features/blog/get-blog-posts'
+import { Link } from '@tanstack/react-router'
+
 import { PixelExternalLink } from '@/components/icons'
 import {
   Card,
@@ -13,6 +14,7 @@ import {
   CardTags,
   CardTitle,
 } from '@/components/ui/card-list'
+import type { BlogPost } from '@/features/blog/get-blog-posts'
 import { formatDate } from '@/lib/format'
 
 export function ArticlesList({

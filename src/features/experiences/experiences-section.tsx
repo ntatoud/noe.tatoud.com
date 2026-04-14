@@ -1,7 +1,8 @@
 import { useLoaderData } from '@tanstack/react-router'
-import type { Experience } from '@/features/experiences/get-experiences'
+
 import { PixelExternalLink } from '@/components/icons'
 import { Badge } from '@/components/ui/badge'
+import type { Experience } from '@/features/experiences/get-experiences'
 import {
   Section,
   SectionContent,

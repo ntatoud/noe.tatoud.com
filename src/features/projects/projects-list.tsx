@@ -1,4 +1,3 @@
-import type { Project } from '@/features/projects/get-projects'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -7,6 +6,7 @@ import {
   CardTags,
   CardTitle,
 } from '@/components/ui/card-list'
+import type { Project } from '@/features/projects/get-projects'
 import { cn } from '@/lib/utils'
 
 export function ProjectsList({ projects }: { projects: Array<Project> }) {

@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { useAchievements } from '@/features/achievements/engine'
+
 import { Button } from '@/components/ui/button'
 import { Image } from '@/components/ui/image'
+import { useAchievements } from '@/features/achievements/engine'
 import { ExperiencesSection } from '@/features/experiences/experiences-section'
 import { ArticlesSection } from '@/features/home/articles-section'
 import { ProjectsSection } from '@/features/home/projects-section'

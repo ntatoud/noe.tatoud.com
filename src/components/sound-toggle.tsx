@@ -1,6 +1,6 @@
-import { useAchievements } from '@/features/achievements/engine'
 import { PixelVolumeHigh, PixelVolumeMute } from '@/components/icons'
 import { Button } from '@/components/ui/button'
+import { useAchievements } from '@/features/achievements/engine'
 import { useSoundMuted } from '@/hooks/use-sound-muted'
 
 export function SoundToggle() {

@@ -1,22 +1,25 @@
 import { useOptimistic, useRef, useState, useTransition } from 'react'
+
 import { useFormStatus } from 'react-dom'
-import { checkAnswer } from './check-riddle'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { PixelProgress } from '@/components/ui/progress'
+import { useHydrated } from '@/hooks/use-hydrated'
+import { getSoundMuted } from '@/hooks/use-sound-muted'
+import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
+import { Section, SectionContent } from '@/layout/section'
+import { notificationPopSound } from '@/lib/notification-pop'
+import { playSound } from '@/lib/sound-engine'
+import { cn } from '@/lib/utils'
+
 import {
   RIDDLE_COUNT,
   addSolvedRiddle,
   getSolvedRiddles,
 } from './achievement/riddle'
+import { checkAnswer } from './check-riddle'
 import { engine } from './engine'
-import { PixelProgress } from '@/components/ui/progress'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { useHydrated } from '@/hooks/use-hydrated'
-import { getSoundMuted } from '@/hooks/use-sound-muted'
-import { notificationPopSound } from '@/lib/notification-pop'
-import { playSound } from '@/lib/sound-engine'
-import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
-import { Section, SectionContent } from '@/layout/section'
 
 const DAY_NAMES = [
   'Sunday',

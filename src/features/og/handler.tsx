@@ -1,6 +1,7 @@
 import { ImageResponse } from '@takumi-rs/image-response'
-import { loadOgSearchParams } from '@/features/og/search-params'
+
 import { OgImage } from '@/features/og/og-image'
+import { loadOgSearchParams } from '@/features/og/search-params'
 
 export async function handleOgImage(request: Request) {
   const { title, description, author, tags, hero, avatar, section } =

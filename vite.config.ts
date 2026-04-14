@@ -1,11 +1,13 @@
-import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
-import viteTsConfigPaths from 'vite-tsconfig-paths'
-import tailwindcss from '@tailwindcss/vite'
-import mdx from 'fumadocs-mdx/vite'
+
 import netlify from '@netlify/vite-plugin-tanstack-start'
+import tailwindcss from '@tailwindcss/vite'
+import viteReact from '@vitejs/plugin-react'
+import mdx from 'fumadocs-mdx/vite'
+import { defineConfig } from 'vite'
+import viteTsConfigPaths from 'vite-tsconfig-paths'
+
 import * as MdxConfig from './source.config'
 
 const config = defineConfig({

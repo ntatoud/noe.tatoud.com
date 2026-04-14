@@ -1,20 +1,22 @@
-import browserCollections from 'fumadocs-mdx:collections/browser'
-import defaultMdxComponents from 'fumadocs-ui/mdx'
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import { Suspense } from 'react'
 import type { ComponentProps } from 'react'
-import { CardTags } from '@/components/ui/card-list'
+
+import browserCollections from 'fumadocs-mdx:collections/browser'
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
+import defaultMdxComponents from 'fumadocs-ui/mdx'
+
+import { PixelExternalLink, PixelSourceCode } from '@/components/icons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { PixelExternalLink, PixelSourceCode } from '@/components/icons'
-import { Hero, HeroTitle } from '@/layout/hero'
-import { PageBreadcrumb } from '@/layout/page-breadcrumb'
+import { CardTags } from '@/components/ui/card-list'
 import {
   ProjectCta,
   ProjectInlineLink,
   ProjectLinkItem,
   ProjectLinks,
 } from '@/features/projects/project-cta'
+import { Hero, HeroTitle } from '@/layout/hero'
+import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 
 const mdxComponents = {
   ...defaultMdxComponents,

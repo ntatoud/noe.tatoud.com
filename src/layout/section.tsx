@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils'
 import { Text } from '@/components/ui/text'
+import { cn } from '@/lib/utils'
 
 function Section(props: React.ComponentProps<'section'>) {
   return (

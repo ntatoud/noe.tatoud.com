@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ACHIEVEMENTS } from './achievements'
-import { getAchievementIcon } from './achievement-icons'
-import type { AchievementId } from './achievements'
+
 import { cn } from '@/lib/utils'
+
+import { getAchievementIcon } from './achievement-icons'
+import { ACHIEVEMENTS } from './achievements'
+import type { AchievementId } from './achievements'
 
 const AUTO_DISMISS_MS = 7000
 const EXIT_DURATION_MS = 250

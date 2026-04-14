@@ -1,7 +1,8 @@
 import { Link, useLoaderData } from '@tanstack/react-router'
-import { PixelArrowRight } from '@/components/icons'
 
+import { PixelArrowRight } from '@/components/icons'
 import { Button } from '@/components/ui/button'
+import { ArticlesList } from '@/features/blog/articles-list'
 import {
   Section,
   SectionActions,
@@ -9,7 +10,6 @@ import {
   SectionHeader,
   SectionTitle,
 } from '@/layout/section'
-import { ArticlesList } from '@/features/blog/articles-list'
 
 export function ArticlesSection() {
   const { posts } = useLoaderData({ from: '/' })

@@ -7,10 +7,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "lint": "eslint",
+    "lint": "oxlint --config oxlint.config.ts",
     "lint:ts": "tsc --noEmit",
     "format": "oxfmt",
-    "check": "oxfmt --check . && eslint --fix",
+    "check": "oxfmt --check . && oxlint --config oxlint.config.ts",
     "postinstall": "lefthook install"
   },
   "dependencies": {
@@ -49,7 +49,6 @@
   "devDependencies": {
     "@netlify/vite-plugin-tanstack-start": "1.2.9",
     "@tanstack/devtools-vite": "0.3.12",
-    "@tanstack/eslint-config": "0.3.4",
     "@testing-library/dom": "10.4.1",
     "@testing-library/react": "16.3.2",
     "@types/mdx": "2.0.13",
@@ -59,7 +58,8 @@
     "@vitejs/plugin-react": "5.1.2",
     "jsdom": "27.4.0",
     "lefthook": "2.1.0",
-    "oxfmt": "0.26.0",
+    "oxfmt": "0.45.0",
+    "oxlint": "1.60.0",
     "typescript": "5.9.3",
     "vite": "7.3.1",
     "vitest": "3.2.4",

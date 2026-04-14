@@ -1,12 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
+
 import type { Person, WebSite } from 'schema-dts'
-import { PageHome } from '@/features/home/page-home'
+
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { getExperiences } from '@/features/experiences/get-experiences'
-import { getProjects } from '@/features/projects/get-projects'
+import { PageHome } from '@/features/home/page-home'
 import { ogMeta } from '@/features/og/meta'
+import { getProjects } from '@/features/projects/get-projects'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
