@@ -1,4 +1,4 @@
-import { ImageResponse } from '@takumi-rs/image-response'
+import { ImageResponse } from 'takumi-js/response'
 
 import { OgImage } from '@/features/og/og-image'
 import { loadOgSearchParams } from '@/features/og/search-params'
