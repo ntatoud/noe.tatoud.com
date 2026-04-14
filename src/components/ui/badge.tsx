@@ -11,13 +11,13 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground [filter:drop-shadow(0_2px_0_var(--shelf-secondary))] [a]:hover:bg-primary/80',
+          'bg-primary text-primary-foreground filter-[drop-shadow(0_2px_0_var(--shelf-secondary))] [a]:hover:bg-primary/80',
         secondary:
-          'bg-secondary text-secondary-foreground [filter:drop-shadow(0_2px_0_var(--shelf-neutral))] [a]:hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground filter-[drop-shadow(0_2px_0_var(--shelf-neutral))] [a]:hover:bg-secondary/80',
         destructive:
-          'bg-destructive text-destructive-foreground [filter:drop-shadow(0_2px_0_var(--shelf-destructive))] [a]:hover:bg-destructive/90',
+          'bg-destructive text-destructive-foreground filter-[drop-shadow(0_2px_0_var(--shelf-destructive))] [a]:hover:bg-destructive/90',
         outline:
-          'relative bg-border text-foreground [filter:drop-shadow(0_2px_0_var(--shelf-neutral))] before:absolute before:inset-[1px] before:-z-10 before:bg-muted before:content-[""] before:clip-pixel-xs [a]:hover:before:bg-muted/80',
+          'relative bg-border text-foreground filter-[drop-shadow(0_2px_0_var(--shelf-neutral))] before:absolute before:inset-px before:-z-10 before:bg-muted before:content-[""] before:clip-pixel-xs [a]:hover:before:bg-muted/80',
         ghost: 'hover:bg-muted hover:text-muted-foreground',
         link: 'clip-none text-primary underline-offset-4 hover:underline',
       },
