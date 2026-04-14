@@ -15,6 +15,7 @@ const config: KnipConfig = {
     // Packages loaded via CSS @import, not JS imports
     '@fontsource/atkinson-hyperlegible',
     'shadcn',
+    'tailwindcss',
     'tw-animate-css',
     // Unlisted but transitive deps re-exported by fumadocs
     'zod',
@@ -23,11 +24,6 @@ const config: KnipConfig = {
     '@tanstack/hotkeys',
     // achievements is a bundled type from achievements-react
     'achievements',
-    // Testing: used in vitest setup / test files not tracked as entry
-    '@testing-library/dom',
-    '@testing-library/react',
-    // MDX types used in tsconfig.json, not direct imports
-    '@types/mdx',
   ],
   rules: {
     // TanStack Router generates enum-like route trees

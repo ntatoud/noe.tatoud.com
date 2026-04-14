@@ -5,7 +5,12 @@ export default defineConfig({
   singleQuote: true,
   trailingComma: 'all',
   printWidth: 80,
-  ignorePatterns: ['package-lock.json', 'pnpm-lock.yaml', 'yarn.lock'],
+  ignorePatterns: [
+    'package-lock.json',
+    'pnpm-lock.yaml',
+    'yarn.lock',
+    'src/routeTree.gen.ts',
+  ],
   experimentalTailwindcss: {
     attributes: ['class', 'className'],
     functions: ['cva', 'cn'],

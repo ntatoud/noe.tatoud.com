@@ -2,6 +2,7 @@ pre-commit:
   commands:
     format:
       glob: '*.{ts,tsx,js,jsx,json,css,md,mdx,toml}'
+      exclude: 'src/routeTree.gen.ts'
       run: bunx oxfmt {staged_files}
       stage_fixed: true
 

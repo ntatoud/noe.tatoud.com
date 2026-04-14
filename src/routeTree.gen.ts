@@ -9,14 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
-import { Route as ApiOgRouteImport } from './routes/api/og'
-import { Route as BlogSplatRouteImport } from './routes/blog/$'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ShrineRouteImport } from './routes/shrine'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ShrineRouteImport } from './routes/shrine'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
+import { Route as BlogSplatRouteImport } from './routes/blog/$'
+import { Route as ApiOgRouteImport } from './routes/api/og'
 
 const StyleguideRoute = StyleguideRouteImport.update({
   id: '/styleguide',
@@ -209,9 +209,8 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { createStart } from '@tanstack/react-start'
-
 import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
