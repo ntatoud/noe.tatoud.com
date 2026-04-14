@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
-import { useNavigate } from '@tanstack/react-router'
-import { useHotkey, useHotkeySequence } from '@tanstack/react-hotkeys'
+
 import type { HotkeySequence } from '@tanstack/hotkeys'
+import { useHotkey, useHotkeySequence } from '@tanstack/react-hotkeys'
+import { useNavigate } from '@tanstack/react-router'
+
+import { createPortal } from 'react-dom'
+
+import { PixelVolumeHigh, PixelVolumeMute } from '@/components/icons'
 import {
   Command,
   CommandEmpty,
@@ -13,7 +17,6 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command'
-import { PixelVolumeHigh, PixelVolumeMute } from '@/components/icons'
 import { engine } from '@/features/achievements/engine'
 import { useSoundMuted } from '@/hooks/use-sound-muted'
 import { nav } from '@/layout/nav-config'

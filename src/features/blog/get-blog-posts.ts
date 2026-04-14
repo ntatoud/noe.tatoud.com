@@ -1,6 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import type { BlogPostFrontmatter } from './schemas'
+
 import { blog } from '@/lib/source'
+
+import type { BlogPostFrontmatter } from './schemas'
 
 export type BlogPost = Omit<BlogPostFrontmatter, 'externalUrl'> & {
   slug: string

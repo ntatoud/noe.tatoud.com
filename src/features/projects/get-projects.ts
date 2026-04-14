@@ -1,6 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import type { ProjectFrontmatter } from './schemas'
+
 import { projects } from '@/lib/source'
+
+import type { ProjectFrontmatter } from './schemas'
 
 export type Project = ProjectFrontmatter & { slug: string }
 

@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import { Image } from '@/components/ui/image'
 import { cn } from '@/lib/utils'

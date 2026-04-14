@@ -1,8 +1,9 @@
-import { getAchievementIcon } from './achievement-icons'
-import type { Achievement } from './achievements'
 import { PixelLock } from '@/components/icons'
 import { PixelProgress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+
+import { getAchievementIcon } from './achievement-icons'
+import type { Achievement } from './achievements'
 
 export function AchievementCard({
   achievement,

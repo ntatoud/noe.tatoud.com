@@ -1,5 +1,5 @@
-import { Provider, useAchievementToast } from './engine'
 import { AchievementToast } from './achievement-toast'
+import { Provider, useAchievementToast } from './engine'
 
 function Toasts() {
   const { queue, dismiss } = useAchievementToast()

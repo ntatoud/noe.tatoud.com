@@ -1,4 +1,5 @@
 import { applyMdxPreset, defineCollections } from 'fumadocs-mdx/config'
+
 import { BlogPostSchema } from './src/features/blog/schemas'
 import { ExperienceSchema } from './src/features/experiences/schemas'
 import { ProjectSchema } from './src/features/projects/schemas'

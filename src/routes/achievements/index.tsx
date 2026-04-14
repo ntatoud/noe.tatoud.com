@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
-import { getBlogPosts } from '@/features/blog/get-blog-posts'
+
 import { PageAchievements } from '@/features/achievements/page-achievements'
+import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { ogMeta } from '@/features/og/meta'
 
 const getOrigin = createServerFn({ method: 'GET' }).handler(

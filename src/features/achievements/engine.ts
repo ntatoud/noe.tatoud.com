@@ -3,8 +3,9 @@ import {
   defineAchievements,
   localStorageAdapter,
 } from 'achievements-react'
-import { notificationPopSound } from '@/lib/notification-pop'
+
 import { getSoundMuted } from '@/hooks/use-sound-muted'
+import { notificationPopSound } from '@/lib/notification-pop'
 import { playSound } from '@/lib/sound-engine'
 
 const definitions = defineAchievements([

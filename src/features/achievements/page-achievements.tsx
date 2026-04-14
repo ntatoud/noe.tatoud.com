@@ -1,12 +1,13 @@
+import { PixelProgress } from '@/components/ui/progress'
+import { useHydrated } from '@/hooks/use-hydrated'
+import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
+import { Section, SectionContent } from '@/layout/section'
+import { Route } from '@/routes/achievements/index'
+
 import { AchievementCard } from './achievement-card'
 import { ACHIEVEMENTS } from './achievements'
 import { engine, useProgress, useUnlockedCount } from './engine'
 import type { AchievementId } from './engine'
-import { useHydrated } from '@/hooks/use-hydrated'
-import { PixelProgress } from '@/components/ui/progress'
-import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
-import { Route } from '@/routes/achievements/index'
-import { Section, SectionContent } from '@/layout/section'
 
 export function PageAchievements() {
   const { totalBlogPosts } = Route.useLoaderData()

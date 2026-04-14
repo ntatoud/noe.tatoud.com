@@ -2,7 +2,7 @@ pre-commit:
   commands:
     format:
       glob: '*.{ts,tsx,js,jsx,json,css,md,mdx,toml}'
-      run: bunx vp fmt {staged_files}
+      run: bunx oxfmt {staged_files}
       stage_fixed: true
 
 pre-push:
