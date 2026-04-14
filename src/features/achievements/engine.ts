@@ -118,7 +118,7 @@ export const {
   engine,
   Provider,
   useAchievements,
-  useIsUnlocked,
+
   useProgress,
   useAchievementToast,
   useUnlockedCount,

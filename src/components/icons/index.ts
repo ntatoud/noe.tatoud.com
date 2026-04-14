@@ -1,4 +1,3 @@
-export type { PixelIconProps } from './types'
 export { PixelArrowRight } from './pixel-arrow-right'
 export { PixelTrophy } from './pixel-trophy'
 export { PixelExternalLink } from './pixel-external-link'

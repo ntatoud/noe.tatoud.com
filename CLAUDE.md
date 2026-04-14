@@ -9,25 +9,26 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Framework**: TanStack Start v1.132 (React meta-framework) on Vite 7
+- **Framework**: TanStack Start v1.166 (React meta-framework) on Vite 7
 - **React**: 19.3.0-canary
-- **Styling**: Tailwind CSS 4, tw-animate-css
-- **UI components**: shadcn/ui (base-nova style, hugeicons icon library)
+- **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/tailwind.css
+- **UI components**: shadcn/ui (base-nova style), custom pixel icons in `src/components/icons/`
 - **Blog/MDX**: fumadocs-mdx with fumadocs-core, content in `content/`
-- **Maps**: MapLibre GL (Carto basemaps)
 - **Package manager**: bun
 - **Formatting**: oxfmt (`bun run format`) — no semicolons, single quotes, trailing commas
-- **Linting**: ESLint via `@tanstack/eslint-config` (`bun run lint`)
+- **Linting**: oxlint via `oxlint.config.ts` (`bun run lint`)
 - **Testing**: Vitest + Testing Library + jsdom (`bun run test`)
-- **Language**: TypeScript 5.7 (strict mode, noUnusedLocals, noUnusedParameters)
+- **Dead code**: knip (`bun run knip`)
+- **Language**: TypeScript 5.9 (strict mode, noUnusedLocals, noUnusedParameters)
 
 ## Commands
 
 ```sh
 bun run dev       # dev server on port 3000
-bun run build     # production build (Nitro/Netlify)
-bun run check     # format check + lint fix
+bun run build     # production build (Netlify)
+bun run check     # format check + oxlint fix
 bun run test      # run vitest
+bun run knip      # dead code detection
 ```
 
 ## Key paths
@@ -35,16 +36,19 @@ bun run test      # run vitest
 ```
 src/
   routes/          # TanStack Router file-based routes (auto-generates routeTree.gen.ts)
-  features/        # feature modules: blog, events, home, projects
-  components/ui/   # shadcn/ui primitives
+  features/        # feature modules: blog, events, home, achievements
+  components/
+    ui/            # shadcn/ui primitives
+    icons/         # custom pixel SVG icon components
   layout/          # shared layout: header, footer, nav, hero, section
   lib/             # utils.ts (cn), source.ts (fumadocs loaders), format.ts (formatDate)
   styles.css       # Tailwind imports, CSS variables, fonts, theming
 content/
   blog/<slug>/index.mdx     # blog posts
-  projects/<slug>/index.mdx  # project showcases
   events/<slug>/index.mdx    # tech events
-source.config.ts   # fumadocs-mdx collection definitions (blogPosts, projects, techEvents)
+source.config.ts   # fumadocs-mdx collection definitions (blogPosts, techEvents)
+knip.config.ts     # dead code detection config
+oxlint.config.ts   # linting config
 ```
 
 ## Path aliases
@@ -63,6 +67,7 @@ source.config.ts   # fumadocs-mdx collection definitions (blogPosts, projects, t
 ### Components
 
 - UI primitives go in `src/components/ui/`; feature-specific components go in `src/features/<feature>/`.
+- Custom icons are SVG components in `src/components/icons/` (pixel art style, not an icon library).
 - Prefer small, focused components. Colocate related code within feature folders.
 - Use `cn()` from `@/lib/utils` to merge classNames (clsx + tailwind-merge).
 - Use `cva` from `class-variance-authority` for variant-based styling.
@@ -79,12 +84,12 @@ source.config.ts   # fumadocs-mdx collection definitions (blogPosts, projects, t
 
 - Dark mode only (body has `className="dark"`).
 - Colors use oklch color space via CSS variables.
-- Fonts: Public Sans (body), Space Grotesk (headings).
+- Fonts: Atkinson Hyperlegible (body), loaded via `@fontsource/atkinson-hyperlegible` CSS import.
 
 ## Git hooks (lefthook)
 
 - **pre-commit**: oxfmt formats staged files, auto-stages fixes.
-- **pre-push**: ESLint lint + fumadocs type generation + tsc typecheck.
+- **pre-push**: oxlint + fumadocs type generation + tsc typecheck.
 
 ## CI (GitHub Actions)
 
@@ -92,6 +97,6 @@ Runs on push/PR to `main`: format check, lint, fumadocs type gen, typecheck.
 
 ## Deployment
 
-- **Netlify** with Nitro preset. Config in `netlify.toml`.
+- **Netlify** with TanStack Start plugin. Config in `netlify.toml`.
 - Build output: `dist/`.
 - Currently blocks search engine indexing (`X-Robots-Tag: noindex, nofollow`).

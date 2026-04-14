@@ -16,7 +16,7 @@ import { IconQuestion } from './secret'
 import { IconBubble } from './social'
 import type { AchievementDef, AchievementId } from './types'
 
-export type { Achievement, AchievementDef, AchievementId } from './types'
+export type { Achievement, AchievementId } from './types'
 
 const iconMap: Record<AchievementId, AchievementDef['icon']> = {
   'first-visit': IconFlag,

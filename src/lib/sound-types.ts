@@ -7,31 +7,3 @@ export interface SoundAsset {
   license: 'CC0' | 'OGA-BY' | 'MIT'
   author: string
 }
-
-export interface UseSoundOptions {
-  volume?: number
-  playbackRate?: number
-  /** If true, calling play() stops current playback first */
-  interrupt?: boolean
-  /** If false, play() is a no-op */
-  soundEnabled?: boolean
-  onPlay?: () => void
-  onEnd?: () => void
-  onPause?: () => void
-  onStop?: () => void
-}
-
-export type PlayFunction = (overrides?: {
-  volume?: number
-  playbackRate?: number
-}) => void
-
-export interface SoundControls {
-  stop: () => void
-  pause: () => void
-  isPlaying: boolean
-  duration: number | null
-  sound: SoundAsset
-}
-
-export type UseSoundReturn = readonly [PlayFunction, SoundControls]
