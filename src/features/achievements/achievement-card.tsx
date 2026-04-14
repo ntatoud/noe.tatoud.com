@@ -24,7 +24,7 @@ export function AchievementCard({
         'relative flex items-center gap-4 p-4 clip-pixel-lg',
         'before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:content-[""] before:clip-pixel-lg',
         unlocked
-          ? 'bg-primary/50 [filter:drop-shadow(2px_2px_0_var(--shelf-primary))] before:bg-card'
+          ? 'bg-primary/50 pixel-shadow pixel-shadow-primary pixel-shadow-x-2 pixel-shadow-y-2 before:bg-card'
           : 'bg-border before:bg-card/60',
       )}
     >

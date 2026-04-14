@@ -1,0 +1,29 @@
+@utility animate-pixel-bounce {
+  animation: pixel-bounce 2s ease-in-out infinite;
+}
+
+@utility animate-pixel-blink {
+  animation: pixel-blink 1.2s step-end infinite;
+}
+
+@keyframes pixel-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    filter: drop-shadow(0px 4px 0 var(--shelf-secondary));
+  }
+  50% {
+    transform: translateY(-3px);
+    filter: drop-shadow(0px 7px 0 var(--shelf-secondary));
+  }
+}
+
+@keyframes pixel-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

@@ -31,7 +31,7 @@ export function Header() {
         className={cn(
           'pointer-events-auto relative transition-[background-color,filter] duration-200 clip-pixel-lg',
           scrolled
-            ? 'bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[""] before:clip-pixel-lg'
+            ? 'bg-border pixel-shadow pixel-shadow-card pixel-shadow-x-4 before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[""] before:clip-pixel-lg'
             : 'bg-transparent',
         )}
       >

@@ -10,7 +10,7 @@ export function MobileNav() {
       aria-label="Main"
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 sm:hidden',
-        'bg-card [filter:drop-shadow(0_-4px_0_var(--shelf-card))]',
+        'bg-card pixel-shadow pixel-shadow-card pixel-shadow-y-neg-4',
         'pb-safe-bottom',
       )}
     >
