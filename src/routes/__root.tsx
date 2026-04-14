@@ -7,7 +7,7 @@ import { RootProvider } from 'fumadocs-ui/provider/tanstack'
 import { PageError } from '@/components/page-error'
 import { Layout } from '@/layout/layout'
 
-import appCss from '@/styles.css?url'
+import appCss from '@/styles/index.css?url'
 
 export const Route = createRootRoute({
   notFoundComponent: () => (

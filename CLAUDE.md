@@ -42,7 +42,9 @@ src/
     icons/         # custom pixel SVG icon components
   layout/          # shared layout: header, footer, nav, hero, section
   lib/             # utils.ts (cn), source.ts (fumadocs loaders), format.ts (formatDate)
-  styles.css       # Tailwind imports, CSS variables, fonts, theming
+  styles/
+    index.css      # Tailwind imports, CSS variables, fonts, theming
+    utilities/     # @utility blocks: pixel-shadow, pixel-clip, pixel-animations
 content/
   blog/<slug>/index.mdx     # blog posts
   events/<slug>/index.mdx    # tech events

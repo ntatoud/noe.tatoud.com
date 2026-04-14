@@ -18,12 +18,12 @@ export function Card({ className, ...props }: ComponentProps<'article'>) {
     <article
       className={cn(
         'group relative bg-border clip-pixel-lg',
-        'filter-[drop-shadow(4px_4px_0_var(--shelf-card))]',
+        'pixel-shadow pixel-shadow-card pixel-shadow-x-4',
         'before:pointer-events-none before:absolute before:inset-0.5 before:-z-20 before:bg-card before:content-[""] before:clip-pixel-lg',
         'has-[>a]:transition-[filter,transform,background-color] has-[>a]:duration-100',
-        'has-[>a]:hover:-translate-y-0.5 has-[>a]:hover:bg-foreground has-[>a]:hover:filter-[drop-shadow(4px_6px_0_var(--shelf-card))]',
-        'has-[>a]:focus-within:-translate-y-0.5 has-[>a]:focus-within:bg-foreground has-[>a]:focus-within:filter-[drop-shadow(4px_6px_0_var(--shelf-card))]',
-        'has-[>a]:active:translate-y-0.5 has-[>a]:active:filter-[drop-shadow(4px_2px_0_var(--shelf-card))]',
+        'has-[>a]:hover:-translate-y-0.5 has-[>a]:hover:bg-foreground has-[>a]:hover:pixel-shadow-y-6',
+        'has-[>a]:focus-within:-translate-y-0.5 has-[>a]:focus-within:bg-foreground has-[>a]:focus-within:pixel-shadow-y-6',
+        'has-[>a]:active:translate-y-0.5 has-[>a]:active:pixel-shadow-y-2',
         className,
       )}
       {...props}

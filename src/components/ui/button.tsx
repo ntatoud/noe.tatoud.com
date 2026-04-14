@@ -10,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'border-primary bg-primary text-primary-foreground filter-[drop-shadow(0_4px_0_var(--shelf-secondary))] hover:-translate-y-0.5 hover:brightness-90 hover:filter-[drop-shadow(0_6px_0_var(--shelf-secondary))] active:translate-y-0.75 active:filter-[drop-shadow(0_1px_0_var(--shelf-secondary))]',
+          'border-primary bg-primary text-primary-foreground pixel-shadow pixel-shadow-secondary hover:-translate-y-0.5 hover:brightness-90 hover:pixel-shadow-y-6 active:translate-y-0.75 active:pixel-shadow-y-1',
         outline:
-          'bg-border bg-clip-border text-foreground filter-[drop-shadow(0_4px_0_var(--shelf-neutral))] before:absolute before:inset-0 before:-z-10 before:bg-background before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:filter-[drop-shadow(0_6px_0_var(--shelf-neutral))] hover:before:bg-muted active:translate-y-0.75 active:filter-[drop-shadow(0_1px_0_var(--shelf-neutral))]',
+          'bg-border bg-clip-border text-foreground pixel-shadow pixel-shadow-neutral before:absolute before:inset-0 before:-z-10 before:bg-background before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:pixel-shadow-y-6 hover:before:bg-muted active:translate-y-0.75 active:pixel-shadow-y-1',
         secondary:
-          'bg-border bg-clip-border text-secondary-foreground filter-[drop-shadow(0_4px_0_var(--shelf-neutral))] before:absolute before:inset-0 before:-z-10 before:bg-secondary before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:filter-[drop-shadow(0_6px_0_var(--shelf-neutral))] hover:before:bg-secondary/80 active:translate-y-0.75 active:filter-[drop-shadow(0_1px_0_var(--shelf-neutral))]',
+          'bg-border bg-clip-border text-secondary-foreground pixel-shadow pixel-shadow-neutral before:absolute before:inset-0 before:-z-10 before:bg-secondary before:content-[""] before:clip-pixel hover:-translate-y-0.5 hover:pixel-shadow-y-6 hover:before:bg-secondary/80 active:translate-y-0.75 active:pixel-shadow-y-1',
         ghost:
           'border-transparent hover:-translate-y-0.5 hover:bg-muted active:translate-y-0.5 active:bg-muted/80',
         destructive:
-          'border-destructive bg-destructive text-destructive-foreground filter-[drop-shadow(0_4px_0_var(--shelf-destructive))] hover:-translate-y-0.5 hover:bg-destructive/90 hover:filter-[drop-shadow(0_6px_0_var(--shelf-destructive))] active:translate-y-0.75 active:filter-[drop-shadow(0_1px_0_var(--shelf-destructive))]',
+          'border-destructive bg-destructive text-destructive-foreground pixel-shadow pixel-shadow-destructive hover:-translate-y-0.5 hover:bg-destructive/90 hover:pixel-shadow-y-6 active:translate-y-0.75 active:pixel-shadow-y-1',
         link: 'clip-none border-transparent text-primary underline-offset-4 hover:underline',
       },
       size: {

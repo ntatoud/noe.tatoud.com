@@ -15,7 +15,7 @@ import { formatDate } from '@/lib/format'
 const mdxComponents = {
   ...defaultMdxComponents,
   pre: (props: ComponentProps<'pre'>) => (
-    <div className="relative my-4 bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] clip-pixel-lg before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[''] before:clip-pixel-lg">
+    <div className="relative my-4 bg-border pixel-shadow clip-pixel-lg pixel-shadow-card pixel-shadow-x-4 before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[''] before:clip-pixel-lg">
       <CodeBlock
         {...props}
         className="!my-0 !rounded-none !border-none !bg-transparent !shadow-none"

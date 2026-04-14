@@ -85,7 +85,7 @@ function ToastItem({
         aria-label={`Achievement unlocked: ${achievement.label}. Dismiss`}
         className={cn(
           'relative flex cursor-pointer items-center gap-4 px-4 py-3 text-left clip-pixel-lg',
-          'bg-border [filter:drop-shadow(2px_2px_0_var(--shelf-card))]',
+          'bg-border pixel-shadow pixel-shadow-card pixel-shadow-x-2 pixel-shadow-y-2',
           'before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:bg-card before:content-[""] before:clip-pixel-lg',
           !exiting && 'animate-in duration-200 fade-in slide-in-from-left-4',
           exiting &&

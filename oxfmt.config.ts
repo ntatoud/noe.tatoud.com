@@ -14,7 +14,7 @@ export default defineConfig({
   experimentalTailwindcss: {
     attributes: ['class', 'className'],
     functions: ['cva', 'cn'],
-    stylesheet: './src/styles.css',
+    stylesheet: './src/styles/index.css',
   },
   sortImports: {
     newlinesBetween: true,

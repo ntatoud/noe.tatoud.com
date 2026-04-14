@@ -82,7 +82,7 @@ export function CommandPalette() {
         aria-label="Command palette"
         className="fixed top-[30%] left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2"
       >
-        <Command className="relative bg-border [filter:drop-shadow(4px_4px_0_var(--shelf-card))] clip-pixel-lg before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:bg-background before:content-[''] before:clip-pixel-lg">
+        <Command className="relative bg-border pixel-shadow clip-pixel-lg pixel-shadow-card pixel-shadow-x-4 before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:bg-background before:content-[''] before:clip-pixel-lg">
           <CommandInput
             autoFocus
             placeholder="Type a command..."
