@@ -1,36 +1,41 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { blog } from '@/lib/source'
+import { allBlogPosts } from 'content-collections'
 
-import type { BlogPostFrontmatter } from './schemas'
+import { resolveContentImage } from '@/lib/content-images'
 
-export type BlogPost = Omit<BlogPostFrontmatter, 'externalUrl'> & {
+export type BlogPost = {
   slug: string
   url: string
-  hero: string | null
+  title: string
+  description: string | undefined
+  author: string
+  date: string
+  published: boolean
+  translations: Array<{ lang: string; url: string }> | undefined
+  tags: Array<string> | undefined
   externalUrl: string | null
+  hero: string | null
 }
 
 export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
-  blog
-    .getPages()
-    .filter((page) => page.data.published)
-    .sort(
-      (a, b) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-    )
-    .map((page) => ({
-      slug: page.slugs.join('/'),
-      url: page.url,
-      title: page.data.title,
-      description: page.data.description,
-      author: page.data.author,
-      date: page.data.date,
-
-      published: page.data.published,
-      translations: page.data.translations,
-      tags: page.data.tags,
-      externalUrl: page.data.externalUrl ?? null,
-      hero: (page.data._exports.hero as string | undefined) ?? null,
+  allBlogPosts
+    .filter((post) => post.published)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((post) => ({
+      slug: post._meta.path,
+      url: `/blog/${post._meta.path}`,
+      title: post.title,
+      description: post.description,
+      author: post.author,
+      date: post.date,
+      published: post.published,
+      translations: post.translations,
+      tags: post.tags,
+      externalUrl: post.externalUrl ?? null,
+      hero: resolveContentImage(
+        `content/blog/${post._meta.directory}`,
+        post.hero,
+      ),
     })),
 )

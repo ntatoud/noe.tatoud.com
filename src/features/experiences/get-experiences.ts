@@ -1,26 +1,29 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { experiences } from '@/lib/source'
+import { allExperiences } from 'content-collections'
 
-import type { ExperienceFrontmatter } from './schemas'
+import type { ExperienceFrontmatter } from '@/features/experiences/schemas'
+import { resolveContentImage } from '@/lib/content-images'
 
-export type Experience = ExperienceFrontmatter & {
+export type Experience = Omit<ExperienceFrontmatter, 'content' | 'logo'> & {
   slug: string
   logo: string | null
 }
 
 export const getExperiences = createServerFn({ method: 'GET' }).handler(() =>
-  experiences
-    .getPages()
-    .map((page) => ({
-      slug: page.slugs.join('/'),
-      title: page.data.title,
-      organization: page.data.organization,
-      url: page.data.url,
-      startDate: page.data.startDate,
-      endDate: page.data.endDate,
-      kind: page.data.kind,
-      logo: (page.data._exports.logo as string | undefined) ?? null,
+  allExperiences
+    .map((exp) => ({
+      slug: exp._meta.path,
+      title: exp.title,
+      organization: exp.organization,
+      url: exp.url,
+      startDate: exp.startDate,
+      endDate: exp.endDate,
+      kind: exp.kind,
+      logo: resolveContentImage(
+        `content/experiences/${exp._meta.directory}`,
+        exp.logo,
+      ),
     }))
     .sort(
       (a, b) =>

@@ -1,26 +1,31 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
+import { allBlogPosts } from 'content-collections'
+
 import { handleOgImage } from '@/features/og/handler'
 import { serializeOgSearchParams } from '@/features/og/search-params'
-import { blog } from '@/lib/source'
+import { resolveContentImage } from '@/lib/content-images'
 
 export const Route = createFileRoute('/blog/$slug/assets/og-image')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        const page = blog.getPage([params.slug])
-        if (!page) throw notFound()
+        const post = allBlogPosts.find((p) => p._meta.path === params.slug)
+        if (!post) throw notFound()
 
         const origin = new URL(request.url).origin
-        const section = page.url.split('/').filter(Boolean)[0] ?? null
-        const hero = (page.data._exports.hero as string | undefined) ?? null
+        const section = 'blog'
+        const hero = resolveContentImage(
+          `content/blog/${post._meta.directory}`,
+          post.hero,
+        )
 
         const ogUrl = new URL(
           `/api/og${serializeOgSearchParams({
-            title: page.data.title,
-            description: page.data.description ?? null,
-            author: page.data.author,
-            tags: page.data.tags ?? null,
+            title: post.title,
+            description: post.description ?? null,
+            author: post.author,
+            tags: post.tags ?? null,
             hero,
             avatar: null,
             section,

@@ -1,25 +1,26 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { projects } from '@/lib/source'
+import { allProjects } from 'content-collections'
 
-import type { ProjectFrontmatter } from './schemas'
+import type { ProjectFrontmatter } from '@/features/projects/schemas'
 
-export type Project = ProjectFrontmatter & { slug: string }
+export type Project = Omit<ProjectFrontmatter, 'content'> & {
+  slug: string
+}
 
 export const getProjects = createServerFn({ method: 'GET' }).handler(() =>
-  projects
-    .getPages()
-    .filter((page) => page.data.published)
-    .map((page) => ({
-      slug: page.slugs.join('/'),
-      title: page.data.title,
-      description: page.data.description,
-      date: page.data.date,
-      published: page.data.published,
-      kind: page.data.kind,
-      url: page.data.url,
-      repo: page.data.repo,
-      tags: page.data.tags,
+  allProjects
+    .filter((project) => project.published)
+    .map((project) => ({
+      slug: project._meta.path,
+      title: project.title,
+      description: project.description,
+      date: project.date,
+      published: project.published,
+      kind: project.kind,
+      url: project.url,
+      repo: project.repo,
+      tags: project.tags,
     }))
     .sort((a, b) => {
       if (a.kind !== b.kind) return a.kind === 'personal' ? -1 : 1

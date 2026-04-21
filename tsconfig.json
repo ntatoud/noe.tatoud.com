@@ -29,7 +29,7 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["./src/*"],
-      "fumadocs-mdx:collections/*": ["./.source/*"]
+      "content-collections": ["./.content-collections/generated/index.d.ts"]
     }
   }
 }
