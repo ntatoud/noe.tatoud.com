@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useRef } from 'react'
-import type { ComponentProps } from 'react'
 
+import { mdxComponents } from '@/components/mdx'
 import { CardTags } from '@/components/ui/card-list'
 import { Image } from '@/components/ui/image'
 import { engine, useAchievements } from '@/features/achievements/engine'
@@ -12,26 +12,6 @@ import { createLazyMDXLoader } from '@/lib/mdx'
 const getLazyMDX = createLazyMDXLoader(
   import.meta.glob('/content/blog/**/*.mdx'),
 )
-
-const mdxComponents = {
-  figure: ({
-    children,
-    ...props
-  }: ComponentProps<'figure'> & {
-    'data-rehype-pretty-code-figure'?: string
-  }) => {
-    if ('data-rehype-pretty-code-figure' in props) return <>{children}</>
-    return <figure {...props}>{children}</figure>
-  },
-  pre: (props: ComponentProps<'pre'>) => (
-    <div className="relative my-4 bg-border pixel-shadow clip-pixel-lg pixel-shadow-card pixel-shadow-x-4 before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[''] before:clip-pixel-lg">
-      <pre
-        {...props}
-        className="!my-0 overflow-auto p-4 text-sm [&_code]:bg-transparent [&_code]:p-0"
-      />
-    </div>
-  ),
-}
 
 function ScrollTracker({ slug }: { slug: string }) {
   const { unlock } = useAchievements()
