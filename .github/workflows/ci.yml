@@ -29,8 +29,8 @@ jobs:
       - name: 🧹 Lint
         run: bun run lint
 
-      - name: 🏗️ Generate fumadocs types
-        run: bunx fumadocs-mdx
+      - name: 🏗️ Generate content-collections types
+        run: bunx content-collections build
 
       - name: 🔎 Typecheck
         run: bunx tsc --noEmit

@@ -1,13 +1,15 @@
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
+import contentCollections from '@content-collections/vite'
+import mdx from '@mdx-js/rollup'
 import netlify from '@netlify/vite-plugin-tanstack-start'
 import tailwindcss from '@tailwindcss/vite'
 import viteReact from '@vitejs/plugin-react'
-import mdx from 'fumadocs-mdx/vite'
+import rehypePrettyCode from 'rehype-pretty-code'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
-
-import * as MdxConfig from './source.config'
 
 const config = defineConfig({
   resolve: {
@@ -15,11 +17,19 @@ const config = defineConfig({
   },
   plugins: [
     devtools(),
-    mdx(MdxConfig),
+    contentCollections(),
+    {
+      // MDX must run before viteReact so .mdx files are compiled to JSX first
+      enforce: 'pre',
+      ...mdx({
+        remarkPlugins: [remarkFrontmatter, remarkGfm],
+        rehypePlugins: [[rehypePrettyCode, { theme: 'github-dark' }]],
+      }),
+    },
     netlify(),
     tailwindcss(),
     tanstackStart(),
-    viteReact(),
+    viteReact({ include: /\.(tsx|ts|jsx|js)$/ }),
   ],
 })
 

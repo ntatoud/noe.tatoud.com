@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import type { FileRoutesByPath } from '@tanstack/react-router'
 
+import { allBlogPosts } from 'content-collections'
+
 const BASE_URL = 'https://noe.tatoud.com'
 
 // Derive public page paths from the router — excludes API, dynamic, and meta routes
@@ -29,9 +31,10 @@ function buildSitemap(urls: Array<string>): string {
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
-      GET: async () => {
-        const { blog } = await import('@/lib/source')
-        const blogSlugs = blog.getPages().map((page) => page.url)
+      GET: () => {
+        const blogSlugs = allBlogPosts
+          .filter((p) => p.published)
+          .map((p) => `/blog/${p._meta.path}`)
 
         const xml = buildSitemap([...staticRoutes, ...blogSlugs])
 

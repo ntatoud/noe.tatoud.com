@@ -2,14 +2,15 @@ import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestUrl } from '@tanstack/react-start/server'
 
+import { allBlogPosts } from 'content-collections'
 import type { BlogPosting } from 'schema-dts'
 
 import { PageError } from '@/components/page-error'
-import { PageBlogPost, blogPostLoader } from '@/features/blog/page-blog-post'
+import { PageBlogPost, blogMdx } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
+import { resolveContentImage } from '@/lib/content-images'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
-import { blog } from '@/lib/source'
 
 export const Route = createFileRoute('/blog/$')({
   component: Page,
@@ -21,12 +22,12 @@ export const Route = createFileRoute('/blog/$')({
     />
   ),
   loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? []
-    const data = await serverLoader({ data: slugs })
+    const slug = params._splat ?? ''
+    const data = await serverLoader({ data: slug })
     if (data.externalUrl) {
       throw redirect({ href: data.externalUrl })
     }
-    await blogPostLoader.preload(data.path)
+    await blogMdx.preload(`/content/blog/${slug}/index.mdx`)
     return data
   },
   head: ({ loaderData }) => {
@@ -58,28 +59,31 @@ export const Route = createFileRoute('/blog/$')({
 })
 
 const serverLoader = createServerFn({ method: 'GET' })
-  .inputValidator((slugs: Array<string>) => slugs)
-  .handler(({ data: slugs }: { data: Array<string> }) => {
-    const page = blog.getPage(slugs)
-    if (!page) throw notFound()
+  .inputValidator((slug: string) => slug)
+  .handler(({ data: slug }: { data: string }) => {
+    const post = allBlogPosts.find((p) => p._meta.path === slug)
+    if (!post) throw notFound()
     const origin = getRequestUrl({ xForwardedHost: true }).origin
 
     return {
-      path: page.path,
-      title: page.data.title,
-      description: page.data.description ?? null,
-      author: page.data.author,
-      date: new Date(page.data.date).toISOString().split('T')[0],
-      tags: page.data.tags ?? null,
-      url: page.url,
-      hero: (page.data._exports.hero as string | undefined) ?? null,
-      externalUrl: page.data.externalUrl ?? null,
+      slug,
+      title: post.title,
+      description: post.description ?? null,
+      author: post.author,
+      date: new Date(post.date).toISOString().split('T')[0],
+      tags: post.tags ?? null,
+      translations: post.translations ?? null,
+      url: `/blog/${slug}`,
+      hero: resolveContentImage(
+        `content/blog/${post._meta.directory}`,
+        post.hero,
+      ),
+      externalUrl: post.externalUrl ?? null,
       origin,
     }
   })
 
 function Page() {
-  const { path } = Route.useLoaderData()
-  const params = Route.useParams()
-  return <PageBlogPost path={path} slug={params._splat ?? ''} />
+  const data = Route.useLoaderData()
+  return <PageBlogPost {...data} />
 }

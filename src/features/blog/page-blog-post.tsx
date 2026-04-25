@@ -1,90 +1,17 @@
 import { Suspense, useEffect, useRef } from 'react'
-import type { ComponentProps } from 'react'
 
-import browserCollections from 'fumadocs-mdx:collections/browser'
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
-import defaultMdxComponents from 'fumadocs-ui/mdx'
-
+import { mdxComponents } from '@/components/mdx'
 import { CardTags } from '@/components/ui/card-list'
 import { Image } from '@/components/ui/image'
 import { engine, useAchievements } from '@/features/achievements/engine'
 import { Hero, HeroMeta, HeroTitle } from '@/layout/hero'
 import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 import { formatDate } from '@/lib/format'
+import { createLazyMDXLoader } from '@/lib/mdx'
 
-const mdxComponents = {
-  ...defaultMdxComponents,
-  pre: (props: ComponentProps<'pre'>) => (
-    <div className="relative my-4 bg-border pixel-shadow clip-pixel-lg pixel-shadow-card pixel-shadow-x-4 before:absolute before:inset-[2px] before:-z-10 before:bg-card before:content-[''] before:clip-pixel-lg">
-      <CodeBlock
-        {...props}
-        className="!my-0 !rounded-none !border-none !bg-transparent !shadow-none"
-      >
-        <Pre>{props.children}</Pre>
-      </CodeBlock>
-    </div>
-  ),
-}
-
-export const blogPostLoader = browserCollections.blogPosts.createClientLoader({
-  component({ frontmatter, hero, default: MDX }) {
-    const heroSrc = hero as string | undefined
-    return (
-      <>
-        <Hero className="pt-12 text-center">
-          <PageBreadcrumb
-            href="/blog"
-            label="Blog"
-            current={frontmatter.title}
-          />
-          {frontmatter.tags && frontmatter.tags.length > 0 && (
-            <CardTags tags={frontmatter.tags} />
-          )}
-          <HeroTitle className="text-3xl sm:text-4xl">
-            {frontmatter.title}
-          </HeroTitle>
-          <HeroMeta>
-            <span>{frontmatter.author}</span>
-            <span>·</span>
-            <time>{formatDate(frontmatter.date)}</time>
-          </HeroMeta>
-
-          {heroSrc && (
-            <Image
-              src={heroSrc}
-              alt={frontmatter.title}
-              className="inset-0 clip-pixel-lg"
-              sizes="(max-width: 672px) 100vw, 672px"
-              priority
-            />
-          )}
-
-          {frontmatter.translations && frontmatter.translations.length > 0 && (
-            <div className="text-sm text-muted-foreground">
-              <span>Also available in: </span>
-              {frontmatter.translations.map((translation, index) => (
-                <span key={translation.lang}>
-                  <a
-                    href={translation.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline hover:no-underline"
-                  >
-                    {translation.lang.toUpperCase()}
-                  </a>
-                  {index < frontmatter.translations!.length - 1 && ', '}
-                </span>
-              ))}
-            </div>
-          )}
-        </Hero>
-        <article className="mx-auto prose w-full max-w-3xl px-4 py-6 *:mx-auto *:max-w-2xl sm:py-8 md:px-0">
-          <MDX components={mdxComponents} />
-        </article>
-      </>
-    )
-  },
-})
+export const blogMdx = createLazyMDXLoader(
+  import.meta.glob('/content/blog/**/*.mdx'),
+)
 
 function ScrollTracker({ slug }: { slug: string }) {
   const { unlock } = useAchievements()
@@ -112,11 +39,78 @@ function ScrollTracker({ slug }: { slug: string }) {
   return <div ref={sentinelRef} />
 }
 
-export function PageBlogPost({ path, slug }: { path: string; slug: string }) {
+export function PageBlogPost({
+  slug,
+  hero,
+  title,
+  author,
+  date,
+  tags,
+  translations,
+}: {
+  slug: string
+  hero: string | null
+  title: string
+  author: string
+  date: string
+  tags: Array<string> | null
+  translations: Array<{ lang: string; url: string }> | null
+}) {
+  const LazyMDX = blogMdx(`/content/blog/${slug}/index.mdx`)
+
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
-      {blogPostLoader.useContent(path)}
+    <>
+      <Hero className="pt-12 text-center">
+        <PageBreadcrumb href="/blog" label="Blog" current={title} />
+        {tags && tags.length > 0 && <CardTags tags={tags} />}
+        <HeroTitle className="text-3xl sm:text-4xl">{title}</HeroTitle>
+        <HeroMeta>
+          <span>{author}</span>
+          <span>·</span>
+          <time>{formatDate(date)}</time>
+        </HeroMeta>
+
+        {hero && (
+          <Image
+            src={hero}
+            alt={title}
+            className="inset-0 clip-pixel-lg"
+            sizes="(max-width: 672px) 100vw, 672px"
+            priority
+          />
+        )}
+
+        {translations && translations.length > 0 && (
+          <div className="text-sm text-muted-foreground">
+            <span>Also available in: </span>
+            {translations.map((t, i) => (
+              <span key={t.lang}>
+                <a
+                  href={t.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline hover:no-underline"
+                >
+                  {t.lang.toUpperCase()}
+                </a>
+                {i < translations.length - 1 && ', '}
+              </span>
+            ))}
+          </div>
+        )}
+      </Hero>
+
+      <article className="prose-article mx-auto prose w-full max-w-2xl px-4 py-6 prose-invert sm:py-8 md:px-0">
+        {LazyMDX && (
+          <Suspense
+            fallback={<div className="p-8 text-center">Loading...</div>}
+          >
+            <LazyMDX components={mdxComponents} />
+          </Suspense>
+        )}
+      </article>
+
       <ScrollTracker slug={slug} />
-    </Suspense>
+    </>
   )
 }

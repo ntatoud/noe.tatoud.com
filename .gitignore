@@ -10,6 +10,6 @@ count.txt
 .wrangler
 .netlify
 .output
-.source
+.content-collections
 .vinxi
 todos.json
