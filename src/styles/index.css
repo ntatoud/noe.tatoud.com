@@ -217,6 +217,10 @@
     line-height: 1.2;
   }
 
+  .prose-article {
+    contain: content;
+  }
+
   /* Blog prose */
   .prose {
     font-family: var(--font-prose);

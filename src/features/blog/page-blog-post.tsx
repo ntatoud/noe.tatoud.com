@@ -9,7 +9,7 @@ import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 import { formatDate } from '@/lib/format'
 import { createLazyMDXLoader } from '@/lib/mdx'
 
-const getLazyMDX = createLazyMDXLoader(
+export const blogMdx = createLazyMDXLoader(
   import.meta.glob('/content/blog/**/*.mdx'),
 )
 
@@ -56,7 +56,7 @@ export function PageBlogPost({
   tags: Array<string> | null
   translations: Array<{ lang: string; url: string }> | null
 }) {
-  const LazyMDX = getLazyMDX(`/content/blog/${slug}/index.mdx`)
+  const LazyMDX = blogMdx(`/content/blog/${slug}/index.mdx`)
 
   return (
     <>
@@ -100,7 +100,7 @@ export function PageBlogPost({
         )}
       </Hero>
 
-      <article className="mx-auto prose w-full max-w-3xl px-4 py-6 prose-invert *:mx-auto *:max-w-2xl sm:py-8 md:px-0">
+      <article className="prose-article mx-auto prose w-full max-w-2xl px-4 py-6 prose-invert sm:py-8 md:px-0">
         {LazyMDX && (
           <Suspense
             fallback={<div className="p-8 text-center">Loading...</div>}

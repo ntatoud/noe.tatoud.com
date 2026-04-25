@@ -6,7 +6,7 @@ import { allBlogPosts } from 'content-collections'
 import type { BlogPosting } from 'schema-dts'
 
 import { PageError } from '@/components/page-error'
-import { PageBlogPost } from '@/features/blog/page-blog-post'
+import { PageBlogPost, blogMdx } from '@/features/blog/page-blog-post'
 import { ogMeta } from '@/features/og/meta'
 import { resolveContentImage } from '@/lib/content-images'
 import { jsonLd } from '@/lib/json-ld'
@@ -27,6 +27,7 @@ export const Route = createFileRoute('/blog/$')({
     if (data.externalUrl) {
       throw redirect({ href: data.externalUrl })
     }
+    await blogMdx.preload(`/content/blog/${slug}/index.mdx`)
     return data
   },
   head: ({ loaderData }) => {

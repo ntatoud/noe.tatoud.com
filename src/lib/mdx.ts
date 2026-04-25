@@ -11,7 +11,7 @@ export function createLazyMDXLoader(
 ) {
   const cache: Record<string, React.LazyExoticComponent<MDXComponentType>> = {}
 
-  return function getLazyMDX(path: string) {
+  function getLazyMDX(path: string) {
     if (!cache[path]) {
       const loader = modules[path]
       if (!loader) return null
@@ -19,4 +19,11 @@ export function createLazyMDXLoader(
     }
     return cache[path]
   }
+
+  function preload(path: string) {
+    const loader = modules[path]
+    if (loader) return loader()
+  }
+
+  return Object.assign(getLazyMDX, { preload })
 }
