@@ -1,12 +1,6 @@
-import type { ReactElement, SVGProps } from 'react'
-
-import {
-  PixelGitHub,
-  PixelLinkedIn,
-  PixelMail,
-  PixelSourceCode,
-} from '@/components/icons'
+import { PixelSourceCode } from '@/components/icons'
 import { useAchievements } from '@/features/achievements/engine'
+import { socialLinks } from '@/features/social/social-links'
 import { cn } from '@/lib/utils'
 
 export function Footer() {
@@ -20,24 +14,15 @@ export function Footer() {
             Let&apos;s connect
           </p>
           <div className="flex items-center gap-0">
-            <FooterLink
-              href="https://github.com/ntatoud"
-              label="GitHub"
-              icon={PixelGitHub}
-              onClick={() => unlock('social')}
-            />
-            <FooterLink
-              href="https://linkedin.com/in/noetatoud"
-              label="LinkedIn"
-              icon={PixelLinkedIn}
-              onClick={() => unlock('social')}
-            />
-            <FooterLink
-              href="mailto:noe.tatoud@gmail.com"
-              label="Email"
-              icon={PixelMail}
-              onClick={() => unlock('social')}
-            />
+            {socialLinks.map((link) => (
+              <FooterLink
+                key={link.id}
+                href={link.href}
+                label={link.label}
+                icon={link.icon}
+                onClick={() => unlock('social')}
+              />
+            ))}
           </div>
         </div>
 
@@ -55,9 +40,11 @@ export function Footer() {
   )
 }
 
+import type { SVGProps } from 'react'
+
 type PixelIconComponent = (
   props: SVGProps<SVGSVGElement> & { size?: number },
-) => ReactElement
+) => React.ReactElement
 
 function FooterLink({
   href,
