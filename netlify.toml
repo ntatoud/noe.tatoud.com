@@ -1,9 +1,6 @@
 [build]
-command = "bun run build"
+command = "pnpm run build"
 publish = "dist/client"
-
-[build.environment]
-NODE_MODULES_CACHE = "false"
 
 # Hashed Vite bundles — safe to cache forever
 [[headers]]
