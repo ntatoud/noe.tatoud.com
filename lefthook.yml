@@ -11,4 +11,4 @@ pre-push:
     lint:
       run: bun run lint
     typecheck:
-      run: bunx content-collections build && bunx tsc --noEmit
+      run: bunx content-collections build && bunx tsgo --noEmit
