@@ -1,15 +1,15 @@
-import z from 'zod'
+import * as v from 'valibot'
 
-export type ProjectFrontmatter = z.infer<typeof ProjectSchema>
+export type ProjectFrontmatter = v.InferOutput<typeof ProjectSchema>
 
-export const ProjectSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  date: z.string(),
-  published: z.boolean().default(false),
-  kind: z.enum(['personal', 'contribution']).default('personal'),
-  url: z.string().url().optional(),
-  repo: z.string().url().optional(),
-  tags: z.array(z.string()).optional(),
-  content: z.string().optional(),
+export const ProjectSchema = v.object({
+  title: v.string(),
+  description: v.optional(v.string()),
+  date: v.string(),
+  published: v.optional(v.boolean(), false),
+  kind: v.optional(v.picklist(['personal', 'contribution']), 'personal'),
+  url: v.optional(v.pipe(v.string(), v.url())),
+  repo: v.optional(v.pipe(v.string(), v.url())),
+  tags: v.optional(v.array(v.string())),
+  content: v.optional(v.string()),
 })
