@@ -1,16 +1,16 @@
-import z from 'zod'
+import * as v from 'valibot'
 
-export const BlogPostSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
-  author: z.string(),
-  date: z.string(),
-  published: z.boolean().default(false),
-  translations: z
-    .array(z.object({ lang: z.string(), url: z.string().url() }))
-    .optional(),
-  tags: z.array(z.string()).optional(),
-  externalUrl: z.string().url().optional(),
-  hero: z.string().optional(),
-  content: z.string().optional(),
+export const BlogPostSchema = v.object({
+  title: v.string(),
+  description: v.optional(v.string()),
+  author: v.string(),
+  date: v.string(),
+  published: v.optional(v.boolean(), false),
+  translations: v.optional(
+    v.array(v.object({ lang: v.string(), url: v.pipe(v.string(), v.url()) })),
+  ),
+  tags: v.optional(v.array(v.string())),
+  externalUrl: v.optional(v.pipe(v.string(), v.url())),
+  hero: v.optional(v.string()),
+  content: v.optional(v.string()),
 })

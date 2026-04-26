@@ -1,14 +1,14 @@
-import z from 'zod'
+import * as v from 'valibot'
 
-export type ExperienceFrontmatter = z.infer<typeof ExperienceSchema>
+export type ExperienceFrontmatter = v.InferOutput<typeof ExperienceSchema>
 
-export const ExperienceSchema = z.object({
-  title: z.string(),
-  organization: z.string(),
-  url: z.string().url().optional(),
-  startDate: z.string(),
-  endDate: z.string().optional(),
-  kind: z.enum(['work', 'volunteer', 'education']),
-  logo: z.string().optional(),
-  content: z.string().optional(),
+export const ExperienceSchema = v.object({
+  title: v.string(),
+  organization: v.string(),
+  url: v.optional(v.pipe(v.string(), v.url())),
+  startDate: v.string(),
+  endDate: v.optional(v.string()),
+  kind: v.picklist(['work', 'volunteer', 'education']),
+  logo: v.optional(v.string()),
+  content: v.optional(v.string()),
 })
