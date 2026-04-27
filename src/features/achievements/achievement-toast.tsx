@@ -83,7 +83,19 @@ function ToastItem({
   const Icon = getAchievementIcon(id)
 
   return (
-    <li role="listitem" aria-atomic="true" className="list-none">
+    <li
+      role="listitem"
+      aria-atomic="true"
+      className={cn(
+        'list-none',
+        !exiting && 'animate-in duration-200 fade-in slide-in-from-left-4',
+        exiting &&
+          'animate-out fill-mode-forwards fade-out slide-out-to-left-4',
+      )}
+      style={
+        exiting ? { animationDuration: `${EXIT_DURATION_MS}ms` } : undefined
+      }
+    >
       <button
         type="button"
         onClick={startDismiss}
@@ -92,13 +104,7 @@ function ToastItem({
           'relative flex cursor-pointer items-center gap-4 px-4 py-3 text-left clip-pixel-lg',
           'bg-border pixel-shadow pixel-shadow-card pixel-shadow-x-2 pixel-shadow-y-2',
           'before:pointer-events-none before:absolute before:inset-[2px] before:z-[-1] before:bg-card before:content-[""] before:clip-pixel-lg',
-          !exiting && 'animate-in duration-200 fade-in slide-in-from-left-4',
-          exiting &&
-            'animate-out fill-mode-forwards fade-out slide-out-to-left-4',
         )}
-        style={
-          exiting ? { animationDuration: `${EXIT_DURATION_MS}ms` } : undefined
-        }
       >
         <Icon size={28} className="shrink-0 text-primary" aria-hidden="true" />
         <div>
