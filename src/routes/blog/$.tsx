@@ -125,6 +125,7 @@ const serverLoader = createServerFn({ method: 'GET' })
         `content/blog/${post._meta.directory}`,
         post.hero,
       ),
+      heroDimensions: post.heroDimensions ?? null,
       externalUrl: post.externalUrl ?? null,
       origin,
     }
