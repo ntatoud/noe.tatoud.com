@@ -1,3 +1,5 @@
+import { ClientOnly } from '@/components/client-only'
+
 import { AchievementToast } from './achievement-toast'
 import { Provider, useAchievementToast } from './engine'
 
@@ -14,7 +16,9 @@ export function AchievementProvider({
   return (
     <Provider>
       {children}
-      <Toasts />
+      <ClientOnly>
+        <Toasts />
+      </ClientOnly>
     </Provider>
   )
 }
