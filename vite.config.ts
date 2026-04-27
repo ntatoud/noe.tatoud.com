@@ -12,7 +12,7 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 
-import rehypeImgDimensions from './src/lib/rehype-img-dimensions'
+import rehypeImgDimensions from './plugins/rehype-img-dimensions'
 
 const config = defineConfig({
   resolve: {
