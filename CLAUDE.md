@@ -14,21 +14,21 @@ Personal website & blog — **noe.tatoud.com**
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/tailwind.css
 - **UI components**: shadcn/ui (base-nova style), custom pixel icons in `src/components/icons/`
 - **Blog/MDX**: fumadocs-mdx with fumadocs-core, content in `content/`
-- **Package manager**: bun
-- **Formatting**: oxfmt (`bun run format`) — no semicolons, single quotes, trailing commas
-- **Linting**: oxlint via `oxlint.config.ts` (`bun run lint`)
-- **Testing**: Vitest + Testing Library + jsdom (`bun run test`)
-- **Dead code**: knip (`bun run knip`)
+- **Package manager**: pnpm
+- **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
+- **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
+- **Testing**: Vitest + Testing Library + jsdom (`pnpm run test`)
+- **Dead code**: knip (`pnpm run knip`)
 - **Language**: TypeScript 5.9 (strict mode, noUnusedLocals, noUnusedParameters)
 
 ## Commands
 
 ```sh
-bun run dev       # dev server on port 3000
-bun run build     # production build (Netlify)
-bun run check     # format check + oxlint fix
-bun run test      # run vitest
-bun run knip      # dead code detection
+pnpm run dev       # dev server on port 3000
+pnpm run build     # production build (Netlify)
+pnpm run check     # format check + oxlint fix
+pnpm run test      # run vitest
+pnpm run knip      # dead code detection
 ```
 
 ## Key paths

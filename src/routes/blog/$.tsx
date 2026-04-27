@@ -7,7 +7,7 @@ import type { BlogPosting } from 'schema-dts'
 
 import { PageError } from '@/components/page-error'
 import { PageBlogPost, blogMdx } from '@/features/blog/page-blog-post'
-import { ogMeta } from '@/features/og/meta'
+import { canonicalLink, ogMeta } from '@/features/og/meta'
 import { resolveContentImage } from '@/lib/content-images'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
@@ -33,7 +33,38 @@ export const Route = createFileRoute('/blog/$')({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
 
+    const heroPreload = loaderData.hero
+      ? [
+          {
+            rel: 'preload',
+            as: 'image',
+            href: `/.netlify/images?url=${encodeURIComponent(loaderData.hero)}&w=828&q=75`,
+            imageSrcSet: [320, 640, 828, 1080]
+              .map(
+                (w) =>
+                  `/.netlify/images?url=${encodeURIComponent(loaderData.hero!)}&w=${w}&q=75 ${w}w`,
+              )
+              .join(', '),
+            imageSizes: '(max-width: 672px) 100vw, 672px',
+          },
+        ]
+      : []
+
+    const pageUrl = siteUrl(loaderData.origin, loaderData.url)
+    const hreflangLinks = (loaderData.translations ?? []).map((t) => ({
+      rel: 'alternate',
+      hrefLang: t.lang,
+      href: t.url.startsWith('http')
+        ? t.url
+        : siteUrl(loaderData.origin, t.url),
+    }))
+
     return {
+      links: [
+        canonicalLink(loaderData.url, loaderData.origin),
+        ...hreflangLinks,
+        ...heroPreload,
+      ],
       meta: [
         ...ogMeta({
           ...loaderData,
@@ -49,9 +80,25 @@ export const Route = createFileRoute('/blog/$')({
           ...(loaderData.description && {
             description: loaderData.description,
           }),
-          author: { '@type': 'Person', name: loaderData.author },
+          author: {
+            '@type': 'Person',
+            name: loaderData.author,
+            url: siteUrl(loaderData.origin, '/'),
+          },
           datePublished: loaderData.date,
-          url: siteUrl(loaderData.origin, loaderData.url),
+          url: pageUrl,
+          mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+          isPartOf: {
+            '@type': 'WebSite',
+            name: 'Noé Tatoud',
+            url: siteUrl(loaderData.origin, '/'),
+          },
+          ...(loaderData.hero && {
+            image: {
+              '@type': 'ImageObject',
+              url: loaderData.hero,
+            },
+          }),
         }),
       ],
     }
@@ -78,6 +125,7 @@ const serverLoader = createServerFn({ method: 'GET' })
         `content/blog/${post._meta.directory}`,
         post.hero,
       ),
+      heroDimensions: post.heroDimensions ?? null,
       externalUrl: post.externalUrl ?? null,
       origin,
     }

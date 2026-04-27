@@ -13,24 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'pnpm'
 
-      - uses: oven-sh/setup-bun@v2
-
-      - run: bun install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           LEFTHOOK: '0'
 
       - name: 🎨 Check formatting
-        run: bunx oxfmt --check .
+        run: pnpm exec oxfmt --check .
 
       - name: 🧹 Lint
-        run: bun run lint
+        run: pnpm run lint
 
       - name: 🏗️ Generate content-collections types
-        run: bunx content-collections build
+        run: pnpm exec content-collections build
 
       - name: 🔎 Typecheck
-        run: bunx tsc --noEmit
+        run: pnpm exec tsc --noEmit

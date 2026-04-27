@@ -7,7 +7,7 @@ import type { Person, WebSite } from 'schema-dts'
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { getExperiences } from '@/features/experiences/get-experiences'
 import { PageHome } from '@/features/home/page-home'
-import { ogMeta } from '@/features/og/meta'
+import { canonicalLink, ogMeta } from '@/features/og/meta'
 import { getProjects } from '@/features/projects/get-projects'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
@@ -22,6 +22,7 @@ export const Route = createFileRoute('/')({
     if (!loaderData) return {}
     const homeUrl = siteUrl(loaderData.origin, '/')
     return {
+      links: [canonicalLink('/', loaderData.origin)],
       meta: [
         ...ogMeta({
           title: 'Noé Tatoud | Frontend Developer',

@@ -42,6 +42,7 @@ function ScrollTracker({ slug }: { slug: string }) {
 export function PageBlogPost({
   slug,
   hero,
+  heroDimensions,
   title,
   author,
   date,
@@ -50,6 +51,7 @@ export function PageBlogPost({
 }: {
   slug: string
   hero: string | null
+  heroDimensions: { width: number; height: number } | null
   title: string
   author: string
   date: string
@@ -76,6 +78,8 @@ export function PageBlogPost({
             alt={title}
             className="inset-0 clip-pixel-lg"
             sizes="(max-width: 672px) 100vw, 672px"
+            width={heroDimensions?.width}
+            height={heroDimensions?.height}
             priority
           />
         )}

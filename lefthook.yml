@@ -3,12 +3,12 @@ pre-commit:
     format:
       glob: '*.{ts,tsx,js,jsx,json,css,md,mdx,toml}'
       exclude: 'src/routeTree.gen.ts'
-      run: bunx oxfmt {staged_files}
+      run: pnpm exec oxfmt {staged_files}
       stage_fixed: true
 
 pre-push:
   commands:
     lint:
-      run: bun run lint
+      run: pnpm run lint
     typecheck:
-      run: bunx content-collections build && bunx tsgo --noEmit
+      run: pnpm exec content-collections build && pnpm exec tsgo --noEmit

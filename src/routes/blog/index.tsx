@@ -4,7 +4,7 @@ import { getRequestUrl } from '@tanstack/react-start/server'
 
 import { getBlogPosts } from '@/features/blog/get-blog-posts'
 import { PageBlog } from '@/features/blog/page-blog'
-import { ogMeta } from '@/features/og/meta'
+import { canonicalLink, ogMeta } from '@/features/og/meta'
 
 const getOrigin = createServerFn({ method: 'GET' }).handler(
   () => getRequestUrl({ xForwardedHost: true }).origin,
@@ -15,6 +15,7 @@ export const Route = createFileRoute('/blog/')({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
     return {
+      links: [canonicalLink('/blog/', loaderData.origin)],
       meta: ogMeta({
         title: 'Blog | Noé Tatoud',
         description:

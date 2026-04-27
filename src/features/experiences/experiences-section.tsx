@@ -2,6 +2,7 @@ import { useLoaderData } from '@tanstack/react-router'
 
 import { PixelExternalLink } from '@/components/icons'
 import { Badge } from '@/components/ui/badge'
+import { Image } from '@/components/ui/image'
 import type { Experience } from '@/features/experiences/get-experiences'
 import {
   Section,
@@ -18,9 +19,9 @@ const KIND_LABEL: Record<Experience['kind'], string> = {
 }
 
 function ExperienceItem({ experience }: { experience: Experience }) {
-  const start = new Date(experience.startDate).getFullYear()
+  const start = new Date(experience.startDate).getUTCFullYear()
   const end = experience.endDate
-    ? new Date(experience.endDate).getFullYear()
+    ? new Date(experience.endDate).getUTCFullYear()
     : 'Present'
 
   const Wrapper = experience.url ? 'a' : 'div'
@@ -38,11 +39,14 @@ function ExperienceItem({ experience }: { experience: Experience }) {
       )}
     >
       {experience.logo ? (
-        <img
+        <Image
           src={experience.logo}
           alt={experience.organization}
           width={40}
           height={40}
+          widths={[40, 80]}
+          sizes="40px"
+          quality={90}
           className="shrink-0 object-contain clip-pixel"
           style={{ imageRendering: 'pixelated' }}
         />
