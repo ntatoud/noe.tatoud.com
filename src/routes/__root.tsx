@@ -49,6 +49,11 @@ export const Route = createRootRoute({
         crossOrigin: 'anonymous',
       },
       {
+        rel: 'preload',
+        href: appCss,
+        as: 'style',
+      },
+      {
         rel: 'stylesheet',
         href: appCss,
       },
