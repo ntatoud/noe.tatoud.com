@@ -42,10 +42,17 @@ export function ogMeta({
     { property: 'og:image:height', content: '630' },
     { property: 'og:url', content: pageUrl },
     { property: 'og:site_name', content: 'Noe Tatoud' },
+    { property: 'og:locale', content: 'en_US' },
     { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:site', content: '@ntatoud' },
+    { name: 'twitter:creator', content: '@ntatoud' },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description ?? '' },
     { name: 'twitter:image', content: ogImageUrl },
     { name: 'twitter:url', content: pageUrl },
   ]
+}
+
+export function canonicalLink(url: string, origin: string) {
+  return { rel: 'canonical', href: siteUrl(origin, url) }
 }

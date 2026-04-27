@@ -7,7 +7,7 @@ import type { BlogPosting } from 'schema-dts'
 
 import { PageError } from '@/components/page-error'
 import { PageBlogPost, blogMdx } from '@/features/blog/page-blog-post'
-import { ogMeta } from '@/features/og/meta'
+import { canonicalLink, ogMeta } from '@/features/og/meta'
 import { resolveContentImage } from '@/lib/content-images'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
@@ -50,8 +50,21 @@ export const Route = createFileRoute('/blog/$')({
         ]
       : []
 
+    const pageUrl = siteUrl(loaderData.origin, loaderData.url)
+    const hreflangLinks = (loaderData.translations ?? []).map((t) => ({
+      rel: 'alternate',
+      hrefLang: t.lang,
+      href: t.url.startsWith('http')
+        ? t.url
+        : siteUrl(loaderData.origin, t.url),
+    }))
+
     return {
-      links: heroPreload,
+      links: [
+        canonicalLink(loaderData.url, loaderData.origin),
+        ...hreflangLinks,
+        ...heroPreload,
+      ],
       meta: [
         ...ogMeta({
           ...loaderData,
@@ -67,9 +80,25 @@ export const Route = createFileRoute('/blog/$')({
           ...(loaderData.description && {
             description: loaderData.description,
           }),
-          author: { '@type': 'Person', name: loaderData.author },
+          author: {
+            '@type': 'Person',
+            name: loaderData.author,
+            url: siteUrl(loaderData.origin, '/'),
+          },
           datePublished: loaderData.date,
-          url: siteUrl(loaderData.origin, loaderData.url),
+          url: pageUrl,
+          mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+          isPartOf: {
+            '@type': 'WebSite',
+            name: 'Noé Tatoud',
+            url: siteUrl(loaderData.origin, '/'),
+          },
+          ...(loaderData.hero && {
+            image: {
+              '@type': 'ImageObject',
+              url: loaderData.hero,
+            },
+          }),
         }),
       ],
     }

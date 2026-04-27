@@ -18,25 +18,32 @@ const staticRoutes = [
   '/achievements/',
 ] satisfies Array<StaticPagePath>
 
-function buildSitemap(urls: Array<string>): string {
-  const entries = urls
-    .map((url) => {
+type SitemapEntry = { url: string; lastmod?: string }
+
+function buildSitemap(entries: Array<SitemapEntry>): string {
+  const items = entries
+    .map(({ url, lastmod }) => {
       const normalized = url.length > 1 ? url.replace(/\/$/, '') : url
-      return `  <url><loc>${BASE_URL}${normalized}</loc></url>`
+      const lastmodTag = lastmod ? `<lastmod>${lastmod}</lastmod>` : ''
+      return `  <url><loc>${BASE_URL}${normalized}</loc>${lastmodTag}</url>`
     })
     .join('\n')
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>`
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>`
 }
 
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: () => {
-        const blogSlugs = allBlogPosts
+        const blogEntries = allBlogPosts
           .filter((p) => p.published)
-          .map((p) => `/blog/${p._meta.path}`)
+          .map((p) => ({
+            url: `/blog/${p._meta.path}`,
+            lastmod: new Date(p.date).toISOString().split('T')[0],
+          }))
 
-        const xml = buildSitemap([...staticRoutes, ...blogSlugs])
+        const staticEntries = staticRoutes.map((url) => ({ url }))
+        const xml = buildSitemap([...staticEntries, ...blogEntries])
 
         return new Response(xml, {
           headers: { 'Content-Type': 'application/xml; charset=utf-8' },

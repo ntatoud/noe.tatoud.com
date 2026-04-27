@@ -40,6 +40,7 @@ export const Route = createRootRoute({
       },
     ],
     links: [
+      { rel: 'preconnect', href: '/.netlify' },
       {
         rel: 'preload',
         href: '/fonts/GeistPixel-Square.woff2',
@@ -53,7 +54,7 @@ export const Route = createRootRoute({
       },
       { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
       { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
-      { rel: 'manifest', href: '/manifest.json' },
+      { rel: 'manifest', href: '/site.webmanifest' },
     ],
   }),
 
