@@ -18,6 +18,9 @@ const DEFAULT_WIDTHS = [320, 640, 828, 1080, 1200, 1920]
 
 function netlifyUrl(src: string, w: number, quality: number): string {
   if (import.meta.env.DEV) return src
+  // Netlify Image CDN can't process data URIs (returns 502). Vite inlines
+  // small assets (<4 KiB by default) as base64, so bypass the CDN for those.
+  if (src.startsWith('data:')) return src
   return `/.netlify/images?${new URLSearchParams({ url: src, w: String(w), q: String(quality) })}`
 }
 
@@ -30,16 +33,17 @@ export function Image({
   sizes = '100vw',
   ...props
 }: ImageProps) {
-  const srcSet = widths
-    .map((w) => `${netlifyUrl(src, w, quality)} ${w}w`)
-    .join(', ')
+  const isDataUri = src.startsWith('data:')
+  const srcSet = isDataUri
+    ? undefined
+    : widths.map((w) => `${netlifyUrl(src, w, quality)} ${w}w`).join(', ')
 
   return (
     <img
       {...props}
       src={netlifyUrl(src, widths.at(-1) ?? 1920, quality)}
       srcSet={srcSet}
-      sizes={sizes}
+      sizes={isDataUri ? undefined : sizes}
       alt={alt}
       loading={priority ? undefined : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
