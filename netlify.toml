@@ -8,6 +8,12 @@ for = "/assets/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
+# Netlify image CDN — content-addressed by URL params, safe to cache long-term
+[[headers]]
+for = "/.netlify/images*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
 # Content images — cache for 1 day
 [[headers]]
 for = "/content/*"

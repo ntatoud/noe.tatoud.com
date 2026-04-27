@@ -21,7 +21,12 @@ export function AchievementToast({
       aria-label="Notifications"
       className="fixed bottom-24 left-3 z-60 flex flex-col gap-2 sm:bottom-5"
     >
-      <ol aria-live="polite" aria-relevant="additions" className="contents">
+      <ol
+        role="list"
+        aria-live="polite"
+        aria-relevant="additions"
+        className="contents"
+      >
         {queue.map((id) => (
           <ToastItem key={id} id={id} onDismiss={onDismiss} />
         ))}
@@ -78,7 +83,7 @@ function ToastItem({
   const Icon = getAchievementIcon(id)
 
   return (
-    <li role="status" aria-atomic="true" className="list-none">
+    <li role="listitem" aria-atomic="true" className="list-none">
       <button
         type="button"
         onClick={startDismiss}
