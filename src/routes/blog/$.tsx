@@ -33,7 +33,25 @@ export const Route = createFileRoute('/blog/$')({
   head: ({ loaderData }) => {
     if (!loaderData) return {}
 
+    const heroPreload = loaderData.hero
+      ? [
+          {
+            rel: 'preload',
+            as: 'image',
+            href: `/.netlify/images?url=${encodeURIComponent(loaderData.hero)}&w=828&q=75`,
+            imageSrcSet: [320, 640, 828, 1080]
+              .map(
+                (w) =>
+                  `/.netlify/images?url=${encodeURIComponent(loaderData.hero!)}&w=${w}&q=75 ${w}w`,
+              )
+              .join(', '),
+            imageSizes: '(max-width: 672px) 100vw, 672px',
+          },
+        ]
+      : []
+
     return {
+      links: heroPreload,
       meta: [
         ...ogMeta({
           ...loaderData,
