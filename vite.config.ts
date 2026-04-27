@@ -12,6 +12,8 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 
+import rehypeImgDimensions from './src/lib/rehype-img-dimensions'
+
 const config = defineConfig({
   resolve: {
     tsconfigPaths: true,
@@ -25,6 +27,7 @@ const config = defineConfig({
       ...mdx({
         remarkPlugins: [remarkFrontmatter, remarkGfm],
         rehypePlugins: [
+          rehypeImgDimensions,
           rehypeMdxImportMedia,
           [rehypePrettyCode, { theme: 'github-dark' }],
         ],

@@ -1,6 +1,24 @@
 import type { ComponentProps } from 'react'
 
+import { Image } from '@/components/ui/image'
+
 export const mdxComponents = {
+  img: ({
+    src,
+    alt,
+    width,
+    height,
+    ...props
+  }: ComponentProps<'img'> & { src: string; alt: string }) => (
+    <Image
+      src={src}
+      alt={alt ?? ''}
+      width={width ? Number(width) : undefined}
+      height={height ? Number(height) : undefined}
+      sizes="(max-width: 672px) 100vw, 672px"
+      {...props}
+    />
+  ),
   figure: ({
     children,
     ...props
