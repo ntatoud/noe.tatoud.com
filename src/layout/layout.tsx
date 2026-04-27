@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 
 import { useRouter } from '@tanstack/react-router'
 
-import ClickSpark from '@/components/click-spark'
 import { ClientOnly } from '@/components/client-only'
 import { PageLoader } from '@/components/page-loader'
 import { SoundToggle } from '@/components/sound-toggle'
@@ -65,7 +64,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-dvh flex-1 flex-col sm:h-auto sm:min-h-dvh">
-      <ClickSpark className="relative flex flex-1 flex-col">
+      <div className="relative flex flex-1 flex-col">
         <PageLoader />
         <ScrollToTop mainRef={mainRef} />
         <ClickSound />
@@ -85,7 +84,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         <div className="fixed top-3 right-3 z-50 pt-safe-top sm:hidden">
           <SoundToggle />
         </div>
-      </ClickSpark>
+      </div>
     </div>
   )
 }
