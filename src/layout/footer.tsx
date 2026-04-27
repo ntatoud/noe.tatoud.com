@@ -31,7 +31,10 @@ export function Footer() {
             <PixelSourceCode size={14} aria-hidden="true" />
             <span>Built with React, TanStack &amp; Tailwind</span>
           </div>
-          <p className="font-mono text-xs text-muted-foreground">
+          <p
+            className="font-mono text-xs text-muted-foreground"
+            suppressHydrationWarning
+          >
             &copy; {new Date().getFullYear()} Noe Tatoud. All rights reserved.
           </p>
         </div>
