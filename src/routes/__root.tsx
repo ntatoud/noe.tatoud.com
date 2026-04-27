@@ -4,7 +4,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 
 import { PageError } from '@/components/page-error'
 import { Layout } from '@/layout/layout'
-
+import '@/lib/content-images'
 import appCss from '@/styles/index.css?url'
 
 export const Route = createRootRoute({
