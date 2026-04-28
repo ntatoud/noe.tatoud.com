@@ -44,7 +44,7 @@ Cache-Control = "public, max-age=31536000, immutable"
 [[headers]]
 for = "/"
 [headers.values]
-Link = '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"; type="text/plain"'
+Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"'
 
 [[edge_functions]]
 path = "/*"

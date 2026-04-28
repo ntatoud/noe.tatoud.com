@@ -1,7 +1,7 @@
 type Context = { next: () => Promise<Response> }
 
 const LINK_HEADERS: Record<string, string> = {
-  '/': '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"; type="text/plain"',
+  '/': '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"',
 }
 
 // Page-specific markdown content for agent consumption
