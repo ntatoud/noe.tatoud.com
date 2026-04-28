@@ -1,4 +1,4 @@
-import type { Context } from '@netlify/edge-functions'
+type Context = { next: () => Promise<Response> }
 
 // Page-specific markdown content for agent consumption
 const MARKDOWN_PAGES: Record<string, string> = {
