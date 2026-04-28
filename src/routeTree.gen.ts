@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShrineRouteImport } from './routes/shrine'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiOgRouteImport } from './routes/api/og'
+import { Route as BlogSlugLlmsDottxtRouteImport } from './routes/blog/$slug/llms[.]txt'
 import { Route as BlogSlugAssetsOgImageRouteImport } from './routes/blog/$slug/assets/og-image'
 
 const StyleguideRoute = StyleguideRouteImport.update({
@@ -32,6 +34,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ShrineRoute = ShrineRouteImport.update({
   id: '/shrine',
   path: '/shrine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +66,11 @@ const ApiOgRoute = ApiOgRouteImport.update({
   path: '/api/og',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugLlmsDottxtRoute = BlogSlugLlmsDottxtRouteImport.update({
+  id: '/blog/$slug/llms.txt',
+  path: '/blog/$slug/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugAssetsOgImageRoute = BlogSlugAssetsOgImageRouteImport.update({
   id: '/blog/$slug/assets/og-image',
   path: '/blog/$slug/assets/og-image',
@@ -67,6 +79,7 @@ const BlogSlugAssetsOgImageRoute = BlogSlugAssetsOgImageRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -74,10 +87,12 @@ export interface FileRoutesByFullPath {
   '/blog/$': typeof BlogSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -85,11 +100,13 @@ export interface FileRoutesByTo {
   '/blog/$': typeof BlogSplatRoute
   '/achievements': typeof AchievementsIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -97,12 +114,14 @@ export interface FileRoutesById {
   '/blog/$': typeof BlogSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/llms.txt'
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
@@ -110,10 +129,12 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/achievements/'
     | '/blog/'
+    | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/llms.txt'
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
@@ -121,10 +142,12 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/achievements'
     | '/blog'
+    | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   id:
     | '__root__'
     | '/'
+    | '/llms.txt'
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
@@ -132,11 +155,13 @@ export interface FileRouteTypes {
     | '/blog/$'
     | '/achievements/'
     | '/blog/'
+    | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   ShrineRoute: typeof ShrineRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleguideRoute: typeof StyleguideRoute
@@ -144,6 +169,7 @@ export interface RootRouteChildren {
   BlogSplatRoute: typeof BlogSplatRoute
   AchievementsIndexRoute: typeof AchievementsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  BlogSlugLlmsDottxtRoute: typeof BlogSlugLlmsDottxtRoute
   BlogSlugAssetsOgImageRoute: typeof BlogSlugAssetsOgImageRoute
 }
 
@@ -168,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/shrine'
       fullPath: '/shrine'
       preLoaderRoute: typeof ShrineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -205,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiOgRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug/llms.txt': {
+      id: '/blog/$slug/llms.txt'
+      path: '/blog/$slug/llms.txt'
+      fullPath: '/blog/$slug/llms.txt'
+      preLoaderRoute: typeof BlogSlugLlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug/assets/og-image': {
       id: '/blog/$slug/assets/og-image'
       path: '/blog/$slug/assets/og-image'
@@ -217,6 +257,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   ShrineRoute: ShrineRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleguideRoute: StyleguideRoute,
@@ -224,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSplatRoute: BlogSplatRoute,
   AchievementsIndexRoute: AchievementsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  BlogSlugLlmsDottxtRoute: BlogSlugLlmsDottxtRoute,
   BlogSlugAssetsOgImageRoute: BlogSlugAssetsOgImageRoute,
 }
 export const routeTree = rootRouteImport
