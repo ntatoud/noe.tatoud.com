@@ -1,5 +1,9 @@
 type Context = { next: () => Promise<Response> }
 
+const LINK_HEADERS: Record<string, string> = {
+  '/': '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"; type="text/plain"',
+}
+
 // Page-specific markdown content for agent consumption
 const MARKDOWN_PAGES: Record<string, string> = {
   '/': `# Noé Tatoud
@@ -28,17 +32,22 @@ Visit https://noe.tatoud.com/blog for the full list of posts.
 }
 
 export default async function handler(req: Request, context: Context) {
+  const url = new URL(req.url)
   const accept = req.headers.get('accept') ?? ''
+  const linkHeader = LINK_HEADERS[url.pathname]
 
   if (!accept.includes('text/markdown')) {
-    return context.next()
+    const res = await context.next()
+    if (linkHeader) res.headers.set('Link', linkHeader)
+    return res
   }
 
-  const url = new URL(req.url)
   const markdown = MARKDOWN_PAGES[url.pathname]
 
   if (!markdown) {
-    return context.next()
+    const res = await context.next()
+    if (linkHeader) res.headers.set('Link', linkHeader)
+    return res
   }
 
   return new Response(markdown, {
@@ -46,6 +55,7 @@ export default async function handler(req: Request, context: Context) {
     headers: {
       'Content-Type': 'text/markdown; charset=utf-8',
       Vary: 'Accept',
+      ...(linkHeader && { Link: linkHeader }),
     },
   })
 }
