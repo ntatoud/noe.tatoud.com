@@ -40,11 +40,11 @@ for = "/assets/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
-# Agent discovery — RFC 8288 Link relation headers
+# Agent discovery — RFC 8288 Link relation headers (RFC 9727 §3)
 [[headers]]
 for = "/"
 [headers.values]
-Link = '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"'
+Link = '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"; type="text/plain"'
 
 [[edge_functions]]
 path = "/*"
