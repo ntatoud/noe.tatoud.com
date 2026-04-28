@@ -46,7 +46,6 @@ for = "/"
 [headers.values]
 Link = '</sitemap.xml>; rel="sitemap", </llms.txt>; rel="describedby"'
 
-[edge_functions]
 [[edge_functions]]
 path = "/*"
 function = "markdown-negotiation"
