@@ -13,7 +13,7 @@ import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
 const HOME_LINK_HEADER =
-  '</.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </llms.txt>; rel="describedby"; type="text/plain"'
+  '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"'
 
 const getOrigin = createServerFn({ method: 'GET' }).handler(
   () => getRequestUrl({ xForwardedHost: true }).origin,

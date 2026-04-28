@@ -18,7 +18,6 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiOgRouteImport } from './routes/api/og'
-import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog'
 import { Route as BlogSlugLlmsDottxtRouteImport } from './routes/blog/$slug/llms[.]txt'
 import { Route as BlogSlugAssetsOgImageRouteImport } from './routes/blog/$slug/assets/og-image'
 
@@ -67,11 +66,6 @@ const ApiOgRoute = ApiOgRouteImport.update({
   path: '/api/og',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DotwellKnownApiCatalogRoute = DotwellKnownApiCatalogRouteImport.update({
-  id: '/.well-known/api-catalog',
-  path: '/.well-known/api-catalog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogSlugLlmsDottxtRoute = BlogSlugLlmsDottxtRouteImport.update({
   id: '/blog/$slug/llms.txt',
   path: '/blog/$slug/llms.txt',
@@ -89,7 +83,6 @@ export interface FileRoutesByFullPath {
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
@@ -103,7 +96,6 @@ export interface FileRoutesByTo {
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/achievements': typeof AchievementsIndexRoute
@@ -118,7 +110,6 @@ export interface FileRoutesById {
   '/shrine': typeof ShrineRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
   '/achievements/': typeof AchievementsIndexRoute
@@ -134,7 +125,6 @@ export interface FileRouteTypes {
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
-    | '/.well-known/api-catalog'
     | '/api/og'
     | '/blog/$'
     | '/achievements/'
@@ -148,7 +138,6 @@ export interface FileRouteTypes {
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
-    | '/.well-known/api-catalog'
     | '/api/og'
     | '/blog/$'
     | '/achievements'
@@ -162,7 +151,6 @@ export interface FileRouteTypes {
     | '/shrine'
     | '/sitemap.xml'
     | '/styleguide'
-    | '/.well-known/api-catalog'
     | '/api/og'
     | '/blog/$'
     | '/achievements/'
@@ -177,7 +165,6 @@ export interface RootRouteChildren {
   ShrineRoute: typeof ShrineRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleguideRoute: typeof StyleguideRoute
-  DotwellKnownApiCatalogRoute: typeof DotwellKnownApiCatalogRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSplatRoute: typeof BlogSplatRoute
   AchievementsIndexRoute: typeof AchievementsIndexRoute
@@ -251,13 +238,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiOgRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/api-catalog': {
-      id: '/.well-known/api-catalog'
-      path: '/.well-known/api-catalog'
-      fullPath: '/.well-known/api-catalog'
-      preLoaderRoute: typeof DotwellKnownApiCatalogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/$slug/llms.txt': {
       id: '/blog/$slug/llms.txt'
       path: '/blog/$slug/llms.txt'
@@ -281,7 +261,6 @@ const rootRouteChildren: RootRouteChildren = {
   ShrineRoute: ShrineRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleguideRoute: StyleguideRoute,
-  DotwellKnownApiCatalogRoute: DotwellKnownApiCatalogRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSplatRoute: BlogSplatRoute,
   AchievementsIndexRoute: AchievementsIndexRoute,
