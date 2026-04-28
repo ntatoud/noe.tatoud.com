@@ -12,12 +12,18 @@ import { getProjects } from '@/features/projects/get-projects'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
+const HOME_LINK_HEADER =
+  '</.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </llms.txt>; rel="describedby"; type="text/plain"'
+
 const getOrigin = createServerFn({ method: 'GET' }).handler(
   () => getRequestUrl({ xForwardedHost: true }).origin,
 )
 
 export const Route = createFileRoute('/')({
   component: App,
+  headers: () => ({
+    Link: HOME_LINK_HEADER,
+  }),
   head: ({ loaderData }) => {
     if (!loaderData) return {}
     const homeUrl = siteUrl(loaderData.origin, '/')
