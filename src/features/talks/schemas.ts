@@ -1,10 +1,11 @@
 import * as v from 'valibot'
 
-const TalkVenueSchema = v.object({
+const TalkEventSchema = v.object({
   event: v.string(),
   city: v.string(),
   date: v.string(),
   url: v.optional(v.pipe(v.string(), v.url())),
+  logo: v.optional(v.string()),
 })
 
 export const TalkSchema = v.object({
@@ -12,9 +13,9 @@ export const TalkSchema = v.object({
   description: v.string(),
   slidesUrl: v.optional(v.pipe(v.string(), v.url())),
   tags: v.optional(v.array(v.string())),
-  venues: v.optional(v.array(TalkVenueSchema), []),
+  events: v.optional(v.array(TalkEventSchema), []),
   content: v.optional(v.string()),
 })
 
-export type TalkVenue = v.InferOutput<typeof TalkVenueSchema>
+export type TalkEvent = v.InferOutput<typeof TalkEventSchema>
 export type TalkFrontmatter = v.InferOutput<typeof TalkSchema>

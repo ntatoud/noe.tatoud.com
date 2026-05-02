@@ -16,6 +16,7 @@ import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
+import { Route as TalksSlugRouteImport } from './routes/talks/$slug'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 import { Route as BlogSlugLlmsDottxtRouteImport } from './routes/blog/$slug/llms[.]txt'
@@ -56,6 +57,11 @@ const AchievementsIndexRoute = AchievementsIndexRouteImport.update({
   path: '/achievements/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalksSlugRoute = TalksSlugRouteImport.update({
+  id: '/talks/$slug',
+  path: '/talks/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSplatRoute = BlogSplatRouteImport.update({
   id: '/blog/$',
   path: '/blog/$',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/talks/$slug': typeof TalksSlugRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/talks/$slug': typeof TalksSlugRoute
   '/achievements': typeof AchievementsIndexRoute
   '/blog': typeof BlogIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
+  '/talks/$slug': typeof TalksSlugRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/talks/$slug'
     | '/achievements/'
     | '/blog/'
     | '/blog/$slug/llms.txt'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/talks/$slug'
     | '/achievements'
     | '/blog'
     | '/blog/$slug/llms.txt'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
+    | '/talks/$slug'
     | '/achievements/'
     | '/blog/'
     | '/blog/$slug/llms.txt'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   StyleguideRoute: typeof StyleguideRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSplatRoute: typeof BlogSplatRoute
+  TalksSlugRoute: typeof TalksSlugRoute
   AchievementsIndexRoute: typeof AchievementsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   BlogSlugLlmsDottxtRoute: typeof BlogSlugLlmsDottxtRoute
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AchievementsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talks/$slug': {
+      id: '/talks/$slug'
+      path: '/talks/$slug'
+      fullPath: '/talks/$slug'
+      preLoaderRoute: typeof TalksSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$': {
       id: '/blog/$'
       path: '/blog/$'
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   StyleguideRoute: StyleguideRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSplatRoute: BlogSplatRoute,
+  TalksSlugRoute: TalksSlugRoute,
   AchievementsIndexRoute: AchievementsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   BlogSlugLlmsDottxtRoute: BlogSlugLlmsDottxtRoute,

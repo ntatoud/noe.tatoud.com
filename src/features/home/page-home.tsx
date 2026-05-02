@@ -6,6 +6,7 @@ import { useAchievements } from '@/features/achievements/engine'
 import { ExperiencesSection } from '@/features/experiences/experiences-section'
 import { ArticlesSection } from '@/features/home/articles-section'
 import { ProjectsSection } from '@/features/home/projects-section'
+import { TalksSection } from '@/features/home/talks-section'
 import { socialLinks } from '@/features/social/social-links'
 import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
@@ -93,6 +94,7 @@ export function PageHome() {
       </Hero>
       <ArticlesSection />
       <ProjectsSection />
+      <TalksSection />
       <ExperiencesSection />
     </div>
   )

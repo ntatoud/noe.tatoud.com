@@ -9,6 +9,7 @@ import { getExperiences } from '@/features/experiences/get-experiences'
 import { PageHome } from '@/features/home/page-home'
 import { canonicalLink, ogMeta } from '@/features/og/meta'
 import { getProjects } from '@/features/projects/get-projects'
+import { getTalks } from '@/features/talks/get-talks'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 
@@ -59,13 +60,14 @@ export const Route = createFileRoute('/')({
     }
   },
   loader: async () => {
-    const [posts, projects, experiences, origin] = await Promise.all([
+    const [posts, projects, talks, experiences, origin] = await Promise.all([
       getBlogPosts(),
       getProjects(),
+      getTalks(),
       getExperiences(),
       getOrigin(),
     ])
-    return { posts, projects, experiences, origin }
+    return { posts, projects, talks, experiences, origin }
   },
 })
 
