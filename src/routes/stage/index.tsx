@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { getTalks } from '@/features/talks/get-talks'
-import { PageTalks } from '@/features/talks/page-talks'
+import { getTalks } from '@/features/talks/get-stage'
+import { PageStage } from '@/features/talks/page-stage'
 
 export const Route = createFileRoute('/stage/')({
-  component: PageTalks,
+  component: PageStage,
   loader: async () => {
     const talks = await getTalks()
     return { talks }

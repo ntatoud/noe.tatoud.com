@@ -1,10 +1,10 @@
 import { useLoaderData } from '@tanstack/react-router'
 
-import { TalksList } from '@/features/talks/talks-list'
+import { StageList } from '@/features/talks/stage-list'
 import { Hero, HeroSubtitle, HeroTitle } from '@/layout/hero'
 import { Section, SectionContent } from '@/layout/section'
 
-export function PageTalks() {
+export function PageStage() {
   const { talks } = useLoaderData({ from: '/stage/' })
 
   return (
@@ -18,7 +18,7 @@ export function PageTalks() {
 
       <Section>
         <SectionContent>
-          <TalksList talks={talks} />
+          <StageList talks={talks} />
         </SectionContent>
       </Section>
     </div>

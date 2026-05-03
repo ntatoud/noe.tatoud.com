@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 
-const TalkEventSchema = v.object({
+const StageEventSchema = v.object({
   event: v.string(),
   city: v.string(),
   date: v.string(),
@@ -8,21 +8,21 @@ const TalkEventSchema = v.object({
   logo: v.optional(v.string()),
 })
 
-const TalkResourceSchema = v.object({
+const StageResourceSchema = v.object({
   kind: v.picklist(['slides', 'docs', 'website']),
   url: v.pipe(v.string(), v.url()),
 })
 
-export const TalkSchema = v.object({
+export const StageItemSchema = v.object({
   title: v.string(),
   description: v.string(),
   kind: v.optional(v.picklist(['talk', 'workshop']), 'talk'),
-  resource: v.optional(TalkResourceSchema),
+  resource: v.optional(StageResourceSchema),
   tags: v.optional(v.array(v.string())),
-  events: v.optional(v.array(TalkEventSchema), []),
+  events: v.optional(v.array(StageEventSchema), []),
   content: v.optional(v.string()),
 })
 
-export type TalkEvent = v.InferOutput<typeof TalkEventSchema>
-export type TalkResource = v.InferOutput<typeof TalkResourceSchema>
-export type TalkFrontmatter = v.InferOutput<typeof TalkSchema>
+export type StageEvent = v.InferOutput<typeof StageEventSchema>
+export type StageResource = v.InferOutput<typeof StageResourceSchema>
+export type StageFrontmatter = v.InferOutput<typeof StageItemSchema>

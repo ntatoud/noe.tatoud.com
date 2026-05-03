@@ -7,7 +7,7 @@ import { imageSize } from 'image-size'
 import { BlogPostSchema } from './src/features/blog/schemas'
 import { ExperienceSchema } from './src/features/experiences/schemas'
 import { ProjectSchema } from './src/features/projects/schemas'
-import { TalkSchema } from './src/features/talks/schemas'
+import { StageItemSchema } from './src/features/talks/schemas'
 
 const blogPosts = defineCollection({
   name: 'blogPosts',
@@ -51,7 +51,7 @@ const talks = defineCollection({
   name: 'talks',
   directory: 'content/talks',
   include: '**/*.mdx',
-  schema: TalkSchema,
+  schema: StageItemSchema,
 })
 
 export default defineConfig({

@@ -2,7 +2,7 @@ import { Link, useLoaderData } from '@tanstack/react-router'
 
 import { PixelArrowRight } from '@/components/icons'
 import { Button } from '@/components/ui/button'
-import { TalksList } from '@/features/talks/talks-list'
+import { StageList } from '@/features/talks/stage-list'
 import {
   Section,
   SectionActions,
@@ -11,12 +11,12 @@ import {
   SectionTitle,
 } from '@/layout/section'
 
-export function TalksSection() {
+export function StageSection() {
   const { talks } = useLoaderData({ from: '/' })
   return (
     <Section>
       <SectionHeader>
-        <SectionTitle>Talks</SectionTitle>
+        <SectionTitle>Stage</SectionTitle>
         <SectionActions>
           <Button
             variant="ghost"
@@ -29,7 +29,7 @@ export function TalksSection() {
         </SectionActions>
       </SectionHeader>
       <SectionContent>
-        <TalksList talks={talks} />
+        <StageList talks={talks} />
       </SectionContent>
     </Section>
   )

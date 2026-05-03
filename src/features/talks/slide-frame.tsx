@@ -1,9 +1,9 @@
 import { useId } from 'react'
 
-import type { TalkResource } from '@/features/talks/schemas'
+import type { StageResource } from '@/features/talks/schemas'
 import { cn } from '@/lib/utils'
 
-const LABELS: Record<TalkResource['kind'], string> = {
+const LABELS: Record<StageResource['kind'], string> = {
   slides: 'View slides',
   docs: 'View docs',
   website: 'Open website',
@@ -100,7 +100,7 @@ export function SlideFrame({
   resource,
   title,
 }: {
-  resource?: TalkResource
+  resource?: StageResource
   title?: string
 }) {
   const clipId = useId()

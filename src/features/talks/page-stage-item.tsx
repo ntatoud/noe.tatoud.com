@@ -1,6 +1,6 @@
 import { CardTags } from '@/components/ui/card-list'
-import type { Talk } from '@/features/talks/get-talks'
-import type { TalkEvent } from '@/features/talks/schemas'
+import type { StageItem } from '@/features/talks/get-stage'
+import type { StageEvent } from '@/features/talks/schemas'
 import { SlideFrame } from '@/features/talks/slide-frame'
 import { Hero, HeroTitle } from '@/layout/hero'
 import { PageBreadcrumb } from '@/layout/page-breadcrumb'
@@ -11,9 +11,10 @@ import {
   SectionTitle,
 } from '@/layout/section'
 import { formatDate } from '@/lib/format'
+import { sortEventsByDate } from '@/lib/stage'
 import { cn } from '@/lib/utils'
 
-function TalkEventItem({ ev }: { ev: TalkEvent }) {
+function StageEventItem({ ev }: { ev: StageEvent }) {
   const Wrapper = ev.url ? 'a' : 'div'
 
   return (
@@ -52,10 +53,8 @@ function TalkEventItem({ ev }: { ev: TalkEvent }) {
   )
 }
 
-export function PageTalk({ talk }: { talk: Talk }) {
-  const sortedEvents = [...(talk.events ?? [])].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  )
+export function PageTalk({ talk }: { talk: StageItem }) {
+  const sortedEvents = sortEventsByDate(talk.events ?? [])
 
   return (
     <>
@@ -83,7 +82,7 @@ export function PageTalk({ talk }: { talk: Talk }) {
           <SectionContent>
             <div className="-my-4 flex w-full flex-col divide-y divide-border">
               {sortedEvents.map((ev) => (
-                <TalkEventItem key={`${ev.event}-${ev.date}`} ev={ev} />
+                <StageEventItem key={`${ev.event}-${ev.date}`} ev={ev} />
               ))}
             </div>
           </SectionContent>

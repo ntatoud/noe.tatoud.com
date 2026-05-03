@@ -9,7 +9,7 @@ import { getExperiences } from '@/features/experiences/get-experiences'
 import { PageHome } from '@/features/home/page-home'
 import { canonicalLink, ogMeta } from '@/features/og/meta'
 import { getProjects } from '@/features/projects/get-projects'
-import { getTalks } from '@/features/talks/get-talks'
+import { getTalks } from '@/features/talks/get-stage'
 import { jsonLd } from '@/lib/json-ld'
 import { siteUrl } from '@/lib/site'
 

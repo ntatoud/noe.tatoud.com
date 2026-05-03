@@ -4,12 +4,12 @@ import { createServerFn } from '@tanstack/react-start'
 import { allTalks } from 'content-collections'
 
 import { PageError } from '@/components/page-error'
-import type { Talk } from '@/features/talks/get-talks'
-import { PageTalk } from '@/features/talks/page-talk'
+import type { StageItem } from '@/features/talks/get-stage'
+import { PageTalk } from '@/features/talks/page-stage-item'
 
 const getTalk = createServerFn({ method: 'GET' })
   .inputValidator((slug: string) => slug)
-  .handler(({ data: slug }): Talk => {
+  .handler(({ data: slug }): StageItem => {
     const talk = allTalks.find((t) => t._meta.path === slug)
     if (!talk) throw notFound()
     return {
@@ -28,8 +28,8 @@ export const Route = createFileRoute('/stage/$slug')({
   notFoundComponent: () => (
     <PageError
       code="404"
-      title="Talk not found"
-      description="This talk doesn't exist or has been removed."
+      title="Not found"
+      description="This session doesn't exist or has been removed."
     />
   ),
   loader: ({ params }) => getTalk({ data: params.slug }),

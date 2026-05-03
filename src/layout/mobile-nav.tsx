@@ -37,10 +37,7 @@ function NavButton({ item }: { item: (typeof nav)[number] }) {
       className="h-auto min-h-11 min-w-11 flex-col gap-1 px-3 py-1.5 text-muted-foreground hover:text-foreground data-[status=active]:bg-muted data-[status=active]:text-foreground"
       render={<Link {...linkProps} />}
     >
-      <Icon size={20} filled={isActive} />
-      <span className="max-w-14 truncate font-mono text-[0.55rem] leading-none tracking-widest uppercase">
-        {item.label}
-      </span>
+      <Icon size={20} filled={isActive} aria-label={item.label} />
     </Button>
   )
 }
