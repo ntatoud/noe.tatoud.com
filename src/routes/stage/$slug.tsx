@@ -16,13 +16,14 @@ const getTalk = createServerFn({ method: 'GET' })
       slug,
       title: talk.title,
       description: talk.description,
-      slidesUrl: talk.slidesUrl,
+      kind: talk.kind,
+      resource: talk.resource,
       tags: talk.tags,
       events: talk.events,
     }
   })
 
-export const Route = createFileRoute('/talks/$slug')({
+export const Route = createFileRoute('/stage/$slug')({
   component: Page,
   notFoundComponent: () => (
     <PageError

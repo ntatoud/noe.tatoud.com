@@ -14,9 +14,10 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShrineRouteImport } from './routes/shrine'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StageIndexRouteImport } from './routes/stage/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AchievementsIndexRouteImport } from './routes/achievements/index'
-import { Route as TalksSlugRouteImport } from './routes/talks/$slug'
+import { Route as StageSlugRouteImport } from './routes/stage/$slug'
 import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 import { Route as BlogSlugLlmsDottxtRouteImport } from './routes/blog/$slug/llms[.]txt'
@@ -47,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StageIndexRoute = StageIndexRouteImport.update({
+  id: '/stage/',
+  path: '/stage/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -57,9 +63,9 @@ const AchievementsIndexRoute = AchievementsIndexRouteImport.update({
   path: '/achievements/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TalksSlugRoute = TalksSlugRouteImport.update({
-  id: '/talks/$slug',
-  path: '/talks/$slug',
+const StageSlugRoute = StageSlugRouteImport.update({
+  id: '/stage/$slug',
+  path: '/stage/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSplatRoute = BlogSplatRouteImport.update({
@@ -91,9 +97,10 @@ export interface FileRoutesByFullPath {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
-  '/talks/$slug': typeof TalksSlugRoute
+  '/stage/$slug': typeof StageSlugRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/stage/': typeof StageIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
@@ -105,9 +112,10 @@ export interface FileRoutesByTo {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
-  '/talks/$slug': typeof TalksSlugRoute
+  '/stage/$slug': typeof StageSlugRoute
   '/achievements': typeof AchievementsIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/stage': typeof StageIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
@@ -120,9 +128,10 @@ export interface FileRoutesById {
   '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$': typeof BlogSplatRoute
-  '/talks/$slug': typeof TalksSlugRoute
+  '/stage/$slug': typeof StageSlugRoute
   '/achievements/': typeof AchievementsIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/stage/': typeof StageIndexRoute
   '/blog/$slug/llms.txt': typeof BlogSlugLlmsDottxtRoute
   '/blog/$slug/assets/og-image': typeof BlogSlugAssetsOgImageRoute
 }
@@ -136,9 +145,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
-    | '/talks/$slug'
+    | '/stage/$slug'
     | '/achievements/'
     | '/blog/'
+    | '/stage/'
     | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   fileRoutesByTo: FileRoutesByTo
@@ -150,9 +160,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
-    | '/talks/$slug'
+    | '/stage/$slug'
     | '/achievements'
     | '/blog'
+    | '/stage'
     | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   id:
@@ -164,9 +175,10 @@ export interface FileRouteTypes {
     | '/styleguide'
     | '/api/og'
     | '/blog/$'
-    | '/talks/$slug'
+    | '/stage/$slug'
     | '/achievements/'
     | '/blog/'
+    | '/stage/'
     | '/blog/$slug/llms.txt'
     | '/blog/$slug/assets/og-image'
   fileRoutesById: FileRoutesById
@@ -179,9 +191,10 @@ export interface RootRouteChildren {
   StyleguideRoute: typeof StyleguideRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSplatRoute: typeof BlogSplatRoute
-  TalksSlugRoute: typeof TalksSlugRoute
+  StageSlugRoute: typeof StageSlugRoute
   AchievementsIndexRoute: typeof AchievementsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  StageIndexRoute: typeof StageIndexRoute
   BlogSlugLlmsDottxtRoute: typeof BlogSlugLlmsDottxtRoute
   BlogSlugAssetsOgImageRoute: typeof BlogSlugAssetsOgImageRoute
 }
@@ -223,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stage/': {
+      id: '/stage/'
+      path: '/stage'
+      fullPath: '/stage/'
+      preLoaderRoute: typeof StageIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -237,11 +257,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AchievementsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/talks/$slug': {
-      id: '/talks/$slug'
-      path: '/talks/$slug'
-      fullPath: '/talks/$slug'
-      preLoaderRoute: typeof TalksSlugRouteImport
+    '/stage/$slug': {
+      id: '/stage/$slug'
+      path: '/stage/$slug'
+      fullPath: '/stage/$slug'
+      preLoaderRoute: typeof StageSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$': {
@@ -283,9 +303,10 @@ const rootRouteChildren: RootRouteChildren = {
   StyleguideRoute: StyleguideRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSplatRoute: BlogSplatRoute,
-  TalksSlugRoute: TalksSlugRoute,
+  StageSlugRoute: StageSlugRoute,
   AchievementsIndexRoute: AchievementsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  StageIndexRoute: StageIndexRoute,
   BlogSlugLlmsDottxtRoute: BlogSlugLlmsDottxtRoute,
   BlogSlugAssetsOgImageRoute: BlogSlugAssetsOgImageRoute,
 }

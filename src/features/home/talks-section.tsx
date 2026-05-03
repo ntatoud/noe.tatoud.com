@@ -1,8 +1,11 @@
-import { useLoaderData } from '@tanstack/react-router'
+import { Link, useLoaderData } from '@tanstack/react-router'
 
+import { PixelArrowRight } from '@/components/icons'
+import { Button } from '@/components/ui/button'
 import { TalksList } from '@/features/talks/talks-list'
 import {
   Section,
+  SectionActions,
   SectionContent,
   SectionHeader,
   SectionTitle,
@@ -14,6 +17,16 @@ export function TalksSection() {
     <Section>
       <SectionHeader>
         <SectionTitle>Talks</SectionTitle>
+        <SectionActions>
+          <Button
+            variant="ghost"
+            className="px-2"
+            render={<Link to="/stage" />}
+            nativeButton={false}
+          >
+            All sessions <PixelArrowRight size={16} aria-hidden />
+          </Button>
+        </SectionActions>
       </SectionHeader>
       <SectionContent>
         <TalksList talks={talks} />

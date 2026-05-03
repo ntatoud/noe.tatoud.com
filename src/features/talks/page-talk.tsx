@@ -1,6 +1,7 @@
 import { CardTags } from '@/components/ui/card-list'
 import type { Talk } from '@/features/talks/get-talks'
 import type { TalkEvent } from '@/features/talks/schemas'
+import { SlideFrame } from '@/features/talks/slide-frame'
 import { Hero, HeroTitle } from '@/layout/hero'
 import { PageBreadcrumb } from '@/layout/page-breadcrumb'
 import {
@@ -59,30 +60,23 @@ export function PageTalk({ talk }: { talk: Talk }) {
   return (
     <>
       <Hero className="pt-12 text-center">
-        <PageBreadcrumb href="/" label="Home" current={talk.title} />
+        <PageBreadcrumb href="/stage" label="Stage" current={talk.title} />
         {talk.tags && talk.tags.length > 0 && <CardTags tags={talk.tags} />}
         <HeroTitle className="text-3xl sm:text-4xl">{talk.title}</HeroTitle>
       </Hero>
 
-      <div className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-8 md:px-0">
+      <div className="mx-auto w-full max-w-2xl px-4 pt-6 sm:pt-8 md:px-0">
         <p className="leading-relaxed text-pretty text-muted-foreground">
           {talk.description}
         </p>
+      </div>
 
-        {talk.slidesUrl && (
-          <a
-            href={talk.slidesUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-block font-medium transition-colors hover:text-primary"
-          >
-            View slides →
-          </a>
-        )}
+      <div className="mx-auto w-full max-w-4xl px-4 py-8 md:px-6">
+        <SlideFrame resource={talk.resource} title={talk.title} />
       </div>
 
       {sortedEvents.length > 0 && (
-        <Section className="pt-0">
+        <Section className="mt-8 pt-0">
           <SectionHeader>
             <SectionTitle className="mr-auto">Presented at</SectionTitle>
           </SectionHeader>

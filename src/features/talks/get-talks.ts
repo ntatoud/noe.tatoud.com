@@ -14,7 +14,8 @@ export const getTalks = createServerFn({ method: 'GET' }).handler(() =>
       slug: talk._meta.path,
       title: talk.title,
       description: talk.description,
-      slidesUrl: talk.slidesUrl,
+      kind: talk.kind,
+      resource: talk.resource,
       tags: talk.tags,
       events: talk.events,
     }))

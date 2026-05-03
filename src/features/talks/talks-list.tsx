@@ -29,7 +29,7 @@ export function TalksList({ talks }: { talks: Array<Talk> }) {
       {talks.map((talk) => (
         <Card key={talk.slug}>
           <Link
-            to="/talks/$slug"
+            to="/stage/$slug"
             params={{ slug: talk.slug }}
             className="flex h-full"
           >
