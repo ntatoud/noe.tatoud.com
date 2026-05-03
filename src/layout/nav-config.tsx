@@ -25,7 +25,7 @@ export const nav = linkOptions([
     to: '/stage',
   },
   {
-    label: 'Achievements',
+    label: 'Trophies',
     icon: PixelTrophy,
     to: '/achievements',
   },

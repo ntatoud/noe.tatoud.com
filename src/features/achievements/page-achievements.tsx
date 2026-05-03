@@ -61,7 +61,7 @@ export function PageAchievements() {
           value={displayUnlockedCount}
           max={ACHIEVEMENTS.length}
           label={`${displayUnlockedCount} of ${ACHIEVEMENTS.length} achievements unlocked`}
-          className="w-full max-w-xs"
+          className="w-full max-w-xs text-center"
         />
       </Hero>
       <Section>
