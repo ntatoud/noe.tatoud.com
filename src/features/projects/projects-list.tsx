@@ -25,16 +25,9 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {projects.map((project) => (
-        <Card
-          key={project.slug}
-          className={cn(
-            'border-t-2',
-            project.kind === 'contribution'
-              ? 'border-t-primary'
-              : 'border-t-accent',
-          )}
-        >
+      {projects.map((project) => {
+        const href = project.url ?? project.repo
+        const cardContent = (
           <CardContent>
             <div className="flex items-center gap-3">
               <CardTitle>{project.title}</CardTitle>
@@ -53,8 +46,32 @@ export function ProjectsList({ projects }: { projects: Array<Project> }) {
               <CardTags tags={project.tags} />
             )}
           </CardContent>
-        </Card>
-      ))}
+        )
+        return (
+          <Card
+            key={project.slug}
+            className={cn(
+              'border-t-2',
+              project.kind === 'contribution'
+                ? 'border-t-primary'
+                : 'border-t-accent',
+            )}
+          >
+            {href ? (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-full"
+              >
+                {cardContent}
+              </a>
+            ) : (
+              cardContent
+            )}
+          </Card>
+        )
+      })}
     </div>
   )
 }
