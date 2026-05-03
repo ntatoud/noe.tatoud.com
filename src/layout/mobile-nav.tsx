@@ -38,7 +38,7 @@ function NavButton({ item }: { item: (typeof nav)[number] }) {
       render={<Link {...linkProps} />}
     >
       <Icon size={20} filled={isActive} />
-      <span className="max-w-14 truncate font-mono text-[0.55rem] leading-none tracking-widest uppercase">
+      <span className="font-mono text-[0.55rem] leading-none tracking-widest uppercase">
         {item.label}
       </span>
     </Button>

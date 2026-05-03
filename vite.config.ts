@@ -14,7 +14,7 @@ import { defineConfig } from 'vite'
 
 import rehypeImgDimensions from './plugins/rehype-img-dimensions'
 
-const config = defineConfig({
+export default defineConfig(({ mode }) => ({
   resolve: {
     tsconfigPaths: true,
   },
@@ -33,11 +33,9 @@ const config = defineConfig({
         ],
       }),
     },
-    netlify(),
+    ...(mode !== 'development' ? [netlify()] : []),
     tailwindcss(),
     tanstackStart(),
     viteReact({ include: /\.(tsx|ts|jsx|js)$/ }),
   ],
-})
-
-export default config
+}))
