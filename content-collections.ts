@@ -45,6 +45,25 @@ const experiences = defineCollection({
   directory: 'content/experiences',
   include: '**/*.mdx',
   schema: ExperienceSchema,
+  transform: (data) => {
+    let logo: string | null = null
+    if (data.logo) {
+      try {
+        const ext = path.extname(data.logo).slice(1).toLowerCase()
+        const mimeType =
+          ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : `image/${ext}`
+        const logoPath = path.resolve(
+          'content/experiences',
+          data._meta.directory,
+          data.logo.replace(/^\.\//, ''),
+        )
+        logo = `data:${mimeType};base64,${fs.readFileSync(logoPath).toString('base64')}`
+      } catch {
+        // logo file not found or unreadable
+      }
+    }
+    return { ...data, logo }
+  },
 })
 
 const talks = defineCollection({

@@ -3,7 +3,6 @@ import { createServerFn } from '@tanstack/react-start'
 import { allExperiences } from 'content-collections'
 
 import type { ExperienceFrontmatter } from '@/features/experiences/schemas'
-import { resolveContentImage } from '@/lib/content-images'
 
 export type Experience = Omit<ExperienceFrontmatter, 'content' | 'logo'> & {
   slug: string
@@ -20,10 +19,7 @@ export const getExperiences = createServerFn({ method: 'GET' }).handler(() =>
       startDate: exp.startDate,
       endDate: exp.endDate,
       kind: exp.kind,
-      logo: resolveContentImage(
-        `content/experiences/${exp._meta.directory}`,
-        exp.logo,
-      ),
+      logo: exp.logo,
     }))
     .sort(
       (a, b) =>
