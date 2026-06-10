@@ -7,7 +7,7 @@ import { ExperiencesSection } from '@/features/experiences/experiences-section'
 import { ArticlesSection } from '@/features/home/articles-section'
 import { ProjectsSection } from '@/features/home/projects-section'
 import { StageSection } from '@/features/home/stage-section'
-import { socialLinks } from '@/features/social/social-links'
+import { SocialLinks } from '@/features/social/social-links'
 import { Hero, HeroActions, HeroSubtitle, HeroTitle } from '@/layout/hero'
 
 export function PageHome() {
@@ -48,7 +48,7 @@ export function PageHome() {
           <br />
           and thoughtful web experiences.
         </HeroSubtitle>
-        <HeroActions>
+        <HeroActions className="flex-wrap justify-center">
           <Button
             size="lg"
             render={<Link to="/blog" />}
@@ -59,38 +59,13 @@ export function PageHome() {
           </Button>
           <Button
             size="lg"
-            render={
-              <a href={socialLinks.find((l) => l.id === 'email')?.href} />
-            }
+            render={<a href="/Noe_Tatoud_CV_React_EN.pdf" download />}
             nativeButton={false}
-            onClick={() => unlock('social')}
           >
-            Get in touch
+            Download resume
           </Button>
         </HeroActions>
-        <div className="flex items-center gap-6 pt-2 text-sm text-muted-foreground">
-          {socialLinks
-            .filter((l) => l.id !== 'email')
-            .flatMap((link, i, arr) => [
-              <a
-                key={link.id}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono tracking-widest uppercase transition-colors hover:text-foreground"
-                onClick={() => unlock('social')}
-              >
-                {link.label}
-              </a>,
-              ...(i < arr.length - 1
-                ? [
-                    <span key={`sep-${link.id}`} className="text-border">
-                      ·
-                    </span>,
-                  ]
-                : []),
-            ])}
-        </div>
+        <SocialLinks className="pt-2" />
       </Hero>
       <ArticlesSection />
       <ProjectsSection />
