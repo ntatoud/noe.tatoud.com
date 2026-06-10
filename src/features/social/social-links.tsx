@@ -1,3 +1,5 @@
+import type { SVGProps } from 'react'
+
 import {
   PixelBluesky,
   PixelGitHub,
@@ -5,6 +7,8 @@ import {
   PixelMail,
   PixelX,
 } from '@/components/icons'
+import { useAchievements } from '@/features/achievements/engine'
+import { cn } from '@/lib/utils'
 
 export const socialLinks = [
   {
@@ -38,3 +42,66 @@ export const socialLinks = [
     icon: PixelMail,
   },
 ] as const
+
+type SocialId = (typeof socialLinks)[number]['id']
+
+export function SocialLinks({
+  exclude = [],
+  className,
+}: {
+  exclude?: ReadonlyArray<SocialId>
+  className?: string
+}) {
+  const { unlock } = useAchievements()
+
+  return (
+    <div className={cn('flex items-center gap-0', className)}>
+      {socialLinks
+        .filter((link) => !exclude.includes(link.id))
+        .map((link) => (
+          <SocialLink
+            key={link.id}
+            href={link.href}
+            label={link.label}
+            icon={link.icon}
+            onClick={() => unlock('social')}
+          />
+        ))}
+    </div>
+  )
+}
+
+type PixelIconComponent = (
+  props: SVGProps<SVGSVGElement> & { size?: number },
+) => React.ReactElement
+
+function SocialLink({
+  href,
+  label,
+  icon: Icon,
+  onClick,
+}: {
+  href: string
+  label: string
+  icon: PixelIconComponent
+  onClick?: () => void
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onClick={onClick}
+      className={cn(
+        'group relative flex size-10 items-center justify-center border-2 border-transparent',
+        'text-muted-foreground',
+        'transition-colors duration-100',
+        'hover:border-border hover:bg-muted hover:text-foreground',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+      )}
+    >
+      <Icon size={20} />
+    </a>
+  )
+}
