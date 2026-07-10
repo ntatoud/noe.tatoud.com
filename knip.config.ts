@@ -1,8 +1,14 @@
 import type { KnipConfig } from 'knip'
 
 const config: KnipConfig = {
-  entry: [],
-  project: ['apps/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
+  workspaces: {
+    'packages/content': {
+      entry: ['content-collections.ts'],
+      project: ['**/*.{ts,tsx}'],
+      ignoreDependencies: ['@content-collections/vite'],
+    },
+  },
+  project: ['apps/**/*.{ts,tsx}', '*.config.ts'],
   rules: {
     enumMembers: 'off',
     binaries: 'off',

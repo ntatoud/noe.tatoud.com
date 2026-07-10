@@ -19,10 +19,16 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    /* Node types for content package transforms (fs, path, url) */
+    "types": ["node"],
+
     /* Path aliases */
     "paths": {
       "@ntatoud/content": ["./packages/content/index.ts"],
-      "@ntatoud/web": ["./apps/web/package.json"]
+      "@ntatoud/web": ["./apps/web/package.json"],
+      "content-collections": [
+        "./packages/content/.content-collections/generated/index.d.ts"
+      ]
     }
   },
   "include": [
