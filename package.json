@@ -13,13 +13,13 @@
   },
   "devDependencies": {
     "@content-collections/cli": "0.1.9",
-    "knip": "6.7.0",
-    "lefthook": "2.1.6",
-    "oxfmt": "0.46.0",
-    "oxlint": "1.61.0",
+    "knip": "6.26.0",
+    "lefthook": "2.1.10",
+    "oxfmt": "0.58.0",
+    "oxlint": "1.73.0",
     "typescript": "7.0.2"
   },
-  "packageManager": "pnpm@10.26.0",
+  "packageManager": "pnpm@10.34.5",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
