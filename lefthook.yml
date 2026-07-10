@@ -13,4 +13,4 @@ pre-push:
     content-collections:
       run: pnpm --filter @ntatoud/content build
     typecheck:
-      run: pnpm --filter @ntatoud/web typecheck
+      run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck
