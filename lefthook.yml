@@ -10,5 +10,7 @@ pre-push:
   commands:
     lint:
       run: pnpm run lint
+    content-collections:
+      run: pnpm --filter @ntatoud/content build
     typecheck:
       run: pnpm exec tsc --noEmit
