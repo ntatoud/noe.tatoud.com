@@ -102,3 +102,17 @@ Runs on push/PR to `main`: format check, lint, fumadocs type gen, typecheck.
 - **Netlify** with TanStack Start plugin. Config in `netlify.toml`.
 - Build output: `dist/`.
 - Currently blocks search engine indexing (`X-Robots-Tag: noindex, nofollow`).
+
+## Agent skills
+
+### Issue tracker
+
+GitHub issues (via `gh` CLI). External PRs are not a triage surface. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses the five canonical triage labels (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout — `CONTEXT.md` at repo root, ADRs in `docs/adr/`. See `docs/agents/domain.md`.
