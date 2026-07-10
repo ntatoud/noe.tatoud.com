@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   quality:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
@@ -31,7 +31,7 @@ jobs:
         run: pnpm run lint
 
       - name: 🏗️ Generate content-collections types
-        run: pnpm exec content-collections build
+        run: pnpm --filter @ntatoud/content build
 
       - name: 🔎 Typecheck
         run: pnpm exec tsc --noEmit

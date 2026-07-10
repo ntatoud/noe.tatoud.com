@@ -2,6 +2,9 @@
 command = "pnpm run build"
 publish = "dist/client"
 
+[build.environment]
+NODE_VERSION = "24"
+
 # Public static assets at the site root (favicon, logos, manifest, OG images)
 # Declared first so the more specific rules below can override for /assets/*.
 [[headers]]
