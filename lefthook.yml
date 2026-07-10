@@ -1,8 +1,8 @@
 pre-commit:
   commands:
     format:
-      glob: '*.{ts,tsx,js,jsx,json,css,md,mdx,toml}'
-      exclude: 'src/routeTree.gen.ts'
+      glob: '*.{ts,tsx,js,jsx,json,css,md,mdx,toml,yaml}'
+      exclude: '**/*.gen.ts'
       run: pnpm exec oxfmt {staged_files}
       stage_fixed: true
 
@@ -11,4 +11,4 @@ pre-push:
     lint:
       run: pnpm run lint
     typecheck:
-      run: pnpm exec content-collections build && pnpm exec tsgo --noEmit
+      run: pnpm exec tsc --noEmit

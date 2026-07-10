@@ -9,20 +9,15 @@ export default defineConfig({
     'package-lock.json',
     'pnpm-lock.yaml',
     'yarn.lock',
-    'src/routeTree.gen.ts',
+    '**/*.gen.ts',
   ],
-  experimentalTailwindcss: {
-    attributes: ['class', 'className'],
-    functions: ['cva', 'cn'],
-    stylesheet: './src/styles/index.css',
-  },
   sortImports: {
     newlinesBetween: true,
     customGroups: [
       { groupName: 'react', elementNamePattern: ['react'] },
       {
         groupName: 'main-external',
-        elementNamePattern: ['@tanstack/**', '@fumadocs/**', 'fumadocs'],
+        elementNamePattern: ['@tanstack/**', '@ntatoud/**'],
       },
     ],
     groups: [
