@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@content-collections/core": "0.15.0",
-    "@content-collections/vite": "0.3.0",
-    "image-size": "2.0.2",
+    "@content-collections/vite": "catalog:",
+    "image-size": "catalog:",
     "valibot": "1.3.1"
   },
   "devDependencies": {
-    "@types/node": "24.13.3"
+    "@types/node": "catalog:"
   }
 }
