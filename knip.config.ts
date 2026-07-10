@@ -1,34 +1,10 @@
 import type { KnipConfig } from 'knip'
 
 const config: KnipConfig = {
-  entry: [
-    // TanStack Start / Vite entry
-    'src/router.tsx',
-    'source.config.ts',
-    // File-based routes (TanStack Router)
-    'src/routes/**/*.{ts,tsx}',
-    // OG image handler
-    'src/features/og/**/*.{ts,tsx}',
-  ],
-  project: ['src/**/*.{ts,tsx}'],
-  ignoreDependencies: [
-    // Packages loaded via CSS @import, not JS imports
-    '@fontsource/atkinson-hyperlegible',
-    'shadcn',
-    'tailwindcss',
-    'tw-animate-css',
-    // Unlisted but transitive deps re-exported by fumadocs
-    'zod',
-    'clsx',
-    // @tanstack/hotkeys is the actual package behind react-hotkeys
-    '@tanstack/hotkeys',
-    // achievements is a bundled type from achievements-react
-    'achievements',
-  ],
+  entry: [],
+  project: ['apps/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}'],
   rules: {
-    // TanStack Router generates enum-like route trees
     enumMembers: 'off',
-    // oxlint binary is resolved via oxlint package
     binaries: 'off',
   },
   ignoreExportsUsedInFile: false,

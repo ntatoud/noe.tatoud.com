@@ -18,7 +18,12 @@ export default defineConfig({
     es2020: true,
     browser: true,
   },
-  ignorePatterns: ['.source/', '.netlify/', 'dist/', 'src/**.gen.ts'],
+  ignorePatterns: [
+    '.content-collections/',
+    '.netlify/',
+    'dist/',
+    '**/*.gen.ts',
+  ],
   rules: {
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
     'no-rest-spread-properties': 'off',

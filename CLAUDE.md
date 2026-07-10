@@ -9,78 +9,78 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Framework**: TanStack Start v1.166 (React meta-framework) on Vite 7
-- **React**: 19.3.0-canary
-- **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/tailwind.css
-- **UI components**: shadcn/ui (base-nova style), custom pixel icons in `src/components/icons/`
-- **Blog/MDX**: fumadocs-mdx with fumadocs-core, content in `content/`
+- **Monorepo**: pnpm workspaces — `apps/web` + `packages/content`
+- **Framework**: TanStack Start (React meta-framework) on Vite
+- **React**: 19
+- **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
+- **Content**: @content-collections/core + @content-collections/vite, valibot schemas
 - **Package manager**: pnpm
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
-- **Testing**: Vitest + Testing Library + jsdom (`pnpm run test`)
 - **Dead code**: knip (`pnpm run knip`)
-- **Language**: TypeScript 5.9 (strict mode, noUnusedLocals, noUnusedParameters)
+- **Language**: TypeScript 7 (strict mode, noUnusedLocals, noUnusedParameters)
 
 ## Commands
 
 ```sh
-pnpm run dev       # dev server on port 3000
-pnpm run build     # production build (Netlify)
-pnpm run check     # format check + oxlint fix
-pnpm run test      # run vitest
+pnpm run dev       # dev server (delegates to @ntatoud/web)
+pnpm run build     # production build (delegates to @ntatoud/web)
+pnpm run check     # format check + oxlint
 pnpm run knip      # dead code detection
 ```
 
 ## Key paths
 
 ```
-src/
-  routes/          # TanStack Router file-based routes (auto-generates routeTree.gen.ts)
-  features/        # feature modules: blog, events, home, achievements
-  components/
-    ui/            # shadcn/ui primitives
-    icons/         # custom pixel SVG icon components
-  layout/          # shared layout: header, footer, nav, hero, section
-  lib/             # utils.ts (cn), source.ts (fumadocs loaders), format.ts (formatDate)
-  styles/
-    index.css      # Tailwind imports, CSS variables, fonts, theming
-    utilities/     # @utility blocks: pixel-shadow, pixel-clip, pixel-animations
-content/
-  blog/<slug>/index.mdx     # blog posts
-  events/<slug>/index.mdx    # tech events
-source.config.ts   # fumadocs-mdx collection definitions (blogPosts, techEvents)
-knip.config.ts     # dead code detection config
-oxlint.config.ts   # linting config
+apps/web/              # @ntatoud/web — TanStack Start app
+  src/
+    routes/           # TanStack Router file-based routes
+    features/         # feature modules (blog, projects, experiences, talks, home)
+    components/       # shadcn/ui primitives, custom pixel icons
+    layout/           # shared layout: header, footer, nav, hero, section
+    lib/              # utils.ts (cn), format.ts, etc.
+    styles/           # index.css, utilities/
+  plugins/            # custom Vite/rehype plugins
+  public/             # static assets
+packages/content/      # @ntatoud/content — content pipeline
+  schemas/            # valibot schemas (one file per collection)
+  readers/            # reader functions (typed data access)
+  lib/                # image transform pure functions
+  content/            # MDX files (blog, projects, experiences, talks)
+  content-collections.ts  # collection definitions
+docs/
+  adr/                # architectural decision records
+  agents/             # agent skill configs
+CONTEXT.md            # domain glossary
 ```
 
 ## Path aliases
 
-- `@/*` → `./src/*`
-- `fumadocs-mdx:collections/*` → `.source/*` (auto-generated, do not edit `.source/`)
+- `@/*` → `./src/*` (inside `apps/web`)
+- `@ntatoud/content` → workspace package
+- `@ntatoud/web` → workspace package
 
 ## Conventions
 
 ### Imports & code style
 
-- Always use `@/` path alias for imports from `src/`.
+- Use `@/` path alias for imports within the app.
+- Use `@ntatoud/content` for reader functions and content types.
 - oxfmt handles formatting: no semicolons, single quotes, trailing commas, 80-char width.
-- Import order: external deps → TanStack → `@/features/` → `@/components/` → `@/layout/` → `@/lib/`.
 
 ### Components
 
-- UI primitives go in `src/components/ui/`; feature-specific components go in `src/features/<feature>/`.
-- Custom icons are SVG components in `src/components/icons/` (pixel art style, not an icon library).
-- Prefer small, focused components. Colocate related code within feature folders.
+- UI primitives go in `apps/web/src/components/ui/`; feature-specific components go in `apps/web/src/features/<feature>/`.
 - Use `cn()` from `@/lib/utils` to merge classNames (clsx + tailwind-merge).
 - Use `cva` from `class-variance-authority` for variant-based styling.
 - Use `data-slot` attributes for styling hooks (shadcn pattern).
 
 ### Content & data
 
-- Blog posts are MDX files in `content/blog/<slug>/index.mdx`.
-- All MDX frontmatter is validated with Zod schemas (defined in each feature's `schemas.ts`).
-- Server data fetching uses `createServerFn` from TanStack Start (see `get-*.ts` files in features).
-- Fumadocs sources are loaded via `lib/source.ts` using `toFumadocsSource()` + `loader()`.
+- Content MDX files live in `packages/content/content/<collection>/<slug>/index.mdx`.
+- All MDX frontmatter is validated with valibot schemas (defined in `packages/content/schemas/`).
+- The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `content-collections` directly.
+- Server data fetching uses `createServerFn` from TanStack Start.
 
 ### Theming
 
@@ -91,17 +91,16 @@ oxlint.config.ts   # linting config
 ## Git hooks (lefthook)
 
 - **pre-commit**: oxfmt formats staged files, auto-stages fixes.
-- **pre-push**: oxlint + fumadocs type generation + tsc typecheck.
+- **pre-push**: oxlint + tsc typecheck.
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`: format check, lint, fumadocs type gen, typecheck.
+Runs on push/PR to `main`: format check, lint, content-collections build, typecheck.
 
 ## Deployment
 
 - **Netlify** with TanStack Start plugin. Config in `netlify.toml`.
-- Build output: `dist/`.
-- Currently blocks search engine indexing (`X-Robots-Tag: noindex, nofollow`).
+- Build output: `apps/web/dist/client`.
 
 ## Agent skills
 
