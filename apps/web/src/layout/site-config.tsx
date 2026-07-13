@@ -8,9 +8,11 @@ import {
   NewTwitterIcon,
 } from '@hugeicons/core-free-icons'
 
+import type { RouteTo } from '@/lib/routes'
+
 export type NavItem = {
   label: string
-  href: string
+  href: RouteTo
 }
 
 /** Primary header navigation, in display order. */
