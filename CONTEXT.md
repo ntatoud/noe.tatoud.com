@@ -18,11 +18,15 @@ The content package is named `@ntatoud/content` and is workspace-internal (not p
 _Avoid_: library, module
 
 **Content Collection**:
-A typed group of MDX documents defined by a schema and a directory. Collections are compiled at build time into typed artifacts consumed by apps.
+A typed group of Documents defined by a schema and a directory (blog, projects, experiences, talks). A collection's items are validated against its schema; Apps consume it only through Readers.
 _Avoid_: collection (alone — too generic), content type
 
+**Document**:
+A single content item within a Collection — one MDX file (frontmatter + markdown body) rendered to its own page. A blog Document is a _post_; a talks Document is a _Talk_.
+_Avoid_: entry, article, page (a page is a route)
+
 **Reader**:
-A function exported by the content package that returns typed, ready-to-use data for a given collection (e.g., `getBlogPosts`). Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
+A typed accessor for content. A _collection reader_ returns metadata for a whole collection (e.g. `getBlogPosts` — titles, dates, hero; no body); a _document reader_ returns one Document's metadata plus its rendered body (e.g. `getBlogPost(slug)`). Readers encapsulate filtering, sorting, and shape-mapping; the pipeline behind them is an implementation detail.
 _Avoid_: loader, getter, fetcher
 
 **Feature**:
