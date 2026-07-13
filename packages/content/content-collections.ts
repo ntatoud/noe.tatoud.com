@@ -9,7 +9,13 @@ import { ExperienceSchema } from './schemas/experiences'
 import { ProjectSchema } from './schemas/projects'
 import { StageItemSchema } from './schemas/talks'
 
-const packageRoot = path.dirname(fileURLToPath(import.meta.url))
+const here = path.dirname(fileURLToPath(import.meta.url))
+// content-collections caches/compiles the config into .content-collections/cache/,
+// so import.meta.url may point at the cache rather than the package root.
+// Walk back to the real package root so image files resolve against the source.
+const packageRoot = here.includes('.content-collections')
+  ? path.resolve(here, '../..')
+  : here
 
 function resolveContentFile(
   collectionDir: string,

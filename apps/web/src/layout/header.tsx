@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Button } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button-link'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
@@ -44,20 +45,16 @@ function PrimaryNav({ className }: { className?: string }) {
   return (
     <nav className={cn('items-center gap-1', className)} aria-label="Primary">
       {navItems.map((item) => (
-        <Button
+        <ButtonLink
           key={item.href}
+          to={item.href}
           variant="ghost"
           size="sm"
-          render={
-            <Link
-              to={item.href}
-              className="text-sm text-muted-foreground hover:text-foreground"
-              data-nav={item.label.toLowerCase()}
-            >
-              {item.label}
-            </Link>
-          }
-        />
+          className="text-sm text-muted-foreground hover:text-foreground"
+          data-nav={item.label.toLowerCase()}
+        >
+          {item.label}
+        </ButtonLink>
       ))}
     </nav>
   )
@@ -65,20 +62,16 @@ function PrimaryNav({ className }: { className?: string }) {
 
 export function TrophyLink({ className }: { className?: string }) {
   return (
-    <Button
+    <ButtonLink
+      to="/achievements"
       variant="ghost"
       size="icon"
       className={className}
-      render={
-        <Link
-          to="/achievements"
-          aria-label="Achievements"
-          data-slot="trophy-link"
-        />
-      }
+      aria-label="Achievements"
+      data-slot="trophy-link"
     >
       <HugeiconsIcon icon={trophyIcon} size={18} />
-    </Button>
+    </ButtonLink>
   )
 }
 
@@ -108,21 +101,17 @@ function MobileMenu({ className }: { className?: string }) {
           <div className="flex flex-col gap-4 p-4">
             <nav className="flex flex-col gap-1" aria-label="Mobile primary">
               {navItems.map((item) => (
-                <Button
+                <ButtonLink
                   key={item.href}
+                  to={item.href}
                   variant="ghost"
                   size="sm"
                   className="w-full justify-start"
-                  render={
-                    <Link
-                      to={item.href}
-                      onClick={() => setOpen(false)}
-                      data-nav={item.label.toLowerCase()}
-                    >
-                      {item.label}
-                    </Link>
-                  }
-                />
+                  onClick={() => setOpen(false)}
+                  data-nav={item.label.toLowerCase()}
+                >
+                  {item.label}
+                </ButtonLink>
               ))}
             </nav>
 
