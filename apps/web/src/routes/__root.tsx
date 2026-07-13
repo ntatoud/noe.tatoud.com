@@ -1,16 +1,13 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 
+import { NotFound } from '@/components/error/not-found'
+import { Footer } from '@/layout/footer'
+import { Header } from '@/layout/header'
+
 import appCss from '@/styles/index.css?url'
 
 export const Route = createRootRoute({
-  notFoundComponent: () => (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-2xl font-bold">404</h1>
-      <p className="mt-2 text-muted-foreground">
-        This page doesn't exist or has been moved.
-      </p>
-    </main>
-  ),
+  notFoundComponent: NotFound,
 
   head: () => ({
     meta: [
@@ -22,7 +19,7 @@ export const Route = createRootRoute({
       { title: 'Noé Tatoud' },
       {
         name: 'description',
-        content: 'Noé Tatoud — Software engineer.',
+        content: 'Noé Tatoud | Software engineer.',
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
@@ -37,8 +34,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="dark">
+      <body className="dark flex min-h-full flex-col">
+        <Header />
         {children}
+        <Footer />
         <Scripts />
       </body>
     </html>
