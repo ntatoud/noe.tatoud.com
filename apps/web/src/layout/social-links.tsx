@@ -1,6 +1,6 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 
-import { Button } from '@/components/ui/button'
+import { ButtonAnchor } from '@/components/ui/button-link'
 import { cn } from '@/lib/utils'
 
 import { socialLinks, type SocialLink } from './site-config'
@@ -29,19 +29,15 @@ function SocialLinkButton({ link }: { link: SocialLink }) {
     : {}
 
   return (
-    <Button
+    <ButtonAnchor
+      href={link.href}
       variant="ghost"
       size="icon"
-      render={
-        <a
-          href={link.href}
-          aria-label={link.label}
-          data-social={link.id}
-          {...externalProps}
-        />
-      }
+      aria-label={link.label}
+      data-social={link.id}
+      {...externalProps}
     >
       <HugeiconsIcon icon={link.icon} size={18} />
-    </Button>
+    </ButtonAnchor>
   )
 }

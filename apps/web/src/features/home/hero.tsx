@@ -1,6 +1,4 @@
-import { Link } from '@tanstack/react-router'
-
-import { Button } from '@/components/ui/button'
+import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 
 const blogRoute = '/blog' as string
 const ownerName = 'Noé Tatoud'
@@ -28,15 +26,17 @@ export function Hero() {
       </h1>
       <p className="mt-4 max-w-xl text-lg text-muted-foreground">{tagline}</p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <Button render={<Link to={blogRoute} data-slot="hero-cta-blog" />}>
+        <ButtonLink to={blogRoute} data-slot="hero-cta-blog">
           Read the blog
-        </Button>
-        <Button
+        </ButtonLink>
+        <ButtonAnchor
+          href={resumeHref}
           variant="outline"
-          render={<a href={resumeHref} download data-slot="hero-cta-resume" />}
+          download
+          data-slot="hero-cta-resume"
         >
           Download resume
-        </Button>
+        </ButtonAnchor>
       </div>
     </section>
   )
