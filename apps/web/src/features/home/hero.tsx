@@ -1,6 +1,5 @@
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 
-const blogRoute = '/blog' as string
 const ownerName = 'Noé Tatoud'
 const tagline =
   'Frontend developer crafting pixel-perfect interfaces and thoughtful web experiences.'
@@ -26,7 +25,7 @@ export function Hero() {
       </h1>
       <p className="mt-4 max-w-xl text-lg text-muted-foreground">{tagline}</p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <ButtonLink to={blogRoute} data-slot="hero-cta-blog">
+        <ButtonLink to="/blog" data-slot="hero-cta-blog">
           Read the blog
         </ButtonLink>
         <ButtonAnchor

@@ -1,10 +1,11 @@
 import { Link } from '@tanstack/react-router'
 
+import type { RouteTo } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 type SliceProps = {
   title: string
-  seeAllHref: string
+  seeAllHref: RouteTo
   seeAllLabel?: string
   className?: string
   children: React.ReactNode
@@ -25,7 +26,7 @@ export function Slice({
       <div className="mb-4 flex items-baseline justify-between">
         <h2 className="text-xl font-semibold">{title}</h2>
         <Link
-          to={seeAllHref as string}
+          to={seeAllHref}
           className="text-sm text-muted-foreground hover:text-foreground"
           data-slot="slice-see-all"
         >
