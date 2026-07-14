@@ -1,6 +1,6 @@
 import { Effect, ParseResult, Schema } from 'effect'
 
-import { FrontmatterInvalid } from '../errors'
+import { FrontmatterInvalid } from '../engine/errors'
 
 /**
  * Frontmatter dates are authored as bare YAML dates (`date: 2026-04-08`), which

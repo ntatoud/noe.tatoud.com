@@ -1,16 +1,13 @@
-export {
-  CompileFailed,
-  ContentNotFound,
-  FrontmatterInvalid,
-} from './src/errors'
-export { BlogFrontmatter } from './src/schema/blog'
-export {
-  ContentConfig,
-  type ContentConfigShape,
-} from './src/services/content-config'
+export { BlogFrontmatter } from './src/blog/schema'
+export { ContentConfig, type ContentConfigShape } from './src/engine/config'
 export {
   type BlogPost,
   type BlogPostWithBody,
   ContentService,
-} from './src/services/content-service'
-export { HighlighterService } from './src/services/highlighter'
+} from './src/engine/content'
+export {
+  CompileFailed,
+  ContentNotFound,
+  FrontmatterInvalid,
+} from './src/engine/errors'
+export { HighlighterService } from './src/engine/highlighter'
