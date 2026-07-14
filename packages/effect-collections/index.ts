@@ -1,11 +1,12 @@
 export {
   type Collection,
-  type CollectionDefinition,
   type CollectionDeps,
+  type DefaultMeta,
   defineCollection,
   type FrontmatterSchema,
   makeReaders,
   type Readers,
+  type ResolvedFrontmatter,
   type ToMetadataArgs,
 } from '#core/collection'
 export { collectImageRefs } from '#core/collect-image-refs'
@@ -21,10 +22,16 @@ export {
   imageRefExists,
   isRelativeRef,
   type ResolvedImage,
-  type ResolvedLogo,
   resolveImage,
   resolveLogo,
 } from '#core/image'
+export {
+  Image,
+  ImageRef,
+  Logo,
+  type ResolveImageRefs,
+  resolveImageRefs,
+} from '#core/image-schema'
 export { compileMdxBody, type CompileMdxOptions } from '#core/mdx'
 export {
   rehypeContentImages,

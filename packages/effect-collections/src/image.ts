@@ -3,16 +3,14 @@ import { imageSize } from 'image-size'
 
 import { CollectionsConfig } from '#core/config'
 
-/** A resolved image reference: a public URL plus its stamped dimensions. */
+/**
+ * A resolved image reference: a public/inlined source URL plus its stamped
+ * dimensions. Produced both by the low-level {@link resolveImage}/
+ * {@link resolveLogo} helpers and by the reader's automatic `ImageRef`
+ * resolution.
+ */
 export type ResolvedImage = {
-  readonly url: string
-  readonly width: number | null
-  readonly height: number | null
-}
-
-/** A resolved logo: an inlined `data:` URL plus its stamped dimensions. */
-export type ResolvedLogo = {
-  readonly url: string
+  readonly src: string
   readonly width: number | null
   readonly height: number | null
 }
@@ -80,20 +78,20 @@ export const resolveImage = (
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
-    const url = assetUrl(assetBaseUrl, collection, slug, ref)
+    const src = assetUrl(assetBaseUrl, collection, slug, ref)
     const filePath = path.join(contentRoot, collection, slug, stripLeading(ref))
 
     return yield* fs.readFile(filePath).pipe(
       Effect.map((buffer) => {
         const size = imageSize(buffer)
         return {
-          url,
+          src,
           width: size.width ?? null,
           height: size.height ?? null,
         }
       }),
       Effect.orElseSucceed(
-        (): ResolvedImage => ({ url, width: null, height: null }),
+        (): ResolvedImage => ({ src, width: null, height: null }),
       ),
     )
   })
@@ -101,14 +99,14 @@ export const resolveImage = (
 /**
  * Resolves a (tiny) logo reference to an inlined base64 `data:` URL with stamped
  * dimensions — keeping it out of a request round-trip. A reference that cannot
- * be read yields an empty URL with null dimensions.
+ * be read yields an empty `src` with null dimensions.
  */
 export const resolveLogo = (
   collection: string,
   slug: string,
   ref: string,
 ): Effect.Effect<
-  ResolvedLogo,
+  ResolvedImage,
   never,
   CollectionsConfig | FileSystem.FileSystem | Path.Path
 > =>
@@ -126,13 +124,13 @@ export const resolveLogo = (
         const mime = mimeFor(path.extname(cleaned))
         const base64 = Buffer.from(buffer).toString('base64')
         return {
-          url: `data:${mime};base64,${base64}`,
+          src: `data:${mime};base64,${base64}`,
           width: size.width ?? null,
           height: size.height ?? null,
         }
       }),
       Effect.orElseSucceed(
-        (): ResolvedLogo => ({ url: '', width: null, height: null }),
+        (): ResolvedImage => ({ src: '', width: null, height: null }),
       ),
     )
   })

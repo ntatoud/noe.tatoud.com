@@ -64,13 +64,13 @@ describe('getBlogPost', () => {
       const content = yield* ContentService
       const post = yield* content.getBlogPost('alpha-post')
 
-      expect(post.hero).toBe('/content/blog/alpha-post/hero.png')
-      const dimensions = post.heroDimensions
-      expect(dimensions).not.toBeNull()
-      expect(typeof dimensions?.width).toBe('number')
-      expect(typeof dimensions?.height).toBe('number')
-      expect(dimensions?.width ?? 0).toBeGreaterThan(0)
-      expect(dimensions?.height ?? 0).toBeGreaterThan(0)
+      const hero = post.hero
+      expect(hero).not.toBeUndefined()
+      expect(hero?.src).toBe('/content/blog/alpha-post/hero.png')
+      expect(typeof hero?.width).toBe('number')
+      expect(typeof hero?.height).toBe('number')
+      expect(hero?.width ?? 0).toBeGreaterThan(0)
+      expect(hero?.height ?? 0).toBeGreaterThan(0)
     }).pipe(Effect.provide(contentLayer)),
   )
 })

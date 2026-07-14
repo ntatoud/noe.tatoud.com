@@ -13,8 +13,11 @@ import {
   defineCollection,
   FrontmatterInvalid,
   HighlighterService,
+  Image,
   isRelativeRef,
+  Logo,
   makeReaders,
+  type ResolvedImage,
   resolveLogo,
 } from '../index'
 
@@ -26,53 +29,21 @@ const fixtures = path.join(
 const ASSET_BASE_URL = '/assets'
 
 // A generic fixture collection exercised purely through the public
-// `defineCollection` + `makeReaders` API — no blog/project knowledge.
+// `defineCollection` + `makeReaders` API — no blog/project knowledge, and no
+// `toMetadata`: `slug`/`url` and image resolution are automatic.
 const NoteFrontmatter = Schema.Struct({
   title: Schema.String,
   date: Schema.String,
   published: Schema.Boolean.pipe(
     Schema.withDecodingDefaultKey(Effect.succeed(false)),
   ),
-  cover: Schema.optional(Schema.String),
+  cover: Schema.optional(Image),
+  logo: Schema.optional(Logo),
 })
-
-type NoteMeta = {
-  readonly slug: string
-  readonly url: string
-  readonly title: string
-  readonly date: string
-  readonly published: boolean
-  readonly cover: string | null
-  readonly coverWidth: number | null
-  readonly coverHeight: number | null
-}
 
 const notes = defineCollection({
   name: 'notes',
   schema: NoteFrontmatter,
-  toMetadata: ({ slug, frontmatter, resolveImage }) =>
-    Effect.gen(function* () {
-      let cover: string | null = null
-      let coverWidth: number | null = null
-      let coverHeight: number | null = null
-      if (frontmatter.cover) {
-        const resolved = yield* resolveImage(frontmatter.cover)
-        cover = resolved.url
-        coverWidth = resolved.width
-        coverHeight = resolved.height
-      }
-      const meta: NoteMeta = {
-        slug,
-        url: `/notes/${slug}`,
-        title: frontmatter.title,
-        date: frontmatter.date,
-        published: frontmatter.published,
-        cover,
-        coverWidth,
-        coverHeight,
-      }
-      return meta
-    }),
   include: (note) => note.published,
   order: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 })
@@ -109,8 +80,8 @@ describe('makeReaders — list', () => {
   )
 })
 
-describe('makeReaders — get', () => {
-  it.effect('returns metadata plus a non-empty compiled body', () =>
+describe('makeReaders — get (auto slug/url)', () => {
+  it.effect('returns auto slug/url plus a non-empty compiled body', () =>
     Effect.gen(function* () {
       const note = yield* readers.get('second-note')
 
@@ -122,17 +93,42 @@ describe('makeReaders — get', () => {
       expect(note.body).toContain('/assets/notes/second-note/inline.png')
     }).pipe(Effect.provide(contentLayer)),
   )
+})
 
+describe('makeReaders — automatic image resolution (no toMetadata)', () => {
   it.effect(
-    'resolves an image ref to <assetBaseUrl>/<name>/<slug>/<file>',
+    'an Image field resolves to <assetBaseUrl>/<name>/<slug>/<file>',
     () =>
       Effect.gen(function* () {
         const note = yield* readers.get('first-note')
 
-        expect(note.cover).toBe('/assets/notes/first-note/cover.png')
-        expect(note.coverWidth ?? 0).toBeGreaterThan(0)
-        expect(note.coverHeight ?? 0).toBeGreaterThan(0)
+        // The schema declared `cover: Image`; the reader resolved it with no
+        // `toMetadata` in sight.
+        const cover: ResolvedImage | undefined = note.cover
+        expect(cover?.src).toBe('/assets/notes/first-note/cover.png')
+        expect(cover?.width ?? 0).toBeGreaterThan(0)
+        expect(cover?.height ?? 0).toBeGreaterThan(0)
       }).pipe(Effect.provide(contentLayer)),
+  )
+
+  it.effect('a Logo field resolves to an inlined base64 data URL', () =>
+    Effect.gen(function* () {
+      const note = yield* readers.get('first-note')
+
+      const logo: ResolvedImage | undefined = note.logo
+      expect(logo?.src.startsWith('data:image/png;base64,')).toBe(true)
+      expect(logo?.width ?? 0).toBeGreaterThan(0)
+      expect(logo?.height ?? 0).toBeGreaterThan(0)
+    }).pipe(Effect.provide(contentLayer)),
+  )
+
+  it.effect('an absent optional image stays undefined', () =>
+    Effect.gen(function* () {
+      const note = yield* readers.get('second-note')
+
+      expect(note.cover).toBeUndefined()
+      expect(note.logo).toBeUndefined()
+    }).pipe(Effect.provide(contentLayer)),
   )
 })
 
@@ -141,8 +137,8 @@ describe('image resolution', () => {
     Effect.gen(function* () {
       const logo = yield* resolveLogo('notes', 'first-note', './cover.png')
 
-      expect(logo.url.startsWith('data:image/png;base64,')).toBe(true)
-      expect(logo.url.length).toBeGreaterThan('data:image/png;base64,'.length)
+      expect(logo.src.startsWith('data:image/png;base64,')).toBe(true)
+      expect(logo.src.length).toBeGreaterThan('data:image/png;base64,'.length)
     }).pipe(Effect.provide(contentLayer)),
   )
 

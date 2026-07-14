@@ -1,10 +1,10 @@
 # effect-collections
 
 A tiny, **content-agnostic** [Effect](https://effect.website) engine for MDX
-content collections. You describe a collection with an Effect `Schema` and a
-`toMetadata` mapping; you get back two fully-typed readers — `list` and `get` —
-with server-side MDX compilation, static image resolution, a typed error
-channel, and an in-memory compile cache.
+content collections. You describe a collection with an Effect `Schema`; you get
+back two fully-typed readers — `list` and `get` — with server-side MDX
+compilation, automatic image resolution, a typed error channel, and an
+in-memory compile cache.
 
 It knows nothing about blogs, projects, or any particular site. Everything
 domain-specific lives in _your_ collection definitions.
@@ -22,9 +22,13 @@ Node that is `NodeServices.layer` from `@effect/platform-node`.
 
 ## Define a collection
 
+Declare image fields with the `Image`/`Logo` schema constructors. No
+`toMetadata` is needed: the reader adds `slug`/`url` and resolves every image
+field automatically.
+
 ```ts
 import { Effect, Schema } from 'effect'
-import { defineCollection, makeReaders } from 'effect-collections'
+import { defineCollection, Image, makeReaders } from 'effect-collections'
 
 const NoteFrontmatter = Schema.Struct({
   title: Schema.String,
@@ -32,26 +36,15 @@ const NoteFrontmatter = Schema.Struct({
   published: Schema.Boolean.pipe(
     Schema.withDecodingDefaultKey(Effect.succeed(false)),
   ),
-  cover: Schema.optional(Schema.String),
+  // The raw frontmatter value is a `string` ref (`cover: ./cover.png`);
+  // it decodes to an `ImageRef` and the reader resolves it to a
+  // `ResolvedImage` = `{ src, width, height }`.
+  cover: Schema.optional(Image),
 })
 
 const notes = defineCollection({
   name: 'notes', // == directory under `contentRoot`
   schema: NoteFrontmatter,
-  toMetadata: ({ slug, frontmatter, resolveImage }) =>
-    Effect.gen(function* () {
-      const cover = frontmatter.cover
-        ? (yield* resolveImage(frontmatter.cover)).url
-        : null
-      return {
-        slug,
-        url: `/notes/${slug}`,
-        title: frontmatter.title,
-        date: frontmatter.date,
-        published: frontmatter.published,
-        cover,
-      }
-    }),
   include: (note) => note.published, // filter applied to `list`
   order: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 })
@@ -59,14 +52,43 @@ const notes = defineCollection({
 export const { list, get } = makeReaders(notes)
 ```
 
-- `list` — `Effect<readonly Meta[], ContentNotFound | FrontmatterInvalid, Deps>`
-  (list slugs → validate frontmatter → `toMetadata` → filter → sort).
-- `get(slug)` — `Effect<Meta & { body: string }, … | CompileFailed, Deps>`
-  (validate → `toMetadata` → compile body; memoized by slug + file mtime).
+Each Document's metadata is the image-resolved frontmatter plus `slug` and
+`url` (`/${name}/${slug}`). Above, `note.cover` is typed as
+`{ src, width, height } | undefined` — an absent optional image stays
+`undefined`.
 
-`toMetadata` receives `{ slug, frontmatter, assetBaseUrl, resolveImage, resolveLogo }`.
-`resolveImage(ref)` yields `{ url, width, height }` (a public URL with stamped
-dimensions); `resolveLogo(ref)` inlines the file as a base64 `data:` URL.
+- `list` — `Effect<readonly Meta[], ContentNotFound | FrontmatterInvalid, Deps>`
+  (list slugs → validate + image-resolve frontmatter → filter → sort).
+- `get(slug)` — `Effect<Meta & { body: string }, … | CompileFailed, Deps>`
+  (validate + resolve → compile body; memoized by slug + file mtime).
+
+### Image fields
+
+- `Image` — Encoded `string` ref → decoded `ImageRef` → resolved to a public
+  `<assetBaseUrl>/<collection>/<slug>/<file>` URL (`kind: 'asset'`).
+- `Logo` — same, but resolved to an inlined base64 `data:` URL (`kind:
+'inline'`), for small logos that should avoid a request round-trip.
+
+Both compose with optionality/nullability (`Schema.optional(Image)`, …) and are
+resolved wherever they appear — top-level, in nested objects, and inside arrays
+(e.g. `events: Schema.Array(Schema.Struct({ logo: Logo }))`). Resolution stamps
+on-disk `width`/`height` (or `null` if the file cannot be read).
+
+### Reshaping with `toMetadata` (optional)
+
+For collections that need to reshape the resolved frontmatter into a different
+public shape, pass a `toMetadata`. It receives the **already image-resolved**
+frontmatter plus `{ slug, url }` and returns the final `Meta`; `include`/`order`
+then operate on that shape.
+
+```ts
+const talks = defineCollection({
+  name: 'talks',
+  schema: TalkFrontmatter,
+  toMetadata: ({ slug, url, frontmatter }) =>
+    Effect.succeed({ slug, url, title: frontmatter.title /* … */ }),
+})
+```
 
 ## Provide the Layers
 
@@ -99,9 +121,11 @@ Every failure is on the typed error channel (`import { … } from 'effect-collec
 
 ## Also exported
 
-`resolveImage`, `resolveLogo`, `imageRefExists`, `isRelativeRef`, `assetUrl`,
-`collectImageRefs`, `compileMdxBody`, `rehypeContentImages`, and the low-level
-document source (`listSlugs`, `readDocument`, `documentMtime`).
+`Image`, `Logo`, `ImageRef`, `resolveImageRefs`, `resolveImage`, `resolveLogo`,
+`imageRefExists`, `isRelativeRef`, `assetUrl`, `collectImageRefs`,
+`compileMdxBody`, `rehypeContentImages`, and the low-level document source
+(`listSlugs`, `readDocument`, `documentMtime`). Types: `ResolvedImage`,
+`ResolveImageRefs`, `DefaultMeta`, `ResolvedFrontmatter`, `ToMetadataArgs`, …
 
 ## Packaging note
 

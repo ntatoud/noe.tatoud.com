@@ -1,4 +1,5 @@
 import { Effect, Schema, SchemaGetter } from 'effect'
+import { Image } from 'effect-collections'
 
 /**
  * Frontmatter dates are authored as bare YAML dates (`date: 2026-04-08`), which
@@ -31,7 +32,7 @@ export const BlogFrontmatter = Schema.Struct({
   translations: Schema.optional(Schema.Array(Translation)),
   tags: Schema.optional(Schema.Array(Schema.String)),
   externalUrl: Schema.optional(Schema.String),
-  hero: Schema.optional(Schema.String),
+  hero: Schema.optional(Image),
 })
 
 export type BlogFrontmatter = Schema.Schema.Type<typeof BlogFrontmatter>
