@@ -22,8 +22,13 @@ export class ContentService extends Context.Service<ContentService>()(
   '@ntatoud/effect-content/ContentService',
   { make: makeCollections({ blog }) },
 ) {
+  // `Context.Service` only registers the key + build recipe (`make`); it does
+  // not create a Layer. Reuse that recipe here rather than calling
+  // `makeCollections` again, and bake in the one service `make` depends on that
+  // the runner shouldn't have to (`HighlighterService`); the platform
+  // `FileSystem`/`Path` and `CollectionsConfig` are still provided at the edge.
   static readonly Default = Layer.effect(
     ContentService,
-    makeCollections({ blog }),
+    ContentService.make,
   ).pipe(Layer.provide(HighlighterService.Default))
 }
