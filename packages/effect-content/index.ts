@@ -8,6 +8,10 @@ export {
   type ExperienceWithBody,
   type Project,
   type ProjectWithBody,
+  type Talk,
+  type TalkEvent,
+  type TalkResource,
+  type TalkWithBody,
 } from './src/engine/content'
 export {
   CompileFailed,
@@ -17,3 +21,4 @@ export {
 export { HighlighterService } from './src/engine/highlighter'
 export { ExperienceFrontmatter } from './src/experiences/schema'
 export { ProjectFrontmatter } from './src/projects/schema'
+export { TalkFrontmatter } from './src/talks/schema'

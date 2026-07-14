@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router'
 
-import type { StageItem } from '@/lib/content'
+import type { Talk } from '@/lib/content'
 
 type TalksPageProps = {
-  talks: StageItem[]
+  talks: Talk[]
 }
 
 export function TalksPage({ talks }: TalksPageProps) {

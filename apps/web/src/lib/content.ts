@@ -3,12 +3,11 @@
  *
  * Every feature imports collection readers and content types from here,
  * never from `@ntatoud/content` or `@ntatoud/effect-content` directly. Blog,
- * Projects, and Experiences now run on the Effect content pipeline
+ * Projects, Experiences, and Talks all run on the Effect content pipeline
  * (`@ntatoud/effect-content`), behind the server functions in `./server/blog`,
- * `./server/projects`, and `./server/experiences` — the only places that
- * package is imported, so Shiki and the MDX compiler stay server-side. Talks
- * still re-exports the legacy `@ntatoud/content` reader unchanged until it's
- * ported in a later issue.
+ * `./server/projects`, `./server/experiences`, and `./server/talks` — the
+ * only places that package is imported, so Shiki and the MDX compiler stay
+ * server-side.
  */
 import { getBlogPostServerFn, getBlogPostsServerFn } from './server/blog'
 import {
@@ -16,8 +15,7 @@ import {
   getExperiencesServerFn,
 } from './server/experiences'
 import { getProjectServerFn, getProjectsServerFn } from './server/projects'
-
-export { getTalks, type StageItem, type StageEvent } from '@ntatoud/content'
+import { getTalkServerFn, getTalksServerFn } from './server/talks'
 
 export type {
   BlogPost,
@@ -26,6 +24,10 @@ export type {
   ExperienceWithBody,
   Project,
   ProjectWithBody,
+  Talk,
+  TalkEvent,
+  TalkResource,
+  TalkWithBody,
 } from '@ntatoud/effect-content'
 
 export function getBlogPosts() {
@@ -50,4 +52,12 @@ export function getExperiences() {
 
 export function getExperience(slug: string) {
   return getExperienceServerFn({ data: slug })
+}
+
+export function getTalks() {
+  return getTalksServerFn()
+}
+
+export function getTalk(slug: string) {
+  return getTalkServerFn({ data: slug })
 }

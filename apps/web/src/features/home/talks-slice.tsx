@@ -1,17 +1,17 @@
 import { Badge } from '@/components/ui/badge'
-import { type StageItem, type StageEvent } from '@/lib/content'
+import { type Talk, type TalkEvent } from '@/lib/content'
 import { formatDate } from '@/lib/format'
 
 import { Slice } from './slice'
 
 type TalksSliceProps = {
-  talks: StageItem[]
+  talks: Talk[]
 }
 
 /** Returns the event with the most recent date, or undefined. */
 function latestEvent(
-  events: Array<StageEvent> | undefined,
-): StageEvent | undefined {
+  events: Array<TalkEvent> | undefined,
+): TalkEvent | undefined {
   if (!events || events.length === 0) return undefined
   return events.reduce((latest, e) =>
     new Date(e.date) > new Date(latest.date) ? e : latest,

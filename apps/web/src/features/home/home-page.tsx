@@ -1,4 +1,4 @@
-import type { BlogPost, Experience, Project, StageItem } from '@/lib/content'
+import type { BlogPost, Experience, Project, Talk } from '@/lib/content'
 
 import { BlogSlice } from './blog-slice'
 import { ExperiencesSlice } from './experiences-slice'
@@ -9,7 +9,7 @@ import { TalksSlice } from './talks-slice'
 type HomePageProps = {
   posts: BlogPost[]
   projects: Project[]
-  talks: StageItem[]
+  talks: Talk[]
   experiences: Experience[]
 }
 

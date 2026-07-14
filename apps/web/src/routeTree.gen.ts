@@ -15,6 +15,7 @@ import { Route as ExperiencesRouteImport } from './routes/experiences'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TalksIndexRouteImport } from './routes/talks.index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ExperiencesIndexRouteImport } from './routes/experiences.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TalksIndexRoute = TalksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TalksRoute,
 } as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   id: '/',
@@ -103,11 +109,11 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/talks/': typeof TalksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
-  '/talks': typeof TalksRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -115,6 +121,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/experiences': typeof ExperiencesIndexRoute
   '/projects': typeof ProjectsIndexRoute
+  '/talks': typeof TalksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +138,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/talks/': typeof TalksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,11 +156,11 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/experiences/'
     | '/projects/'
+    | '/talks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/achievements'
-    | '/talks'
     | '/blog/$slug'
     | '/experiences/$slug'
     | '/projects/$slug'
@@ -160,6 +168,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/experiences'
     | '/projects'
+    | '/talks'
   id:
     | '__root__'
     | '/'
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/experiences/'
     | '/projects/'
+    | '/talks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -229,6 +239,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/talks/': {
+      id: '/talks/'
+      path: '/'
+      fullPath: '/talks/'
+      preLoaderRoute: typeof TalksIndexRouteImport
+      parentRoute: typeof TalksRoute
     }
     '/projects/': {
       id: '/projects/'
@@ -324,10 +341,12 @@ const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
 
 interface TalksRouteChildren {
   TalksSlugRoute: typeof TalksSlugRoute
+  TalksIndexRoute: typeof TalksIndexRoute
 }
 
 const TalksRouteChildren: TalksRouteChildren = {
   TalksSlugRoute: TalksSlugRoute,
+  TalksIndexRoute: TalksIndexRoute,
 }
 
 const TalksRouteWithChildren = TalksRoute._addFileChildren(TalksRouteChildren)
