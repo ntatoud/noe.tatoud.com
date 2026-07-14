@@ -1,26 +1,9 @@
 import { ContentService } from '@ntatoud/effect-content'
-import { notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 
 import { Effect } from 'effect'
 
-import { runContentProgram } from './content-runtime'
-
-function isTagged(error: unknown): error is { _tag: string } {
-  return typeof error === 'object' && error !== null && '_tag' in error
-}
-
-/**
- * Maps `ContentNotFound` to a router `notFound()`; rethrows everything else
- * (`FrontmatterInvalid`, `CompileFailed`, defects) as-is for the nearest
- * route `errorComponent` (ADR-0006 / ADR-0007, issue #95).
- */
-function rethrowContentError(error: unknown): never {
-  if (isTagged(error) && error._tag === 'ContentNotFound') {
-    throw notFound()
-  }
-  throw error
-}
+import { rethrowContentError, runContentProgram } from './content-runtime'
 
 /**
  * Blog server-fn seam: wraps the two Blog `@ntatoud/effect-content` programs

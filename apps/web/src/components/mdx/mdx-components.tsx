@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 
 import type { MDXComponents } from 'mdx/types'
 
+import { ProjectCta, ProjectInlineLink } from '@/features/projects/project-cta'
 import { netlifyImageUrl } from '@/lib/netlify-image'
 import { cn } from '@/lib/utils'
 
@@ -92,4 +93,6 @@ export const mdxComponents: MDXComponents = {
   a: MdxLink,
   img: MdxImage,
   pre: MdxPre,
+  ProjectCta,
+  ProjectInlineLink,
 }

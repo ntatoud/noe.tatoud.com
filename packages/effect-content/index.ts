@@ -4,6 +4,8 @@ export {
   type BlogPost,
   type BlogPostWithBody,
   ContentService,
+  type Project,
+  type ProjectWithBody,
 } from './src/engine/content'
 export {
   CompileFailed,
@@ -11,3 +13,4 @@ export {
   FrontmatterInvalid,
 } from './src/engine/errors'
 export { HighlighterService } from './src/engine/highlighter'
+export { ProjectFrontmatter } from './src/projects/schema'

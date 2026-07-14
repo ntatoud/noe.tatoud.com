@@ -9,6 +9,7 @@ import { createRequire } from 'node:module'
 import * as path from 'node:path'
 
 import { ContentConfig, ContentService } from '@ntatoud/effect-content'
+import { notFound } from '@tanstack/react-router'
 
 import { FileSystem, Path } from '@effect/platform'
 import { NodeContext } from '@effect/platform-node'
@@ -76,4 +77,21 @@ export async function runContentProgram<A, E>(
   if (Option.isSome(failure)) throw failure.value
 
   throw new Error(Cause.pretty(exit.cause))
+}
+
+function isTagged(error: unknown): error is { _tag: string } {
+  return typeof error === 'object' && error !== null && '_tag' in error
+}
+
+/**
+ * Maps `ContentNotFound` to a router `notFound()`; rethrows everything else
+ * (`FrontmatterInvalid`, `CompileFailed`, defects) as-is for the nearest
+ * route `errorComponent` (ADR-0006 / ADR-0007). Shared by every collection's
+ * server-fn seam (blog, projects, and future collections, issue #95/#97).
+ */
+export function rethrowContentError(error: unknown): never {
+  if (isTagged(error) && error._tag === 'ContentNotFound') {
+    throw notFound()
+  }
+  throw error
 }

@@ -1,17 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-
-import { ProjectsPage } from '@/features/projects/projects-page'
-import { getProjects } from '@/lib/content'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/projects')({
-  component: ProjectsPageRoute,
-  loader: async () => {
-    const projects = await getProjects()
-    return { projects }
-  },
+  component: Outlet,
 })
-
-function ProjectsPageRoute() {
-  const { projects } = Route.useLoaderData()
-  return <ProjectsPage projects={projects} />
-}
