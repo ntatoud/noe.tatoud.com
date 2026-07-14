@@ -1,21 +1,19 @@
-import { Effect, ParseResult, Schema } from 'effect'
+import { Effect, Schema, SchemaGetter } from 'effect'
 
-import { FrontmatterInvalid } from '../engine/errors'
+import { FrontmatterInvalid } from '#engine/errors'
 
 /**
  * Frontmatter dates are authored as bare YAML dates (`date: 2026-04-08`), which
  * the parser hands back as `Date` instances, or as quoted strings. Either way we
  * normalise to the original `YYYY-MM-DD` string the readers expose.
  */
-const FrontmatterDate = Schema.transform(
-  Schema.Union(Schema.String, Schema.DateFromSelf),
-  Schema.String,
-  {
-    strict: true,
-    decode: (value) =>
+const FrontmatterDate = Schema.Union([Schema.String, Schema.Date]).pipe(
+  Schema.decodeTo(Schema.String, {
+    decode: SchemaGetter.transform((value: string | Date) =>
       typeof value === 'string' ? value : value.toISOString().slice(0, 10),
-    encode: (value) => value,
-  },
+    ),
+    encode: SchemaGetter.transform((value: string): string | Date => value),
+  }),
 )
 
 const Translation = Schema.Struct({
@@ -29,24 +27,26 @@ export const BlogFrontmatter = Schema.Struct({
   description: Schema.optional(Schema.String),
   author: Schema.String,
   date: FrontmatterDate,
-  published: Schema.optionalWith(Schema.Boolean, { default: () => false }),
+  published: Schema.Boolean.pipe(
+    Schema.withDecodingDefaultKey(Effect.succeed(false)),
+  ),
   translations: Schema.optional(Schema.Array(Translation)),
   tags: Schema.optional(Schema.Array(Schema.String)),
   externalUrl: Schema.optional(Schema.String),
   hero: Schema.optional(Schema.String),
 })
 
-export type BlogFrontmatter = typeof BlogFrontmatter.Type
+export type BlogFrontmatter = Schema.Schema.Type<typeof BlogFrontmatter>
 
 /** Decodes unknown frontmatter, mapping validation failures to a typed error. */
 export const decodeBlogFrontmatter = (slug: string, data: unknown) =>
-  Schema.decodeUnknown(BlogFrontmatter)(data).pipe(
+  Schema.decodeUnknownEffect(BlogFrontmatter)(data).pipe(
     Effect.mapError(
       (error) =>
         new FrontmatterInvalid({
           collection: 'blog',
           slug,
-          reason: ParseResult.TreeFormatter.formatErrorSync(error),
+          reason: error.message,
         }),
     ),
   )

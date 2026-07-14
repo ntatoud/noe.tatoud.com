@@ -1,5 +1,4 @@
-import { FileSystem, Path } from '@effect/platform'
-import { Effect } from 'effect'
+import { Effect, FileSystem, Path } from 'effect'
 import { imageSize } from 'image-size'
 
 export type ResolvedImage = {
@@ -15,7 +14,7 @@ export type ResolvedImage = {
  *
  * Platform access goes through the Effect `FileSystem`/`Path` services, so the
  * engine stays framework-agnostic — the runner decides which platform Layer
- * (e.g. `NodeContext.layer`) satisfies them.
+ * (e.g. `NodeServices.layer`) satisfies them.
  */
 export const resolveImage = (
   contentRoot: string,

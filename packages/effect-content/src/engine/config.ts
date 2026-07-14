@@ -16,9 +16,10 @@ const defaultContentRoot = path.resolve(
   '../../../../content/content',
 )
 
-export class ContentConfig extends Context.Tag(
-  '@ntatoud/effect-content/ContentConfig',
-)<ContentConfig, ContentConfigShape>() {
+export class ContentConfig extends Context.Service<
+  ContentConfig,
+  ContentConfigShape
+>()('@ntatoud/effect-content/ContentConfig') {
   /** Builds a config Layer pointing at an explicit content root. */
   static readonly layer = (contentRoot: string) =>
     Layer.succeed(ContentConfig, { contentRoot })

@@ -1,13 +1,13 @@
-export { BlogFrontmatter } from './src/blog/schema'
-export { ContentConfig, type ContentConfigShape } from './src/engine/config'
+export { BlogFrontmatter } from '#blog/schema'
+export { ContentConfig, type ContentConfigShape } from '#engine/config'
 export {
   type BlogPost,
   type BlogPostWithBody,
   ContentService,
-} from './src/engine/content'
+} from '#engine/content'
 export {
   CompileFailed,
   ContentNotFound,
   FrontmatterInvalid,
-} from './src/engine/errors'
-export { HighlighterService } from './src/engine/highlighter'
+} from '#engine/errors'
+export { HighlighterService } from '#engine/highlighter'

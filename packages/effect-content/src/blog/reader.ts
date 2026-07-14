@@ -1,28 +1,30 @@
-import { FileSystem, Path } from '@effect/platform'
-import { Effect, Option } from 'effect'
+import { Effect, FileSystem, Option, Path } from 'effect'
 import matter from 'gray-matter'
 
-import { ContentConfig } from '../engine/config'
-import { ContentNotFound } from '../engine/errors'
-import { HighlighterService } from '../engine/highlighter'
-import { resolveImage } from '../engine/image'
-import { compileMdxBody } from '../engine/mdx'
-import { type BlogFrontmatter, decodeBlogFrontmatter } from './schema'
+import { type BlogFrontmatter, decodeBlogFrontmatter } from '#blog/schema'
+import { ContentConfig } from '#engine/config'
+import { ContentNotFound } from '#engine/errors'
+import { HighlighterService } from '#engine/highlighter'
+import { resolveImage } from '#engine/image'
+import { compileMdxBody } from '#engine/mdx'
 
-/** Blog collection metadata (no body), the shape features already consume. */
-export type BlogPost = {
-  slug: string
-  url: string
-  title: string
-  description: string | undefined
-  author: string
-  date: string
-  published: boolean
-  translations: Array<{ lang: string; url: string }> | undefined
-  tags: Array<string> | undefined
-  externalUrl: string | null
-  hero: string | null
-  heroDimensions: { width: number; height: number } | null
+/**
+ * Blog collection metadata (no body), the shape features already consume.
+ *
+ * Derived from the frontmatter Schema so the pass-through fields stay in sync
+ * with validation: `hero`/`externalUrl` are swapped for their resolved forms
+ * (a `/content` URL and a normalised `null`), and the reader adds `slug`, `url`
+ * and the stamped `heroDimensions`.
+ */
+export type BlogPost = Omit<BlogFrontmatter, 'hero' | 'externalUrl'> & {
+  readonly slug: string
+  readonly url: string
+  readonly externalUrl: string | null
+  readonly hero: string | null
+  readonly heroDimensions: {
+    readonly width: number
+    readonly height: number
+  } | null
 }
 
 /** A single Blog Document: its metadata plus the compiled function-body string. */

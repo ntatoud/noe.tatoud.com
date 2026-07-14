@@ -1,9 +1,9 @@
-import { Effect } from 'effect'
+import { Context, Layer } from 'effect'
 
-import { makeBlogReader } from '../blog/reader'
-import { HighlighterService } from './highlighter'
+import { makeBlogReader } from '#blog/reader'
+import { HighlighterService } from '#engine/highlighter'
 
-export type { BlogPost, BlogPostWithBody } from '../blog/reader'
+export type { BlogPost, BlogPostWithBody } from '#blog/reader'
 
 /**
  * Composition root that hosts the collection readers. Blog-specific logic lives
@@ -12,12 +12,13 @@ export type { BlogPost, BlogPostWithBody } from '../blog/reader'
  *
  * `Default` depends on the abstract `FileSystem`/`Path` services (never a
  * concrete platform) so the package stays framework-agnostic: the runner
- * provides `NodeContext.layer` (or another platform Layer) at the edge.
+ * provides `NodeServices.layer` (or another platform Layer) at the edge.
  */
-export class ContentService extends Effect.Service<ContentService>()(
+export class ContentService extends Context.Service<ContentService>()(
   '@ntatoud/effect-content/ContentService',
-  {
-    dependencies: [HighlighterService.Default],
-    effect: makeBlogReader,
-  },
-) {}
+  { make: makeBlogReader },
+) {
+  static readonly Default = Layer.effect(ContentService, makeBlogReader).pipe(
+    Layer.provide(HighlighterService.Default),
+  )
+}

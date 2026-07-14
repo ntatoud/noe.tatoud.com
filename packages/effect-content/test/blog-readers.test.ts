@@ -1,7 +1,7 @@
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { NodeContext } from '@effect/platform-node'
+import { NodeServices } from '@effect/platform-node'
 import { describe, expect, it } from '@effect/vitest'
 import { Effect, Layer } from 'effect'
 
@@ -19,11 +19,11 @@ const fixtures = path.join(
 )
 
 // The engine depends on the abstract FileSystem/Path services; the runner
-// (here, the test) supplies a concrete platform via NodeContext.layer.
+// (here, the test) supplies a concrete platform via NodeServices.layer.
 const layerFor = (root: string) =>
   ContentService.Default.pipe(
     Layer.provide(ContentConfig.layer(root)),
-    Layer.provideMerge(NodeContext.layer),
+    Layer.provideMerge(NodeServices.layer),
   )
 
 const contentLayer = layerFor(path.join(fixtures, 'content'))

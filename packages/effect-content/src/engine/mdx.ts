@@ -4,7 +4,7 @@ import rehypePrettyCode from 'rehype-pretty-code'
 import remarkGfm from 'remark-gfm'
 import type { Highlighter } from 'shiki'
 
-import { CompileFailed } from './errors'
+import { CompileFailed } from '#engine/errors'
 
 /**
  * Compiles an MDX body to a serializable `function-body` string (ADR-0007),
