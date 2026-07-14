@@ -29,14 +29,14 @@ describe('blog collection wiring', () => {
       Effect.gen(function* () {
         const content = yield* ContentService
 
-        const posts = yield* content.getBlogPosts()
+        const posts = yield* content.blog.list()
         expect(posts.every((post) => post.published)).toBe(true)
         expect(posts.map((post) => post.slug)).toEqual([
           'beta-post',
           'alpha-post',
         ])
 
-        const post = yield* content.getBlogPost('alpha-post')
+        const post = yield* content.blog.get('alpha-post')
         expect(post.url).toBe('/blog/alpha-post')
         expect(post.hero?.src).toBe('/content/blog/alpha-post/hero.png')
       }).pipe(Effect.provide(contentLayer)),

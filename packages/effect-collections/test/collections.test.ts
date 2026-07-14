@@ -16,6 +16,7 @@ import {
   Image,
   isRelativeRef,
   Logo,
+  makeCollections,
   makeReaders,
   type ResolvedImage,
   resolveLogo,
@@ -156,6 +157,34 @@ describe('image resolution', () => {
     )
     expect(refs).toEqual(['./a.png', './b.png'])
   })
+})
+
+describe('makeCollections — layer-boundary injection', () => {
+  // The env is provided ONCE, to the `makeCollections` effect. The resulting
+  // accessors escape with `R = never`, so the test body below runs the readers
+  // with no `Effect.provide` of its own — the whole point of the accessor.
+  const content = makeCollections({ notes }).pipe(Effect.provide(contentLayer))
+
+  it.effect(
+    'yields env-injected notes.list()/get() that run with no plumbing',
+    () =>
+      Effect.gen(function* () {
+        const { notes: reader } = yield* content
+
+        const metas = yield* reader.list()
+        expect(metas.map((note) => note.slug)).toEqual([
+          'second-note',
+          'first-note',
+        ])
+        expect(metas.every((note) => note.published)).toBe(true)
+
+        const note = yield* reader.get('second-note')
+        expect(note.slug).toBe('second-note')
+        expect(note.url).toBe('/notes/second-note')
+        expect(typeof note.body).toBe('string')
+        expect(note.body.length).toBeGreaterThan(0)
+      }),
+  )
 })
 
 describe('typed failures', () => {

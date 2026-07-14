@@ -28,7 +28,7 @@ field automatically.
 
 ```ts
 import { Effect, Schema } from 'effect'
-import { defineCollection, Image, makeReaders } from 'effect-collections'
+import { defineCollection, Image } from 'effect-collections'
 
 const NoteFrontmatter = Schema.Struct({
   title: Schema.String,
@@ -42,14 +42,12 @@ const NoteFrontmatter = Schema.Struct({
   cover: Schema.optional(Image),
 })
 
-const notes = defineCollection({
+export const notes = defineCollection({
   name: 'notes', // == directory under `contentRoot`
   schema: NoteFrontmatter,
   include: (note) => note.published, // filter applied to `list`
   order: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 })
-
-export const { list, get } = makeReaders(notes)
 ```
 
 Each Document's metadata is the image-resolved frontmatter plus `slug` and
@@ -57,10 +55,37 @@ Each Document's metadata is the image-resolved frontmatter plus `slug` and
 `{ src, width, height } | undefined` — an absent optional image stays
 `undefined`.
 
-- `list` — `Effect<readonly Meta[], ContentNotFound | FrontmatterInvalid, Deps>`
+## Get ready-to-run readers with `makeCollections`
+
+`makeCollections` is the primary entry point. Hand it a record of collections
+and it returns an Effect that captures the dependency context **once** and
+yields an accessor per key. The `list`/`get` on each accessor have their
+requirement channel fully discharged (`R = never`), so consumers run them with
+no per-call layer plumbing:
+
+```ts
+import { Effect } from 'effect'
+import { makeCollections } from 'effect-collections'
+
+const program = Effect.gen(function* () {
+  const content = yield* makeCollections({ notes /* , posts, talks, … */ })
+
+  const published = yield* content.notes.list() // Effect<readonly Meta[], …, never>
+  const note = yield* content.notes.get('hello') // Effect<Meta & { body }, …, never>
+  return { published, note }
+})
+```
+
+- `.list()` — `Effect<readonly Meta[], ContentNotFound | FrontmatterInvalid>`
   (list slugs → validate + image-resolve frontmatter → filter → sort).
-- `get(slug)` — `Effect<Meta & { body: string }, … | CompileFailed, Deps>`
+- `.get(slug)` — `Effect<Meta & { body: string }, … | CompileFailed>`
   (validate + resolve → compile body; memoized by slug + file mtime).
+
+Run `makeCollections(...)` at a Layer boundary (e.g. `Layer.effect(MyService,
+makeCollections({ notes }))`) so the context is captured once for the service's
+lifetime. `makeReaders(collection)` is still exported if you want a single
+collection's raw `list`/`get` (whose `R` is `CollectionDeps`) and to wire the
+Layers yourself.
 
 ### Image fields
 
@@ -92,12 +117,20 @@ const talks = defineCollection({
 
 ## Provide the Layers
 
-`list`/`get` require `Deps = CollectionsConfig | HighlighterService | FileSystem | Path`:
+`makeCollections` (and the raw `makeReaders` readers) require
+`CollectionDeps = CollectionsConfig | HighlighterService | FileSystem | Path`.
+Provide the config, a platform layer (`NodeServices.layer` for Node), and
+`HighlighterService` via a Layer, and inject them once at the `makeCollections`
+boundary:
 
 ```ts
 import { NodeServices } from '@effect/platform-node'
 import { Effect, Layer } from 'effect'
-import { CollectionsConfig, HighlighterService } from 'effect-collections'
+import {
+  CollectionsConfig,
+  HighlighterService,
+  makeCollections,
+} from 'effect-collections'
 
 const AppLayer = Layer.mergeAll(
   CollectionsConfig.layer({
@@ -108,7 +141,12 @@ const AppLayer = Layer.mergeAll(
   NodeServices.layer, // FileSystem + Path
 )
 
-const posts = await Effect.runPromise(list.pipe(Effect.provide(AppLayer)))
+const program = Effect.gen(function* () {
+  const content = yield* makeCollections({ notes })
+  return yield* content.notes.list() // runs with no further environment
+})
+
+const posts = await Effect.runPromise(program.pipe(Effect.provide(AppLayer)))
 ```
 
 ## Typed errors
@@ -125,7 +163,8 @@ Every failure is on the typed error channel (`import { … } from 'effect-collec
 `imageRefExists`, `isRelativeRef`, `assetUrl`, `collectImageRefs`,
 `compileMdxBody`, `rehypeContentImages`, and the low-level document source
 (`listSlugs`, `readDocument`, `documentMtime`). Types: `ResolvedImage`,
-`ResolveImageRefs`, `DefaultMeta`, `ResolvedFrontmatter`, `ToMetadataArgs`, …
+`ResolveImageRefs`, `DefaultMeta`, `ResolvedFrontmatter`, `ToMetadataArgs`,
+`CollectionAccessor`, `MetaOf`, …
 
 ## Packaging note
 

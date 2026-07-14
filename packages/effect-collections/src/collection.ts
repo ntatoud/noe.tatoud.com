@@ -219,3 +219,77 @@ export const makeReaders = <S extends FrontmatterSchema, Meta extends object>(
 
   return { list, get }
 }
+
+/**
+ * Extracts a {@link Collection}'s public per-Document metadata (`Meta`) type.
+ * The `any` args sidestep `Collection`'s schema/`toMetadata` variance so a
+ * heterogeneous record of collections stays assignable.
+ */
+export type MetaOf<C extends Collection<any, any>> =
+  C extends Collection<any, infer Meta> ? Meta : never
+
+/**
+ * The env-injected reader pair {@link makeCollections} exposes for one
+ * collection. Both readers have their requirement channel fully discharged
+ * (`R = never`) — the {@link CollectionDeps} were captured once at the layer
+ * boundary and re-provided per call — so consumers run them with no further
+ * environment.
+ */
+export type CollectionAccessor<Meta extends object> = {
+  /** All Documents' metadata (filtered + ordered). See {@link Readers.list}. */
+  readonly list: () => Effect.Effect<
+    ReadonlyArray<Meta>,
+    ContentNotFound | FrontmatterInvalid
+  >
+  /** One Document's metadata plus its compiled body. See {@link Readers.get}. */
+  readonly get: (
+    slug: string,
+  ) => Effect.Effect<
+    Meta & { body: string },
+    ContentNotFound | FrontmatterInvalid | CompileFailed
+  >
+}
+
+/**
+ * Builds ready-to-run readers for a record of collections, injecting the shared
+ * {@link CollectionDeps} once.
+ *
+ * It captures the whole {@link CollectionDeps} context a single time (via
+ * `Effect.context`) at the point this Effect runs — typically a `Layer.effect`
+ * boundary — then re-provides that context to every `list`/`get` call. The
+ * returned accessors therefore have `R = never`: consumers call
+ * `content.<key>.list()` / `content.<key>.get(slug)` with no per-call layer
+ * plumbing.
+ *
+ * @example
+ * ```ts
+ * const content = yield* makeCollections({ blog, projects })
+ * const posts = yield* content.blog.list()
+ * const post = yield* content.blog.get('hello-world')
+ * ```
+ */
+export const makeCollections = <R extends Record<string, Collection<any, any>>>(
+  collections: R,
+): Effect.Effect<
+  { readonly [K in keyof R]: CollectionAccessor<MetaOf<R[K]>> },
+  never,
+  CollectionDeps
+> =>
+  Effect.gen(function* () {
+    // Capture the full dependency context once, at this Effect's run site.
+    const context = yield* Effect.context<CollectionDeps>()
+
+    const accessors: Record<string, CollectionAccessor<object>> = {}
+    for (const [key, collection] of Object.entries(collections)) {
+      const readers = makeReaders(collection)
+      accessors[key] = {
+        // Re-provide the captured context so each reader's R collapses to never.
+        list: () => readers.list.pipe(Effect.provide(context)),
+        get: (slug) => readers.get(slug).pipe(Effect.provide(context)),
+      }
+    }
+
+    return accessors as {
+      readonly [K in keyof R]: CollectionAccessor<MetaOf<R[K]>>
+    }
+  })

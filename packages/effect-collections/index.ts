@@ -1,10 +1,13 @@
 export {
   type Collection,
+  type CollectionAccessor,
   type CollectionDeps,
   type DefaultMeta,
   defineCollection,
   type FrontmatterSchema,
+  makeCollections,
   makeReaders,
+  type MetaOf,
   type Readers,
   type ResolvedFrontmatter,
   type ToMetadataArgs,
