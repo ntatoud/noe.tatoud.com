@@ -16,6 +16,7 @@ import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 
 import { contentImagesStatic } from './plugins/content-images-static'
+import { prepareContentForBuild } from './plugins/content-prerender'
 import rehypeImgDimensions from './plugins/rehype-img-dimensions'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -25,29 +26,44 @@ const contentConfig = path.resolve(
 )
 const contentRoot = path.resolve(here, '../../packages/content/content')
 
-export default defineConfig(({ mode }) => ({
-  resolve: {
-    tsconfigPaths: true,
-  },
-  plugins: [
-    devtools(),
-    contentCollections({ configPath: contentConfig }),
-    contentImagesStatic(contentRoot),
-    {
-      // MDX must run before viteReact so .mdx files are compiled to JSX first
-      enforce: 'pre',
-      ...mdx({
-        remarkPlugins: [remarkFrontmatter, remarkGfm],
-        rehypePlugins: [
-          rehypeImgDimensions,
-          rehypeMdxImportMedia,
-          [rehypePrettyCode, { theme: 'github-dark' }],
-        ],
-      }),
+export default defineConfig(async ({ mode, command }) => {
+  // Strict build-time content validation + prerender page enumeration
+  // (ADR-0006, issue #100) only apply to a real `vite build`: `prepareContentForBuild`
+  // fails the build outright on invalid frontmatter, a missing referenced
+  // image, or un-compilable MDX, and otherwise returns every route to
+  // prerender to static HTML (home, the four list routes, and every
+  // published Document's detail route) — so the MDX compiler / Shiki never
+  // run at request time in production.
+  const isBuild = command === 'build'
+  const pages = isBuild ? await prepareContentForBuild(contentRoot) : []
+
+  return {
+    resolve: {
+      tsconfigPaths: true,
     },
-    ...(mode !== 'development' ? [netlify()] : []),
-    tailwindcss(),
-    tanstackStart(),
-    viteReact({ include: /\.(tsx|ts|jsx|js)$/ }),
-  ],
-}))
+    plugins: [
+      devtools(),
+      contentCollections({ configPath: contentConfig }),
+      contentImagesStatic(contentRoot),
+      {
+        // MDX must run before viteReact so .mdx files are compiled to JSX first
+        enforce: 'pre',
+        ...mdx({
+          remarkPlugins: [remarkFrontmatter, remarkGfm],
+          rehypePlugins: [
+            rehypeImgDimensions,
+            rehypeMdxImportMedia,
+            [rehypePrettyCode, { theme: 'github-dark' }],
+          ],
+        }),
+      },
+      ...(mode !== 'development' ? [netlify()] : []),
+      tailwindcss(),
+      tanstackStart({
+        pages,
+        prerender: isBuild ? { enabled: true, crawlLinks: false } : undefined,
+      }),
+      viteReact({ include: /\.(tsx|ts|jsx|js)$/ }),
+    ],
+  }
+})

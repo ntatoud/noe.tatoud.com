@@ -134,5 +134,5 @@ export const makeProjectsReader = Effect.gen(function* () {
       return project
     })
 
-  return { getProjects, getProject } as const
+  return { getProjects, getProject, readFrontmatter } as const
 })

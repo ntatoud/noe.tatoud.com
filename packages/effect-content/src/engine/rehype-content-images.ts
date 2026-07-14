@@ -1,7 +1,7 @@
 import { FileSystem, Path } from '@effect/platform'
 import { Runtime } from 'effect'
 
-import { resolveImage } from './image'
+import { isRelativeRef, resolveImage } from './image'
 
 export type RehypeContentImagesOptions = {
   readonly contentRoot: string
@@ -22,10 +22,6 @@ type HastNode = {
   properties?: Record<string, unknown>
   children?: HastNode[]
 }
-
-/** External URLs, root-relative paths, and data URIs are left untouched. */
-const isRelativeRef = (src: string) =>
-  !/^([a-z][a-z0-9+.-]*:|\/\/|\/)/i.test(src)
 
 const collectImgNodes = (node: HastNode, out: HastNode[]): void => {
   if (node.type === 'element' && node.tagName === 'img') out.push(node)

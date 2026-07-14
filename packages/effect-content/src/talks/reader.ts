@@ -163,5 +163,5 @@ export const makeTalksReader = Effect.gen(function* () {
       return talk
     })
 
-  return { getTalks, getTalk } as const
+  return { getTalks, getTalk, readFrontmatter } as const
 })

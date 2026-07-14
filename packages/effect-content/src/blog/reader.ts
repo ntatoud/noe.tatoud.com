@@ -160,5 +160,5 @@ export const makeBlogReader = Effect.gen(function* () {
       return post
     })
 
-  return { getBlogPosts, getBlogPost } as const
+  return { getBlogPosts, getBlogPost, readFrontmatter } as const
 })

@@ -148,5 +148,5 @@ export const makeExperiencesReader = Effect.gen(function* () {
       return experience
     })
 
-  return { getExperiences, getExperience } as const
+  return { getExperiences, getExperience, readFrontmatter } as const
 })

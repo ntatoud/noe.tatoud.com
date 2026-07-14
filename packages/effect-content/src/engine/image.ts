@@ -15,6 +15,14 @@ export type ResolvedLogo = {
 }
 
 /**
+ * External URLs, root-relative paths, and data URIs are not local file
+ * references — shared by the MDX body image rewriter (`rehypeContentImages`)
+ * and the build-time content validator's image-existence check.
+ */
+export const isRelativeRef = (src: string) =>
+  !/^([a-z][a-z0-9+.-]*:|\/\/|\/)/i.test(src)
+
+/**
  * Resolves an image reference relative to a Document's directory to a stable
  * `/content/<collection>/<slug>/<path>` URL and stamps its on-disk dimensions.
  * A reference that cannot be read still yields the URL with null dimensions.
@@ -94,4 +102,29 @@ export const resolveLogo = (
       }),
       Effect.orElseSucceed((): ResolvedLogo | null => null),
     )
+  })
+
+/**
+ * Checks whether an image reference relative to a Document's directory exists
+ * on disk, without reading or decoding it — the build-time counterpart to
+ * {@link resolveImage}/{@link resolveLogo}, which both swallow a missing file
+ * into a still-successful (if dimension-less) result so request-time rendering
+ * never breaks on a bad ref. This is the strict check the content validator
+ * uses to fail the build instead. Existence goes through the Effect
+ * `FileSystem` service (`fs.exists`), consistent with the rest of the engine.
+ */
+export const imageRefExists = (
+  contentRoot: string,
+  collection: string,
+  slug: string,
+  ref: string,
+): Effect.Effect<boolean, never, FileSystem.FileSystem | Path.Path> =>
+  Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const path = yield* Path.Path
+
+    const cleaned = ref.replace(/^\.\//, '')
+    const filePath = path.join(contentRoot, collection, slug, cleaned)
+
+    return yield* fs.exists(filePath).pipe(Effect.orElseSucceed(() => false))
   })
