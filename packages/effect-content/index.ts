@@ -4,6 +4,8 @@ export {
   type BlogPost,
   type BlogPostWithBody,
   ContentService,
+  type Experience,
+  type ExperienceWithBody,
   type Project,
   type ProjectWithBody,
 } from './src/engine/content'
@@ -13,4 +15,5 @@ export {
   FrontmatterInvalid,
 } from './src/engine/errors'
 export { HighlighterService } from './src/engine/highlighter'
+export { ExperienceFrontmatter } from './src/experiences/schema'
 export { ProjectFrontmatter } from './src/projects/schema'

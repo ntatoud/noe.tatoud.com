@@ -16,6 +16,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
+import { Route as ExperiencesIndexRouteImport } from './routes/experiences.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as TalksSlugRouteImport } from './routes/talks.$slug'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
@@ -57,6 +58,11 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProjectsRoute,
 } as any)
+const ExperiencesIndexRoute = ExperiencesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExperiencesRoute,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -95,18 +101,19 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
-  '/experiences': typeof ExperiencesRouteWithChildren
   '/talks': typeof TalksRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/experiences': typeof ExperiencesIndexRoute
   '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -122,6 +129,7 @@ export interface FileRoutesById {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -138,18 +146,19 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
+    | '/experiences/'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/achievements'
-    | '/experiences'
     | '/talks'
     | '/blog/$slug'
     | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog'
+    | '/experiences'
     | '/projects'
   id:
     | '__root__'
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
+    | '/experiences/'
     | '/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -227,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof ProjectsRoute
     }
+    '/experiences/': {
+      id: '/experiences/'
+      path: '/'
+      fullPath: '/experiences/'
+      preLoaderRoute: typeof ExperiencesIndexRouteImport
+      parentRoute: typeof ExperiencesRoute
+    }
     '/blog/': {
       id: '/blog/'
       path: '/'
@@ -279,10 +296,12 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 interface ExperiencesRouteChildren {
   ExperiencesSlugRoute: typeof ExperiencesSlugRoute
+  ExperiencesIndexRoute: typeof ExperiencesIndexRoute
 }
 
 const ExperiencesRouteChildren: ExperiencesRouteChildren = {
   ExperiencesSlugRoute: ExperiencesSlugRoute,
+  ExperiencesIndexRoute: ExperiencesIndexRoute,
 }
 
 const ExperiencesRouteWithChildren = ExperiencesRoute._addFileChildren(
