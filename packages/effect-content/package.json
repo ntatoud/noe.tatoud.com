@@ -10,6 +10,7 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
+    "@effect/platform": "0.97.0",
     "@mdx-js/mdx": "3.1.1",
     "effect": "3.22.0",
     "gray-matter": "4.0.3",
@@ -19,6 +20,7 @@
     "shiki": "4.3.1"
   },
   "devDependencies": {
+    "@effect/platform-node": "0.108.0",
     "@effect/vitest": "0.30.0",
     "@types/node": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
