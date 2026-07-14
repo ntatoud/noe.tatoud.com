@@ -25,6 +25,7 @@
     /* Path aliases */
     "paths": {
       "@ntatoud/content": ["./packages/content/index.ts"],
+      "@ntatoud/effect-content": ["./packages/effect-content/index.ts"],
       "@ntatoud/web": ["./apps/web/package.json"],
       "content-collections": [
         "./packages/content/.content-collections/generated/index.d.ts"

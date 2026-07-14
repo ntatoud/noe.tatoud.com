@@ -8,7 +8,8 @@
       "content-collections": [
         "../../packages/content/.content-collections/generated/index.d.ts"
       ],
-      "@ntatoud/content": ["../../packages/content/index.ts"]
+      "@ntatoud/content": ["../../packages/content/index.ts"],
+      "@ntatoud/effect-content": ["../../packages/effect-content/index.ts"]
     }
   }
 }

@@ -1,10 +1,17 @@
 import { Link } from '@tanstack/react-router'
 
+import { MdxRenderer } from '@/components/mdx/mdx-renderer'
+import type { BlogPostWithBody } from '@/lib/content'
+import { resolveContentImage } from '@/lib/content-images'
+import { formatDate } from '@/lib/format'
+
 type BlogPostPageProps = {
-  slug: string
+  post: BlogPostWithBody
 }
 
-export function BlogPostPage({ slug }: BlogPostPageProps) {
+export function BlogPostPage({ post }: BlogPostPageProps) {
+  const heroSrc = resolveContentImage(post.hero)
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="blog-post-page">
       <Link
@@ -13,8 +20,26 @@ export function BlogPostPage({ slug }: BlogPostPageProps) {
       >
         ← Blog
       </Link>
-      <h1 className="mt-6 text-3xl font-bold tracking-tight">{slug}</h1>
-      <p className="mt-2 text-muted-foreground">Post content goes here.</p>
+      <h1 className="mt-6 text-3xl font-bold tracking-tight">{post.title}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {formatDate(post.date)}
+      </p>
+      {heroSrc && (
+        <img
+          src={heroSrc}
+          alt=""
+          className="mt-6 w-full rounded-lg border border-border object-cover"
+          width={post.heroDimensions?.width}
+          height={post.heroDimensions?.height}
+          data-slot="blog-post-hero"
+        />
+      )}
+      <div
+        className="prose prose-invert mt-8 max-w-none"
+        data-slot="blog-post-body"
+      >
+        <MdxRenderer body={post.body} />
+      </div>
     </main>
   )
 }
