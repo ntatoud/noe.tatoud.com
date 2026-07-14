@@ -15,6 +15,7 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 
+import { contentImagesStatic } from './plugins/content-images-static'
 import rehypeImgDimensions from './plugins/rehype-img-dimensions'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -22,6 +23,7 @@ const contentConfig = path.resolve(
   here,
   '../../packages/content/content-collections.ts',
 )
+const contentRoot = path.resolve(here, '../../packages/content/content')
 
 export default defineConfig(({ mode }) => ({
   resolve: {
@@ -30,6 +32,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     devtools(),
     contentCollections({ configPath: contentConfig }),
+    contentImagesStatic(contentRoot),
     {
       // MDX must run before viteReact so .mdx files are compiled to JSX first
       enforce: 'pre',

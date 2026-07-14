@@ -73,6 +73,20 @@ describe('getBlogPost', () => {
       expect(dimensions?.height ?? 0).toBeGreaterThan(0)
     }).pipe(Effect.provide(contentLayer)),
   )
+
+  it.effect(
+    'rewrites an inline body image to a /content URL with stamped dimensions',
+    () =>
+      Effect.gen(function* () {
+        const content = yield* ContentService
+        const post = yield* content.getBlogPost('alpha-post')
+
+        expect(post.body).toContain('/content/blog/alpha-post/hero.png')
+        expect(post.body).not.toContain('src: "./hero.png"')
+        expect(post.body).toMatch(/width:\s*"?80"?/)
+        expect(post.body).toMatch(/height:\s*"?80"?/)
+      }).pipe(Effect.provide(contentLayer)),
+  )
 })
 
 describe('typed failures', () => {

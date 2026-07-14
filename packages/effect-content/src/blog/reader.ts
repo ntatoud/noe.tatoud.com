@@ -146,7 +146,13 @@ export const makeBlogReader = Effect.gen(function* () {
       const cacheKey = `${slug}:${mtime}`
       let compiled = compiledCache.get(cacheKey)
       if (compiled === undefined) {
-        compiled = yield* compileMdxBody(BLOG, slug, body, highlighter)
+        compiled = yield* compileMdxBody(
+          contentRoot,
+          BLOG,
+          slug,
+          body,
+          highlighter,
+        )
         compiledCache.set(cacheKey, compiled)
       }
 

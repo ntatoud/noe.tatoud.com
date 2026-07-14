@@ -4,8 +4,18 @@ import { Link } from '@tanstack/react-router'
 
 import type { MDXComponents } from 'mdx/types'
 
-import { resolveContentImage } from '@/lib/content-images'
+import { netlifyImageUrl } from '@/lib/netlify-image'
 import { cn } from '@/lib/utils'
+
+/** `width`/`height` come off the compiled MDX as either numbers or strings. */
+function toDimension(value: number | string | undefined) {
+  if (typeof value === 'number') return value
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : undefined
+  }
+  return undefined
+}
 
 function isExternalHref(href: string) {
   return /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//')
@@ -33,11 +43,35 @@ function MdxLink({ href = '', children, ...props }: ComponentProps<'a'>) {
   )
 }
 
-/** Resolves content-relative image refs the same way hero images do. */
-function MdxImage({ src, alt, ...props }: ComponentProps<'img'>) {
+/**
+ * Body image refs are already rewritten to `/content/...` URLs with stamped
+ * dimensions server-side (ADR-0008); route them through the Netlify Image
+ * CDN for responsive, format-negotiated delivery.
+ */
+function MdxImage({
+  src,
+  alt,
+  width,
+  height,
+  ...props
+}: ComponentProps<'img'>) {
   const resolved =
-    typeof src === 'string' ? (resolveContentImage(src) ?? src) : src
-  return <img src={resolved} alt={alt ?? ''} loading="lazy" {...props} />
+    typeof src === 'string'
+      ? netlifyImageUrl(src, {
+          width: toDimension(width),
+          height: toDimension(height),
+        })
+      : src
+  return (
+    <img
+      src={resolved}
+      alt={alt ?? ''}
+      width={width}
+      height={height}
+      loading="lazy"
+      {...props}
+    />
+  )
 }
 
 /** Wraps `rehype-pretty-code` output; highlighting itself is server-baked. */

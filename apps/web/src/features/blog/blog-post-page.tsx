@@ -2,15 +2,20 @@ import { Link } from '@tanstack/react-router'
 
 import { MdxRenderer } from '@/components/mdx/mdx-renderer'
 import type { BlogPostWithBody } from '@/lib/content'
-import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
+import { netlifyImageUrl } from '@/lib/netlify-image'
 
 type BlogPostPageProps = {
   post: BlogPostWithBody
 }
 
 export function BlogPostPage({ post }: BlogPostPageProps) {
-  const heroSrc = resolveContentImage(post.hero)
+  const heroSrc = post.hero
+    ? netlifyImageUrl(post.hero, {
+        width: post.heroDimensions?.width,
+        height: post.heroDimensions?.height,
+      })
+    : null
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="blog-post-page">

@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import type { BlogPost } from '@/lib/content'
-import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
+import { netlifyImageUrl } from '@/lib/netlify-image'
 import { cn } from '@/lib/utils'
 
 import { Slice } from './slice'
@@ -19,7 +19,12 @@ export function BlogSlice({ posts }: BlogSliceProps) {
         {latest.map((post) => {
           const href = post.externalUrl ?? post.url
           const isExternal = post.externalUrl !== null
-          const heroSrc = resolveContentImage(post.hero)
+          const heroSrc = post.hero
+            ? netlifyImageUrl(post.hero, {
+                width: post.heroDimensions?.width,
+                height: post.heroDimensions?.height,
+              })
+            : null
           return (
             <a
               key={post.slug}
