@@ -29,9 +29,6 @@ const fixtures = path.join(
 
 const ASSET_BASE_URL = '/assets'
 
-// A generic fixture collection exercised purely through the public
-// `defineCollection` + `makeReaders` API — no blog/project knowledge, and no
-// `toMetadata`: `slug`/`url` and image resolution are automatic.
 const NoteFrontmatter = Schema.Struct({
   title: Schema.String,
   date: Schema.String,
@@ -51,8 +48,6 @@ const notes = defineCollection({
 
 const readers = makeReaders(notes)
 
-// The engine depends on the abstract FileSystem/Path services; the test supplies
-// a concrete platform via NodeServices.layer.
 const layerFor = (root: string) =>
   Layer.mergeAll(
     CollectionsConfig.layer({
@@ -90,7 +85,6 @@ describe('makeReaders — get (auto slug/url)', () => {
       expect(note.url).toBe('/notes/second-note')
       expect(typeof note.body).toBe('string')
       expect(note.body.length).toBeGreaterThan(0)
-      // inline `![](./inline.png)` was rewritten against assetBaseUrl
       expect(note.body).toContain('/assets/notes/second-note/inline.png')
     }).pipe(Effect.provide(contentLayer)),
   )
@@ -103,8 +97,6 @@ describe('makeReaders — automatic image resolution (no toMetadata)', () => {
       Effect.gen(function* () {
         const note = yield* readers.get('first-note')
 
-        // The schema declared `cover: Image`; the reader resolved it with no
-        // `toMetadata` in sight.
         const cover: ResolvedImage | undefined = note.cover
         expect(cover?.src).toBe('/assets/notes/first-note/cover.png')
         expect(cover?.width ?? 0).toBeGreaterThan(0)
@@ -160,9 +152,6 @@ describe('image resolution', () => {
 })
 
 describe('makeCollections — layer-boundary injection', () => {
-  // The env is provided ONCE, to the `makeCollections` effect. The resulting
-  // accessors escape with `R = never`, so the test body below runs the readers
-  // with no `Effect.provide` of its own — the whole point of the accessor.
   const content = makeCollections({ notes }).pipe(Effect.provide(contentLayer))
 
   it.effect(

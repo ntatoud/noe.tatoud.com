@@ -13,12 +13,6 @@ type HastNode = {
   children?: ReadonlyArray<HastNode> | null
 }
 
-/**
- * A rehype plugin that rewrites relative `<img src>` references in a Document's
- * body to their public asset URL (`<assetBaseUrl>/<collection>/<slug>/<file>`),
- * mirroring how frontmatter image refs are resolved. Absolute URLs and
- * root-absolute paths are left untouched. Runs during MDX compilation.
- */
 export const rehypeContentImages =
   (options: RehypeContentImagesOptions) =>
   (tree: HastNode): undefined => {

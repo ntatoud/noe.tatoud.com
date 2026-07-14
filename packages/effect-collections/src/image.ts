@@ -3,33 +3,18 @@ import { imageSize } from 'image-size'
 
 import { CollectionsConfig } from '#core/config'
 
-/**
- * A resolved image reference: a public/inlined source URL plus its stamped
- * dimensions. Produced both by the low-level {@link resolveImage}/
- * {@link resolveLogo} helpers and by the reader's automatic `ImageRef`
- * resolution.
- */
 export type ResolvedImage = {
   readonly src: string
   readonly width: number | null
   readonly height: number | null
 }
 
-/**
- * Whether a reference points inside the Document's directory (so the pipeline
- * owns it) rather than at an absolute URL, a root-absolute path, or a data URL.
- */
 export const isRelativeRef = (ref: string): boolean =>
   !/^[a-z][a-z0-9+.-]*:/i.test(ref) && !ref.startsWith('/')
 
 const stripLeading = (ref: string): string =>
   ref.replace(/^\.\//, '').replace(/^\/+/, '')
 
-/**
- * Builds the public URL for a reference colocated with a Document:
- * `<assetBaseUrl>/<collection>/<slug>/<file>`. The base's scheme (if any) is
- * preserved — only duplicate path separators are collapsed.
- */
 export const assetUrl = (
   assetBaseUrl: string,
   collection: string,
@@ -54,16 +39,6 @@ const MIME_BY_EXT: Record<string, string> = {
 const mimeFor = (ext: string): string =>
   MIME_BY_EXT[ext.toLowerCase()] ?? 'application/octet-stream'
 
-/**
- * Resolves an image reference relative to a Document's directory to a stable
- * `<assetBaseUrl>/<collection>/<slug>/<path>` URL and stamps its on-disk
- * dimensions. A reference that cannot be read still yields the URL with null
- * dimensions.
- *
- * Platform access goes through the Effect `FileSystem`/`Path` services, so the
- * engine stays framework-agnostic — the runner decides which platform Layer
- * (e.g. `NodeServices.layer`) satisfies them.
- */
 export const resolveImage = (
   collection: string,
   slug: string,
@@ -96,11 +71,6 @@ export const resolveImage = (
     )
   })
 
-/**
- * Resolves a (tiny) logo reference to an inlined base64 `data:` URL with stamped
- * dimensions — keeping it out of a request round-trip. A reference that cannot
- * be read yields an empty `src` with null dimensions.
- */
 export const resolveLogo = (
   collection: string,
   slug: string,
@@ -135,7 +105,6 @@ export const resolveLogo = (
     )
   })
 
-/** Whether a reference resolves to a file that exists on disk. */
 export const imageRefExists = (
   collection: string,
   slug: string,

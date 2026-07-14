@@ -3,16 +3,6 @@ import { Data, Effect, FileSystem, Path, Schema, SchemaGetter } from 'effect'
 import { CollectionsConfig } from '#core/config'
 import { resolveImage, resolveLogo, type ResolvedImage } from '#core/image'
 
-/**
- * The decoded form of an image field: a tagged marker carrying the raw
- * frontmatter reference and how it should be resolved. `ImageRef`s are produced
- * when frontmatter is decoded and are replaced by {@link ResolvedImage}s during
- * reader metadata assembly — they never leak into a collection's public
- * metadata.
- *
- * - `asset` — resolved to a public `<assetBaseUrl>/…` URL.
- * - `inline` — resolved to a base64 `data:` URL (small logos).
- */
 export class ImageRef extends Data.TaggedClass('ImageRef')<{
   readonly ref: string
   readonly kind: 'asset' | 'inline'
@@ -20,14 +10,6 @@ export class ImageRef extends Data.TaggedClass('ImageRef')<{
 
 const imageRefSchema = Schema.instanceOf(ImageRef)
 
-/**
- * A frontmatter image field. Its Encoded form is the raw `string` reference the
- * author writes (`hero: ./hero.png`); its decoded Type is an {@link ImageRef}
- * (`kind: 'asset'`) that the reader later resolves to a public
- * `<assetBaseUrl>/<collection>/<slug>/<file>` URL with stamped dimensions.
- *
- * Composes with optionality/nullability, e.g. `Schema.optional(Image)`.
- */
 export const Image = Schema.String.pipe(
   Schema.decodeTo(imageRefSchema, {
     decode: SchemaGetter.transform(
@@ -37,11 +19,6 @@ export const Image = Schema.String.pipe(
   }),
 )
 
-/**
- * Like {@link Image}, but decodes to an {@link ImageRef} with `kind: 'inline'`
- * — the reader resolves it to an inlined base64 `data:` URL. Suitable for small
- * logos that should avoid an extra request round-trip.
- */
 export const Logo = Schema.String.pipe(
   Schema.decodeTo(imageRefSchema, {
     decode: SchemaGetter.transform(
@@ -51,12 +28,6 @@ export const Logo = Schema.String.pipe(
   }),
 )
 
-/**
- * Maps a decoded frontmatter type to its resolved form: every {@link ImageRef}
- * (however deeply nested inside arrays/objects) becomes a {@link ResolvedImage},
- * distributing over unions so `ImageRef | undefined` becomes
- * `ResolvedImage | undefined`. Everything else is preserved.
- */
 export type ResolveImageRefs<T> = T extends ImageRef
   ? ResolvedImage
   : T extends ReadonlyArray<infer U>
@@ -65,7 +36,6 @@ export type ResolveImageRefs<T> = T extends ImageRef
       ? { readonly [K in keyof T]: ResolveImageRefs<T[K]> }
       : T
 
-/** Services the `ImageRef` resolution walk needs at run time. */
 type ResolveDeps = CollectionsConfig | FileSystem.FileSystem | Path.Path
 
 const isPlainObject = (value: object): boolean => {
@@ -106,11 +76,6 @@ const walk = (
   return Effect.succeed(value)
 }
 
-/**
- * Recursively resolves every {@link ImageRef} in a decoded frontmatter value to
- * a {@link ResolvedImage}, walking arrays and (plain) nested objects. Absent
- * optional images (`undefined`/`null`) and every non-image value are preserved.
- */
 export const resolveImageRefs = <T>(
   collection: string,
   slug: string,

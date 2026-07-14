@@ -4,18 +4,12 @@ import matter from 'gray-matter'
 import { CollectionsConfig } from '#core/config'
 import { ContentNotFound } from '#core/errors'
 
-/** A Document read from disk: raw (undecoded) frontmatter, body, and its path. */
 export type RawDocument = {
   readonly data: Record<string, unknown>
   readonly body: string
   readonly file: string
 }
 
-/**
- * Lists the slugs of a collection: the immediate sub-directories of
- * `<contentRoot>/<collection>` that contain an `index.mdx`. A missing
- * collection directory yields an empty list rather than an error.
- */
 export const listSlugs = (
   collection: string,
 ): Effect.Effect<
@@ -43,11 +37,6 @@ export const listSlugs = (
     return slugs
   })
 
-/**
- * Reads and gray-matter-parses a Document's `index.mdx`. A missing file becomes
- * a typed {@link ContentNotFound}; frontmatter is returned undecoded (validation
- * is the caller's concern).
- */
 export const readDocument = (
   collection: string,
   slug: string,
@@ -70,10 +59,6 @@ export const readDocument = (
     return { data: parsed.data, body: parsed.content, file }
   })
 
-/**
- * The modification time of a Document file as epoch millis, used as a cache key.
- * Falls back to `0` if the file cannot be stat-ed.
- */
 export const documentMtime = (
   file: string,
 ): Effect.Effect<number, never, FileSystem.FileSystem> =>

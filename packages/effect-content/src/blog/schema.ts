@@ -1,11 +1,8 @@
 import { Effect, Schema, SchemaGetter } from 'effect'
 import { Image } from 'effect-collections'
 
-/**
- * Frontmatter dates are authored as bare YAML dates (`date: 2026-04-08`), which
- * the parser hands back as `Date` instances, or as quoted strings. Either way we
- * normalise to the original `YYYY-MM-DD` string the readers expose.
- */
+// gray-matter's YAML parser turns bare `date: 2026-04-08` into a `Date`
+// instance (quoted dates stay strings) — normalise both to `YYYY-MM-DD`.
 const FrontmatterDate = Schema.Union([Schema.String, Schema.Date]).pipe(
   Schema.decodeTo(Schema.String, {
     decode: SchemaGetter.transform((value: string | Date) =>
@@ -20,7 +17,6 @@ const Translation = Schema.Struct({
   url: Schema.String,
 })
 
-/** Effect Schema for Blog Document frontmatter (mirrors the legacy valibot shape). */
 export const BlogFrontmatter = Schema.Struct({
   title: Schema.String,
   description: Schema.optional(Schema.String),

@@ -12,11 +12,6 @@ const fixtures = path.join(
   'fixtures',
 )
 
-// Wiring smoke test only. The pipeline's behaviour — frontmatter validation,
-// MDX compile, image resolution, and the typed failures — is exercised
-// generically in `effect-collections`. This asserts just the Blog-specific
-// wiring the core cannot know: the route base (`/blog`), the asset base
-// (`/content`), the `published` filter, and date-descending order.
 const contentLayer = ContentService.Default.pipe(
   Layer.provide(ContentConfig.layer(path.join(fixtures, 'content'))),
   Layer.provideMerge(NodeServices.layer),

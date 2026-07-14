@@ -11,84 +11,45 @@ import { type ResolveImageRefs, resolveImageRefs } from '#core/image-schema'
 import { compileMdxBody } from '#core/mdx'
 import { documentMtime, listSlugs, readDocument } from '#core/source'
 
-/** Services every reader needs at run time. */
 export type CollectionDeps =
   | CollectionsConfig
   | HighlighterService
   | FileSystem.FileSystem
   | Path.Path
 
-/** Services image resolution / `toMetadata` needs (the highlighter is body-only). */
 type ResolveDeps = CollectionsConfig | FileSystem.FileSystem | Path.Path
 
-/**
- * A frontmatter schema whose decode/encode requires no services — the only kind
- * a content pipeline needs. Pinning the service channels to `never` keeps the
- * readers' requirement channel down to {@link CollectionDeps}.
- */
 export type FrontmatterSchema = Schema.Top & {
   readonly DecodingServices: never
   readonly EncodingServices: never
 }
 
-/**
- * The frontmatter after image fields are resolved: every `ImageRef` declared by
- * an {@link Image}/{@link Logo} schema field becomes a `ResolvedImage`.
- */
 export type ResolvedFrontmatter<S extends FrontmatterSchema> = ResolveImageRefs<
   S['Type']
 >
 
-/**
- * The default per-Document metadata when a collection provides no `toMetadata`:
- * the image-resolved frontmatter plus the auto-added `slug` and `url`.
- */
 export type DefaultMeta<S extends FrontmatterSchema> =
   ResolvedFrontmatter<S> & {
     readonly slug: string
     readonly url: string
   }
 
-/** Arguments handed to a collection's `toMetadata` for each Document. */
 export type ToMetadataArgs<F> = {
   readonly slug: string
-  /** The auto-derived public URL: `/${collectionName}/${slug}`. */
   readonly url: string
-  /** The frontmatter with all image fields already resolved. */
   readonly frontmatter: F
 }
 
-/**
- * A collection definition: how to read, validate, (optionally) reshape, filter
- * and order the Documents of one collection. `S` is the frontmatter schema
- * type; `Meta` is the public per-Document metadata the readers expose.
- *
- * When `toMetadata` is omitted, `Meta` is {@link DefaultMeta}. When provided, it
- * receives the image-resolved frontmatter plus `{ slug, url }` and returns the
- * final `Meta`.
- */
 export type Collection<S extends FrontmatterSchema, Meta extends object> = {
-  /** Collection name — also its directory under `contentRoot`. */
   readonly name: string
-  /** Frontmatter schema; image fields (`Image`/`Logo`) auto-resolve. */
   readonly schema: S
-  /** Optional reshape of the resolved frontmatter into public metadata. */
   readonly toMetadata?: (
     args: ToMetadataArgs<ResolvedFrontmatter<S>>,
   ) => Effect.Effect<Meta, never, ResolveDeps>
-  /** Keep only Documents matching this predicate in `list` (e.g. published). */
   readonly include?: (meta: Meta) => boolean
-  /** Sort comparator applied to `list`. */
   readonly order?: (a: Meta, b: Meta) => number
 }
 
-/**
- * Declares a content collection. The identity at run time; its job is to infer
- * and lock in the schema/metadata types so {@link makeReaders} stays fully typed.
- *
- * With `toMetadata`, `Meta` is inferred from its result. Without it, `Meta` is
- * the {@link DefaultMeta} (resolved frontmatter + `slug`/`url`).
- */
 export function defineCollection<
   S extends FrontmatterSchema,
   Meta extends object,
@@ -111,21 +72,12 @@ export function defineCollection(def: unknown): unknown {
   return def
 }
 
-/** The reader pair produced for a collection. */
 export type Readers<Meta extends object> = {
-  /**
-   * All Documents' metadata: list slugs → read + validate + image-resolve
-   * frontmatter → (`toMetadata`) → filter (`include`) → sort (`order`).
-   */
   readonly list: Effect.Effect<
     ReadonlyArray<Meta>,
     ContentNotFound | FrontmatterInvalid,
     CollectionDeps
   >
-  /**
-   * One Document's metadata plus its compiled `body` (function-body string).
-   * Compilation is memoized in-memory, keyed by slug + file mtime.
-   */
   readonly get: (
     slug: string,
   ) => Effect.Effect<
@@ -135,10 +87,6 @@ export type Readers<Meta extends object> = {
   >
 }
 
-/**
- * Builds the `list`/`get` readers for a collection. The compiled-body cache is
- * held in this call's closure, so call it once per long-lived consumer.
- */
 export const makeReaders = <S extends FrontmatterSchema, Meta extends object>(
   collection: Collection<S, Meta>,
 ): Readers<Meta> => {
@@ -220,28 +168,14 @@ export const makeReaders = <S extends FrontmatterSchema, Meta extends object>(
   return { list, get }
 }
 
-/**
- * Extracts a {@link Collection}'s public per-Document metadata (`Meta`) type.
- * The `any` args sidestep `Collection`'s schema/`toMetadata` variance so a
- * heterogeneous record of collections stays assignable.
- */
 export type MetaOf<C extends Collection<any, any>> =
   C extends Collection<any, infer Meta> ? Meta : never
 
-/**
- * The env-injected reader pair {@link makeCollections} exposes for one
- * collection. Both readers have their requirement channel fully discharged
- * (`R = never`) — the {@link CollectionDeps} were captured once at the layer
- * boundary and re-provided per call — so consumers run them with no further
- * environment.
- */
 export type CollectionAccessor<Meta extends object> = {
-  /** All Documents' metadata (filtered + ordered). See {@link Readers.list}. */
   readonly list: () => Effect.Effect<
     ReadonlyArray<Meta>,
     ContentNotFound | FrontmatterInvalid
   >
-  /** One Document's metadata plus its compiled body. See {@link Readers.get}. */
   readonly get: (
     slug: string,
   ) => Effect.Effect<
@@ -250,24 +184,6 @@ export type CollectionAccessor<Meta extends object> = {
   >
 }
 
-/**
- * Builds ready-to-run readers for a record of collections, injecting the shared
- * {@link CollectionDeps} once.
- *
- * It captures the whole {@link CollectionDeps} context a single time (via
- * `Effect.context`) at the point this Effect runs — typically a `Layer.effect`
- * boundary — then re-provides that context to every `list`/`get` call. The
- * returned accessors therefore have `R = never`: consumers call
- * `content.<key>.list()` / `content.<key>.get(slug)` with no per-call layer
- * plumbing.
- *
- * @example
- * ```ts
- * const content = yield* makeCollections({ blog, projects })
- * const posts = yield* content.blog.list()
- * const post = yield* content.blog.get('hello-world')
- * ```
- */
 export const makeCollections = <R extends Record<string, Collection<any, any>>>(
   collections: R,
 ): Effect.Effect<
@@ -276,14 +192,12 @@ export const makeCollections = <R extends Record<string, Collection<any, any>>>(
   CollectionDeps
 > =>
   Effect.gen(function* () {
-    // Capture the full dependency context once, at this Effect's run site.
     const context = yield* Effect.context<CollectionDeps>()
 
     const accessors: Record<string, CollectionAccessor<object>> = {}
     for (const [key, collection] of Object.entries(collections)) {
       const readers = makeReaders(collection)
       accessors[key] = {
-        // Re-provide the captured context so each reader's R collapses to never.
         list: () => readers.list.pipe(Effect.provide(context)),
         get: (slug) => readers.get(slug).pipe(Effect.provide(context)),
       }

@@ -12,17 +12,10 @@ export type CompileMdxOptions = {
   readonly slug: string
   readonly source: string
   readonly highlighter: Highlighter
-  /** Shiki theme handed to `rehype-pretty-code`. */
   readonly theme: string
-  /** Public prefix used to rewrite relative body-image refs. */
   readonly assetBaseUrl: string
 }
 
-/**
- * Compiles an MDX body to a serializable `function-body` string, running GFM,
- * `rehype-pretty-code` (Shiki, against the shared highlighter) and the relative
- * body-image rewrite. Compilation failures become a typed {@link CompileFailed}.
- */
 export const compileMdxBody = (
   options: CompileMdxOptions,
 ): Effect.Effect<string, CompileFailed> =>
