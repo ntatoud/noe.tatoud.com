@@ -1,12 +1,12 @@
+import { createFileRoute } from '@tanstack/react-router'
+
+import { HomePage } from '@/features/home/home-page'
 import {
   getBlogPosts,
   getExperiences,
   getProjects,
   getTalks,
-} from '@ntatoud/content'
-import { createFileRoute } from '@tanstack/react-router'
-
-import { HomePage } from '@/features/home/home-page'
+} from '@/lib/content'
 
 export const Route = createFileRoute('/')({
   component: HomePageRoute,

@@ -1,5 +1,6 @@
-import type { Experience } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
+
+import type { Experience } from '@/lib/content'
 
 type ExperiencesPageProps = {
   experiences: Experience[]

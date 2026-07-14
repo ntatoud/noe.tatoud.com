@@ -1,6 +1,5 @@
-import type { Project } from '@ntatoud/content'
-
 import { Badge } from '@/components/ui/badge'
+import type { Project } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
 import { Slice } from './slice'

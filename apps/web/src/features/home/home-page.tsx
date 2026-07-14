@@ -1,4 +1,4 @@
-import type { BlogPost, Experience, Project, StageItem } from '@ntatoud/content'
+import type { BlogPost, Experience, Project, StageItem } from '@/lib/content'
 
 import { BlogSlice } from './blog-slice'
 import { ExperiencesSlice } from './experiences-slice'

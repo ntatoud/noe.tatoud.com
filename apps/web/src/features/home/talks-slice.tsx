@@ -1,6 +1,5 @@
-import { type StageItem, type StageEvent } from '@ntatoud/content'
-
 import { Badge } from '@/components/ui/badge'
+import { type StageItem, type StageEvent } from '@/lib/content'
 import { formatDate } from '@/lib/format'
 
 import { Slice } from './slice'

@@ -1,7 +1,7 @@
-import { getBlogPosts } from '@ntatoud/content'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { BlogPage } from '@/features/blog/blog-page'
+import { getBlogPosts } from '@/lib/content'
 
 export const Route = createFileRoute('/blog')({
   component: BlogPageRoute,
