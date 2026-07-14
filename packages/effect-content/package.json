@@ -1,0 +1,27 @@
+{
+  "name": "@ntatoud/effect-content",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "3.1.1",
+    "effect": "3.22.0",
+    "gray-matter": "4.0.3",
+    "image-size": "catalog:",
+    "rehype-pretty-code": "0.14.4",
+    "remark-gfm": "4.0.1",
+    "shiki": "4.3.1"
+  },
+  "devDependencies": {
+    "@effect/vitest": "0.30.0",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "vitest": "3.2.7"
+  }
+}
