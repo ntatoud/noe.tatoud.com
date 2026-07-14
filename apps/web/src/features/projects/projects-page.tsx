@@ -1,5 +1,6 @@
-import type { Project } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
+
+import type { Project } from '@/lib/content'
 
 type ProjectsPageProps = {
   projects: Project[]

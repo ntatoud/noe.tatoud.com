@@ -1,7 +1,7 @@
-import { getTalks } from '@ntatoud/content'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { TalksPage } from '@/features/talks/talks-page'
+import { getTalks } from '@/lib/content'
 
 export const Route = createFileRoute('/talks')({
   component: TalksPageRoute,

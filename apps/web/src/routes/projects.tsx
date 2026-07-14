@@ -1,7 +1,7 @@
-import { getProjects } from '@ntatoud/content'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { ProjectsPage } from '@/features/projects/projects-page'
+import { getProjects } from '@/lib/content'
 
 export const Route = createFileRoute('/projects')({
   component: ProjectsPageRoute,

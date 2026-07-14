@@ -1,5 +1,6 @@
-import { BlogPost } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
+
+import { BlogPost } from '@/lib/content'
 
 type BlogPageProps = {
   posts: BlogPost[]

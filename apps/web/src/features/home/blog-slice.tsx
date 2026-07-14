@@ -1,6 +1,5 @@
-import type { BlogPost } from '@ntatoud/content'
-
 import { Badge } from '@/components/ui/badge'
+import type { BlogPost } from '@/lib/content'
 import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
 import { cn } from '@/lib/utils'

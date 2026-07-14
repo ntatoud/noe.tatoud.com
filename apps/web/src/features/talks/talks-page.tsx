@@ -1,5 +1,6 @@
-import type { StageItem } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
+
+import type { StageItem } from '@/lib/content'
 
 type TalksPageProps = {
   talks: StageItem[]

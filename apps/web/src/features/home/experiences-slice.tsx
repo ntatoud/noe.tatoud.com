@@ -1,6 +1,5 @@
-import type { Experience } from '@ntatoud/content'
-
 import { Badge } from '@/components/ui/badge'
+import type { Experience } from '@/lib/content'
 import { formatMonthYear } from '@/lib/format'
 
 import { Slice } from './slice'
