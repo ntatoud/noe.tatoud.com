@@ -14,19 +14,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mdx-js/mdx": "3.1.1",
     "effect": "catalog:",
-    "gray-matter": "4.0.3",
-    "image-size": "catalog:",
-    "rehype-pretty-code": "0.14.4",
-    "remark-gfm": "4.0.1",
-    "shiki": "4.3.1"
+    "effect-collections": "workspace:*"
   },
   "devDependencies": {
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "vitest": "3.2.7"
+    "vitest": "catalog:"
   }
 }

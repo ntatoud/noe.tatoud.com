@@ -15,18 +15,36 @@ catalogs:
     '@effect/vitest':
       specifier: 4.0.0-beta.98
       version: 4.0.0-beta.98
+    '@mdx-js/mdx':
+      specifier: 3.1.1
+      version: 3.1.1
     '@types/node':
       specifier: 24.13.3
       version: 24.13.3
     effect:
       specifier: 4.0.0-beta.98
       version: 4.0.0-beta.98
+    gray-matter:
+      specifier: 4.0.3
+      version: 4.0.3
     image-size:
       specifier: 2.0.2
       version: 2.0.2
+    rehype-pretty-code:
+      specifier: 0.14.4
+      version: 0.14.4
+    remark-gfm:
+      specifier: 4.0.1
+      version: 4.0.1
+    shiki:
+      specifier: 4.3.1
+      version: 4.3.1
     typescript:
       specifier: 7.0.2
       version: 7.0.2
+    vitest:
+      specifier: 3.2.7
+      version: 3.2.7
 
 importers:
 
@@ -179,29 +197,54 @@ importers:
         specifier: 7.0.0-dev.20260707.2
         version: 7.0.0-dev.20260707.2
 
-  packages/effect-content:
+  packages/effect-collections:
     dependencies:
       '@mdx-js/mdx':
-        specifier: 3.1.1
-        version: 3.1.1
-      effect:
         specifier: 'catalog:'
-        version: 4.0.0-beta.98
+        version: 3.1.1
       gray-matter:
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3
       image-size:
         specifier: 'catalog:'
         version: 2.0.2
       rehype-pretty-code:
-        specifier: 0.14.4
+        specifier: 'catalog:'
         version: 0.14.4(shiki@4.3.1)
       remark-gfm:
-        specifier: 4.0.1
+        specifier: 'catalog:'
         version: 4.0.1
       shiki:
-        specifier: 4.3.1
+        specifier: 'catalog:'
         version: 4.3.1
+    devDependencies:
+      '@effect/platform-node':
+        specifier: 'catalog:'
+        version: 4.0.0-beta.98(effect@4.0.0-beta.98)(ioredis@5.11.1)
+      '@effect/vitest':
+        specifier: 'catalog:'
+        version: 4.0.0-beta.98(effect@4.0.0-beta.98)(vitest@3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0-beta.98
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0)
+
+  packages/effect-content:
+    dependencies:
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0-beta.98
+      effect-collections:
+        specifier: workspace:*
+        version: link:../effect-collections
     devDependencies:
       '@effect/platform-node':
         specifier: 'catalog:'
@@ -216,7 +259,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.2
       vitest:
-        specifier: 3.2.7
+        specifier: 'catalog:'
         version: 3.2.7(@types/debug@4.1.13)(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0)
 
 packages:

@@ -1,7 +1,5 @@
 import { Effect, Schema, SchemaGetter } from 'effect'
 
-import { FrontmatterInvalid } from '#engine/errors'
-
 /**
  * Frontmatter dates are authored as bare YAML dates (`date: 2026-04-08`), which
  * the parser hands back as `Date` instances, or as quoted strings. Either way we
@@ -37,16 +35,3 @@ export const BlogFrontmatter = Schema.Struct({
 })
 
 export type BlogFrontmatter = Schema.Schema.Type<typeof BlogFrontmatter>
-
-/** Decodes unknown frontmatter, mapping validation failures to a typed error. */
-export const decodeBlogFrontmatter = (slug: string, data: unknown) =>
-  Schema.decodeUnknownEffect(BlogFrontmatter)(data).pipe(
-    Effect.mapError(
-      (error) =>
-        new FrontmatterInvalid({
-          collection: 'blog',
-          slug,
-          reason: error.message,
-        }),
-    ),
-  )

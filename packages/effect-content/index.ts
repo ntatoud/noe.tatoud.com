@@ -1,3 +1,9 @@
+export {
+  CompileFailed,
+  ContentNotFound,
+  FrontmatterInvalid,
+  HighlighterService,
+} from 'effect-collections'
 export { BlogFrontmatter } from '#blog/schema'
 export { ContentConfig, type ContentConfigShape } from '#engine/config'
 export {
@@ -5,9 +11,3 @@ export {
   type BlogPostWithBody,
   ContentService,
 } from '#engine/content'
-export {
-  CompileFailed,
-  ContentNotFound,
-  FrontmatterInvalid,
-} from '#engine/errors'
-export { HighlighterService } from '#engine/highlighter'

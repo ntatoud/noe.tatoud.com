@@ -1,0 +1,57 @@
+{
+  "name": "effect-collections",
+  "version": "0.1.0",
+  "description": "A tiny, content-agnostic Effect engine for MDX content collections: define a collection with a Schema and get typed, memoized list/get readers with server-side MDX compile and static image resolution.",
+  "keywords": [
+    "collections",
+    "content",
+    "effect",
+    "mdx"
+  ],
+  "license": "MIT",
+  "author": "Noe TATOUD <noe@bearstudio.fr>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntatoud/noe.tatoud.com.git",
+    "directory": "packages/effect-collections"
+  },
+  "files": [
+    "dist",
+    "src",
+    "index.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "imports": {
+    "#core/*": "./src/*.ts"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "catalog:",
+    "gray-matter": "catalog:",
+    "image-size": "catalog:",
+    "rehype-pretty-code": "catalog:",
+    "remark-gfm": "catalog:",
+    "shiki": "catalog:"
+  },
+  "devDependencies": {
+    "@effect/platform-node": "catalog:",
+    "@effect/vitest": "catalog:",
+    "@types/node": "catalog:",
+    "effect": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:"
+  }
+}
