@@ -9,7 +9,7 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Monorepo**: pnpm workspaces — `apps/web`, `apps/demo`, `packages/content`, `packages/effect-mdx`, `packages/effect-collections`
+- **Monorepo**: pnpm workspaces — `apps/web`, `packages/content`, `packages/effect-mdx`, `packages/effect-collections`
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
@@ -82,6 +82,9 @@ CONTEXT.md            # domain glossary
 - All MDX frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
 - The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `@ntatoud/effect-collections` directly.
 - Server data fetching uses `createServerFn` from TanStack Start.
+- Detail readers (`getBlogPost(slug)`, etc.) return `Content: ComponentType` — a real React component compiled from the MDX body by `@ntatoud/effect-mdx`. Since it can't cross the `createServerFn` RPC boundary, `apps/web/src/server/content.tsx`'s `withBodyHtml()` renders it to an HTML string (`bodyHtml`) server-side; detail pages display it via `dangerouslySetInnerHTML`.
+- Code blocks in MDX bodies are syntax-highlighted automatically (`rehype-pretty-code` + Shiki, `github-dark` theme, wired into `@ntatoud/effect-mdx`) — no per-page setup needed.
+- **Custom components in MDX** (e.g. authoring `<Callout>...</Callout>` or `<Button>...</Button>` directly in a `.mdx` file): `MdxCompiler.toJsx(source, { components })` accepts a default component map merged with whatever's passed to `<Content components={...} />` at render time. To enable one for a collection, pass a components map as `withBodyHtml(getXFromContent(data), { Button, Callout })` in `apps/web/src/server/content.tsx` — components must be imported there (e.g. from `@/components/ui/*`) since MDX content files can't import anything themselves.
 
 ### Theming
 

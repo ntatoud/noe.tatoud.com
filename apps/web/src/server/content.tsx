@@ -10,6 +10,7 @@ import {
   getTalk as getTalkFromContent,
   getTalks as getTalksFromContent,
 } from '@ntatoud/content'
+import type { MdxComponents } from '@ntatoud/effect-mdx'
 import { createServerFn } from '@tanstack/react-start'
 
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -34,11 +35,17 @@ export const getTalks = createServerFn({ method: 'GET' }).handler(() =>
 // createServerFn responses are serialized over RPC — a React component
 // (Content) can't cross that boundary, so render the MDX body to an HTML
 // string here instead.
-async function withBodyHtml<T extends { Content: ComponentType }>(
+async function withBodyHtml<
+  T extends { Content: ComponentType<{ components?: MdxComponents }> },
+>(
   detail: Promise<T>,
+  components?: MdxComponents,
 ): Promise<Omit<T, 'Content'> & { bodyHtml: string }> {
   const { Content, ...rest } = await detail
-  return { ...rest, bodyHtml: renderToStaticMarkup(<Content />) }
+  return {
+    ...rest,
+    bodyHtml: renderToStaticMarkup(<Content components={components} />),
+  }
 }
 
 export const getBlogPost = createServerFn({ method: 'GET' })
