@@ -1,6 +1,7 @@
 import type { Experience } from '@ntatoud/content'
 
 import { Badge } from '@/components/ui/badge'
+import { resolveContentImage } from '@/lib/content-images'
 import { formatMonthYear } from '@/lib/format'
 
 import { Slice } from './slice'
@@ -27,6 +28,7 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
       <ul className="flex flex-col divide-y divide-border">
         {latest.map((exp) => {
           const href = `/experiences#${exp.slug}`
+          const logoSrc = resolveContentImage(exp.logo)
           return (
             <li key={exp.slug} className="py-4">
               <a
@@ -34,9 +36,9 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
                 className="group flex items-start gap-3"
                 data-slot="experience-link"
               >
-                {exp.logo && (
+                {logoSrc && (
                   <img
-                    src={exp.logo}
+                    src={logoSrc}
                     alt={`${exp.organization} logo`}
                     width={40}
                     height={40}

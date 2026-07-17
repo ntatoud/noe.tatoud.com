@@ -9,37 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TalksRouteImport } from './routes/talks'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as ExperiencesRouteImport } from './routes/experiences'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TalksSlugRouteImport } from './routes/talks.$slug'
-import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
-import { Route as ExperiencesSlugRouteImport } from './routes/experiences.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as TalksIndexRouteImport } from './routes/talks/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
+import { Route as ExperiencesIndexRouteImport } from './routes/experiences/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as TalksSlugRouteImport } from './routes/talks/$slug'
+import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
+import { Route as ExperiencesSlugRouteImport } from './routes/experiences/$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 
-const TalksRoute = TalksRouteImport.update({
-  id: '/talks',
-  path: '/talks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExperiencesRoute = ExperiencesRouteImport.update({
-  id: '/experiences',
-  path: '/experiences',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
@@ -50,142 +30,138 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalksIndexRoute = TalksIndexRouteImport.update({
+  id: '/talks/',
+  path: '/talks/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExperiencesIndexRoute = ExperiencesIndexRouteImport.update({
+  id: '/experiences/',
+  path: '/experiences/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TalksSlugRoute = TalksSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => TalksRoute,
+  id: '/talks/$slug',
+  path: '/talks/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/$slug',
+  path: '/projects/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ExperiencesSlugRoute = ExperiencesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ExperiencesRoute,
+  id: '/experiences/$slug',
+  path: '/experiences/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/experiences': typeof ExperiencesRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
-  '/talks': typeof TalksRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/experiences/': typeof ExperiencesIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
+  '/talks/': typeof TalksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/experiences': typeof ExperiencesRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
-  '/talks': typeof TalksRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
+  '/blog': typeof BlogIndexRoute
+  '/experiences': typeof ExperiencesIndexRoute
+  '/projects': typeof ProjectsIndexRoute
+  '/talks': typeof TalksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/experiences': typeof ExperiencesRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
-  '/talks': typeof TalksRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/experiences/': typeof ExperiencesIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
+  '/talks/': typeof TalksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/achievements'
-    | '/blog'
-    | '/experiences'
-    | '/projects'
-    | '/talks'
     | '/blog/$slug'
     | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
+    | '/blog/'
+    | '/experiences/'
+    | '/projects/'
+    | '/talks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/achievements'
-    | '/blog'
-    | '/experiences'
-    | '/projects'
-    | '/talks'
     | '/blog/$slug'
     | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
+    | '/blog'
+    | '/experiences'
+    | '/projects'
+    | '/talks'
   id:
     | '__root__'
     | '/'
     | '/achievements'
-    | '/blog'
-    | '/experiences'
-    | '/projects'
-    | '/talks'
     | '/blog/$slug'
     | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
+    | '/blog/'
+    | '/experiences/'
+    | '/projects/'
+    | '/talks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
-  BlogRoute: typeof BlogRouteWithChildren
-  ExperiencesRoute: typeof ExperiencesRouteWithChildren
-  ProjectsRoute: typeof ProjectsRouteWithChildren
-  TalksRoute: typeof TalksRouteWithChildren
+  BlogSlugRoute: typeof BlogSlugRoute
+  ExperiencesSlugRoute: typeof ExperiencesSlugRoute
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  TalksSlugRoute: typeof TalksSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  ExperiencesIndexRoute: typeof ExperiencesIndexRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
+  TalksIndexRoute: typeof TalksIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/talks': {
-      id: '/talks'
-      path: '/talks'
-      fullPath: '/talks'
-      preLoaderRoute: typeof TalksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/experiences': {
-      id: '/experiences'
-      path: '/experiences'
-      fullPath: '/experiences'
-      preLoaderRoute: typeof ExperiencesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/achievements': {
       id: '/achievements'
       path: '/achievements'
@@ -200,88 +176,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talks/': {
+      id: '/talks/'
+      path: '/talks'
+      fullPath: '/talks/'
+      preLoaderRoute: typeof TalksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/experiences/': {
+      id: '/experiences/'
+      path: '/experiences'
+      fullPath: '/experiences/'
+      preLoaderRoute: typeof ExperiencesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/talks/$slug': {
       id: '/talks/$slug'
-      path: '/$slug'
+      path: '/talks/$slug'
       fullPath: '/talks/$slug'
       preLoaderRoute: typeof TalksSlugRouteImport
-      parentRoute: typeof TalksRoute
+      parentRoute: typeof rootRouteImport
     }
     '/projects/$slug': {
       id: '/projects/$slug'
-      path: '/$slug'
+      path: '/projects/$slug'
       fullPath: '/projects/$slug'
       preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof ProjectsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/experiences/$slug': {
       id: '/experiences/$slug'
-      path: '/$slug'
+      path: '/experiences/$slug'
       fullPath: '/experiences/$slug'
       preLoaderRoute: typeof ExperiencesSlugRouteImport
-      parentRoute: typeof ExperiencesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
-interface ExperiencesRouteChildren {
-  ExperiencesSlugRoute: typeof ExperiencesSlugRoute
-}
-
-const ExperiencesRouteChildren: ExperiencesRouteChildren = {
-  ExperiencesSlugRoute: ExperiencesSlugRoute,
-}
-
-const ExperiencesRouteWithChildren = ExperiencesRoute._addFileChildren(
-  ExperiencesRouteChildren,
-)
-
-interface ProjectsRouteChildren {
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
-}
-
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsSlugRoute: ProjectsSlugRoute,
-}
-
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
-
-interface TalksRouteChildren {
-  TalksSlugRoute: typeof TalksSlugRoute
-}
-
-const TalksRouteChildren: TalksRouteChildren = {
-  TalksSlugRoute: TalksSlugRoute,
-}
-
-const TalksRouteWithChildren = TalksRoute._addFileChildren(TalksRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
-  BlogRoute: BlogRouteWithChildren,
-  ExperiencesRoute: ExperiencesRouteWithChildren,
-  ProjectsRoute: ProjectsRouteWithChildren,
-  TalksRoute: TalksRouteWithChildren,
+  BlogSlugRoute: BlogSlugRoute,
+  ExperiencesSlugRoute: ExperiencesSlugRoute,
+  ProjectsSlugRoute: ProjectsSlugRoute,
+  TalksSlugRoute: TalksSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  ExperiencesIndexRoute: ExperiencesIndexRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
+  TalksIndexRoute: TalksIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

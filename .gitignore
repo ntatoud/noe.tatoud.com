@@ -10,12 +10,9 @@ count.txt
 .wrangler
 .netlify
 .output
-.content-collections
 .vinxi
 todos.json
 
 # Workspace member build outputs
 apps/*/dist
-apps/*/.content-collections
 packages/*/dist
-packages/*/.content-collections
