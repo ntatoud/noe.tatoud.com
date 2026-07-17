@@ -1,7 +1,10 @@
 import type { ProjectDetail } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
+import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 
 type ProjectPageProps = {
   project: Omit<ProjectDetail, 'Content'> & { bodyHtml: string }
@@ -10,12 +13,14 @@ type ProjectPageProps = {
 export function ProjectPage({ project }: ProjectPageProps) {
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="project-page">
-      <Link
-        to="/projects"
-        className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-      >
-        ← Projects
-      </Link>
+      <ButtonLink to="/projects" variant="ghost" size="sm">
+        <HugeiconsIcon
+          icon={ArrowLeft02Icon}
+          size={16}
+          data-icon="inline-start"
+        />
+        Projects
+      </ButtonLink>
       <div className="mt-6 flex items-center gap-2">
         <h1 className="text-3xl font-bold tracking-tight">{project.title}</h1>
         <Badge>{project.kind}</Badge>
@@ -36,24 +41,36 @@ export function ProjectPage({ project }: ProjectPageProps) {
 
       <div className="mt-4 flex gap-4">
         {project.url && (
-          <a
+          <ButtonAnchor
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-foreground underline-offset-4 hover:underline"
+            variant="ghost"
+            size="sm"
           >
-            Website →
-          </a>
+            Website
+            <HugeiconsIcon
+              icon={ArrowRight02Icon}
+              size={16}
+              data-icon="inline-end"
+            />
+          </ButtonAnchor>
         )}
         {project.repo && (
-          <a
+          <ButtonAnchor
             href={project.repo}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-foreground underline-offset-4 hover:underline"
+            variant="ghost"
+            size="sm"
           >
-            Repository →
-          </a>
+            Repository
+            <HugeiconsIcon
+              icon={ArrowRight02Icon}
+              size={16}
+              data-icon="inline-end"
+            />
+          </ButtonAnchor>
         )}
       </div>
 
