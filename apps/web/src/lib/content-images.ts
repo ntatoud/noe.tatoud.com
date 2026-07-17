@@ -5,8 +5,8 @@ const imageModules = import.meta.glob<string>(
 
 const cache = new Map<string, string>()
 for (const [key, url] of Object.entries(imageModules)) {
-  // key looks like "/../../content/blog/<dir>/hero.png"
-  const normalized = key.split('/../../content/')[1]?.replace(/\/+/g, '/')
+  // key looks like "../../content/blog/<dir>/hero.png"
+  const normalized = key.split('../../content/')[1]?.replace(/\/+/g, '/')
   if (normalized) cache.set(normalized, url)
 }
 

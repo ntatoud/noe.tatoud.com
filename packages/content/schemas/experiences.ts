@@ -1,14 +1,15 @@
-import * as v from 'valibot'
+import { Image } from '@ntatoud/effect-collections'
 
-export type ExperienceFrontmatter = v.InferOutput<typeof ExperienceSchema>
+import { Schema } from 'effect'
 
-export const ExperienceSchema = v.object({
-  title: v.string(),
-  organization: v.string(),
-  url: v.optional(v.pipe(v.string(), v.url())),
-  startDate: v.string(),
-  endDate: v.optional(v.string()),
-  kind: v.picklist(['work', 'volunteer', 'education']),
-  logo: v.optional(v.string()),
-  content: v.optional(v.string()),
+export const ExperienceSchema = Schema.Struct({
+  title: Schema.String,
+  organization: Schema.String,
+  url: Schema.optionalKey(Schema.String),
+  startDate: Schema.String,
+  endDate: Schema.optionalKey(Schema.String),
+  kind: Schema.Literals(['work', 'volunteer', 'education']),
+  logo: Schema.optionalKey(Image),
 })
+
+export type ExperienceFrontmatter = (typeof ExperienceSchema)['Type']

@@ -1,0 +1,21 @@
+{
+  "name": "@ntatoud/effect-collections",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@effect/platform-node": "catalog:",
+    "@ntatoud/effect-mdx": "workspace:*",
+    "effect": "catalog:",
+    "image-size": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17"
+  }
+}

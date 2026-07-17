@@ -1,4 +1,4 @@
-import { BlogPost } from '@ntatoud/content'
+import type { BlogPost } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
 
 type BlogPageProps = {

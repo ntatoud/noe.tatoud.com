@@ -1,3 +1,5 @@
+> Superseded by [ADR-0006](./0006-effect-collections-replaces-content-collections.md) — rendering (rehype/remark plugins, syntax highlighting, GFM) moved into `@ntatoud/effect-mdx`; `apps/web/vite.config.ts` no longer has an MDX pipeline.
+
 # ADR-0004: MDX rendering pipeline stays in the app
 
 The content package owns _data_ (collection compilation, schema validation, transforms, readers). The app owns _rendering_ — rehype/remark plugins, syntax highlighting, GFM, image auto-import, and the custom `rehype-img-dimensions` plugin all stay in `apps/web/vite.config.ts`.

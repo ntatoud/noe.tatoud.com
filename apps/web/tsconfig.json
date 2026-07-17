@@ -1,13 +1,10 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["**/*.ts", "**/*.tsx", ".content-collections/**/*.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "types": ["vite/client", "node"],
     "paths": {
       "@/*": ["./src/*"],
-      "content-collections": [
-        "../../packages/content/.content-collections/generated/index.d.ts"
-      ],
       "@ntatoud/content": ["../../packages/content/index.ts"]
     }
   }

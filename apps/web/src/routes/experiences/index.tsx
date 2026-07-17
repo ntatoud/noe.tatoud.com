@@ -1,9 +1,9 @@
-import { getExperiences } from '@ntatoud/content'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { ExperiencesPage } from '@/features/experiences/experiences-page'
+import { getExperiences } from '@/server/content'
 
-export const Route = createFileRoute('/experiences')({
+export const Route = createFileRoute('/experiences/')({
   component: ExperiencesPageRoute,
   loader: async () => {
     const experiences = await getExperiences()
