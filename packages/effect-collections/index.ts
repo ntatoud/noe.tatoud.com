@@ -8,6 +8,17 @@ import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
 import { CollectionError } from './errors'
 import { DocumentDirectory } from './image'
 
+/** Curried `mapError` that tags a boundary failure with the operation that produced it. */
+const collectionError =
+  (operation: string) =>
+  <A, E, R>(
+    effect: Effect.Effect<A, E, R>,
+  ): Effect.Effect<A, CollectionError, R> =>
+    Effect.mapError(
+      effect,
+      (cause) => new CollectionError({ operation, cause }),
+    )
+
 export { CollectionError } from './errors'
 export { DocumentDirectory, Image } from './image'
 export type { ImageValue } from './image'
@@ -113,18 +124,10 @@ const make = Layer.effect(
         const filePath = path.join(collection.directory, slug, 'index.mdx')
         const source = yield* fs
           .readFileString(filePath)
-          .pipe(
-            Effect.mapError(
-              (cause) => new CollectionError({ operation: 'readFile', cause }),
-            ),
-          )
+          .pipe(collectionError('readFile'))
         const { frontmatter, Content } = yield* mdxCompiler
           .toJsx(source)
-          .pipe(
-            Effect.mapError(
-              (cause) => new CollectionError({ operation: 'toJsx', cause }),
-            ),
-          )
+          .pipe(collectionError('toJsx'))
         const decoded = yield* Schema.decodeUnknownEffect(collection.schema)(
           frontmatter,
         ).pipe(
@@ -132,9 +135,7 @@ const make = Layer.effect(
             DocumentDirectory,
             path.join(collection.directory, slug),
           ),
-          Effect.mapError(
-            (cause) => new CollectionError({ operation: 'decode', cause }),
-          ),
+          collectionError('decode'),
         )
         const data = yield* collection.transform(decoded, {
           slug,
@@ -149,12 +150,7 @@ const make = Layer.effect(
         Effect.gen(function* () {
           const names = yield* fs
             .readDirectory(collection.directory)
-            .pipe(
-              Effect.mapError(
-                (cause) =>
-                  new CollectionError({ operation: 'readDirectory', cause }),
-              ),
-            )
+            .pipe(collectionError('readDirectory'))
           const slugs = yield* Effect.filter(names, (name) =>
             fs.stat(path.join(collection.directory, name)).pipe(
               Effect.map((info) => info.type === 'Directory'),
