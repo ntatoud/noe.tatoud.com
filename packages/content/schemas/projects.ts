@@ -1,15 +1,18 @@
-import * as v from 'valibot'
+import { Effect, Schema } from 'effect'
 
-export type ProjectFrontmatter = v.InferOutput<typeof ProjectSchema>
-
-export const ProjectSchema = v.object({
-  title: v.string(),
-  description: v.optional(v.string()),
-  date: v.string(),
-  published: v.optional(v.boolean(), false),
-  kind: v.optional(v.picklist(['personal', 'contribution']), 'personal'),
-  url: v.optional(v.pipe(v.string(), v.url())),
-  repo: v.optional(v.pipe(v.string(), v.url())),
-  tags: v.optional(v.array(v.string())),
-  content: v.optional(v.string()),
+export const ProjectSchema = Schema.Struct({
+  title: Schema.String,
+  description: Schema.optionalKey(Schema.String),
+  date: Schema.String,
+  published: Schema.Boolean.pipe(
+    Schema.withDecodingDefaultTypeKey(Effect.succeed(false)),
+  ),
+  kind: Schema.Literals(['personal', 'contribution']).pipe(
+    Schema.withDecodingDefaultTypeKey(Effect.succeed('personal')),
+  ),
+  url: Schema.optionalKey(Schema.String),
+  repo: Schema.optionalKey(Schema.String),
+  tags: Schema.optionalKey(Schema.Array(Schema.String)),
 })
+
+export type ProjectFrontmatter = (typeof ProjectSchema)['Type']

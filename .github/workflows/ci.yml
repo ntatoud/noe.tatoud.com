@@ -30,8 +30,5 @@ jobs:
       - name: 🧹 Lint
         run: pnpm run lint
 
-      - name: 🏗️ Generate content-collections types
-        run: pnpm --filter @ntatoud/content build
-
       - name: 🔎 Typecheck
         run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck

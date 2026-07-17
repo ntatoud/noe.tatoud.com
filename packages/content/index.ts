@@ -1,7 +1,27 @@
-export { getBlogPosts, type BlogPost } from './readers/blog'
-export { getExperiences, type Experience } from './readers/experiences'
-export { getProjects, type Project } from './readers/projects'
-export { getTalks, type StageItem } from './readers/talks'
+export {
+  getBlogPost,
+  getBlogPosts,
+  type BlogPost,
+  type BlogPostDetail,
+} from './readers/blog'
+export {
+  getExperience,
+  getExperiences,
+  type Experience,
+  type ExperienceDetail,
+} from './readers/experiences'
+export {
+  getProject,
+  getProjects,
+  type Project,
+  type ProjectDetail,
+} from './readers/projects'
+export {
+  getTalk,
+  getTalks,
+  type StageItem,
+  type TalkDetail,
+} from './readers/talks'
 
 export type { ExperienceFrontmatter } from './schemas/experiences'
 export type { ProjectFrontmatter } from './schemas/projects'

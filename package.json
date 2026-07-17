@@ -12,7 +12,6 @@
     "postinstall": "lefthook install"
   },
   "devDependencies": {
-    "@content-collections/cli": "0.1.9",
     "@types/node": "catalog:",
     "knip": "6.26.0",
     "lefthook": "2.1.10",

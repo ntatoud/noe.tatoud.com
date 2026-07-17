@@ -1,4 +1,11 @@
-import { allBlogPosts } from 'content-collections'
+import * as path from 'node:path'
+
+import type { ComponentType } from 'react'
+
+import { getAll, getBySlug } from '@ntatoud/effect-collections'
+import type { Document } from '@ntatoud/effect-collections'
+
+import { blogPosts as blogPostsCollection } from '../collections'
 
 export type BlogPost = {
   slug: string
@@ -8,35 +15,56 @@ export type BlogPost = {
   author: string
   date: string
   published: boolean
-  translations: Array<{ lang: string; url: string }> | undefined
-  tags: Array<string> | undefined
+  translations: ReadonlyArray<{ lang: string; url: string }> | undefined
+  tags: ReadonlyArray<string> | undefined
   externalUrl: string | null
   hero: string | null
   heroDimensions: { width: number; height: number } | null
 }
 
-/** Resolves a hero frontmatter path to a content-root-relative URL path. */
-function resolveHeroPath(directory: string, hero: string): string {
-  const cleaned = hero.replace(/^\.\//, '')
-  return `/content/blog/${directory}/${cleaned}`.replace(/\/+/g, '/')
+export type BlogPostDetail = BlogPost & {
+  Content: ComponentType
 }
 
-export function getBlogPosts(): BlogPost[] {
-  return allBlogPosts
+const collectionName = path.basename(blogPostsCollection.directory)
+
+/** Turns an absolute hero image path into a portable, content-root-relative URL path. */
+function publicHeroPath(absolutePath: string): string {
+  const relative = path.relative(blogPostsCollection.directory, absolutePath)
+  return `/content/${collectionName}/${relative}`
+}
+
+function toBlogPost(
+  doc: Document<(typeof blogPostsCollection.schema)['Type']>,
+): BlogPost {
+  const post = { slug: doc.slug, ...doc.data }
+  return {
+    slug: post.slug,
+    url: `/blog/${post.slug}`,
+    title: post.title,
+    description: post.description,
+    author: post.author,
+    date: post.date,
+    published: post.published,
+    translations: post.translations,
+    tags: post.tags,
+    externalUrl: post.externalUrl ?? null,
+    hero: post.hero ? publicHeroPath(post.hero.path) : null,
+    heroDimensions: post.hero
+      ? { width: post.hero.width, height: post.hero.height }
+      : null,
+  }
+}
+
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  const docs = await getAll(blogPostsCollection)
+  return docs
+    .map(toBlogPost)
     .filter((post) => post.published)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map((post) => ({
-      slug: post._meta.path,
-      url: `/blog/${post._meta.path}`,
-      title: post.title,
-      description: post.description,
-      author: post.author,
-      date: post.date,
-      published: post.published,
-      translations: post.translations,
-      tags: post.tags,
-      externalUrl: post.externalUrl ?? null,
-      hero: post.hero ? resolveHeroPath(post._meta.directory, post.hero) : null,
-      heroDimensions: post.heroDimensions,
-    }))
+}
+
+export async function getBlogPost(slug: string): Promise<BlogPostDetail> {
+  const doc = await getBySlug(blogPostsCollection, slug)
+  return { ...toBlogPost(doc), Content: doc.Content }
 }

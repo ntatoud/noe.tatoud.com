@@ -11,7 +11,7 @@ type TalksSliceProps = {
 
 /** Returns the event with the most recent date, or undefined. */
 function latestEvent(
-  events: Array<StageEvent> | undefined,
+  events: ReadonlyArray<StageEvent> | undefined,
 ): StageEvent | undefined {
   if (!events || events.length === 0) return undefined
   return events.reduce((latest, e) =>

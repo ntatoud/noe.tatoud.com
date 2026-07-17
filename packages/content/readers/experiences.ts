@@ -1,26 +1,51 @@
-import { allExperiences } from 'content-collections'
+import * as path from 'node:path'
 
+import type { ComponentType } from 'react'
+
+import { getAll, getBySlug } from '@ntatoud/effect-collections'
+import type { Document } from '@ntatoud/effect-collections'
+
+import { experiences as experiencesCollection } from '../collections'
 import type { ExperienceFrontmatter } from '../schemas/experiences'
 
-export type Experience = Omit<ExperienceFrontmatter, 'content' | 'logo'> & {
+export type Experience = Omit<ExperienceFrontmatter, 'logo'> & {
   slug: string
   logo: string | null
 }
 
-export function getExperiences(): Experience[] {
-  return allExperiences
-    .map((exp) => ({
-      slug: exp._meta.path,
-      title: exp.title,
-      organization: exp.organization,
-      url: exp.url,
-      startDate: exp.startDate,
-      endDate: exp.endDate,
-      kind: exp.kind,
-      logo: exp.logo ?? null,
-    }))
+export type ExperienceDetail = Experience & {
+  Content: ComponentType
+}
+
+const collectionName = path.basename(experiencesCollection.directory)
+
+/** Turns an absolute logo image path into a portable, content-root-relative URL path. */
+function publicLogoPath(absolutePath: string): string {
+  const relative = path.relative(experiencesCollection.directory, absolutePath)
+  return `/content/${collectionName}/${relative}`
+}
+
+function toExperience(
+  doc: Document<(typeof experiencesCollection.schema)['Type']>,
+): Experience {
+  const exp = { slug: doc.slug, ...doc.data }
+  return {
+    ...exp,
+    logo: exp.logo ? publicLogoPath(exp.logo.path) : null,
+  }
+}
+
+export async function getExperiences(): Promise<Experience[]> {
+  const docs = await getAll(experiencesCollection)
+  return docs
+    .map(toExperience)
     .sort(
       (a, b) =>
         new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
     )
+}
+
+export async function getExperience(slug: string): Promise<ExperienceDetail> {
+  const doc = await getBySlug(experiencesCollection, slug)
+  return { ...toExperience(doc), Content: doc.Content }
 }

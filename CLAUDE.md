@@ -9,11 +9,11 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Monorepo**: pnpm workspaces — `apps/web` + `packages/content`
+- **Monorepo**: pnpm workspaces — `apps/web`, `packages/content`, `packages/effect-mdx`, `packages/effect-collections`
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
-- **Content**: @content-collections/core + @content-collections/vite, valibot schemas
+- **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-mdx` MDX→JSX, no build/codegen step)
 - **Package manager**: pnpm
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
@@ -40,13 +40,14 @@ apps/web/              # @ntatoud/web — TanStack Start app
     layout/           # shared layout: header, footer, nav, hero, section
     lib/              # utils.ts (cn), format.ts, etc.
     styles/           # index.css, utilities/
-  plugins/            # custom Vite/rehype plugins
   public/             # static assets
+  src/server/         # createServerFn wrappers (filesystem-backed readers never run client-side)
 packages/content/      # @ntatoud/content — content pipeline
-  schemas/            # valibot schemas (one file per collection)
+  schemas/            # Effect Schema structs (one file per collection)
   readers/            # reader functions (typed data access)
-  lib/                # image transform pure functions
-  content-collections.ts  # collection definitions
+  collections.ts      # collection definitions (@ntatoud/effect-collections)
+packages/effect-mdx/    # @ntatoud/effect-mdx — MDX→JSX compiler (Effect service)
+packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
 content/              # MDX files (blog, projects, experiences, talks)
 docs/
   adr/                # architectural decision records
@@ -78,9 +79,12 @@ CONTEXT.md            # domain glossary
 ### Content & data
 
 - Content MDX files live in `content/<collection>/<slug>/index.mdx` at the repo root.
-- All MDX frontmatter is validated with valibot schemas (defined in `packages/content/schemas/`).
-- The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `content-collections` directly.
+- All MDX frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
+- The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `@ntatoud/effect-collections` directly.
 - Server data fetching uses `createServerFn` from TanStack Start.
+- Detail readers (`getBlogPost(slug)`, etc.) return `Content: ComponentType` — a real React component compiled from the MDX body by `@ntatoud/effect-mdx`. Since it can't cross the `createServerFn` RPC boundary, `apps/web/src/server/content.tsx`'s `withBodyHtml()` renders it to an HTML string (`bodyHtml`) server-side; detail pages display it via `dangerouslySetInnerHTML`.
+- Code blocks in MDX bodies are syntax-highlighted automatically (`rehype-pretty-code` + Shiki, `github-dark` theme, wired into `@ntatoud/effect-mdx`) — no per-page setup needed.
+- **Custom components in MDX** (e.g. authoring `<Callout>...</Callout>` or `<Button>...</Button>` directly in a `.mdx` file): `MdxCompiler.toJsx(source, { components })` accepts a default component map merged with whatever's passed to `<Content components={...} />` at render time. To enable one for a collection, pass a components map as `withBodyHtml(getXFromContent(data), { Button, Callout })` in `apps/web/src/server/content.tsx` — components must be imported there (e.g. from `@/components/ui/*`) since MDX content files can't import anything themselves.
 
 ### Theming
 
@@ -95,7 +99,7 @@ CONTEXT.md            # domain glossary
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`: format check, lint, content-collections build, typecheck.
+Runs on push/PR to `main`: format check, lint, typecheck.
 
 ## Deployment
 
