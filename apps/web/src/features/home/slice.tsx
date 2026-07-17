@@ -1,5 +1,7 @@
-import { Link } from '@tanstack/react-router'
+import { ArrowRight02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
+import { ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -25,13 +27,20 @@ export function Slice({
     >
       <div className="mb-4 flex items-baseline justify-between">
         <h2 className="text-xl font-semibold">{title}</h2>
-        <Link
+        <ButtonLink
           to={seeAllHref}
-          className="text-sm text-muted-foreground hover:text-foreground"
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground"
           data-slot="slice-see-all"
         >
-          {seeAllLabel} →
-        </Link>
+          {seeAllLabel}
+          <HugeiconsIcon
+            icon={ArrowRight02Icon}
+            size={16}
+            data-icon="inline-end"
+          />
+        </ButtonLink>
       </div>
       {children}
     </section>

@@ -1,7 +1,10 @@
 import type { TalkDetail } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
+import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import { formatDate } from '@/lib/format'
 
 type TalkPageProps = {
@@ -11,12 +14,14 @@ type TalkPageProps = {
 export function TalkPage({ talk }: TalkPageProps) {
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="talk-page">
-      <Link
-        to="/talks"
-        className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-      >
-        ← Talks
-      </Link>
+      <ButtonLink to="/talks" variant="ghost" size="sm">
+        <HugeiconsIcon
+          icon={ArrowLeft02Icon}
+          size={16}
+          data-icon="inline-start"
+        />
+        Talks
+      </ButtonLink>
       <div className="mt-6 flex items-center gap-2">
         <h1 className="text-3xl font-bold tracking-tight">{talk.title}</h1>
         <Badge>{talk.kind}</Badge>
@@ -34,15 +39,22 @@ export function TalkPage({ talk }: TalkPageProps) {
       )}
 
       {talk.resource && (
-        <a
+        <ButtonAnchor
           href={talk.resource.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-block text-sm text-foreground underline-offset-4 hover:underline"
+          variant="ghost"
+          size="sm"
+          className="mt-4"
           data-slot="talk-resource"
         >
-          {talk.resource.kind} →
-        </a>
+          {talk.resource.kind}
+          <HugeiconsIcon
+            icon={ArrowRight02Icon}
+            size={16}
+            data-icon="inline-end"
+          />
+        </ButtonAnchor>
       )}
 
       {talk.events.length > 0 && (
