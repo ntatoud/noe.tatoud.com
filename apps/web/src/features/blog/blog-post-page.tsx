@@ -1,7 +1,10 @@
 import type { BlogPostDetail } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ArrowLeft02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
+import { ButtonLink } from '@/components/ui/button-link'
 import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
 
@@ -14,12 +17,14 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="blog-post-page">
-      <Link
-        to="/blog"
-        className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-      >
-        ← Blog
-      </Link>
+      <ButtonLink to="/blog" variant="ghost" size="sm">
+        <HugeiconsIcon
+          icon={ArrowLeft02Icon}
+          size={16}
+          data-icon="inline-start"
+        />
+        Blog
+      </ButtonLink>
       <h1 className="mt-6 text-3xl font-bold tracking-tight">{post.title}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         {post.author} · {formatDate(post.date)}

@@ -1,4 +1,7 @@
-import { Link } from '@tanstack/react-router'
+import { ArrowLeft02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+
+import { ButtonLink } from '@/components/ui/button-link'
 
 export function AchievementsPage() {
   return (
@@ -7,12 +10,14 @@ export function AchievementsPage() {
       <p className="mt-2 text-muted-foreground">
         A gamified grid of unlockable items lives here. Coming soon.
       </p>
-      <Link
-        to="/"
-        className="mt-6 inline-block text-sm text-foreground underline"
-      >
-        ← Back home
-      </Link>
+      <ButtonLink to="/" variant="ghost" size="sm" className="mt-6">
+        <HugeiconsIcon
+          icon={ArrowLeft02Icon}
+          size={16}
+          data-icon="inline-start"
+        />
+        Back home
+      </ButtonLink>
     </main>
   )
 }

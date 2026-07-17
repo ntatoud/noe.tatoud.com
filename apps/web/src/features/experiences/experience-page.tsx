@@ -1,7 +1,10 @@
 import type { ExperienceDetail } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ArrowLeft02Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
+import { ButtonLink } from '@/components/ui/button-link'
 import { resolveContentImage } from '@/lib/content-images'
 import { formatMonthYear } from '@/lib/format'
 
@@ -20,12 +23,14 @@ export function ExperiencePage({ experience }: ExperiencePageProps) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12" data-slot="experience-page">
-      <Link
-        to="/experiences"
-        className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-      >
-        ← Experiences
-      </Link>
+      <ButtonLink to="/experiences" variant="ghost" size="sm">
+        <HugeiconsIcon
+          icon={ArrowLeft02Icon}
+          size={16}
+          data-icon="inline-start"
+        />
+        Experiences
+      </ButtonLink>
       <div className="mt-6 flex items-start gap-3">
         {logoSrc && (
           <img
