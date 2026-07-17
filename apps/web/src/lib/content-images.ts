@@ -1,14 +1,12 @@
 const imageModules = import.meta.glob<string>(
-  '/../../packages/content/content/**/*.{png,jpg,jpeg,webp,avif,svg}',
+  '/../../content/**/*.{png,jpg,jpeg,webp,avif,svg}',
   { eager: true, query: '?url', import: 'default' },
 )
 
 const cache = new Map<string, string>()
 for (const [key, url] of Object.entries(imageModules)) {
-  // key looks like "/../../packages/content/content/blog/<dir>/hero.png"
-  const normalized = key
-    .split('/packages/content/content/')[1]
-    ?.replace(/\/+/g, '/')
+  // key looks like "/../../content/blog/<dir>/hero.png"
+  const normalized = key.split('/../../content/')[1]?.replace(/\/+/g, '/')
   if (normalized) cache.set(normalized, url)
 }
 

@@ -46,8 +46,8 @@ packages/content/      # @ntatoud/content — content pipeline
   schemas/            # valibot schemas (one file per collection)
   readers/            # reader functions (typed data access)
   lib/                # image transform pure functions
-  content/            # MDX files (blog, projects, experiences, talks)
   content-collections.ts  # collection definitions
+content/              # MDX files (blog, projects, experiences, talks)
 docs/
   adr/                # architectural decision records
   agents/             # agent skill configs
@@ -77,7 +77,7 @@ CONTEXT.md            # domain glossary
 
 ### Content & data
 
-- Content MDX files live in `packages/content/content/<collection>/<slug>/index.mdx`.
+- Content MDX files live in `content/<collection>/<slug>/index.mdx` at the repo root.
 - All MDX frontmatter is validated with valibot schemas (defined in `packages/content/schemas/`).
 - The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `content-collections` directly.
 - Server data fetching uses `createServerFn` from TanStack Start.

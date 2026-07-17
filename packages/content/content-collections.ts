@@ -12,10 +12,10 @@ import { StageItemSchema } from './schemas/talks'
 const here = path.dirname(fileURLToPath(import.meta.url))
 // content-collections caches/compiles the config into .content-collections/cache/,
 // so import.meta.url may point at the cache rather than the package root.
-// Walk back to the real package root so image files resolve against the source.
-const packageRoot = here.includes('.content-collections')
-  ? path.resolve(here, '../..')
-  : here
+// Walk back to the repo root so image files resolve against the source.
+const repoRoot = here.includes('.content-collections')
+  ? path.resolve(here, '../../../..')
+  : path.resolve(here, '../..')
 
 function resolveContentFile(
   collectionDir: string,
@@ -23,7 +23,7 @@ function resolveContentFile(
   relativePath: string,
 ): string {
   return path.resolve(
-    packageRoot,
+    repoRoot,
     collectionDir,
     directory,
     relativePath.replace(/^\.\//, ''),
@@ -32,7 +32,7 @@ function resolveContentFile(
 
 const blogPosts = defineCollection({
   name: 'blogPosts',
-  directory: 'content/blog',
+  directory: '../../content/blog',
   include: '**/*.mdx',
   schema: BlogPostSchema,
   transform: (data) => {
@@ -48,14 +48,14 @@ const blogPosts = defineCollection({
 
 const projects = defineCollection({
   name: 'projects',
-  directory: 'content/projects',
+  directory: '../../content/projects',
   include: '**/*.mdx',
   schema: ProjectSchema,
 })
 
 const experiences = defineCollection({
   name: 'experiences',
-  directory: 'content/experiences',
+  directory: '../../content/experiences',
   include: '**/*.mdx',
   schema: ExperienceSchema,
   transform: (data) => {
@@ -75,7 +75,7 @@ const experiences = defineCollection({
 
 const talks = defineCollection({
   name: 'talks',
-  directory: 'content/talks',
+  directory: '../../content/talks',
   include: '**/*.mdx',
   schema: StageItemSchema,
 })
