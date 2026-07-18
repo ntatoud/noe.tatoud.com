@@ -90,7 +90,7 @@ CONTEXT.md            # domain glossary
 
 - Dark mode only (body has `className="dark"`).
 - Colors use oklch color space via CSS variables.
-- Fonts: Atkinson Hyperlegible (body), loaded via `@fontsource/atkinson-hyperlegible` CSS import.
+- Fonts: Manrope (default, body + headings), loaded via `@fontsource/manrope` CSS import. Atkinson Hyperlegible Next is still imported and used as the mono font in blog code blocks (`--font-atkinson-next-light`, see `typeset.css`).
 
 ## Git hooks (lefthook)
 

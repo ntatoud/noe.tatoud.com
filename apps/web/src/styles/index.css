@@ -10,6 +10,7 @@
 @import '@fontsource/manrope';
 @import '@fontsource/manrope/500.css';
 @import '@fontsource/manrope/600.css';
+@import '@fontsource/manrope/700.css';
 
 .typeset-docs {
   --typeset-font-body: var(--font-manrope);
@@ -61,7 +62,7 @@
   --sidebar-border: oklch(0.92 0 0);
   --sidebar-ring: oklch(0 0 0);
 
-  --font-sans: 'Atkinson Hyperlegible Next', sans-serif;
+  --font-sans: 'Manrope', sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-manrope: 'Manrope', sans-serif;
   --font-atkinson-next-light:

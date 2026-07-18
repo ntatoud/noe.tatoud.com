@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
@@ -24,6 +25,11 @@ import { Route as ExperiencesSlugRouteImport } from './routes/experiences/$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
   id: '/rss.xml',
   path: '/rss.xml',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/feed.json'
     | '/rss.xml'
+    | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/feed.json'
     | '/rss.xml'
+    | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/atom.xml'
     | '/feed.json'
     | '/rss.xml'
+    | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   FeedDotjsonRoute: typeof FeedDotjsonRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ExperiencesSlugRoute: typeof ExperiencesSlugRoute
@@ -214,6 +227,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rss.xml': {
       id: '/rss.xml'
       path: '/rss.xml'
@@ -321,6 +341,7 @@ const rootRouteChildren: RootRouteChildren = {
   AtomDotxmlRoute: AtomDotxmlRoute,
   FeedDotjsonRoute: FeedDotjsonRoute,
   RssDotxmlRoute: RssDotxmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSlugRoute: BlogSlugRoute,
   ExperiencesSlugRoute: ExperiencesSlugRoute,
