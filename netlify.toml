@@ -56,4 +56,9 @@ function = "markdown-negotiation"
 [functions]
 node_bundler = "esbuild"
 directory = "netlify/functions"
-included_files = ["node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*"]
+included_files = [
+  "node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
+  # MDX content is read from the filesystem at runtime by the server functions,
+  # so it must be bundled into the serverless function.
+  "content/**",
+]
