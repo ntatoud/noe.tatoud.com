@@ -17,11 +17,9 @@ import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TalksIndexRouteImport } from './routes/talks/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
-import { Route as ExperiencesIndexRouteImport } from './routes/experiences/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as TalksSlugRouteImport } from './routes/talks/$slug'
 import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
-import { Route as ExperiencesSlugRouteImport } from './routes/experiences/$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 
@@ -65,11 +63,6 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExperiencesIndexRoute = ExperiencesIndexRouteImport.update({
-  id: '/experiences/',
-  path: '/experiences/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -83,11 +76,6 @@ const TalksSlugRoute = TalksSlugRouteImport.update({
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects/$slug',
   path: '/projects/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExperiencesSlugRoute = ExperiencesSlugRouteImport.update({
-  id: '/experiences/$slug',
-  path: '/experiences/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -110,11 +98,9 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
-  '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/talks/': typeof TalksIndexRoute
 }
@@ -127,11 +113,9 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog': typeof BlogIndexRoute
-  '/experiences': typeof ExperiencesIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/talks': typeof TalksIndexRoute
 }
@@ -145,11 +129,9 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/experiences/$slug': typeof ExperiencesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
-  '/experiences/': typeof ExperiencesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/talks/': typeof TalksIndexRoute
 }
@@ -164,11 +146,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
-    | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
-    | '/experiences/'
     | '/projects/'
     | '/talks/'
   fileRoutesByTo: FileRoutesByTo
@@ -181,11 +161,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
-    | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog'
-    | '/experiences'
     | '/projects'
     | '/talks'
   id:
@@ -198,11 +176,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/api/og'
     | '/blog/$slug'
-    | '/experiences/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
-    | '/experiences/'
     | '/projects/'
     | '/talks/'
   fileRoutesById: FileRoutesById
@@ -216,11 +192,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSlugRoute: typeof BlogSlugRoute
-  ExperiencesSlugRoute: typeof ExperiencesSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   TalksSlugRoute: typeof TalksSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
-  ExperiencesIndexRoute: typeof ExperiencesIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   TalksIndexRoute: typeof TalksIndexRoute
 }
@@ -283,13 +257,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/experiences/': {
-      id: '/experiences/'
-      path: '/experiences'
-      fullPath: '/experiences/'
-      preLoaderRoute: typeof ExperiencesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -309,13 +276,6 @@ declare module '@tanstack/react-router' {
       path: '/projects/$slug'
       fullPath: '/projects/$slug'
       preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/experiences/$slug': {
-      id: '/experiences/$slug'
-      path: '/experiences/$slug'
-      fullPath: '/experiences/$slug'
-      preLoaderRoute: typeof ExperiencesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
@@ -344,11 +304,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSlugRoute: BlogSlugRoute,
-  ExperiencesSlugRoute: ExperiencesSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   TalksSlugRoute: TalksSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
-  ExperiencesIndexRoute: ExperiencesIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   TalksIndexRoute: TalksIndexRoute,
 }

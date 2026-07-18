@@ -20,7 +20,6 @@ export const navItems: readonly NavItem[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Projects', href: '/projects' },
   { label: 'Talks', href: '/talks' },
-  { label: 'Experiences', href: '/experiences' },
 ] as const
 
 export type SocialLink = {

@@ -1,8 +1,6 @@
 import * as path from 'node:path'
 
-import type { ComponentType } from 'react'
-
-import { getAll, getBySlug } from '@ntatoud/effect-collections'
+import { getAll } from '@ntatoud/effect-collections'
 import type { Document } from '@ntatoud/effect-collections'
 
 import { experiences as experiencesCollection } from '../collections'
@@ -11,10 +9,6 @@ import type { ExperienceFrontmatter } from '../schemas/experiences'
 export type Experience = Omit<ExperienceFrontmatter, 'logo'> & {
   slug: string
   logo: string | null
-}
-
-export type ExperienceDetail = Experience & {
-  Content: ComponentType
 }
 
 const collectionName = path.basename(experiencesCollection.directory)
@@ -43,9 +37,4 @@ export async function getExperiences(): Promise<Experience[]> {
       (a, b) =>
         new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
     )
-}
-
-export async function getExperience(slug: string): Promise<ExperienceDetail> {
-  const doc = await getBySlug(experiencesCollection, slug)
-  return { ...toExperience(doc), Content: doc.Content }
 }

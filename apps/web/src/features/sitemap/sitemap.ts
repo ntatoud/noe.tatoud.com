@@ -1,9 +1,4 @@
-import {
-  getBlogPosts,
-  getExperiences,
-  getProjects,
-  getTalks,
-} from '@ntatoud/content'
+import { getBlogPosts, getProjects, getTalks } from '@ntatoud/content'
 
 import { SITE_URL } from '@/lib/site'
 
@@ -16,7 +11,6 @@ const STATIC_PATHS: ReadonlyArray<string> = [
   '/',
   '/blog',
   '/projects',
-  '/experiences',
   '/talks',
   '/achievements',
 ]
@@ -32,10 +26,9 @@ function latestTalkDate(talk: {
 
 /** Every crawlable page on the site, static and content-backed. */
 export async function getSitemapUrls(): Promise<SitemapUrl[]> {
-  const [posts, projects, experiences, talks] = await Promise.all([
+  const [posts, projects, talks] = await Promise.all([
     getBlogPosts(),
     getProjects(),
-    getExperiences(),
     getTalks(),
   ])
 
@@ -45,10 +38,6 @@ export async function getSitemapUrls(): Promise<SitemapUrl[]> {
     ...projects.map((project) => ({
       path: `/projects/${project.slug}`,
       lastmod: project.date,
-    })),
-    ...experiences.map((exp) => ({
-      path: `/experiences/${exp.slug}`,
-      lastmod: exp.endDate ?? exp.startDate,
     })),
     ...talks.map((talk) => ({
       path: `/talks/${talk.slug}`,
