@@ -3,35 +3,21 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import { NotFound } from '@/components/error/not-found'
+import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
-import { buildOgMeta } from '@/lib/og-image'
 
 import appCss from '@/styles/index.css?url'
-
-const DEFAULT_TITLE = 'Noé Tatoud'
-const DEFAULT_DESCRIPTION = 'Noé Tatoud | Software engineer.'
 
 export const Route = createRootRoute({
   notFoundComponent: NotFound,
 
   head: () => ({
     meta: [
-      { charSet: 'utf-8' },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      { title: DEFAULT_TITLE },
-      {
-        name: 'description',
-        content: DEFAULT_DESCRIPTION,
-      },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:site_name', content: 'noe.tatoud.com' },
-      ...buildOgMeta({
-        title: DEFAULT_TITLE,
-        description: DEFAULT_DESCRIPTION,
+      ...BASE_META_TAGS,
+      ...toMetaTags({
+        title: 'Noé Tatoud',
+        description: 'Noé Tatoud | Software engineer.',
         path: '/',
       }),
     ],

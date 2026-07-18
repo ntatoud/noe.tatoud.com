@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { ExperiencesPage } from '@/features/experiences/experiences-page'
-import { buildOgMeta } from '@/lib/og-image'
+import { toMetaTags } from '@/features/og/metadata'
 import { getExperiences } from '@/server/content'
 
-const TITLE = 'Experiences — Noé Tatoud'
+const TITLE = 'Experiences | Noé Tatoud'
 const DESCRIPTION = 'Work, volunteer, and education history.'
 
 export const Route = createFileRoute('/experiences/')({
@@ -14,16 +14,12 @@ export const Route = createFileRoute('/experiences/')({
     return { experiences }
   },
   head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: 'description', content: DESCRIPTION },
-      ...buildOgMeta({
-        title: TITLE,
-        description: DESCRIPTION,
-        kind: 'experience',
-        path: '/experiences',
-      }),
-    ],
+    meta: toMetaTags({
+      title: TITLE,
+      description: DESCRIPTION,
+      kind: 'experience',
+      path: '/experiences',
+    }),
   }),
 })
 

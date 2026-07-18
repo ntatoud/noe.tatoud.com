@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
+import { toMetaTags } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
-import { buildOgMeta } from '@/lib/og-image'
 import { getTalk } from '@/server/content'
 
 export const Route = createFileRoute('/talks/$slug')({
@@ -16,16 +16,12 @@ export const Route = createFileRoute('/talks/$slug')({
     if (!loaderData) return {}
     const { talk } = loaderData
     return {
-      meta: [
-        { title: talk.title },
-        { name: 'description', content: talk.description },
-        ...buildOgMeta({
-          title: talk.title,
-          description: talk.description,
-          kind: 'talk',
-          path: match.pathname,
-        }),
-      ],
+      meta: toMetaTags({
+        title: talk.title,
+        description: talk.description,
+        kind: 'talk',
+        path: match.pathname,
+      }),
     }
   },
 })

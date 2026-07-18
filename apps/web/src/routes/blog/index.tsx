@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { BlogPage } from '@/features/blog/blog-page'
-import { buildOgMeta } from '@/lib/og-image'
+import { toMetaTags } from '@/features/og/metadata'
 import { getBlogPosts } from '@/server/content'
 
-const TITLE = 'Blog — Noé Tatoud'
+const TITLE = 'Blog | Noé Tatoud'
 const DESCRIPTION = 'Articles on software engineering.'
 
 export const Route = createFileRoute('/blog/')({
@@ -14,16 +14,12 @@ export const Route = createFileRoute('/blog/')({
     return { posts }
   },
   head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: 'description', content: DESCRIPTION },
-      ...buildOgMeta({
-        title: TITLE,
-        description: DESCRIPTION,
-        kind: 'blog',
-        path: '/blog',
-      }),
-    ],
+    meta: toMetaTags({
+      title: TITLE,
+      description: DESCRIPTION,
+      kind: 'blog',
+      path: '/blog',
+    }),
   }),
 })
 

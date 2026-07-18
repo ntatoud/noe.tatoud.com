@@ -1,0 +1,22 @@
+{
+  "name": "@ntatoud/effect-og",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.ts",
+    "./image": "./image.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@takumi-rs/core": "catalog:",
+    "effect": "catalog:",
+    "takumi-js": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "typescript": "catalog:"
+  }
+}

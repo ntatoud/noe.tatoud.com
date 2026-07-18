@@ -1,13 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { ImageResponse } from 'takumi-js/response'
+import { Option, Schema } from 'effect'
 
-import { OG_CARD_KINDS, OgCard, type OgCardKind } from '@/features/og/og-card'
-import { getOgRenderer } from '@/features/og/og-fonts'
+import { OgKind } from '@/features/og/metadata'
+import { OgCard } from '@/features/og/og-card'
+import { ogImage } from '@/features/og/og-image'
 
-function parseKind(value: string | null): OgCardKind | undefined {
-  return OG_CARD_KINDS.find((kind) => kind === value)
-}
+const decodeKind = Schema.decodeUnknownOption(OgKind)
 
 export const Route = createFileRoute('/api/og')({
   server: {
@@ -17,19 +16,10 @@ export const Route = createFileRoute('/api/og')({
         const title = searchParams.get('title') ?? 'Noé Tatoud'
         const description =
           searchParams.get('description') ?? 'Software engineer.'
-        const kind = parseKind(searchParams.get('kind'))
+        const kind = Option.getOrUndefined(decodeKind(searchParams.get('kind')))
 
-        return new ImageResponse(
+        return ogImage.render(
           <OgCard title={title} description={description} kind={kind} />,
-          {
-            width: 1200,
-            height: 630,
-            format: 'png',
-            renderer: await getOgRenderer(),
-            headers: {
-              'Cache-Control': 'public, immutable, max-age=31536000',
-            },
-          },
         )
       },
     },

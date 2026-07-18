@@ -1,25 +1,22 @@
 import type { CSSProperties } from 'react'
 
+import type { OgKind } from '@/features/og/metadata'
 import { OG_FONT_FAMILY } from '@/features/og/og-fonts'
 
 /** Takumi's flowing-text clamp — not part of the standard CSSProperties type. */
 type ClampStyle = CSSProperties & { lineClamp?: number }
 
-const KIND_LABELS = {
+const KIND_LABELS: Record<OgKind, string> = {
   blog: 'Blog',
   project: 'Project',
   talk: 'Talk',
   experience: 'Experience',
-} as const
-
-export type OgCardKind = keyof typeof KIND_LABELS
-
-export const OG_CARD_KINDS = Object.keys(KIND_LABELS) as OgCardKind[]
+}
 
 export type OgCardProps = {
   title: string
   description?: string
-  kind?: OgCardKind
+  kind?: OgKind
 }
 
 export function OgCard({ title, description, kind }: OgCardProps) {
