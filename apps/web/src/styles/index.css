@@ -1,8 +1,29 @@
 @import 'tailwindcss';
+@import './typeset.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-@plugin '@tailwindcss/typography';
-@import '@fontsource/atkinson-hyperlegible';
+@import '@fontsource/atkinson-hyperlegible-next/200.css';
+@import '@fontsource/atkinson-hyperlegible-next/400.css';
+@import '@fontsource/atkinson-hyperlegible-next/500.css';
+@import '@fontsource/atkinson-hyperlegible-next/600.css';
+@import '@fontsource/atkinson-hyperlegible-next/700.css';
+@import '@fontsource/manrope';
+@import '@fontsource/manrope/500.css';
+@import '@fontsource/manrope/600.css';
+
+.typeset-docs {
+  --typeset-font-body: var(--font-manrope);
+  --typeset-font-heading: var(--font-manrope);
+  --typeset-font-mono: var(--font-atkinson-next-light);
+  --typeset-size: 16px;
+  --typeset-leading: 1.75;
+  --typeset-flow: 1.25em;
+  --color-foreground: oklch(0.92 0 0);
+
+  & :where(pre, :not(pre) > code) {
+    font-weight: 200;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -40,8 +61,11 @@
   --sidebar-border: oklch(0.92 0 0);
   --sidebar-ring: oklch(0 0 0);
 
-  --font-sans: 'Atkinson Hyperlegible', sans-serif;
+  --font-sans: 'Atkinson Hyperlegible Next', sans-serif;
   --font-mono: ui-monospace, monospace;
+  --font-manrope: 'Manrope', sans-serif;
+  --font-atkinson-next-light:
+    'Atkinson Hyperlegible Next', ui-monospace, monospace;
   --radius: 0.5rem;
 }
 

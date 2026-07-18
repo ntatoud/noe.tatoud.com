@@ -53,7 +53,7 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
       )}
 
       <div
-        className="prose prose-invert mt-8"
+        className="typeset typeset-docs mt-8"
         data-slot="blog-post-content"
         dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
       />
