@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
 import { ExperiencePage } from '@/features/experiences/experience-page'
+import { toMetaTags } from '@/features/og/metadata'
 import { getExperience } from '@/server/content'
 
 export const Route = createFileRoute('/experiences/$slug')({
@@ -10,6 +11,18 @@ export const Route = createFileRoute('/experiences/$slug')({
       throw notFound()
     })
     return { experience }
+  },
+  head: ({ loaderData, match }) => {
+    if (!loaderData) return {}
+    const { experience } = loaderData
+    return {
+      meta: toMetaTags({
+        title: experience.title,
+        description: experience.organization,
+        kind: 'experience',
+        path: match.pathname,
+      }),
+    }
   },
 })
 

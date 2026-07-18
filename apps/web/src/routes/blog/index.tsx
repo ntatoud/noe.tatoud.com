@@ -1,7 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { BlogPage } from '@/features/blog/blog-page'
+import { toMetaTags } from '@/features/og/metadata'
 import { getBlogPosts } from '@/server/content'
+
+const TITLE = 'Blog | Noé Tatoud'
+const DESCRIPTION = 'Articles on software engineering.'
 
 export const Route = createFileRoute('/blog/')({
   component: BlogPageRoute,
@@ -9,6 +13,14 @@ export const Route = createFileRoute('/blog/')({
     const posts = await getBlogPosts()
     return { posts }
   },
+  head: () => ({
+    meta: toMetaTags({
+      title: TITLE,
+      description: DESCRIPTION,
+      kind: 'blog',
+      path: '/blog',
+    }),
+  }),
 })
 
 function BlogPageRoute() {

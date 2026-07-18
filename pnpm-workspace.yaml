@@ -2,9 +2,14 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+publicHoistPattern:
+  - '@takumi-rs/core-*'
+
 catalog:
   '@effect/platform-node': 4.0.0-beta.99
+  '@takumi-rs/core': 2.3.0
   '@types/node': 24.13.3
   effect: 4.0.0-beta.99
   image-size: 2.0.2
+  takumi-js: 2.3.0
   typescript: 7.0.2
