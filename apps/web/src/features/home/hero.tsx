@@ -3,7 +3,7 @@ import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 const ownerName = 'Noé Tatoud'
 const tagline =
   'Frontend developer crafting pixel-perfect interfaces and thoughtful web experiences.'
-const photoSrc = '/pixel-avatar.png'
+const photoSrc = '/pixel-avatar.webp'
 const resumeHref = '/Noe_Tatoud_CV_React_EN.pdf'
 
 export function Hero() {
