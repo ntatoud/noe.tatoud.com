@@ -23,6 +23,8 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+      { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
       {
         rel: 'alternate',
         type: 'application/rss+xml',
