@@ -2,6 +2,9 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+publicHoistPattern:
+  - '@takumi-rs/core-*'
+
 catalog:
   '@effect/platform-node': 4.0.0-beta.99
   '@types/node': 24.13.3

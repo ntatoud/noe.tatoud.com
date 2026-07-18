@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
 import { ExperiencePage } from '@/features/experiences/experience-page'
+import { buildOgMeta } from '@/lib/og-image'
 import { getExperience } from '@/server/content'
 
 export const Route = createFileRoute('/experiences/$slug')({
@@ -10,6 +11,22 @@ export const Route = createFileRoute('/experiences/$slug')({
       throw notFound()
     })
     return { experience }
+  },
+  head: ({ loaderData, match }) => {
+    if (!loaderData) return {}
+    const { experience } = loaderData
+    return {
+      meta: [
+        { title: experience.title },
+        { name: 'description', content: experience.organization },
+        ...buildOgMeta({
+          title: experience.title,
+          description: experience.organization,
+          kind: 'experience',
+          path: match.pathname,
+        }),
+      ],
+    }
   },
 })
 

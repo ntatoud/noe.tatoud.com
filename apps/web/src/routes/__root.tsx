@@ -5,8 +5,12 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { NotFound } from '@/components/error/not-found'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
+import { buildOgMeta } from '@/lib/og-image'
 
 import appCss from '@/styles/index.css?url'
+
+const DEFAULT_TITLE = 'Noé Tatoud'
+const DEFAULT_DESCRIPTION = 'Noé Tatoud | Software engineer.'
 
 export const Route = createRootRoute({
   notFoundComponent: NotFound,
@@ -18,11 +22,18 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      { title: 'Noé Tatoud' },
+      { title: DEFAULT_TITLE },
       {
         name: 'description',
-        content: 'Noé Tatoud | Software engineer.',
+        content: DEFAULT_DESCRIPTION,
       },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: 'noe.tatoud.com' },
+      ...buildOgMeta({
+        title: DEFAULT_TITLE,
+        description: DEFAULT_DESCRIPTION,
+        path: '/',
+      }),
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),
