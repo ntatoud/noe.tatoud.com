@@ -3,6 +3,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import { NotFound } from '@/components/error/not-found'
+import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
 
@@ -13,16 +14,12 @@ export const Route = createRootRoute({
 
   head: () => ({
     meta: [
-      { charSet: 'utf-8' },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      { title: 'Noé Tatoud' },
-      {
-        name: 'description',
-        content: 'Noé Tatoud | Software engineer.',
-      },
+      ...BASE_META_TAGS,
+      ...toMetaTags({
+        title: 'Noé Tatoud',
+        description: 'Noé Tatoud | Software engineer.',
+        path: '/',
+      }),
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),

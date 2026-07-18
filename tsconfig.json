@@ -26,6 +26,8 @@
     "paths": {
       "@ntatoud/content": ["./packages/content/index.ts"],
       "@ntatoud/effect-collections": ["./packages/effect-collections/index.ts"],
+      "@ntatoud/effect-og": ["./packages/effect-og/index.ts"],
+      "@ntatoud/effect-og/image": ["./packages/effect-og/image.ts"],
       "@ntatoud/effect-mdx": ["./packages/effect-mdx/index.ts"],
       "@ntatoud/web": ["./apps/web/package.json"]
     }
