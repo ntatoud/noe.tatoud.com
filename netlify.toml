@@ -18,6 +18,11 @@ for = "/*.svg"
 Cache-Control = "public, max-age=86400"
 
 [[headers]]
+for = "/*.webp"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+[[headers]]
 for = "/*.ico"
 [headers.values]
 Cache-Control = "public, max-age=86400"
