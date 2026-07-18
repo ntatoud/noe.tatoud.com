@@ -21,7 +21,27 @@ export const Route = createRootRoute({
         path: '/',
       }),
     ],
-    links: [{ rel: 'stylesheet', href: appCss }],
+    links: [
+      { rel: 'stylesheet', href: appCss },
+      {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'Noé Tatoud — Blog (RSS)',
+        href: '/rss.xml',
+      },
+      {
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: 'Noé Tatoud — Blog (Atom)',
+        href: '/atom.xml',
+      },
+      {
+        rel: 'alternate',
+        type: 'application/feed+json',
+        title: 'Noé Tatoud — Blog (JSON Feed)',
+        href: '/feed.json',
+      },
+    ],
   }),
 
   shellComponent: RootDocument,

@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
+import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
+import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TalksIndexRouteImport } from './routes/talks/index'
@@ -21,6 +24,21 @@ import { Route as ExperiencesSlugRouteImport } from './routes/experiences/$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 
+const RssDotxmlRoute = RssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
+  id: '/feed.json',
+  path: '/feed.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
+  id: '/atom.xml',
+  path: '/atom.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
@@ -80,6 +98,9 @@ const ApiOgRoute = ApiOgRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -93,6 +114,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -107,6 +131,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/atom.xml': typeof AtomDotxmlRoute
+  '/feed.json': typeof FeedDotjsonRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/experiences/$slug': typeof ExperiencesSlugRoute
@@ -122,6 +149,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/achievements'
+    | '/atom.xml'
+    | '/feed.json'
+    | '/rss.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -135,6 +165,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/achievements'
+    | '/atom.xml'
+    | '/feed.json'
+    | '/rss.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -148,6 +181,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/achievements'
+    | '/atom.xml'
+    | '/feed.json'
+    | '/rss.xml'
     | '/api/og'
     | '/blog/$slug'
     | '/experiences/$slug'
@@ -162,6 +198,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
+  AtomDotxmlRoute: typeof AtomDotxmlRoute
+  FeedDotjsonRoute: typeof FeedDotjsonRoute
+  RssDotxmlRoute: typeof RssDotxmlRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ExperiencesSlugRoute: typeof ExperiencesSlugRoute
@@ -175,6 +214,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rss.xml': {
+      id: '/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/rss.xml'
+      preLoaderRoute: typeof RssDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed.json': {
+      id: '/feed.json'
+      path: '/feed.json'
+      fullPath: '/feed.json'
+      preLoaderRoute: typeof FeedDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atom.xml': {
+      id: '/atom.xml'
+      path: '/atom.xml'
+      fullPath: '/atom.xml'
+      preLoaderRoute: typeof AtomDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/achievements': {
       id: '/achievements'
       path: '/achievements'
@@ -258,6 +318,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
+  AtomDotxmlRoute: AtomDotxmlRoute,
+  FeedDotjsonRoute: FeedDotjsonRoute,
+  RssDotxmlRoute: RssDotxmlRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSlugRoute: BlogSlugRoute,
   ExperiencesSlugRoute: ExperiencesSlugRoute,

@@ -49,13 +49,8 @@ for = "/"
 [headers.values]
 Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"'
 
-[[edge_functions]]
-path = "/*"
-function = "markdown-negotiation"
-
 [functions]
 node_bundler = "esbuild"
-directory = "netlify/functions"
 included_files = [
   "node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
   # MDX content is read from the filesystem at runtime by the server functions,

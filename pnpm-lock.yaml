@@ -77,6 +77,9 @@ importers:
       '@ntatoud/effect-og':
         specifier: workspace:*
         version: link:../../packages/effect-og
+      '@ntatoud/effect-rss':
+        specifier: workspace:*
+        version: link:../../packages/effect-rss
       '@tailwindcss/vite':
         specifier: 4.3.2
         version: 4.3.2(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
@@ -226,6 +229,16 @@ importers:
       '@types/react':
         specifier: 19.2.17
         version: 19.2.17
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+
+  packages/effect-rss:
+    dependencies:
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0-beta.99
+    devDependencies:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
