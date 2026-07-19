@@ -13,7 +13,10 @@ type TalkPageProps = {
 
 export function TalkPage({ talk }: TalkPageProps) {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12" data-slot="talk-page">
+    <main
+      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
+      data-slot="talk-page"
+    >
       <ButtonLink to="/talks" variant="ghost" size="sm">
         <HugeiconsIcon
           icon={ArrowLeft02Icon}

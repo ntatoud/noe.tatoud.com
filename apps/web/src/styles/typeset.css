@@ -281,8 +281,17 @@
       padding: 0.125em 0.3em;
     }
 
-    /* Code blocks. */
+    /* Code blocks. rehype-pretty-code wraps pre in a figure and sets the
+       code element to display:grid for line highlighting, so both need
+       an explicit width/min-width or their grid tracks can force the
+       ancestor chain wider than the viewport instead of scrolling. */
+    &:where(figure:has(> pre)) {
+      max-width: 100%;
+      min-width: 0;
+    }
     &:where(pre) {
+      display: block;
+      width: 100%;
       background-color: var(
         --color-muted,
         color-mix(in oklab, currentColor 8%, transparent)
@@ -294,11 +303,15 @@
       direction: ltr;
       border-radius: var(--radius, 0.5em);
       padding: 0.75em 1em;
+      max-width: 100%;
+      min-width: 0;
       overflow-x: auto;
       margin-block-start: calc(var(--typeset-flow) / 0.875);
       margin-block-end: 0;
     }
     &:where(pre code) {
+      display: grid;
+      min-width: 0;
       background-color: transparent;
       font-family: inherit;
       font-size: inherit;

@@ -16,7 +16,10 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
   const heroSrc = resolveContentImage(post.hero)
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12" data-slot="blog-post-page">
+    <main
+      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
+      data-slot="blog-post-page"
+    >
       <ButtonLink to="/blog" variant="ghost" size="sm">
         <HugeiconsIcon
           icon={ArrowLeft02Icon}
