@@ -3,7 +3,7 @@ import * as path from 'node:path'
 import type { ComponentType } from 'react'
 
 import { getAll, getBySlug } from '@ntatoud/effect-collections'
-import type { Document } from '@ntatoud/effect-collections'
+import type { DocumentMeta } from '@ntatoud/effect-collections'
 
 import { blogPosts as blogPostsCollection } from '../collections'
 
@@ -35,7 +35,7 @@ function publicHeroPath(absolutePath: string): string {
 }
 
 function toBlogPost(
-  doc: Document<(typeof blogPostsCollection.schema)['Type']>,
+  doc: DocumentMeta<(typeof blogPostsCollection.schema)['Type']>,
 ): BlogPost {
   const post = { slug: doc.slug, ...doc.data }
   return {

@@ -67,10 +67,18 @@ export function defineCollection<S extends Schema.Constraint, A>(collection: {
   }
 }
 
-export interface Document<A> {
+/**
+ * A document without its compiled MDX body. `getAll` returns these: compiling
+ * the body (MDX evaluation + Shiki highlighting) is by far the most expensive
+ * step of reading a document, and list views only ever need the frontmatter.
+ */
+export interface DocumentMeta<A> {
   readonly slug: string
   readonly data: A
   readonly source: string
+}
+
+export interface Document<A> extends DocumentMeta<A> {
   readonly Content: ComponentType
 }
 
@@ -98,7 +106,7 @@ export interface CollectionsShape {
   readonly getAll: <S extends Schema.Constraint, A>(
     collection: Collection<S, A>,
   ) => Effect.Effect<
-    ReadonlyArray<Document<A>>,
+    ReadonlyArray<DocumentMeta<A>>,
     CollectionError,
     FileSystem.FileSystem | Path.Path | ExternalDecodingServices<S>
   >
@@ -116,18 +124,20 @@ const make = Layer.effect(
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
-    const readDocument = <S extends Schema.Constraint, A>(
+    const readSource = <S extends Schema.Constraint, A>(
       collection: Collection<S, A>,
       slug: string,
     ) =>
+      fs
+        .readFileString(path.join(collection.directory, slug, 'index.mdx'))
+        .pipe(collectionError('readFile'))
+
+    const decodeData = <S extends Schema.Constraint, A>(
+      collection: Collection<S, A>,
+      slug: string,
+      frontmatter: Record<string, unknown>,
+    ) =>
       Effect.gen(function* () {
-        const filePath = path.join(collection.directory, slug, 'index.mdx')
-        const source = yield* fs
-          .readFileString(filePath)
-          .pipe(collectionError('readFile'))
-        const { frontmatter, Content } = yield* mdxCompiler
-          .toJsx(source)
-          .pipe(collectionError('toJsx'))
         const decoded = yield* Schema.decodeUnknownEffect(collection.schema)(
           frontmatter,
         ).pipe(
@@ -137,11 +147,38 @@ const make = Layer.effect(
           ),
           collectionError('decode'),
         )
-        const data = yield* collection.transform(decoded, {
+        return yield* collection.transform(decoded, {
           slug,
           directory: collection.directory,
         })
+      })
+
+    const readDocument = <S extends Schema.Constraint, A>(
+      collection: Collection<S, A>,
+      slug: string,
+    ) =>
+      Effect.gen(function* () {
+        const source = yield* readSource(collection, slug)
+        const { frontmatter, Content } = yield* mdxCompiler
+          .toJsx(source)
+          .pipe(collectionError('toJsx'))
+        const data = yield* decodeData(collection, slug, frontmatter)
         return { slug, data, source, Content } satisfies Document<A>
+      })
+
+    // Frontmatter-only read: skips MDX compilation, which list views never
+    // need and which dominates the cost of `getAll` over a whole collection.
+    const readDocumentMeta = <S extends Schema.Constraint, A>(
+      collection: Collection<S, A>,
+      slug: string,
+    ) =>
+      Effect.gen(function* () {
+        const source = yield* readSource(collection, slug)
+        const frontmatter = yield* mdxCompiler
+          .frontmatter(source)
+          .pipe(collectionError('frontmatter'))
+        const data = yield* decodeData(collection, slug, frontmatter)
+        return { slug, data, source } satisfies DocumentMeta<A>
       })
 
     return Collections.of({
@@ -157,8 +194,10 @@ const make = Layer.effect(
               Effect.orElseSucceed(() => false),
             ),
           )
-          return yield* Effect.forEach(slugs, (slug) =>
-            readDocument(collection, slug),
+          return yield* Effect.forEach(
+            slugs,
+            (slug) => readDocumentMeta(collection, slug),
+            { concurrency: 8 },
           )
         }),
     })
@@ -189,14 +228,14 @@ export const getAll = <
   A,
 >(
   collection: Collection<S, A>,
-): Promise<ReadonlyArray<Document<A>>> =>
+): Promise<ReadonlyArray<DocumentMeta<A>>> =>
   Effect.runPromise(
     // The `S['DecodingServices'] extends KnownDecodingServices` constraint
     // above guarantees this is sound; tsc just can't distribute `Exclude`
     // over a constrained indexed-access type parameter to verify it itself.
     Collections.use((collections) => collections.getAll(collection)).pipe(
       Effect.provide(CollectionsLive),
-    ) as Effect.Effect<ReadonlyArray<Document<A>>, CollectionError>,
+    ) as Effect.Effect<ReadonlyArray<DocumentMeta<A>>, CollectionError>,
   )
 
 /** Promise-based convenience wrapper — resolves `Collections` and provides `CollectionsLive` for you. */

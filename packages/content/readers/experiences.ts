@@ -1,7 +1,7 @@
 import * as path from 'node:path'
 
 import { getAll } from '@ntatoud/effect-collections'
-import type { Document } from '@ntatoud/effect-collections'
+import type { DocumentMeta } from '@ntatoud/effect-collections'
 
 import { experiences as experiencesCollection } from '../collections'
 import type { ExperienceFrontmatter } from '../schemas/experiences'
@@ -20,7 +20,7 @@ function publicLogoPath(absolutePath: string): string {
 }
 
 function toExperience(
-  doc: Document<(typeof experiencesCollection.schema)['Type']>,
+  doc: DocumentMeta<(typeof experiencesCollection.schema)['Type']>,
 ): Experience {
   const exp = { slug: doc.slug, ...doc.data }
   return {
