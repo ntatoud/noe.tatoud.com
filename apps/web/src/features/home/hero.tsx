@@ -18,7 +18,7 @@ export function Hero() {
         alt={`Pixel art portrait of ${ownerName}`}
         width={160}
         height={160}
-        className="mb-4 size-40 border border-border object-cover"
+        className="mb-4 size-40 object-cover"
         data-slot="hero-photo"
       />
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">

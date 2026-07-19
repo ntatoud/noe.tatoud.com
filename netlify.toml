@@ -1,6 +1,6 @@
 [build]
+base = "apps/web"
 command = "pnpm run build"
-publish = "apps/web/dist/client"
 
 [build.environment]
 NODE_VERSION = "24"
@@ -33,6 +33,25 @@ for = "/content/*"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 
+# Blog/project/talk detail pages compile MDX to HTML server-side on every
+# request — cache the rendered page at the CDN edge so it isn't re-rendered
+# per visit. Content only changes on deploy, and Netlify purges this cache
+# on each deploy, so a 1-day TTL is safe.
+[[headers]]
+for = "/blog/*"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+[[headers]]
+for = "/projects/*"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+[[headers]]
+for = "/talks/*"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
 # Netlify image CDN — content-addressed by URL params, safe to cache long-term
 # Note: Netlify forces a 1-day browser Cache-Control on /.netlify/images
 # responses; this override only takes effect if Netlify lifts that restriction.
@@ -57,8 +76,8 @@ Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="
 [functions]
 node_bundler = "esbuild"
 included_files = [
-  "node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
+  "../../node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
   # MDX content is read from the filesystem at runtime by the server functions,
   # so it must be bundled into the serverless function.
-  "content/**",
+  "../../content/**",
 ]
