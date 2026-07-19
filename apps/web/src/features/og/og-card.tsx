@@ -10,7 +10,6 @@ const KIND_LABELS: Record<OgKind, string> = {
   blog: 'Blog',
   project: 'Project',
   talk: 'Talk',
-  experience: 'Experience',
 }
 
 export type OgCardProps = {

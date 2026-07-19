@@ -1,5 +1,6 @@
 import type { BlogPost } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ContentList } from '@/components/content-list'
 
 type BlogPageProps = {
   posts: BlogPost[]
@@ -12,19 +13,15 @@ export function BlogPage({ posts }: BlogPageProps) {
       <p className="mt-2 text-muted-foreground">
         Long-form posts on frontend, tooling, and craft.
       </p>
-      <ul className="mt-8 flex flex-col gap-2">
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <Link
-              to="/blog/$slug"
-              params={{ slug: post.slug }}
-              className="text-sm text-foreground underline-offset-4 hover:underline"
-            >
-              {post.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ContentList
+        className="mt-8"
+        items={posts.map((post) => ({
+          key: post.slug,
+          href: post.externalUrl ?? post.url,
+          title: post.title,
+          external: post.externalUrl !== null,
+        }))}
+      />
     </main>
   )
 }

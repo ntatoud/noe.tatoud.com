@@ -4,12 +4,7 @@ export {
   type BlogPost,
   type BlogPostDetail,
 } from './readers/blog'
-export {
-  getExperience,
-  getExperiences,
-  type Experience,
-  type ExperienceDetail,
-} from './readers/experiences'
+export { getExperiences, type Experience } from './readers/experiences'
 export {
   getProject,
   getProjects,

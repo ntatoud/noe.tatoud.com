@@ -3,6 +3,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import { NotFound } from '@/components/error/not-found'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
@@ -56,9 +57,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-full flex-col">
-        <Header />
-        {children}
-        <Footer />
+        <TooltipProvider>
+          <Header />
+          {children}
+          <Footer />
+        </TooltipProvider>
         {import.meta.env.DEV && (
           <TanStackDevtools
             plugins={[

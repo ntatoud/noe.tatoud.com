@@ -1,5 +1,6 @@
 import type { StageItem } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ContentList } from '@/components/content-list'
 
 type TalksPageProps = {
   talks: StageItem[]
@@ -12,19 +13,14 @@ export function TalksPage({ talks }: TalksPageProps) {
       <p className="mt-2 text-muted-foreground">
         Conference talks and stage sessions.
       </p>
-      <ul className="mt-8 flex flex-col gap-2">
-        {talks.map((talk) => (
-          <li key={talk.slug}>
-            <Link
-              to="/talks/$slug"
-              params={{ slug: talk.slug }}
-              className="text-sm text-foreground underline-offset-4 hover:underline"
-            >
-              {talk.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ContentList
+        className="mt-8"
+        items={talks.map((talk) => ({
+          key: talk.slug,
+          href: `/talks/${talk.slug}`,
+          title: talk.title,
+        }))}
+      />
     </main>
   )
 }
