@@ -54,6 +54,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{document.documentElement.classList.toggle('dark',localStorage.getItem('theme')!=='light')}catch(e){}",
+          }}
+        />
         <HeadContent />
       </head>
       <body className="flex min-h-full flex-col">

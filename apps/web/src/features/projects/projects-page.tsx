@@ -17,7 +17,11 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
         className="mt-8"
         items={projects.map((project) => ({
           key: project.slug,
-          href: `/projects/${project.slug}`,
+          href:
+            project.kind === 'contribution' && project.url
+              ? project.url
+              : `/projects/${project.slug}`,
+          external: project.kind === 'contribution' && !!project.url,
           title: project.title,
         }))}
       />
