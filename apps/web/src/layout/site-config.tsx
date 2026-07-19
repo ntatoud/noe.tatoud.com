@@ -63,6 +63,6 @@ export const socialLinks: readonly SocialLink[] = [
   },
 ] as const
 
-/** Trophy icon used by the header for the `/achievements` link. */
+/** Trophy icon used by the header's disabled "Achievements" nav button. */
 export const trophyIcon = ChampionIcon
 export const menuIcon = Menu01Icon

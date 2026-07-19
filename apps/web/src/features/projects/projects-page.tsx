@@ -1,5 +1,6 @@
 import type { Project } from '@ntatoud/content'
-import { Link } from '@tanstack/react-router'
+
+import { ContentList } from '@/components/content-list'
 
 type ProjectsPageProps = {
   projects: Project[]
@@ -12,19 +13,14 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
       <p className="mt-2 text-muted-foreground">
         Things I've built and shipped.
       </p>
-      <ul className="mt-8 flex flex-col gap-2">
-        {projects.map((project) => (
-          <li key={project.slug}>
-            <Link
-              to="/projects/$slug"
-              params={{ slug: project.slug }}
-              className="text-sm text-foreground underline-offset-4 hover:underline"
-            >
-              {project.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ContentList
+        className="mt-8"
+        items={projects.map((project) => ({
+          key: project.slug,
+          href: `/projects/${project.slug}`,
+          title: project.title,
+        }))}
+      />
     </main>
   )
 }

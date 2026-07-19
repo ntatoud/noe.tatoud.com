@@ -12,7 +12,6 @@ const STATIC_PATHS: ReadonlyArray<string> = [
   '/blog',
   '/projects',
   '/talks',
-  '/achievements',
 ]
 
 /** Most recent event date for a talk, or `undefined` if it has none. */

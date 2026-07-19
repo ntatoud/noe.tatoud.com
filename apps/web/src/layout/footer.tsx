@@ -8,7 +8,7 @@ export function Footer() {
       className="mt-auto w-full border-t border-border bg-background"
       data-slot="footer"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-start gap-4 px-4 py-10">
+      <div className="mx-auto flex max-w-3xl flex-col items-start gap-4 px-4 py-10">
         <h2 className="text-sm font-medium text-muted-foreground">
           Let's connect
         </h2>

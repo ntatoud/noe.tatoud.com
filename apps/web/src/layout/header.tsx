@@ -7,6 +7,11 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Button } from '@/components/ui/button'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 import { menuIcon, navItems, trophyIcon } from './site-config'
@@ -16,7 +21,7 @@ const logoLabel = 'noe.tatoud.com — home'
 export function Header() {
   return (
     <header className="w-full" data-slot="header">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
+      <div className="mx-auto flex h-14 max-w-3xl items-center gap-4 px-4">
         <Logo />
         <PrimaryNav className="hidden md:flex" />
         <div className="ml-auto hidden items-center gap-1 md:flex">
@@ -62,16 +67,23 @@ function PrimaryNav({ className }: { className?: string }) {
 
 export function TrophyLink({ className }: { className?: string }) {
   return (
-    <ButtonLink
-      to="/achievements"
-      variant="ghost"
-      size="icon"
-      className={className}
-      aria-label="Achievements"
-      data-slot="trophy-link"
-    >
-      <HugeiconsIcon icon={trophyIcon} size={18} />
-    </ButtonLink>
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn('opacity-50', className)}
+            aria-label="Achievements"
+            aria-disabled="true"
+            data-slot="trophy-link"
+          />
+        }
+      >
+        <HugeiconsIcon icon={trophyIcon} size={18} />
+      </TooltipTrigger>
+      <TooltipContent>Available soon</TooltipContent>
+    </Tooltip>
   )
 }
 
