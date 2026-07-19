@@ -75,7 +75,7 @@ export function ProjectPage({ project }: ProjectPageProps) {
       </div>
 
       <div
-        className="prose prose-invert mt-8"
+        className="typeset typeset-docs mt-8"
         data-slot="project-content"
         dangerouslySetInnerHTML={{ __html: project.bodyHtml }}
       />

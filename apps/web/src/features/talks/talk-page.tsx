@@ -71,7 +71,7 @@ export function TalkPage({ talk }: TalkPageProps) {
       )}
 
       <div
-        className="prose prose-invert mt-8"
+        className="typeset typeset-docs mt-8"
         data-slot="talk-content"
         dangerouslySetInnerHTML={{ __html: talk.bodyHtml }}
       />
