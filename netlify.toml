@@ -1,6 +1,6 @@
 [build]
+base = "apps/web"
 command = "pnpm run build"
-publish = "apps/web/dist/client"
 
 [build.environment]
 NODE_VERSION = "24"
@@ -57,8 +57,8 @@ Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="
 [functions]
 node_bundler = "esbuild"
 included_files = [
-  "node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
+  "../../node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
   # MDX content is read from the filesystem at runtime by the server functions,
   # so it must be bundled into the serverless function.
-  "content/**",
+  "../../content/**",
 ]
