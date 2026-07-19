@@ -20,7 +20,6 @@ export const navItems: readonly NavItem[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Projects', href: '/projects' },
   { label: 'Talks', href: '/talks' },
-  { label: 'Experiences', href: '/experiences' },
 ] as const
 
 export type SocialLink = {
@@ -64,6 +63,6 @@ export const socialLinks: readonly SocialLink[] = [
   },
 ] as const
 
-/** Trophy icon used by the header for the `/achievements` link. */
+/** Trophy icon used by the header's disabled "Achievements" nav button. */
 export const trophyIcon = ChampionIcon
 export const menuIcon = Menu01Icon

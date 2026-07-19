@@ -9,7 +9,7 @@ import { SITE_URL } from '@/lib/site'
 export const { OgKind, toMetaTags, BASE_META_TAGS } = defineOgMetadata({
   siteUrl: SITE_URL,
   siteName: 'noe.tatoud.com',
-  kinds: ['blog', 'project', 'talk', 'experience'],
+  kinds: ['blog', 'project', 'talk'],
 })
 
 export type OgKind = typeof OgKind.Type

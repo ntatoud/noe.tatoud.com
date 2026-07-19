@@ -3,7 +3,6 @@ import type { ComponentType } from 'react'
 import {
   getBlogPost as getBlogPostFromContent,
   getBlogPosts as getBlogPostsFromContent,
-  getExperience as getExperienceFromContent,
   getExperiences as getExperiencesFromContent,
   getProject as getProjectFromContent,
   getProjects as getProjectsFromContent,
@@ -54,9 +53,6 @@ export const getBlogPost = createServerFn({ method: 'GET' })
 export const getProject = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) => withBodyHtml(getProjectFromContent(data)))
-export const getExperience = createServerFn({ method: 'GET' })
-  .validator((slug: string) => slug)
-  .handler(({ data }) => withBodyHtml(getExperienceFromContent(data)))
 export const getTalk = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) => withBodyHtml(getTalkFromContent(data)))
