@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -25,6 +26,7 @@ export function Header() {
         <Logo />
         <PrimaryNav className="hidden md:flex" />
         <div className="ml-auto hidden items-center gap-1 md:flex">
+          <ThemeToggle />
           <TrophyLink />
         </div>
         <MobileMenu className="md:hidden" />
@@ -127,7 +129,10 @@ function MobileMenu({ className }: { className?: string }) {
               ))}
             </nav>
 
-            <TrophyLink />
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <TrophyLink />
+            </div>
           </div>
         </SheetContent>
       </Sheet>
