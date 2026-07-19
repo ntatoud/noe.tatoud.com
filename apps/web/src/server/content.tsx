@@ -17,26 +17,33 @@ import { renderToStaticMarkup } from 'react-dom/server'
 
 import { resolveContentImage } from '@/lib/content-images'
 
-// Matches the /blog/*, /projects/*, /talks/* Cache-Control rules in
-// netlify.toml — set here too so the CDN edge cache is populated from the
-// origin response itself, not just Netlify's header-rewrite rules.
+// Content only changes on deploy (MDX files are bundled into the serverless
+// function), so both list and detail responses are safe to cache at the CDN
+// edge for a day. Netlify invalidates its edge cache on every deploy.
 const CONTENT_CACHE_CONTROL = 'public, max-age=86400'
+
+const cached =
+  <T,>(read: () => Promise<T>) =>
+  (): Promise<T> => {
+    setResponseHeader('Cache-Control', CONTENT_CACHE_CONTROL)
+    return read()
+  }
 
 // The content readers read the filesystem (via @ntatoud/effect-collections),
 // so they must never run in the browser. createServerFn strips the handler
 // (and everything it closes over) from the client bundle and calls it over
 // RPC instead.
-export const getBlogPosts = createServerFn({ method: 'GET' }).handler(() =>
-  getBlogPostsFromContent(),
+export const getBlogPosts = createServerFn({ method: 'GET' }).handler(
+  cached(getBlogPostsFromContent),
 )
-export const getProjects = createServerFn({ method: 'GET' }).handler(() =>
-  getProjectsFromContent(),
+export const getProjects = createServerFn({ method: 'GET' }).handler(
+  cached(getProjectsFromContent),
 )
-export const getExperiences = createServerFn({ method: 'GET' }).handler(() =>
-  getExperiencesFromContent(),
+export const getExperiences = createServerFn({ method: 'GET' }).handler(
+  cached(getExperiencesFromContent),
 )
-export const getTalks = createServerFn({ method: 'GET' }).handler(() =>
-  getTalksFromContent(),
+export const getTalks = createServerFn({ method: 'GET' }).handler(
+  cached(getTalksFromContent),
 )
 
 // MDX body images are authored relative to the content file (e.g.
