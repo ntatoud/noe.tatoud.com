@@ -12,7 +12,10 @@ type ProjectPageProps = {
 
 export function ProjectPage({ project }: ProjectPageProps) {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12" data-slot="project-page">
+    <main
+      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
+      data-slot="project-page"
+    >
       <ButtonLink to="/projects" variant="ghost" size="sm">
         <HugeiconsIcon
           icon={ArrowLeft02Icon}
