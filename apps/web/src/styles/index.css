@@ -190,9 +190,11 @@
   }
   html {
     @apply h-full;
+    overscroll-behavior-y: none;
   }
   body {
     @apply h-full bg-background font-sans text-foreground;
+    overscroll-behavior-y: none;
   }
   h1,
   h2,
