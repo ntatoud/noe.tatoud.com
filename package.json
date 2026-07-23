@@ -28,6 +28,9 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "lefthook"
-    ]
+    ],
+    "patchedDependencies": {
+      "@tanstack/start-plugin-core@1.171.19": "patches/@tanstack__start-plugin-core@1.171.19.patch"
+    }
   }
 }

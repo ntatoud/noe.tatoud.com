@@ -1,0 +1,18 @@
+diff --git a/dist/esm/vite/prerender.js b/dist/esm/vite/prerender.js
+index 10ef7b95091c49b24d8a70f82b0f6cab656f627c..d4f7289b8bb990aa35415473a9974ecbc11ea558 100644
+--- a/dist/esm/vite/prerender.js
++++ b/dist/esm/vite/prerender.js
+@@ -33,6 +33,13 @@ async function startPreviewServer(viteConfig) {
+ 		return await vite.preview({
+ 			configFile: viteConfig.configFile,
+ 			preview: {
++				// Fix for https://github.com/TanStack/router/issues/6275 (unmerged
++				// upstream fix: https://github.com/TanStack/router/pull/6305) —
++				// without an explicit host, fetches to "localhost" during prerender
++				// can hit an interface nothing is listening on in container-based
++				// build environments (Docker, Netlify), causing
++				// ETIMEDOUT/ECONNREFUSED.
++				host: "127.0.0.1",
+ 				port: 0,
+ 				open: false
+ 			}

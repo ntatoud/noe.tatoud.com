@@ -28,6 +28,11 @@ catalogs:
       specifier: 7.0.2
       version: 7.0.2
 
+patchedDependencies:
+  '@tanstack/start-plugin-core@1.171.19':
+    hash: 6de392edae273cb7a6f73fad41cf2eee811257d0b341ed8961103681a689b839
+    path: patches/@tanstack__start-plugin-core@1.171.19.patch
+
 importers:
 
   .:
@@ -8354,7 +8359,7 @@ snapshots:
       '@tanstack/router-utils': 1.162.2
       '@tanstack/start-client-core': 1.170.13
       '@tanstack/start-fn-stubs': 1.162.0
-      '@tanstack/start-plugin-core': 1.171.19(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
+      '@tanstack/start-plugin-core': 1.171.19(patch_hash=6de392edae273cb7a6f73fad41cf2eee811257d0b341ed8961103681a689b839)(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
       '@tanstack/start-server-core': 1.169.16(crossws@0.4.9(srvx@0.11.21))
       '@tanstack/start-storage-context': 1.167.16
       pathe: 2.0.3
@@ -8392,7 +8397,7 @@ snapshots:
       '@tanstack/react-start-server': 1.167.21(crossws@0.4.9(srvx@0.11.21))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/router-utils': 1.162.2
       '@tanstack/start-client-core': 1.170.13
-      '@tanstack/start-plugin-core': 1.171.19(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
+      '@tanstack/start-plugin-core': 1.171.19(patch_hash=6de392edae273cb7a6f73fad41cf2eee811257d0b341ed8961103681a689b839)(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
       '@tanstack/start-server-core': 1.169.16(crossws@0.4.9(srvx@0.11.21))
       pathe: 2.0.3
       react: 19.2.7
@@ -8494,7 +8499,7 @@ snapshots:
 
   '@tanstack/start-fn-stubs@1.162.0': {}
 
-  '@tanstack/start-plugin-core@1.171.19(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))':
+  '@tanstack/start-plugin-core@1.171.19(patch_hash=6de392edae273cb7a6f73fad41cf2eee811257d0b341ed8961103681a689b839)(@tanstack/react-router@1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(crossws@0.4.9(srvx@0.11.21))(esbuild@0.28.0)(rolldown@1.1.5)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@babel/code-frame': 7.27.1
       '@babel/core': 7.29.7
