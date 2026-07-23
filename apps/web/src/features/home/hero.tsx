@@ -18,6 +18,7 @@ export function Hero() {
         alt={`Pixel art portrait of ${ownerName}`}
         width={160}
         height={160}
+        fetchPriority="high"
         className="mb-4 size-40 object-cover"
         data-slot="hero-photo"
       />
