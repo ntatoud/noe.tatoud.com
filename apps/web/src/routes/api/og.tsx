@@ -1,12 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { Option, Schema } from 'effect'
-
-import { OgKind } from '@/features/og/metadata'
+import { isOgKind } from '@/features/og/metadata'
 import { OgCard } from '@/features/og/og-card'
 import { ogImage } from '@/features/og/og-image'
-
-const decodeKind = Schema.decodeUnknownOption(OgKind)
 
 export const Route = createFileRoute('/api/og')({
   server: {
@@ -16,7 +12,8 @@ export const Route = createFileRoute('/api/og')({
         const title = searchParams.get('title') ?? 'Noé Tatoud'
         const description =
           searchParams.get('description') ?? 'Software engineer.'
-        const kind = Option.getOrUndefined(decodeKind(searchParams.get('kind')))
+        const rawKind = searchParams.get('kind')
+        const kind = isOgKind(rawKind) ? rawKind : undefined
 
         return ogImage.render(
           <OgCard title={title} description={description} kind={kind} />,

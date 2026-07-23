@@ -1,31 +1,16 @@
-import { Effect, Schema } from 'effect'
-
 // --- Meta tag primitives ---------------------------------------------------
 
-const TitleTag = Schema.Struct({ title: Schema.String })
-const CharSetTag = Schema.Struct({ charSet: Schema.NonEmptyString })
-const NameTag = Schema.Struct({
-  name: Schema.NonEmptyString,
-  content: Schema.String,
-})
-const PropertyTag = Schema.Struct({
-  property: Schema.NonEmptyString,
-  content: Schema.String,
-})
-
 /**
- * A single `<meta>`/`<title>` descriptor. Modeled as a schema union so every
- * tag emitted by {@link defineOgMetadata} is a validated, fully-typed member
- * rather than an anonymous JSON object. The shapes line up with what most React
+ * A single `<meta>`/`<title>` descriptor. Modeled as a union so every tag
+ * emitted by {@link defineOgMetadata} is a fully-typed member rather than an
+ * anonymous JSON object. The shapes line up with what most React
  * meta-frameworks accept in their `head`/`meta` APIs (e.g. TanStack Router).
  */
-export const MetaTag = Schema.Union([
-  TitleTag,
-  CharSetTag,
-  NameTag,
-  PropertyTag,
-])
-export type MetaTag = typeof MetaTag.Type
+export type MetaTag =
+  | { title: string }
+  | { charSet: string }
+  | { name: string; content: string }
+  | { property: string; content: string }
 
 // --- Configuration ---------------------------------------------------------
 
@@ -35,7 +20,7 @@ export interface OgMetadataConfig<Kinds extends ReadonlyArray<string>> {
   /** Value for `og:site_name`. */
   readonly siteName: string
   /**
-   * Content kinds this site publishes. Drives the typed `OgKind` schema and the
+   * Content kinds this site publishes. Drives the typed `OgKind` guard and the
    * `kind` query param on the OG image URL. Pass `[]` if the site has no kinds.
    */
   readonly kinds: Kinds
@@ -56,11 +41,13 @@ export interface OgMetadataConfig<Kinds extends ReadonlyArray<string>> {
 /**
  * Build a typesafe, composable OG/metadata toolkit bound to a site's config.
  *
- * The returned `PageMetadata` schema is the extensible surface: callers describe
- * a page semantically and {@link defineOgMetadata}'s `toMetaTags` derives the
- * concrete, deduplicated tag list. Site-wide values (`ogType`, `siteName`,
- * `twitterCard`) are baked in as constructor defaults, so a page only specifies
- * what differs and may still override any of them.
+ * `toMetaTags` derives the concrete, deduplicated tag list from a page's
+ * semantic description. Site-wide values (`ogType`, `siteName`,
+ * `twitterCard`) are baked in as defaults, so a page only specifies what
+ * differs and may still override any of them.
+ *
+ * Kept dependency-free (no `effect`) since this module is imported from the
+ * root route and ships in every client bundle.
  */
 export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
   config: OgMetadataConfig<Kinds>,
@@ -76,33 +63,27 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
     imageHeight = 630,
   } = config
 
-  /** The set of content kinds as a typed literal union schema. */
-  const OgKind = Schema.Literals(kinds)
-  type OgKind = typeof OgKind.Type
+  type OgKind = Kinds[number]
+  const kindSet = new Set<string>(kinds)
+
+  /** Runtime guard for `OgKind` — use to validate untrusted input (e.g. query params). */
+  const isOgKind = (value: unknown): value is OgKind =>
+    typeof value === 'string' && kindSet.has(value)
 
   /** Semantic, page-level metadata — the composable surface routes describe. */
-  const PageMetadata = Schema.Struct({
+  interface PageMetadataInput {
     /** Document title — drives `<title>`, `og:title`, and `twitter:title`. */
-    title: Schema.NonEmptyString,
+    title: string
     /** Summary — drives `description`, `og:description`, `twitter:description`. */
-    description: Schema.optionalKey(Schema.NonEmptyString),
+    description?: string
     /** Canonical pathname, e.g. `/blog/my-post` — drives `og:url`. */
-    path: Schema.String.pipe(
-      Schema.withConstructorDefault(Effect.succeed('/')),
-    ),
+    path?: string
     /** Content kind — drives the OG image badge. */
-    kind: Schema.optionalKey(OgKind),
-    ogType: Schema.NonEmptyString.pipe(
-      Schema.withConstructorDefault(Effect.succeed(ogType)),
-    ),
-    siteName: Schema.NonEmptyString.pipe(
-      Schema.withConstructorDefault(Effect.succeed(siteName)),
-    ),
-    twitterCard: Schema.NonEmptyString.pipe(
-      Schema.withConstructorDefault(Effect.succeed(twitterCard)),
-    ),
-  })
-  type PageMetadataInput = Parameters<typeof PageMetadata.make>[0]
+    kind?: OgKind
+    ogType?: string
+    siteName?: string
+    twitterCard?: string
+  }
 
   /** Build the OG image endpoint URL for a page. */
   const buildOgImageUrl = (params: {
@@ -124,26 +105,23 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
 
   /** Derive the full, deduplicated set of meta tags for a page. */
   const toMetaTags = (input: PageMetadataInput): MetaTag[] => {
-    // Drop absent/empty optionals so constructor defaults kick in and
-    // `optionalKey` fields never receive an explicit `undefined`.
-    const { title, description, path, kind, ogType, siteName, twitterCard } =
-      PageMetadata.make({
-        title: input.title,
-        ...(input.description ? { description: input.description } : {}),
-        ...(input.path !== undefined ? { path: input.path } : {}),
-        ...(input.kind ? { kind: input.kind } : {}),
-        ...(input.ogType ? { ogType: input.ogType } : {}),
-        ...(input.siteName ? { siteName: input.siteName } : {}),
-        ...(input.twitterCard ? { twitterCard: input.twitterCard } : {}),
-      })
+    const {
+      title,
+      description,
+      path = '/',
+      kind,
+      ogType: pageOgType = ogType,
+      siteName: pageSiteName = siteName,
+      twitterCard: pageTwitterCard = twitterCard,
+    } = input
     const url = `${siteUrl}${path}`
     const image = buildOgImageUrl({ title, description, kind })
 
     return [
       { title },
       ...(description ? [{ name: 'description', content: description }] : []),
-      { property: 'og:type', content: ogType },
-      { property: 'og:site_name', content: siteName },
+      { property: 'og:type', content: pageOgType },
+      { property: 'og:site_name', content: pageSiteName },
       { property: 'og:title', content: title },
       ...(description
         ? [{ property: 'og:description', content: description }]
@@ -152,7 +130,7 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
       { property: 'og:image', content: image },
       { property: 'og:image:width', content: String(imageWidth) },
       { property: 'og:image:height', content: String(imageHeight) },
-      { name: 'twitter:card', content: twitterCard },
+      { name: 'twitter:card', content: pageTwitterCard },
       { name: 'twitter:url', content: url },
       { name: 'twitter:title', content: title },
       ...(description
@@ -163,8 +141,7 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
   }
 
   return {
-    OgKind,
-    PageMetadata,
+    isOgKind,
     buildOgImageUrl,
     BASE_META_TAGS,
     toMetaTags,
