@@ -32,7 +32,7 @@ export function Hero() {
         </ButtonLink>
         <ButtonAnchor
           href={resumeHref}
-          variant="outline"
+          variant="secondary"
           download
           data-slot="hero-cta-resume"
         >
