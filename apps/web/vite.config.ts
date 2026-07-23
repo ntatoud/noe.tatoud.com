@@ -14,7 +14,15 @@ export default defineConfig(({ mode }) => ({
     devtools(),
     ...(mode !== 'development' ? [netlify()] : []),
     tailwindcss(),
-    tanstackStart(),
+    // Prerender every page reachable from / at build time so first loads are
+    // served statically from the CDN instead of invoking the SSR function
+    // (cold start + content pipeline). Unmatched paths still fall back to SSR.
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        crawlLinks: true,
+      },
+    }),
     viteReact({ include: /\.(tsx|ts|jsx|js)$/ }),
   ],
 }))
