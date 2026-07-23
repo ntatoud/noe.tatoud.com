@@ -17,16 +17,26 @@ import { renderToStaticMarkup } from 'react-dom/server'
 
 import { resolveContentImage } from '@/lib/content-images'
 
-// Content only changes on deploy (MDX files are bundled into the serverless
-// function), so both list and detail responses are safe to cache at the CDN
-// edge for a day. Netlify invalidates its edge cache on every deploy.
-const CONTENT_CACHE_CONTROL = 'public, max-age=86400'
+// Content only changes on deploy, and Netlify purges its CDN cache on every
+// deploy — so let the edge cache these RPC responses indefinitely instead of
+// invoking the serverless function (fs read + MDX compile) on each navigation.
+// Browsers keep a short cache so stale tabs recover quickly after a deploy.
+// Only set headers once the content has resolved, so error responses (e.g.
+// unknown slugs) never get cached.
+function setContentCacheHeaders() {
+  setResponseHeader('Cache-Control', 'public, max-age=300')
+  setResponseHeader(
+    'Netlify-CDN-Cache-Control',
+    'public, durable, s-maxage=31536000',
+  )
+}
 
 const cached =
   <T,>(read: () => Promise<T>) =>
-  (): Promise<T> => {
-    setResponseHeader('Cache-Control', CONTENT_CACHE_CONTROL)
-    return read()
+  async (): Promise<T> => {
+    const value = await read()
+    setContentCacheHeaders()
+    return value
   }
 
 // The content readers read the filesystem (via @ntatoud/effect-collections),
@@ -69,8 +79,8 @@ async function withBodyHtml<
   options: { imageBase: string; components?: MdxComponents },
 ): Promise<Omit<T, 'Content'> & { bodyHtml: string }> {
   const { Content, ...rest } = await detail
-  setResponseHeader('Cache-Control', CONTENT_CACHE_CONTROL)
   const html = renderToStaticMarkup(<Content components={options.components} />)
+  setContentCacheHeaders()
   return {
     ...rest,
     bodyHtml: rewriteBodyImages(html, options.imageBase),
