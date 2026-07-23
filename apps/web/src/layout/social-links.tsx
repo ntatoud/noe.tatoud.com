@@ -32,12 +32,12 @@ function SocialLinkButton({ link }: { link: SocialLink }) {
     <ButtonAnchor
       href={link.href}
       variant="ghost"
-      size="icon"
+      size="icon-lg"
       aria-label={link.label}
       data-social={link.id}
       {...externalProps}
     >
-      <HugeiconsIcon icon={link.icon} size={18} />
+      <HugeiconsIcon icon={link.icon} className="size-6" />
     </ButtonAnchor>
   )
 }

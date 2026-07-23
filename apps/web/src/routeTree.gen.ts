@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
@@ -22,6 +23,11 @@ import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ApiOgRouteImport } from './routes/api/og'
 
+const StyleguideRoute = StyleguideRouteImport.update({
+  id: '/styleguide',
+  path: '/styleguide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/feed.json': typeof FeedDotjsonRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/styleguide': typeof StyleguideRoute
   '/api/og': typeof ApiOgRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/feed.json'
     | '/rss.xml'
     | '/sitemap.xml'
+    | '/styleguide'
     | '/api/og'
     | '/blog/$slug'
     | '/projects/$slug'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/feed.json'
     | '/rss.xml'
     | '/sitemap.xml'
+    | '/styleguide'
     | '/api/og'
     | '/blog/$slug'
     | '/projects/$slug'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/feed.json'
     | '/rss.xml'
     | '/sitemap.xml'
+    | '/styleguide'
     | '/api/og'
     | '/blog/$slug'
     | '/projects/$slug'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   FeedDotjsonRoute: typeof FeedDotjsonRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StyleguideRoute: typeof StyleguideRoute
   ApiOgRoute: typeof ApiOgRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
@@ -188,6 +201,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/styleguide': {
+      id: '/styleguide'
+      path: '/styleguide'
+      fullPath: '/styleguide'
+      preLoaderRoute: typeof StyleguideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedDotjsonRoute: FeedDotjsonRoute,
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StyleguideRoute: StyleguideRoute,
   ApiOgRoute: ApiOgRoute,
   BlogSlugRoute: BlogSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
