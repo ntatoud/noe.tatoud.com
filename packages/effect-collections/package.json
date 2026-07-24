@@ -7,7 +7,9 @@
     ".": "./index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
@@ -16,6 +18,11 @@
     "image-size": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "19.2.17"
+    "@effect/vitest": "catalog:",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "vitest": "catalog:"
   }
 }
