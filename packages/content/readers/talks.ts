@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react'
 
-import { getAll, getBySlug } from '@ntatoud/effect-collections'
+import { Collections } from '@ntatoud/effect-collections'
+
+import { Effect } from 'effect'
 
 import { talks as talksCollection } from '../collections'
 import type { StageEvent, StageFrontmatter } from '../schemas/talks'
@@ -23,18 +25,29 @@ function latestEvent(
   )
 }
 
-export async function getTalks(): Promise<StageItem[]> {
-  const docs = await getAll(talksCollection)
-  return docs
-    .map((doc) => ({ slug: doc.slug, ...doc.data }))
-    .sort(
-      (a, b) =>
-        new Date(latestEvent(b.events)?.date ?? 0).getTime() -
-        new Date(latestEvent(a.events)?.date ?? 0).getTime(),
-    )
-}
+export const getTalks = Collections.use((collections) =>
+  collections.getAll(talksCollection),
+).pipe(
+  Effect.map((docs) =>
+    docs
+      .map((doc) => ({ slug: doc.slug, ...doc.data }))
+      .sort(
+        (a, b) =>
+          new Date(latestEvent(b.events)?.date ?? 0).getTime() -
+          new Date(latestEvent(a.events)?.date ?? 0).getTime(),
+      ),
+  ),
+)
 
-export async function getTalk(slug: string): Promise<TalkDetail> {
-  const doc = await getBySlug(talksCollection, slug)
-  return { slug: doc.slug, ...doc.data, Content: doc.Content }
-}
+export const getTalk = (slug: string) =>
+  Collections.use((collections) =>
+    collections.getBySlug(talksCollection, slug),
+  ).pipe(
+    Effect.map(
+      (doc): TalkDetail => ({
+        slug: doc.slug,
+        ...doc.data,
+        Content: doc.Content,
+      }),
+    ),
+  )

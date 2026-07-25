@@ -16,6 +16,7 @@ import { setResponseHeader } from '@tanstack/react-start/server'
 import { renderToStaticMarkup } from 'react-dom/server'
 
 import { resolveContentImage } from '@/lib/content-images'
+import { runtime } from '@/server/runtime'
 
 // Content only changes on deploy, and Netlify purges its CDN cache on every
 // deploy — so let the edge cache these RPC responses indefinitely instead of
@@ -44,16 +45,16 @@ const cached =
 // (and everything it closes over) from the client bundle and calls it over
 // RPC instead.
 export const getBlogPosts = createServerFn({ method: 'GET' }).handler(
-  cached(getBlogPostsFromContent),
+  cached(() => runtime.runPromise(getBlogPostsFromContent)),
 )
 export const getProjects = createServerFn({ method: 'GET' }).handler(
-  cached(getProjectsFromContent),
+  cached(() => runtime.runPromise(getProjectsFromContent)),
 )
 export const getExperiences = createServerFn({ method: 'GET' }).handler(
-  cached(getExperiencesFromContent),
+  cached(() => runtime.runPromise(getExperiencesFromContent)),
 )
 export const getTalks = createServerFn({ method: 'GET' }).handler(
-  cached(getTalksFromContent),
+  cached(() => runtime.runPromise(getTalksFromContent)),
 )
 
 // MDX body images are authored relative to the content file (e.g.
@@ -90,17 +91,21 @@ async function withBodyHtml<
 export const getBlogPost = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(getBlogPostFromContent(data), { imageBase: `blog/${data}` }),
+    withBodyHtml(runtime.runPromise(getBlogPostFromContent(data)), {
+      imageBase: `blog/${data}`,
+    }),
   )
 export const getProject = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(getProjectFromContent(data), {
+    withBodyHtml(runtime.runPromise(getProjectFromContent(data)), {
       imageBase: `projects/${data}`,
     }),
   )
 export const getTalk = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(getTalkFromContent(data), { imageBase: `talks/${data}` }),
+    withBodyHtml(runtime.runPromise(getTalkFromContent(data)), {
+      imageBase: `talks/${data}`,
+    }),
   )

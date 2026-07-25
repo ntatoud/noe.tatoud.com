@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 
 import type { FontDetails } from '@takumi-rs/core'
 import { Renderer } from '@takumi-rs/core'
-import { Context, Effect, Layer, ManagedRuntime } from 'effect'
+import { Context, Effect, Layer } from 'effect'
 import { ImageResponse } from 'takumi-js/response'
 import type { ImageResponseOptions } from 'takumi-js/response'
 
@@ -85,29 +85,3 @@ export const layer = (
       })
     }),
   )
-
-export interface OgImageRuntime {
-  /** Render a React element to a PNG `ImageResponse`. */
-  readonly render: (
-    element: ReactNode,
-    options?: OgRenderOptions,
-  ) => Promise<ImageResponse>
-  /** Dispose the underlying runtime, releasing the renderer. */
-  readonly dispose: () => Promise<void>
-}
-
-/**
- * Promise-based convenience wrapper — the "server function" for OG images.
- *
- * Returns a ready-to-use renderer backed by a memoized runtime: fonts load
- * lazily on the first render and are reused thereafter. Ideal for a route
- * handler that returns `render(<Card .../>)` directly.
- */
-export const makeOgImage = (config?: OgImageConfig): OgImageRuntime => {
-  const runtime = ManagedRuntime.make(layer(config))
-  return {
-    render: (element, options) =>
-      runtime.runPromise(OgImage.use((og) => og.render(element, options))),
-    dispose: () => runtime.dispose(),
-  }
-}

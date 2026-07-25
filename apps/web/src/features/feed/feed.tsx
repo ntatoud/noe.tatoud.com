@@ -1,24 +1,24 @@
 import { getBlogPost, getBlogPosts } from '@ntatoud/content'
-import { makeFeed, type FeedItemInput } from '@ntatoud/effect-rss'
+import type { FeedItemInput } from '@ntatoud/effect-rss'
 
 import { renderToStaticMarkup } from 'react-dom/server'
 
 import { SITE_URL } from '@/lib/site'
-
-const AUTHOR = { name: 'Noé Tatoud' } as const
+import { Feed, runtime } from '@/server/runtime'
 
 /**
- * Blog feed builder bound to this site. Reuse it from the `/rss.xml`,
- * `/atom.xml`, and `/feed.json` route handlers — see `@ntatoud/effect-rss`.
+ * Blog feed serializers bound to this site, backed by the shared App runtime's
+ * `Feed` service. Reuse them from the `/rss.xml`, `/atom.xml`, and `/feed.json`
+ * route handlers — the channel config lives in `./feed-config`.
  */
-export const feed = makeFeed({
-  title: 'Noé Tatoud — Blog',
-  description: 'Articles on software engineering by Noé Tatoud.',
-  siteUrl: SITE_URL,
-  language: 'en',
-  copyright: '© Noé Tatoud',
-  author: AUTHOR,
-})
+export const feed = {
+  rss: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
+    runtime.runPromise(Feed.use((f) => f.rss(items))),
+  atom: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
+    runtime.runPromise(Feed.use((f) => f.atom(items))),
+  json: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
+    runtime.runPromise(Feed.use((f) => f.json(items))),
+}
 
 /**
  * Turn every published blog post into a feed item. Posts hosted here embed
@@ -26,7 +26,7 @@ export const feed = makeFeed({
  * while keeping a stable, on-domain GUID.
  */
 export async function getFeedItems(): Promise<FeedItemInput[]> {
-  const posts = await getBlogPosts()
+  const posts = await runtime.runPromise(getBlogPosts)
 
   return Promise.all(
     posts.map(async (post): Promise<FeedItemInput> => {
@@ -42,7 +42,7 @@ export async function getFeedItems(): Promise<FeedItemInput[]> {
         return { ...base, path: post.externalUrl, id: `${SITE_URL}${post.url}` }
       }
 
-      const detail = await getBlogPost(post.slug)
+      const detail = await runtime.runPromise(getBlogPost(post.slug))
       return {
         ...base,
         path: post.url,

@@ -1,4 +1,4 @@
-import { Context, Effect, Layer, ManagedRuntime, Schema } from 'effect'
+import { Context, Effect, Layer, Schema } from 'effect'
 
 import { FeedError } from './errors'
 import {
@@ -116,27 +116,3 @@ export const layer = (config: FeedConfig): Layer.Layer<Feed> =>
       }),
     }),
   )
-
-export interface FeedRuntime {
-  readonly rss: (items: ReadonlyArray<FeedItemInput>) => Promise<string>
-  readonly atom: (items: ReadonlyArray<FeedItemInput>) => Promise<string>
-  readonly json: (items: ReadonlyArray<FeedItemInput>) => Promise<string>
-  /** Dispose the underlying runtime. */
-  readonly dispose: () => Promise<void>
-}
-
-/**
- * Promise-based convenience wrapper — the "server function" for feeds.
- *
- * Returns a ready-to-use feed builder backed by a memoized runtime, ideal for
- * a route handler that returns `new Response(await feed.rss(items), ...)`.
- */
-export const makeFeed = (config: FeedConfig): FeedRuntime => {
-  const runtime = ManagedRuntime.make(layer(config))
-  return {
-    rss: (items) => runtime.runPromise(Feed.use((f) => f.rss(items))),
-    atom: (items) => runtime.runPromise(Feed.use((f) => f.atom(items))),
-    json: (items) => runtime.runPromise(Feed.use((f) => f.json(items))),
-    dispose: () => runtime.dispose(),
-  }
-}
