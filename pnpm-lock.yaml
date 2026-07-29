@@ -85,6 +85,9 @@ importers:
       '@ntatoud/content':
         specifier: workspace:*
         version: link:../../packages/content
+      '@ntatoud/effect-collections':
+        specifier: workspace:*
+        version: link:../../packages/effect-collections
       '@ntatoud/effect-mdx':
         specifier: workspace:*
         version: link:../../packages/effect-mdx
@@ -109,6 +112,9 @@ importers:
       cnfast:
         specifier: 0.0.8
         version: 0.0.8
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0-beta.99
       react:
         specifier: 19.2.7
         version: 19.2.7

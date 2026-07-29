@@ -2,8 +2,10 @@ import * as path from 'node:path'
 
 import type { ComponentType } from 'react'
 
-import { getAll, getBySlug } from '@ntatoud/effect-collections'
+import { Collections } from '@ntatoud/effect-collections'
 import type { DocumentMeta } from '@ntatoud/effect-collections'
+
+import { Effect } from 'effect'
 
 import { blogPosts as blogPostsCollection } from '../collections'
 
@@ -56,15 +58,22 @@ function toBlogPost(
   }
 }
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
-  const docs = await getAll(blogPostsCollection)
-  return docs
-    .map(toBlogPost)
-    .filter((post) => post.published)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
+export const getBlogPosts = Collections.use((collections) =>
+  collections.getAll(blogPostsCollection),
+).pipe(
+  Effect.map((docs) =>
+    docs
+      .map(toBlogPost)
+      .filter((post) => post.published)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+  ),
+)
 
-export async function getBlogPost(slug: string): Promise<BlogPostDetail> {
-  const doc = await getBySlug(blogPostsCollection, slug)
-  return { ...toBlogPost(doc), Content: doc.Content }
-}
+export const getBlogPost = (slug: string) =>
+  Collections.use((collections) =>
+    collections.getBySlug(blogPostsCollection, slug),
+  ).pipe(
+    Effect.map(
+      (doc): BlogPostDetail => ({ ...toBlogPost(doc), Content: doc.Content }),
+    ),
+  )

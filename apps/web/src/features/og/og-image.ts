@@ -1,13 +1,13 @@
-import { makeOgImage } from '@ntatoud/effect-og/image'
+import type { ReactNode } from 'react'
 
-import { OG_FONTS } from '@/features/og/og-fonts'
+import type { OgRenderOptions } from '@ntatoud/effect-og/image'
 
-/** Shared OG image renderer — fonts load once and the runtime is reused. */
-export const ogImage = makeOgImage({
-  fonts: OG_FONTS,
-  width: 1200,
-  height: 630,
-  headers: {
-    'Cache-Control': 'public, immutable, max-age=31536000',
-  },
-})
+import { OgImage, runtime } from '@/server/runtime'
+
+/**
+ * Render a React element to a PNG `ImageResponse` through the shared App
+ * runtime. Fonts are registered once when the runtime's `OgImage` layer is
+ * first built and reused for every render thereafter.
+ */
+export const renderOgImage = (element: ReactNode, options?: OgRenderOptions) =>
+  runtime.runPromise(OgImage.use((og) => og.render(element, options)))

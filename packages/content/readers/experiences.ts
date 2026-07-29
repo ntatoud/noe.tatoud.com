@@ -1,7 +1,9 @@
 import * as path from 'node:path'
 
-import { getAll } from '@ntatoud/effect-collections'
+import { Collections } from '@ntatoud/effect-collections'
 import type { DocumentMeta } from '@ntatoud/effect-collections'
+
+import { Effect } from 'effect'
 
 import { experiences as experiencesCollection } from '../collections'
 import type { ExperienceFrontmatter } from '../schemas/experiences'
@@ -29,12 +31,15 @@ function toExperience(
   }
 }
 
-export async function getExperiences(): Promise<Experience[]> {
-  const docs = await getAll(experiencesCollection)
-  return docs
-    .map(toExperience)
-    .sort(
-      (a, b) =>
-        new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-    )
-}
+export const getExperiences = Collections.use((collections) =>
+  collections.getAll(experiencesCollection),
+).pipe(
+  Effect.map((docs) =>
+    docs
+      .map(toExperience)
+      .sort(
+        (a, b) =>
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
+      ),
+  ),
+)

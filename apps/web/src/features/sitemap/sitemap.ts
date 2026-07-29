@@ -1,6 +1,7 @@
 import { getBlogPosts, getProjects, getTalks } from '@ntatoud/content'
 
 import { SITE_URL } from '@/lib/site'
+import { runtime } from '@/server/runtime'
 
 export type SitemapUrl = {
   path: string
@@ -26,9 +27,9 @@ function latestTalkDate(talk: {
 /** Every crawlable page on the site, static and content-backed. */
 export async function getSitemapUrls(): Promise<SitemapUrl[]> {
   const [posts, projects, talks] = await Promise.all([
-    getBlogPosts(),
-    getProjects(),
-    getTalks(),
+    runtime.runPromise(getBlogPosts),
+    runtime.runPromise(getProjects),
+    runtime.runPromise(getTalks),
   ])
 
   return [
