@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { getBlogPosts } from '@/content-api'
 import { BlogPage } from '@/features/blog/blog-page'
 import { toMetaTags } from '@/features/og/metadata'
-import { getBlogPosts } from '@/server/content'
 
 const TITLE = 'Blog | Noé Tatoud'
 const DESCRIPTION = 'Articles on software engineering.'

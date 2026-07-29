@@ -1,11 +1,10 @@
-import type { BlogPost } from '@ntatoud/content'
-
 import { ContentList } from '@/components/content-list'
+import type { BlogPost } from '@/content-api'
 
 import { Slice } from './slice'
 
 type BlogSliceProps = {
-  posts: BlogPost[]
+  posts: ReadonlyArray<BlogPost>
 }
 
 export function BlogSlice({ posts }: BlogSliceProps) {

@@ -1,15 +1,14 @@
-import type { BlogPostDetail } from '@ntatoud/content'
-
 import { ArrowLeft02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
 import { ButtonLink } from '@/components/ui/button-link'
+import type { BlogPostDetail } from '@/content-api'
 import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
 
 type BlogPostPageProps = {
-  post: Omit<BlogPostDetail, 'Content'> & { bodyHtml: string }
+  post: BlogPostDetail
 }
 
 export function BlogPostPage({ post }: BlogPostPageProps) {

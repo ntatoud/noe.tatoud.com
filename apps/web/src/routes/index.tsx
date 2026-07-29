@@ -1,12 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { getBlogPosts } from '@/content-api'
 import { HomePage } from '@/features/home/home-page'
-import {
-  getBlogPosts,
-  getExperiences,
-  getProjects,
-  getTalks,
-} from '@/server/content'
+import { getExperiences, getProjects, getTalks } from '@/server/content'
 
 export const Route = createFileRoute('/')({
   component: HomePageRoute,

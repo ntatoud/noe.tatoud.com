@@ -1,4 +1,6 @@
-import type { BlogPost, Experience, Project, StageItem } from '@ntatoud/content'
+import type { Experience, Project, StageItem } from '@ntatoud/content'
+
+import type { BlogPost } from '@/content-api'
 
 import { BlogSlice } from './blog-slice'
 import { ExperiencesSlice } from './experiences-slice'
@@ -7,7 +9,7 @@ import { ProjectsSlice } from './projects-slice'
 import { TalksSlice } from './talks-slice'
 
 type HomePageProps = {
-  posts: BlogPost[]
+  posts: ReadonlyArray<BlogPost>
   projects: Project[]
   talks: StageItem[]
   experiences: Experience[]

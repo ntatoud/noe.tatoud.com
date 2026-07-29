@@ -1,9 +1,8 @@
-import type { BlogPost } from '@ntatoud/content'
-
 import { ContentList } from '@/components/content-list'
+import type { BlogPost } from '@/content-api'
 
 type BlogPageProps = {
-  posts: BlogPost[]
+  posts: ReadonlyArray<BlogPost>
 }
 
 export function BlogPage({ posts }: BlogPageProps) {
