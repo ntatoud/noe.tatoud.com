@@ -1,15 +1,14 @@
 import type { ComponentType } from 'react'
 
 import { Collections } from '@ntatoud/effect-collections'
+import type { CollectionData } from '@ntatoud/effect-collections'
 
 import { Effect } from 'effect'
 
 import { talks as talksCollection } from '../collections'
-import type { StageEvent, StageFrontmatter } from '../schemas/talks'
+import type { StageEvent } from '../schemas/talks'
 
-export type StageItem = StageFrontmatter & {
-  slug: string
-}
+export type StageItem = CollectionData<typeof talksCollection>
 
 export type TalkDetail = StageItem & {
   Content: ComponentType
@@ -30,7 +29,7 @@ export const getTalks = Collections.use((collections) =>
 ).pipe(
   Effect.map((docs) =>
     docs
-      .map((doc) => ({ slug: doc.slug, ...doc.data }))
+      .map((doc) => doc.data)
       .sort(
         (a, b) =>
           new Date(latestEvent(b.events)?.date ?? 0).getTime() -
@@ -43,11 +42,5 @@ export const getTalk = (slug: string) =>
   Collections.use((collections) =>
     collections.getBySlug(talksCollection, slug),
   ).pipe(
-    Effect.map(
-      (doc): TalkDetail => ({
-        slug: doc.slug,
-        ...doc.data,
-        Content: doc.Content,
-      }),
-    ),
+    Effect.map((doc): TalkDetail => ({ ...doc.data, Content: doc.Content })),
   )

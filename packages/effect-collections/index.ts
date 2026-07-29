@@ -38,6 +38,21 @@ export interface Collection<S extends Schema.Constraint, A> {
   ) => Effect.Effect<A, CollectionError, FileSystem.FileSystem | Path.Path>
 }
 
+/**
+ * The shape a document's `data` takes once the collection's `transform` has
+ * run — i.e. what `getAll`/`getBySlug` hand back. Lets consumers name a
+ * collection's output type without restating it, so it cannot drift from the
+ * schema and transform that actually produce it.
+ *
+ * `C` is deliberately unconstrained: `transform` takes `S['Type']` as a
+ * parameter, so a `C extends Collection<Schema.Constraint, unknown>` bound
+ * rejects every real collection under `strictFunctionTypes`. The cost is that
+ * passing a non-collection resolves to `never` here instead of erroring, which
+ * surfaces as a missing-property error at the consumer.
+ */
+export type CollectionData<C> =
+  C extends Collection<infer _S, infer A> ? A : never
+
 export function defineCollection<S extends Schema.Constraint, A>(collection: {
   readonly name: string
   readonly directory: string

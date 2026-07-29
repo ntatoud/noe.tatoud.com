@@ -32,3 +32,6 @@ jobs:
 
       - name: 🔎 Typecheck
         run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck
+
+      - name: 🧪 Test
+        run: pnpm run test
