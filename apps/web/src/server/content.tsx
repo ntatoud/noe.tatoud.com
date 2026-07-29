@@ -9,14 +9,22 @@ import {
   getTalk as getTalkFromContent,
   getTalks as getTalksFromContent,
 } from '@ntatoud/content'
+import type { CollectionError, DocumentNotFound } from '@ntatoud/content'
 import type { MdxComponents } from '@ntatoud/effect-mdx'
+import { notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { setResponseHeader } from '@tanstack/react-start/server'
 
+import { Effect } from 'effect'
 import { renderToStaticMarkup } from 'react-dom/server'
 
+import {
+  ProjectCta,
+  ProjectInlineLink,
+} from '@/features/projects/mdx-components'
 import { resolveContentImage } from '@/lib/content-images'
-import { runtime } from '@/server/runtime'
+import { readContent, runtime } from '@/server/runtime'
+import type { AppServices } from '@/server/runtime'
 
 // Content only changes on deploy, and Netlify purges its CDN cache on every
 // deploy — so let the edge cache these RPC responses indefinitely instead of
@@ -32,6 +40,9 @@ function setContentCacheHeaders() {
   )
 }
 
+const logContentFailure = (cause: unknown) =>
+  Effect.logError('Content read failed', cause)
+
 const cached =
   <T,>(read: () => Promise<T>) =>
   async (): Promise<T> => {
@@ -45,16 +56,16 @@ const cached =
 // (and everything it closes over) from the client bundle and calls it over
 // RPC instead.
 export const getBlogPosts = createServerFn({ method: 'GET' }).handler(
-  cached(() => runtime.runPromise(getBlogPostsFromContent)),
+  cached(() => readContent(getBlogPostsFromContent)),
 )
 export const getProjects = createServerFn({ method: 'GET' }).handler(
-  cached(() => runtime.runPromise(getProjectsFromContent)),
+  cached(() => readContent(getProjectsFromContent)),
 )
 export const getExperiences = createServerFn({ method: 'GET' }).handler(
-  cached(() => runtime.runPromise(getExperiencesFromContent)),
+  cached(() => readContent(getExperiencesFromContent)),
 )
 export const getTalks = createServerFn({ method: 'GET' }).handler(
-  cached(() => runtime.runPromise(getTalksFromContent)),
+  cached(() => readContent(getTalksFromContent)),
 )
 
 // MDX body images are authored relative to the content file (e.g.
@@ -70,6 +81,38 @@ function rewriteBodyImages(html: string, imageBase: string): string {
   })
 }
 
+// Detail reads are the only content reads driven by user-supplied input (a URL
+// slug), so they are the only ones that can legitimately not exist. That case
+// becomes a 404; every other failure is logged and left to surface as a 500
+// instead of masquerading as missing content.
+//
+// The mapping has to happen here rather than in the route loader: this is the
+// last point where the failure is still a real `DocumentNotFound`. Past the
+// createServerFn boundary it is a serialized plain object, so `instanceof` no
+// longer holds on the client. TanStack's `notFound()` is designed to cross that
+// boundary (it becomes a 404 response the client fetcher rethrows), and
+// `runPromise` rejects with the failure value unwrapped — so failing with it
+// here is equivalent to throwing it, for both SSR and client navigation.
+function readDetail<A>(
+  effect: Effect.Effect<A, CollectionError | DocumentNotFound, AppServices>,
+): Promise<A> {
+  return runtime.runPromise(
+    effect.pipe(
+      // Log the real failures only — tapping before the conversion below is
+      // what keeps a 404 (an ordinary answer, and one any stale link or crawler
+      // will trigger) from filling the function logs with ERROR lines.
+      Effect.tapErrorTag(
+        'effect-collections/CollectionError',
+        logContentFailure,
+      ),
+      Effect.tapDefect(logContentFailure),
+      Effect.catchTag('effect-collections/DocumentNotFound', () =>
+        Effect.fail(notFound()),
+      ),
+    ),
+  )
+}
+
 // createServerFn responses are serialized over RPC — a React component
 // (Content) can't cross that boundary, so render the MDX body to an HTML
 // string here instead.
@@ -80,7 +123,15 @@ async function withBodyHtml<
   options: { imageBase: string; components?: MdxComponents },
 ): Promise<Omit<T, 'Content'> & { bodyHtml: string }> {
   const { Content, ...rest } = await detail
-  const html = renderToStaticMarkup(<Content components={options.components} />)
+  // Through `readContent` rather than called directly: rendering the body can
+  // throw (an MDX body referencing a component absent from `options.components`
+  // does), and that failure deserves the same log line as the read itself
+  // instead of escaping as an unexplained 500.
+  const html = await readContent(
+    Effect.sync(() =>
+      renderToStaticMarkup(<Content components={options.components} />),
+    ),
+  )
   setContentCacheHeaders()
   return {
     ...rest,
@@ -91,21 +142,22 @@ async function withBodyHtml<
 export const getBlogPost = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(runtime.runPromise(getBlogPostFromContent(data)), {
+    withBodyHtml(readDetail(getBlogPostFromContent(data)), {
       imageBase: `blog/${data}`,
     }),
   )
 export const getProject = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(runtime.runPromise(getProjectFromContent(data)), {
+    withBodyHtml(readDetail(getProjectFromContent(data)), {
       imageBase: `projects/${data}`,
+      components: { ProjectCta, ProjectInlineLink },
     }),
   )
 export const getTalk = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(runtime.runPromise(getTalkFromContent(data)), {
+    withBodyHtml(readDetail(getTalkFromContent(data)), {
       imageBase: `talks/${data}`,
     }),
   )
