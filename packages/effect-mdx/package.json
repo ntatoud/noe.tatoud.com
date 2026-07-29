@@ -4,7 +4,8 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./shiki-shim": "./shiki-shim.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

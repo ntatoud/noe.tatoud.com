@@ -9,6 +9,12 @@ import { defineConfig } from 'vite'
 export default defineConfig(({ mode }) => ({
   resolve: {
     tsconfigPaths: true,
+    alias: [
+      // rehype-pretty-code statically imports shiki's bundled-grammar registry
+      // (300+ chunks, ~12MB inside the serverless function) even though we hand
+      // it an explicit fine-grained highlighter. See the shim for details.
+      { find: /^shiki$/, replacement: '@ntatoud/effect-mdx/shiki-shim' },
+    ],
   },
   plugins: [
     devtools(),

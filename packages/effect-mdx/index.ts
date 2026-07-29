@@ -10,6 +10,7 @@ import remarkGfm from 'remark-gfm'
 import { parse as parseYaml } from 'yaml'
 
 import { MarkdownParseError } from './errors'
+import { getHighlighter } from './highlighter'
 
 export { MarkdownParseError } from './errors'
 
@@ -82,7 +83,9 @@ export const MdxCompilerLive = Layer.succeed(
           evaluate(content, {
             ...runtime,
             remarkPlugins: [remarkGfm],
-            rehypePlugins: [[rehypePrettyCode, { theme: 'github-dark' }]],
+            rehypePlugins: [
+              [rehypePrettyCode, { theme: 'github-dark', getHighlighter }],
+            ],
           }),
         catch: (cause) => new MarkdownParseError({ cause }),
       })
