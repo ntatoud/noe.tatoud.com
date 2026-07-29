@@ -2,6 +2,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
+import { ErrorPage } from '@/components/error/error-page'
 import { NotFound } from '@/components/error/not-found'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
@@ -12,6 +13,11 @@ import appCss from '@/styles/index.css?url'
 
 export const Route = createRootRoute({
   notFoundComponent: NotFound,
+  // Detail routes no longer collapse every read failure into a 404, so a real
+  // failure reaches the router. Without this it would render TanStack's default
+  // error component, which prints the serialized error — including the absolute
+  // server path a `CollectionError` carries.
+  errorComponent: ErrorPage,
 
   head: () => ({
     meta: [

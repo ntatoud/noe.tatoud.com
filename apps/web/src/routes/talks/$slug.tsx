@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
@@ -7,9 +7,8 @@ import { getTalk } from '@/server/content'
 export const Route = createFileRoute('/talks/$slug')({
   component: TalkPageRoute,
   loader: async ({ params }) => {
-    const talk = await getTalk({ data: params.slug }).catch(() => {
-      throw notFound()
-    })
+    // See the blog detail route: the server function owns the 404/500 split.
+    const talk = await getTalk({ data: params.slug })
     return { talk }
   },
   head: ({ loaderData, match }) => {
