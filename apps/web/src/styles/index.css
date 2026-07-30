@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './typeset.css';
+@import './highlight.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource/atkinson-hyperlegible-next/200.css';

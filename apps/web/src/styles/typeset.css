@@ -281,10 +281,11 @@
       padding: 0.125em 0.3em;
     }
 
-    /* Code blocks. rehype-pretty-code wraps pre in a figure and sets the
-       code element to display:grid for line highlighting, so both need
-       an explicit width/min-width or their grid tracks can force the
-       ancestor chain wider than the viewport instead of scrolling. */
+    /* Code blocks. @tanstack/markdown wraps a titled fence in a figure
+       (`figure.tm-code-frame > figcaption + pre.tm-code`), and the code element
+       is display:grid so each `.th-line` can be highlighted as a full-width
+       band — so both need an explicit width/min-width or their grid tracks can
+       force the ancestor chain wider than the viewport instead of scrolling. */
     &:where(figure:has(> pre)) {
       max-width: 100%;
       min-width: 0;
@@ -309,8 +310,10 @@
       margin-block-start: calc(var(--typeset-flow) / 0.875);
       margin-block-end: 0;
     }
+    /* No `display: grid` here. @tanstack/highlight separates lines with real
+       newlines, which `pre` already honours — turning the code element into a
+       grid would make every token span its own row. */
     &:where(pre code) {
-      display: grid;
       min-width: 0;
       background-color: transparent;
       font-family: inherit;

@@ -9,11 +9,11 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Monorepo**: pnpm workspaces — `apps/web`, `packages/content`, `packages/effect-mdx`, `packages/effect-collections`
+- **Monorepo**: pnpm workspaces — `apps/web`, `packages/content`, `packages/effect-markdown`, `packages/effect-collections`
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
-- **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-mdx` MDX→JSX, no build/codegen step)
+- **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-markdown` markdown→HTML, no build/codegen step)
 - **Package manager**: pnpm
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
@@ -46,7 +46,7 @@ packages/content/      # @ntatoud/content — content pipeline
   schemas/            # Effect Schema structs (one file per collection)
   readers/            # reader functions (typed data access)
   collections.ts      # collection definitions (@ntatoud/effect-collections)
-packages/effect-mdx/    # @ntatoud/effect-mdx — MDX→JSX compiler (Effect service)
+packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
 content/              # MDX files (blog, projects, experiences, talks)
 docs/
@@ -82,9 +82,9 @@ CONTEXT.md            # domain glossary
 - All MDX frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
 - The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `@ntatoud/effect-collections` directly.
 - Server data fetching uses `createServerFn` from TanStack Start.
-- Detail readers (`getBlogPost(slug)`, etc.) return `Content: ComponentType` — a real React component compiled from the MDX body by `@ntatoud/effect-mdx`. Since it can't cross the `createServerFn` RPC boundary, `apps/web/src/server/content.tsx`'s `withBodyHtml()` renders it to an HTML string (`bodyHtml`) server-side; detail pages display it via `dangerouslySetInnerHTML`.
-- Code blocks in MDX bodies are syntax-highlighted automatically (`rehype-pretty-code` + Shiki, `github-dark` theme, wired into `@ntatoud/effect-mdx`) — no per-page setup needed.
-- **Custom components in MDX** (e.g. authoring `<Callout>...</Callout>` or `<Button>...</Button>` directly in a `.mdx` file): `MdxCompiler.toJsx(source, { components })` accepts a default component map merged with whatever's passed to `<Content components={...} />` at render time. To enable one for a collection, pass a components map as `withBodyHtml(getXFromContent(data), { Button, Callout })` in `apps/web/src/server/content.tsx` — components must be imported there (e.g. from `@/components/ui/*`) since MDX content files can't import anything themselves.
+- Detail readers (`getBlogPost(slug)`, etc.) return `html: string` — the body rendered by `@ntatoud/effect-markdown` (`@tanstack/markdown`). It's a plain string, so it crosses the `createServerFn` RPC boundary as-is; `apps/web/src/server/content.tsx`'s `withResolvedImages()` only rewrites relative image srcs. Detail pages display it via `dangerouslySetInnerHTML`.
+- Code blocks are syntax-highlighted automatically by `@tanstack/highlight` (wired into `@ntatoud/effect-markdown`) — no per-page setup needed. The highlighter emits semantic `th-*` classes; the `github-dark` palette lives in `apps/web/src/styles/highlight.css`. A fence may carry `title="main.ts"` and a `{1,4,12-36}` line-highlight range. Languages are registered explicitly in `packages/effect-markdown/languages.ts` — add one there before using it in a fence, or it falls back to plaintext.
+- **No custom components in content.** `@tanstack/markdown` does not evaluate JSX, so a content body is plain markdown (plus raw HTML, which is passed through untouched — `allowHtml`). Anything that needs a React component is driven from frontmatter and rendered by the page instead: see `cta` in `ProjectSchema` → `apps/web/src/features/projects/project-cta.tsx`.
 
 ### Theming
 

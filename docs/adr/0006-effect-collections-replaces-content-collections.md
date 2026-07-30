@@ -1,5 +1,7 @@
 # ADR-0006: `content-collections` replaced by `@ntatoud/effect-collections`
 
+> The rendering half is superseded by [ADR-0007](./0007-tanstack-markdown-replaces-mdx.md) — MDX gave way to `@tanstack/markdown`/`@tanstack/highlight`, `@ntatoud/effect-mdx` was renamed `@ntatoud/effect-markdown`, and bodies are now plain HTML strings (`html`) rather than a `Content` component rendered to `bodyHtml`. The collections/schema half below still holds.
+
 `packages/content` no longer depends on `@content-collections/core`/`@content-collections/vite`. Frontmatter schemas moved from valibot to Effect `Schema`; collection definitions and reading (`defineCollection`, `Collections.getAll`/`getBySlug`) now go through `@ntatoud/effect-collections` (built on `@ntatoud/effect-mdx` and Effect's `FileSystem`/`Path`), as anticipated by ADR-0002. The `getBlogPosts()`/`getProjects()`/`getExperiences()`/`getTalks()` reader API is unchanged — `apps/web` required no changes.
 
 There is no build/codegen step anymore (no `.content-collections/generated`, no `content-collections build` in CI/lefthook): collections are read directly at request time via Effect's `FileSystem` service.

@@ -33,7 +33,7 @@ That’s precisely what **AI agents** enable.
 **AI Agent**: the next level. It can **act on its own**, make decisions **without being told**, and adapt to what’s happening. For example, an AI agent could monitor your inbox, detect an important meeting, book a taxi, and notify you, without you having to ask.
 👉 **It’s autonomous, smart, and learns over time.**
 
-_We won't go into detail about how AI agents work, but you can read this intro article from Google: <a href="https://cloud.google.com/discover/what-are-ai-agents?hl=fr" className="underline not-italic hover:no-underline hover:opacity-80">Google Cloud - What are AI agents?</a>_
+_We won't go into detail about how AI agents work, but you can read this intro article from Google: [Google Cloud - What are AI agents?](https://cloud.google.com/discover/what-are-ai-agents?hl=fr)_
 
 So far, one of the main constraints when creating an agent was building very specific, custom connectors for every data source and model. This approach is tedious, hard to scale, and rarely reusable.
 
@@ -160,20 +160,11 @@ Now let's add a tool to the server.
 
 We need to define three important things:
 
-<ul className="list-disc space-y-2 pl-4">
-  <li>Tool name: `getEmployees`.</li>
-  <li>
-    {
-      "Description: 'Fetches the list of all employees and applies filters if needed'. This helps the LLM understand when/how to use it."
-    }
-  </li>
-  <li>
-    {
-      'Input schema: using Standard Schema, we’ll use zod to validate and describe parameters.'
-    }
-  </li>
-  <li>The function that will execute.</li>
-</ul>
+- Tool name: `getEmployees`.
+- Description: 'Fetches the list of all employees and applies filters if needed'. This helps the LLM understand when/how to use it.
+- Input schema: using Standard Schema, we'll use zod to validate and describe parameters.
+- The function that will execute.
+
 Add this to your main.ts:
 
 ```ts title="main.ts" {1, 4, 12-36} showLineNumbers

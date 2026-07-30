@@ -25,7 +25,10 @@ export {
 export { CollectionError, DocumentNotFound } from '@ntatoud/effect-collections'
 
 export type { ExperienceFrontmatter } from './schemas/experiences'
-export type { ProjectFrontmatter } from './schemas/projects'
+export type {
+  ProjectCtaFrontmatter,
+  ProjectFrontmatter,
+} from './schemas/projects'
 export type {
   StageEvent,
   StageResource,

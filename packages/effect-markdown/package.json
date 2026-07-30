@@ -1,0 +1,18 @@
+{
+  "name": "@ntatoud/effect-markdown",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/highlight": "0.0.9",
+    "@tanstack/markdown": "0.0.12",
+    "effect": "catalog:",
+    "yaml": "2.9.0"
+  }
+}

@@ -8,7 +8,7 @@ import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import { formatDate } from '@/lib/format'
 
 type TalkPageProps = {
-  talk: Omit<TalkDetail, 'Content'> & { bodyHtml: string }
+  talk: TalkDetail
 }
 
 export function TalkPage({ talk }: TalkPageProps) {
@@ -76,7 +76,7 @@ export function TalkPage({ talk }: TalkPageProps) {
       <div
         className="typeset typeset-docs mt-8"
         data-slot="talk-content"
-        dangerouslySetInnerHTML={{ __html: talk.bodyHtml }}
+        dangerouslySetInnerHTML={{ __html: talk.html }}
       />
     </main>
   )

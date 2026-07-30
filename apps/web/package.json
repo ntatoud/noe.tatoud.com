@@ -19,7 +19,6 @@
     "@hugeicons/react": "1.1.9",
     "@ntatoud/content": "workspace:*",
     "@ntatoud/effect-collections": "workspace:*",
-    "@ntatoud/effect-mdx": "workspace:*",
     "@ntatoud/effect-og": "workspace:*",
     "@ntatoud/effect-rss": "workspace:*",
     "@tailwindcss/vite": "4.3.2",

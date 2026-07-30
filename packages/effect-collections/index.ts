@@ -1,6 +1,7 @@
-import type { ComponentType } from 'react'
-
-import { MdxCompiler, MdxCompilerLive } from '@ntatoud/effect-mdx'
+import {
+  MarkdownCompiler,
+  MarkdownCompilerLive,
+} from '@ntatoud/effect-markdown'
 
 import { NodeFileSystem, NodePath } from '@effect/platform-node'
 import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
@@ -83,9 +84,9 @@ export function defineCollection<S extends Schema.Constraint, A>(collection: {
 }
 
 /**
- * A document without its compiled MDX body. `getAll` returns these: compiling
- * the body (MDX evaluation + Shiki highlighting) is by far the most expensive
- * step of reading a document, and list views only ever need the frontmatter.
+ * A document without its rendered body. `getAll` returns these: rendering the
+ * body (block parsing + syntax highlighting) is by far the most expensive step
+ * of reading a document, and list views only ever need the frontmatter.
  */
 export interface DocumentMeta<A> {
   readonly slug: string
@@ -94,7 +95,8 @@ export interface DocumentMeta<A> {
 }
 
 export interface Document<A> extends DocumentMeta<A> {
-  readonly Content: ComponentType
+  /** The body as an HTML string — a plain value, so it survives RPC. */
+  readonly html: string
 }
 
 // `DocumentDirectory` is always satisfied internally — `readDocument`
@@ -160,7 +162,7 @@ const isDocumentSlug = (slug: string): boolean =>
 const make = Layer.effect(
   Collections,
   Effect.gen(function* () {
-    const mdxCompiler = yield* MdxCompiler
+    const markdownCompiler = yield* MarkdownCompiler
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
@@ -243,11 +245,11 @@ const make = Layer.effect(
         }
 
         const source = yield* readSource(collection, slug)
-        const { frontmatter, Content } = yield* mdxCompiler
-          .toJsx(source)
-          .pipe(collectionError('toJsx'))
+        const { frontmatter, html } = yield* markdownCompiler
+          .toHtml(source)
+          .pipe(collectionError('toHtml'))
         const data = yield* decodeData(collection, slug, frontmatter)
-        return { slug, data, source, Content } satisfies Document<A>
+        return { slug, data, source, html } satisfies Document<A>
       })
 
     // Frontmatter-only read: skips MDX compilation, which list views never
@@ -258,7 +260,7 @@ const make = Layer.effect(
     ) =>
       Effect.gen(function* () {
         const source = yield* readSource(collection, slug)
-        const frontmatter = yield* mdxCompiler
+        const frontmatter = yield* markdownCompiler
           .frontmatter(source)
           .pipe(collectionError('frontmatter'))
         const data = yield* decodeData(collection, slug, frontmatter)
@@ -289,7 +291,7 @@ const make = Layer.effect(
 )
 
 export const CollectionsLive = make.pipe(
-  Layer.provide(MdxCompilerLive),
+  Layer.provide(MarkdownCompilerLive),
   // Kept visible (provideMerge, not provide): `Collection.transform`
   // implementations may need FileSystem/Path themselves (e.g. to read a
   // hero image referenced in frontmatter).

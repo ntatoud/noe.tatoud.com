@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-
 import {
   getBlogPost as getBlogPostFromContent,
   getBlogPosts as getBlogPostsFromContent,
@@ -10,18 +8,12 @@ import {
   getTalks as getTalksFromContent,
 } from '@ntatoud/content'
 import type { CollectionError, DocumentNotFound } from '@ntatoud/content'
-import type { MdxComponents } from '@ntatoud/effect-mdx'
 import { notFound } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { setResponseHeader } from '@tanstack/react-start/server'
 
 import { Effect } from 'effect'
-import { renderToStaticMarkup } from 'react-dom/server'
 
-import {
-  ProjectCta,
-  ProjectInlineLink,
-} from '@/features/projects/mdx-components'
 import { resolveContentImage } from '@/lib/content-images'
 import { readContent, runtime } from '@/server/runtime'
 import type { AppServices } from '@/server/runtime'
@@ -68,8 +60,8 @@ export const getTalks = createServerFn({ method: 'GET' }).handler(
   cached(() => readContent(getTalksFromContent)),
 )
 
-// MDX body images are authored relative to the content file (e.g.
-// `![](./diagram.png)`), so the compiled HTML carries raw relative srcs that a
+// Body images are authored relative to the content file (e.g.
+// `![](./diagram.png)`), so the rendered HTML carries raw relative srcs that a
 // browser would resolve against the page URL (→ 404). Rewrite them through the
 // same Vite-processed image map the hero uses, keyed by `<collection>/<slug>`.
 function rewriteBodyImages(html: string, imageBase: string): string {
@@ -113,51 +105,36 @@ function readDetail<A>(
   )
 }
 
-// createServerFn responses are serialized over RPC — a React component
-// (Content) can't cross that boundary, so render the MDX body to an HTML
-// string here instead.
-async function withBodyHtml<
-  T extends { Content: ComponentType<{ components?: MdxComponents }> },
->(
+// The body reaches us as an HTML string, which crosses the createServerFn RPC
+// boundary as-is — all that's left is pointing its relative image srcs at the
+// bundled assets.
+async function withResolvedImages<T extends { html: string }>(
   detail: Promise<T>,
-  options: { imageBase: string; components?: MdxComponents },
-): Promise<Omit<T, 'Content'> & { bodyHtml: string }> {
-  const { Content, ...rest } = await detail
-  // Through `readContent` rather than called directly: rendering the body can
-  // throw (an MDX body referencing a component absent from `options.components`
-  // does), and that failure deserves the same log line as the read itself
-  // instead of escaping as an unexplained 500.
-  const html = await readContent(
-    Effect.sync(() =>
-      renderToStaticMarkup(<Content components={options.components} />),
-    ),
-  )
+  imageBase: string,
+): Promise<T> {
+  const document = await detail
   setContentCacheHeaders()
-  return {
-    ...rest,
-    bodyHtml: rewriteBodyImages(html, options.imageBase),
-  }
+  return { ...document, html: rewriteBodyImages(document.html, imageBase) }
 }
 
 export const getBlogPost = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(readDetail(getBlogPostFromContent(data)), {
-      imageBase: `blog/${data}`,
-    }),
+    withResolvedImages(
+      readDetail(getBlogPostFromContent(data)),
+      `blog/${data}`,
+    ),
   )
 export const getProject = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(readDetail(getProjectFromContent(data)), {
-      imageBase: `projects/${data}`,
-      components: { ProjectCta, ProjectInlineLink },
-    }),
+    withResolvedImages(
+      readDetail(getProjectFromContent(data)),
+      `projects/${data}`,
+    ),
   )
 export const getTalk = createServerFn({ method: 'GET' })
   .validator((slug: string) => slug)
   .handler(({ data }) =>
-    withBodyHtml(readDetail(getTalkFromContent(data)), {
-      imageBase: `talks/${data}`,
-    }),
+    withResolvedImages(readDetail(getTalkFromContent(data)), `talks/${data}`),
   )
