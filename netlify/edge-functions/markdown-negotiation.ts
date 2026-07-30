@@ -30,9 +30,16 @@ const MARKDOWN_TYPE = 'text/markdown; charset=utf-8'
  * `Accept: text/markdown, *\/*` named markdown and nothing else, and should get it.
  *
  * Kept in sync with `prefersMarkdown` in `packages/content/vite-markdown.ts`,
- * which drives the dev server. The duplication is forced — this file runs on Deno
- * at Netlify's edge and cannot import from the workspace — and the two are pinned
- * against each other by `packages/content/test/markdown-negotiation.test.ts`.
+ * which drives the dev server, and pinned against it by
+ * `packages/content/test/markdown.test.ts`.
+ *
+ * Duplicated rather than imported: this file is the one thing in the repo that
+ * does not run on Node — Netlify runs edge functions on Deno — and
+ * `@ntatoud/content` is a private pnpm workspace package, symlinked outside the
+ * deploy root, whose graph pulls in `effect` and `NodeFileSystem`. Importing a
+ * shared leaf module by relative path would probably work, but "probably" is only
+ * discoverable at deploy time, and the parity test closes the drift risk that
+ * duplication actually creates.
  */
 export function prefersMarkdown(accept: string | null): boolean {
   if (!accept) return false

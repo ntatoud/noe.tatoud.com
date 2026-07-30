@@ -381,12 +381,12 @@ describe('estimateTokens', () => {
 })
 
 /**
- * The edge function is a separate program: it runs on Deno at Netlify's edge and
- * cannot import from this workspace, so it carries its own copy of the `Accept`
- * decision and the route mapping. Nothing but this test stops the two from
- * drifting, and drift is silent — the dev server would keep serving markdown while
- * production quietly stopped, or the edge would fetch a path the build never
- * emitted.
+ * The edge function carries its own copy of the `Accept` decision and the route
+ * mapping (it deploys to Netlify's Deno edge runtime, separately from this Node
+ * workspace — see the note in the function itself). Nothing but this test stops the
+ * two from drifting, and drift is silent: the dev server would keep serving
+ * markdown while production quietly stopped, or the edge would fetch a path the
+ * build never emitted.
  *
  * Importing it here works because its only import is `import type`, which is
  * erased, and nothing at module scope touches a Deno global.

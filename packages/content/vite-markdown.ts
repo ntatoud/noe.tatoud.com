@@ -448,9 +448,8 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
 /**
  * The same `Accept` decision the edge function makes, so dev and production agree.
  *
- * Duplicated rather than shared because the edge function runs on Deno at
- * Netlify's edge and cannot import from this workspace. The pair is pinned by
- * `test/markdown-negotiation.test.ts`.
+ * Duplicated rather than shared — see the note in the edge function for why — and
+ * pinned against it by `test/markdown.test.ts`.
  */
 export function prefersMarkdown(accept: string | null): boolean {
   if (!accept) return false
