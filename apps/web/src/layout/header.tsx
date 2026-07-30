@@ -19,16 +19,6 @@ import { menuIcon, navItems, trophyIcon } from './site-config'
 
 const logoLabel = 'noe.tatoud.com — home'
 
-/**
- * `data-status="active"` (and `aria-current="page"`) are set by TanStack
- * Router's `Link` on the rendered anchor, so the active styles can live in the
- * same className the header already passes down.
- *
- * The active pill uses `accent` rather than `muted`: `muted` is what the ghost
- * variant already uses on hover, and in the light theme it sits too close to
- * `background` to read as a highlight on its own. The border fills the ghost
- * button's transparent one, so it costs no layout shift.
- */
 const navLinkClassName =
   'text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-border data-[status=active]:bg-accent data-[status=active]:font-semibold data-[status=active]:text-accent-foreground'
 
