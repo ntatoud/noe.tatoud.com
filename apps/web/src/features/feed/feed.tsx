@@ -1,8 +1,9 @@
-import { getBlogPost, getBlogPosts } from '@ntatoud/content'
 import type { FeedItemInput } from '@ntatoud/effect-rss'
 
+import { blogPosts, loadBlogPost } from 'virtual:content'
+
 import { SITE_URL } from '@/lib/site'
-import { Feed, readContent, runtime } from '@/server/runtime'
+import { Feed, runtime } from '@/server/runtime'
 
 /**
  * Blog feed serializers bound to this site, backed by the shared App runtime's
@@ -24,10 +25,8 @@ export const feed = {
  * while keeping a stable, on-domain GUID.
  */
 export async function getFeedItems(): Promise<FeedItemInput[]> {
-  const posts = await readContent(getBlogPosts)
-
   return Promise.all(
-    posts.map(async (post): Promise<FeedItemInput> => {
+    blogPosts.map(async (post): Promise<FeedItemInput> => {
       const base = {
         title: post.title,
         date: post.date,
@@ -40,15 +39,12 @@ export async function getFeedItems(): Promise<FeedItemInput[]> {
         return { ...base, path: post.externalUrl, id: `${SITE_URL}${post.url}` }
       }
 
-      // Logged like the page reads in `@/server/content`: the slugs come from
-      // the list read just above, so a failure here means a genuinely broken
-      // document, and it takes down all three feeds at once.
-      const detail = await readContent(getBlogPost(post.slug))
-      return {
-        ...base,
-        path: post.url,
-        content: detail.html,
-      }
+      // The slug comes from the listing, so the chunk always exists; an absent
+      // one would be a bug in the content plugin rather than a missing post.
+      const load = loadBlogPost[post.slug]
+      if (!load) throw new Error(`No content chunk for blog post: ${post.slug}`)
+
+      return { ...base, path: post.url, content: (await load()).default.html }
     }),
   )
 }

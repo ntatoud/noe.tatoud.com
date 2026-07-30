@@ -2,5 +2,5 @@
 // renderer lives in a separate entry point (`@ntatoud/effect-og/image`) so
 // importing metadata never pulls Effect or the native `@takumi-rs/core`
 // renderer into a browser bundle.
-export { defineOgMetadata } from './metadata'
-export type { MetaTag, OgMetadataConfig } from './metadata'
+export { defineOgMetadata } from './metadata.ts'
+export type { MetaTag, OgMetadataConfig } from './metadata.ts'

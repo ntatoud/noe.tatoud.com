@@ -41,11 +41,13 @@ apps/web/              # @ntatoud/web — TanStack Start app
     lib/              # utils.ts (cn), format.ts, etc.
     styles/           # index.css, utilities/
   public/             # static assets
-  src/server/         # createServerFn wrappers (filesystem-backed readers never run client-side)
+  src/server/         # runtime.ts — Effect runtime for OgImage + Feed (server-only)
 packages/content/      # @ntatoud/content — content pipeline
   schemas/            # Effect Schema structs (one file per collection)
   readers/            # reader functions (typed data access)
   collections.ts      # collection definitions (@ntatoud/effect-collections)
+  vite.ts             # Vite plugin: bakes collections into `virtual:content` at build time
+  virtual.d.ts        # types for `virtual:content`
 packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
 content/              # MDX files (blog, projects, experiences, talks)
@@ -80,9 +82,12 @@ CONTEXT.md            # domain glossary
 
 - Content MDX files live in `content/<collection>/<slug>/index.mdx` at the repo root.
 - All MDX frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
-- The content package exports reader functions (e.g., `getBlogPosts()`) — the app calls readers and never imports `@ntatoud/effect-collections` directly.
-- Server data fetching uses `createServerFn` from TanStack Start.
-- Detail readers (`getBlogPost(slug)`, etc.) return `html: string` — the body rendered by `@ntatoud/effect-markdown` (`@tanstack/markdown`). It's a plain string, so it crosses the `createServerFn` RPC boundary as-is; `apps/web/src/server/content.tsx`'s `withResolvedImages()` only rewrites relative image srcs. Detail pages display it via `dangerouslySetInnerHTML`.
+- The content package exports reader functions (e.g., `getBlogPosts()`), but **the app does not call them** — they run at build time inside the Vite plugin (`packages/content/vite.ts`).
+- **Pages read content from `virtual:content`, never over the network** (ADR-0008). There are no content server functions.
+  - Listings: `import { blogPosts, projects, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
+  - Details: `loadBlogPost` / `loadProject` / `loadTalk` map a slug to a lazily-imported chunk holding that document's `html`. A missing slug means `notFound()`. Detail pages display the body via `dangerouslySetInnerHTML`.
+- Frontmatter image fields (`hero`, `logo`) and relative body image srcs are already **hashed asset URLs** — the plugin turns them into real Vite `?url` imports. Do not try to resolve them at runtime.
+- Adding a collection means adding its declaration to `packages/content/virtual.d.ts` too.
 - Code blocks are syntax-highlighted automatically by `@tanstack/highlight` (wired into `@ntatoud/effect-markdown`) — no per-page setup needed. The highlighter emits semantic `th-*` classes; the `github-dark` palette lives in `apps/web/src/styles/highlight.css`. A fence may carry `title="main.ts"` and a `{1,4,12-36}` line-highlight range. Languages are registered explicitly in `packages/effect-markdown/languages.ts` — add one there before using it in a fence, or it falls back to plaintext.
 - **No custom components in content.** `@tanstack/markdown` does not evaluate JSX, so a content body is plain markdown (plus raw HTML, which is passed through untouched — `allowHtml`). Anything that needs a React component is driven from frontmatter and rendered by the page instead: see `cta` in `ProjectSchema` → `apps/web/src/features/projects/project-cta.tsx`.
 

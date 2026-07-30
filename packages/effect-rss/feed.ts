@@ -1,13 +1,13 @@
 import { Context, Effect, Layer, Schema } from 'effect'
 
-import { FeedError } from './errors'
+import { FeedError } from './errors.ts'
 import {
   renderAtom,
   renderJsonFeed,
   renderRss,
   type ResolvedFeedItem,
-} from './render'
-import { FeedItem, type FeedConfig, type FeedItemInput } from './schema'
+} from './render.ts'
+import { FeedItem, type FeedConfig, type FeedItemInput } from './schema.ts'
 
 const decodeItems = Schema.decodeUnknownEffect(Schema.Array(FeedItem))
 

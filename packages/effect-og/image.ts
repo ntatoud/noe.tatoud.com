@@ -6,9 +6,9 @@ import { Context, Effect, Layer } from 'effect'
 import { ImageResponse } from 'takumi-js/response'
 import type { ImageResponseOptions } from 'takumi-js/response'
 
-import { OgImageError } from './errors'
+import { OgImageError } from './errors.ts'
 
-export { OgImageError } from './errors'
+export { OgImageError } from './errors.ts'
 
 /** A font face to register on the OG renderer — alias of Takumi's `FontDetails`. */
 export type OgFont = FontDetails

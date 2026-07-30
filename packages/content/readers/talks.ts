@@ -3,8 +3,8 @@ import type { CollectionData } from '@ntatoud/effect-collections'
 
 import { Effect } from 'effect'
 
-import { talks as talksCollection } from '../collections'
-import type { StageEvent } from '../schemas/talks'
+import { talks as talksCollection } from '../collections.ts'
+import type { StageEvent } from '../schemas/talks.ts'
 
 export type StageItem = CollectionData<typeof talksCollection>
 

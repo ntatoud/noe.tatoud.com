@@ -56,9 +56,6 @@ Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="
 
 [functions]
 node_bundler = "esbuild"
-included_files = [
-  "node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*",
-  # MDX content is read from the filesystem at runtime by the server functions,
-  # so it must be bundled into the serverless function.
-  "content/**",
-]
+# `content/**` is deliberately absent: content is baked into the bundle at build
+# time (ADR-0008), so nothing reads it from the filesystem at runtime.
+included_files = ["node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*"]

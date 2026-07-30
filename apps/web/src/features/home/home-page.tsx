@@ -7,10 +7,10 @@ import { ProjectsSlice } from './projects-slice'
 import { TalksSlice } from './talks-slice'
 
 type HomePageProps = {
-  posts: BlogPost[]
-  projects: Project[]
-  talks: StageItem[]
-  experiences: Experience[]
+  posts: readonly BlogPost[]
+  projects: readonly Project[]
+  talks: readonly StageItem[]
+  experiences: readonly Experience[]
 }
 
 export function HomePage({

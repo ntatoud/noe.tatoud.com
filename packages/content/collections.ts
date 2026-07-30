@@ -7,10 +7,10 @@ import type { CollectionMeta, ImageValue } from '@ntatoud/effect-collections'
 
 import { Effect } from 'effect'
 
-import { BlogPostSchema } from './schemas/blog'
-import { ExperienceSchema } from './schemas/experiences'
-import { ProjectSchema } from './schemas/projects'
-import { StageItemSchema } from './schemas/talks'
+import { BlogPostSchema } from './schemas/blog.ts'
+import { ExperienceSchema } from './schemas/experiences.ts'
+import { ProjectSchema } from './schemas/projects.ts'
+import { StageItemSchema } from './schemas/talks.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
@@ -45,7 +45,9 @@ const findContentRoot = () => {
   return path.resolve(here, '../../content')
 }
 
-const contentRoot = findContentRoot()
+// Exported for the Vite plugin (`./vite`), which resolves the frontmatter image
+// URLs derived below back to files on disk in order to import them as assets.
+export const contentRoot = findContentRoot()
 
 // `Image` decodes a frontmatter path into an absolute filesystem path, which is
 // meaningless to a browser. Every collection carrying an image derives a

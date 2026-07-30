@@ -1,17 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
+
+import { loadBlogPost } from 'virtual:content'
 
 import { BlogPostPage } from '@/features/blog/blog-post-page'
 import { toMetaTags } from '@/features/og/metadata'
-import { getBlogPost } from '@/server/content'
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPageRoute,
+  // One chunk per post, so a page downloads only its own body. An absent slug is
+  // the entire 404 check now — no filesystem read, no serverless function. Note
+  // the map holds drafts too, matching what reading per request allowed.
   loader: async ({ params }) => {
-    // No catch here on purpose: `getBlogPost` already answers a missing post
-    // with a 404 and lets every other failure through as a 500, so swallowing
-    // errors at this level would hide real bugs behind "not found".
-    const post = await getBlogPost({ data: params.slug })
-    return { post }
+    const load = loadBlogPost[params.slug]
+    if (!load) throw notFound()
+    return { post: (await load()).default }
   },
   head: ({ loaderData, match }) => {
     if (!loaderData) return {}

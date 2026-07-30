@@ -3,7 +3,7 @@ import type { CollectionData } from '@ntatoud/effect-collections'
 
 import { Effect } from 'effect'
 
-import { blogPosts as blogPostsCollection } from '../collections'
+import { blogPosts as blogPostsCollection } from '../collections.ts'
 
 export type BlogPost = CollectionData<typeof blogPostsCollection>
 

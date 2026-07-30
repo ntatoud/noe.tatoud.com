@@ -5,8 +5,8 @@ import { getSitemapUrls, renderSitemap } from '@/features/sitemap/sitemap'
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
-      async GET() {
-        const xml = renderSitemap(await getSitemapUrls())
+      GET() {
+        const xml = renderSitemap(getSitemapUrls())
         return new Response(xml, {
           headers: {
             'Content-Type': 'application/xml; charset=utf-8',

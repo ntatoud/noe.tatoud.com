@@ -3,7 +3,7 @@ import type { Project } from '@ntatoud/content'
 import { ContentList } from '@/components/content-list'
 
 type ProjectsPageProps = {
-  projects: Project[]
+  projects: readonly Project[]
 }
 
 export function ProjectsPage({ projects }: ProjectsPageProps) {

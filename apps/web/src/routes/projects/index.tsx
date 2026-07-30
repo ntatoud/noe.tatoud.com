@@ -1,18 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { projects } from 'virtual:content'
+
 import { toMetaTags } from '@/features/og/metadata'
 import { ProjectsPage } from '@/features/projects/projects-page'
-import { getProjects } from '@/server/content'
 
 const TITLE = 'Projects | Noé Tatoud'
 const DESCRIPTION = 'Personal and open-source projects.'
 
+// No loader — see the note in `blog/index.tsx`.
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPageRoute,
-  loader: async () => {
-    const projects = await getProjects()
-    return { projects }
-  },
   head: () => ({
     meta: toMetaTags({
       title: TITLE,
@@ -24,6 +22,5 @@ export const Route = createFileRoute('/projects/')({
 })
 
 function ProjectsPageRoute() {
-  const { projects } = Route.useLoaderData()
   return <ProjectsPage projects={projects} />
 }

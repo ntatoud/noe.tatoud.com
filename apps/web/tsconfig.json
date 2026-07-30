@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "types": ["vite/client", "node"],
+    // `@ntatoud/content/virtual` declares `virtual:content`, the module the
+    // content Vite plugin generates — there is no file for TypeScript to infer
+    // it from.
+    "types": ["vite/client", "node", "@ntatoud/content/virtual"],
     "paths": {
       "@/*": ["./src/*"],
       "@ntatoud/content": ["../../packages/content/index.ts"]

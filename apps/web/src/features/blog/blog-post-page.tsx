@@ -5,7 +5,6 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
 import { ButtonLink } from '@/components/ui/button-link'
-import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
 
 type BlogPostPageProps = {
@@ -13,7 +12,9 @@ type BlogPostPageProps = {
 }
 
 export function BlogPostPage({ post }: BlogPostPageProps) {
-  const heroSrc = resolveContentImage(post.hero)
+  // `hero` is already a hashed asset URL: the build-time content plugin turns the
+  // frontmatter path into a real Vite import.
+  const heroSrc = post.hero
 
   return (
     <main

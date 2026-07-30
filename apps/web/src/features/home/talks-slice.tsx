@@ -5,7 +5,7 @@ import { ContentList } from '@/components/content-list'
 import { Slice } from './slice'
 
 type TalksSliceProps = {
-  talks: StageItem[]
+  talks: readonly StageItem[]
 }
 
 export function TalksSlice({ talks }: TalksSliceProps) {
