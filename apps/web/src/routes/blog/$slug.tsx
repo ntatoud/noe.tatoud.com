@@ -7,9 +7,6 @@ import { toMetaTags } from '@/features/og/metadata'
 
 export const Route = createFileRoute('/blog/$slug')({
   component: BlogPostPageRoute,
-  // One chunk per post, so a page downloads only its own body. An absent slug is
-  // the entire 404 check now — no filesystem read, no serverless function. Note
-  // the map holds drafts too, matching what reading per request allowed.
   loader: async ({ params }) => {
     const load = loadBlogPost[params.slug]
     if (!load) throw notFound()

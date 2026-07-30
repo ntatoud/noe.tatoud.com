@@ -1,5 +1,4 @@
 import * as fs from 'node:fs'
-import * as path from 'node:path'
 
 import { CollectionsLive } from '@ntatoud/effect-collections'
 
@@ -8,7 +7,9 @@ import type { Plugin } from 'vite'
 
 import {
   blogPosts as blogPostsCollection,
+  contentFilePath,
   contentRoot,
+  contentUrl,
   projects as projectsCollection,
   talks as talksCollection,
 } from './collections.ts'
@@ -85,12 +86,12 @@ const DETAILS = {
 type DetailCollection = keyof typeof DETAILS
 
 /**
- * Frontmatter image fields arrive as `/content/<collection>/<slug>/<file>` — the
- * portable URL `collections.ts` derives. Anything matching becomes a real `?url`
- * import, so Vite hashes, emits and fingerprints the file, and an image nothing
- * references stays out of the bundle.
+ * Image extensions worth turning into a real `?url` import, so Vite hashes,
+ * emits and fingerprints the file — and so an image nothing references stays out
+ * of the bundle. A string that merely looks like an image but is not a content
+ * URL (an external `logo` on a talk event, say) is rejected by `ref` below.
  */
-const CONTENT_IMAGE = /^\/content\/.+\.(?:avif|gif|jpe?g|png|svg|webp)$/i
+const IMAGE_EXTENSION = /\.(?:avif|gif|jpe?g|png|svg|webp)$/i
 
 /** Srcs a browser already resolves correctly, so they must be left alone. */
 const ABSOLUTE_SRC = /^(?:https?:|\/\/|\/|data:|#)/
@@ -98,22 +99,22 @@ const ABSOLUTE_SRC = /^(?:https?:|\/\/|\/|data:|#)/
 type AssetRef = (publicUrl: string) => string | null
 
 /**
- * Collects the asset imports a generated module needs, handing back the
- * identifier each is bound to. `header()` must run last, after every `ref()`
- * for that module.
+ * Collects the asset imports a generated module needs.
+ *
+ * `emit` is the only way out: it prepends the imports for everything `ref`
+ * registered, so the imports cannot be generated before the code that
+ * references them. That ordering used to be the caller's job, and getting it
+ * wrong produced a `ReferenceError` inside a generated module — see the test.
  */
 function createAssets() {
   const identifiers = new Map<string, string>()
 
   const ref: AssetRef = (publicUrl) => {
-    const absolute = path.join(
-      contentRoot,
-      publicUrl.replace(/^\/content\//, ''),
-    )
+    const absolute = contentFilePath(publicUrl)
     // A missing file would otherwise fail the whole build over a typo in
     // frontmatter or a body image. Leave the original src in place and warn
     // instead — a broken image is not worth a red deploy.
-    if (!fs.existsSync(absolute)) return null
+    if (!absolute || !fs.existsSync(absolute)) return null
     const existing = identifiers.get(absolute)
     if (existing) return existing
     const identifier = `__asset${identifiers.size}`
@@ -121,14 +122,17 @@ function createAssets() {
     return identifier
   }
 
-  const header = () =>
-    Array.from(
-      identifiers,
-      ([absolute, identifier]) =>
-        `import ${identifier} from ${JSON.stringify(`${absolute}?url`)}`,
-    ).join('\n')
+  const emit = (...lines: ReadonlyArray<string>) =>
+    [
+      ...Array.from(
+        identifiers,
+        ([absolute, identifier]) =>
+          `import ${identifier} from ${JSON.stringify(`${absolute}?url`)}`,
+      ),
+      ...lines,
+    ].join('\n')
 
-  return { ref, header }
+  return { ref, emit }
 }
 
 /**
@@ -139,10 +143,9 @@ function createAssets() {
  * preserve.
  */
 function serialize(value: unknown, ref: AssetRef): string {
-  if (typeof value === 'string' && CONTENT_IMAGE.test(value)) {
+  if (typeof value === 'string' && IMAGE_EXTENSION.test(value)) {
     return ref(value) ?? JSON.stringify(value)
   }
-  if (value === undefined) return 'null'
   if (value === null || typeof value !== 'object') return JSON.stringify(value)
   if (Array.isArray(value)) {
     return `[${value.map((entry) => serialize(entry, ref)).join(',')}]`
@@ -213,23 +216,17 @@ export function content(): Plugin {
   const loadIndex = async () => {
     const assets = createAssets()
 
-    // Listed one by one rather than looped over: each reader has its own
-    // document type, and iterating a table of them collapses that into a union
-    // `runPromise` cannot resolve.
-    const listings: ReadonlyArray<readonly [string, unknown]> = [
-      ['blogPosts', await runtime.runPromise(getBlogPosts)],
-      ['projects', await runtime.runPromise(getProjects)],
-      ['experiences', await runtime.runPromise(getExperiences)],
-      ['talks', await runtime.runPromise(getTalks)],
+    // Spelled out one per line rather than looped over a table: each reader has
+    // its own document type, which a table erases to a union. Sequential awaits
+    // are deliberate — the four readers together take ~5ms.
+    const lines = [
+      `export const blogPosts = ${serialize(await runtime.runPromise(getBlogPosts), assets.ref)}`,
+      `export const projects = ${serialize(await runtime.runPromise(getProjects), assets.ref)}`,
+      `export const experiences = ${serialize(await runtime.runPromise(getExperiences), assets.ref)}`,
+      `export const talks = ${serialize(await runtime.runPromise(getTalks), assets.ref)}`,
     ]
 
-    const lines = listings.map(
-      ([name, documents]) =>
-        `export const ${name} = ${serialize(documents, assets.ref)}`,
-    )
-
-    for (const name of Object.keys(DETAILS) as DetailCollection[]) {
-      const { directory, loader } = DETAILS[name]
+    for (const [name, { directory, loader }] of Object.entries(DETAILS)) {
       const entries = readSlugs(directory).map((slug) => {
         const id = `${DETAIL_PREFIX}${name}/${slug}`
         return `${JSON.stringify(slug)}:() => import(${JSON.stringify(id)})`
@@ -237,8 +234,7 @@ export function content(): Plugin {
       lines.push(`export const ${loader} = {${entries.join(',')}}`)
     }
 
-    // `header()` last, once every `serialize` above has registered its assets.
-    return [assets.header(), ...lines].filter(Boolean).join('\n')
+    return assets.emit(...lines)
   }
 
   const loadDetail = async (collection: DetailCollection, slug: string) => {
@@ -246,21 +242,17 @@ export function content(): Plugin {
     const { directory, read } = DETAILS[collection]
     const { html, ...data } = await read(slug)
 
-    const documentUrl = `/content/${path.basename(directory)}/${slug}`
-    const body = serializeHtml(html, documentUrl, assets.ref, warn)
+    const body = serializeHtml(
+      html,
+      contentUrl(directory, slug),
+      assets.ref,
+      warn,
+    )
     const frontmatter = serialize(data, assets.ref)
 
-    // Both bound before `header()` runs: it can only import the assets that have
-    // been referenced by then, and the hero lives in the frontmatter — computing
-    // it inline below would register it one step too late.
-    const header = assets.header()
-
-    return [
-      header,
+    return assets.emit(
       `export default Object.assign(${frontmatter}, { html: ${body} })`,
-    ]
-      .filter(Boolean)
-      .join('\n')
+    )
   }
 
   return {

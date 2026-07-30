@@ -7,7 +7,6 @@ import { TalkPage } from '@/features/talks/talk-page'
 
 export const Route = createFileRoute('/talks/$slug')({
   component: TalkPageRoute,
-  // See the blog detail route.
   loader: async ({ params }) => {
     const load = loadTalk[params.slug]
     if (!load) throw notFound()

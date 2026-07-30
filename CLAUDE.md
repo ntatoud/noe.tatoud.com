@@ -13,7 +13,7 @@ Personal website & blog — **noe.tatoud.com**
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
-- **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-markdown` markdown→HTML, no build/codegen step)
+- **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-markdown` markdown→HTML), baked into the bundle at build time by the `@ntatoud/content/vite` plugin (ADR-0008)
 - **Package manager**: pnpm
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
@@ -69,6 +69,7 @@ CONTEXT.md            # domain glossary
 
 - Use `@/` path alias for imports within the app.
 - Use `@ntatoud/content` for reader functions and content types.
+- **Relative imports inside `packages/**` carry an explicit `.ts` extension** (`./errors.ts`, `../collections.ts`). `apps/web/vite.config.ts` imports the content plugin, so the package graph is loaded by Node's ESM loader, which does no extensionless resolution. `apps/web/src` deliberately does _not_ follow this — its `routeTree.gen.ts` is generated with extensionless imports.
 - oxfmt handles formatting: no semicolons, single quotes, trailing commas, 80-char width.
 
 ### Components
@@ -104,7 +105,7 @@ CONTEXT.md            # domain glossary
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`: format check, lint, typecheck.
+Runs on push/PR to `main`, as two parallel jobs: format check + lint + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
 
 ## Deployment
 

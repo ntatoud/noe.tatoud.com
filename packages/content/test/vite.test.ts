@@ -72,7 +72,13 @@ function evaluateModule(code: string) {
   return { exports, assets }
 }
 
-/** Document directories on disk, which is what a slug is. */
+/**
+ * Document directories on disk, which is what a slug is.
+ *
+ * Deliberately a second implementation of the plugin's own `readSlugs`, not an
+ * import of it: this is the oracle the loader maps are checked against, and
+ * sharing the code under test would make that assertion tautological.
+ */
 const slugsOnDisk = (directory: string) =>
   fs
     .readdirSync(directory, { withFileTypes: true })
@@ -100,6 +106,29 @@ describe('virtual:content', () => {
         `${name} is empty — the collection did not read`,
       ).toBeGreaterThan(0)
     }
+  })
+
+  /**
+   * `virtual.d.ts` is a hand-written claim about code the plugin generates, and
+   * nothing links the two: the export names come from string literals in
+   * `vite.ts`, so a typo there (`loadBlogPst`) still typechecks, still builds,
+   * and only fails as `undefined is not a function` when a visitor opens the
+   * page. This is the assertion that closes that hole.
+   */
+  it('exports exactly the names virtual.d.ts declares', async () => {
+    const { generate } = createPlugin()
+    const { exports } = evaluateModule(await generate('virtual:content'))
+
+    const declared = fs.readFileSync(
+      path.join(import.meta.dirname, '../virtual.d.ts'),
+      'utf8',
+    )
+    const declaredNames = [
+      ...declared.matchAll(/^\s*export const (\w+):/gm),
+    ].map(([, name]) => name)
+
+    expect(declaredNames.length).toBeGreaterThan(0)
+    expect(Object.keys(exports).sort()).toEqual([...declaredNames].sort())
   })
 
   it('exposes every document on disk, drafts included', async () => {
@@ -179,6 +208,9 @@ describe('virtual:content detail modules', () => {
         const html: string = exports.default.html
 
         for (const [, src] of html.matchAll(/<img[^>]*\bsrc="([^"]*)"/g)) {
+          // Deliberately stricter than the plugin's own `ABSOLUTE_SRC`, which
+          // also skips root-relative srcs: no content image should ever come out
+          // as `/…`, because nothing serves `content/` at runtime any more.
           if (/^(?:https?:|\/\/|data:)/.test(src!)) continue
           expect(
             assets,

@@ -7,7 +7,6 @@ import { ProjectPage } from '@/features/projects/project-page'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ProjectPageRoute,
-  // See the blog detail route.
   loader: async ({ params }) => {
     const load = loadProject[params.slug]
     if (!load) throw notFound()

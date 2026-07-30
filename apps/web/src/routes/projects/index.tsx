@@ -8,7 +8,6 @@ import { ProjectsPage } from '@/features/projects/projects-page'
 const TITLE = 'Projects | Noé Tatoud'
 const DESCRIPTION = 'Personal and open-source projects.'
 
-// No loader — see the note in `blog/index.tsx`.
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPageRoute,
   head: () => ({

@@ -12,10 +12,6 @@ type BlogPostPageProps = {
 }
 
 export function BlogPostPage({ post }: BlogPostPageProps) {
-  // `hero` is already a hashed asset URL: the build-time content plugin turns the
-  // frontmatter path into a real Vite import.
-  const heroSrc = post.hero
-
   return (
     <main
       className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
@@ -47,9 +43,11 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
         </div>
       )}
 
-      {heroSrc && (
+      {/* `hero` is already a hashed asset URL — the content plugin turns the
+          frontmatter path into a real Vite import at build time. */}
+      {post.hero && (
         <img
-          src={heroSrc}
+          src={post.hero}
           alt=""
           className="mt-6 w-full rounded-lg border border-border object-cover"
           data-slot="blog-post-hero"
