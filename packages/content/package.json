@@ -5,6 +5,7 @@
   "exports": {
     ".": "./index.ts",
     "./vite": "./vite.ts",
+    "./vite-markdown": "./vite-markdown.ts",
     "./virtual": "./virtual.d.ts"
   },
   "scripts": {

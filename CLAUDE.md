@@ -47,7 +47,11 @@ packages/content/      # @ntatoud/content — content pipeline
   readers/            # reader functions (typed data access)
   collections.ts      # collection definitions (@ntatoud/effect-collections)
   vite.ts             # Vite plugin: bakes collections into `virtual:content` at build time
+  vite-markdown.ts    # Vite plugin: emits the `.md` twins + /llms.txt (ADR-0009)
+  markdown.ts         # renders those twins (pure, unit-tested)
   virtual.d.ts        # types for `virtual:content`
+netlify/
+  edge-functions/     # markdown-negotiation.ts — serves .md on Accept: text/markdown
 packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
 content/              # MDX files (blog, projects, experiences, talks)
@@ -90,6 +94,7 @@ CONTEXT.md            # domain glossary
 - Frontmatter image fields (`hero`, `logo`) and relative body image srcs are already **hashed asset URLs** — the plugin turns them into real Vite `?url` imports. Do not try to resolve them at runtime.
 - Adding a collection means adding its declaration to `packages/content/virtual.d.ts` too.
 - Code blocks are syntax-highlighted automatically by `@tanstack/highlight` (wired into `@ntatoud/effect-markdown`) — no per-page setup needed. The highlighter emits semantic `th-*` classes; the `github-dark` palette lives in `apps/web/src/styles/highlight.css`. A fence may carry `title="main.ts"` and a `{1,4,12-36}` line-highlight range. Languages are registered explicitly in `packages/effect-markdown/languages.ts` — add one there before using it in a fence, or it falls back to plaintext.
+- **Every page has a markdown twin** (ADR-0009). `vite-markdown.ts` emits `/index.md`, `/blog.md`, `/blog/<slug>.md`, … plus `/llms.txt` into `dist/client` at build time, and `netlify/edge-functions/markdown-negotiation.ts` serves them to requests carrying `Accept: text/markdown`. Adding a collection with pages means adding it there too, and the `Accept`/path logic is deliberately duplicated between the plugin and the edge function — **edge functions are the one part of this repo that runs on Deno, not Node**, and deploy separately from the workspace. `test/markdown.test.ts` pins the two copies together, so change both.
 - **No custom components in content.** `@tanstack/markdown` does not evaluate JSX, so a content body is plain markdown (plus raw HTML, which is passed through untouched — `allowHtml`). Anything that needs a React component is driven from frontmatter and rendered by the page instead: see `cta` in `ProjectSchema` → `apps/web/src/features/projects/project-cta.tsx`.
 
 ### Theming

@@ -4,9 +4,10 @@ import { blogPosts } from 'virtual:content'
 
 import { BlogPage } from '@/features/blog/blog-page'
 import { toMetaTags } from '@/features/og/metadata'
+import { PAGE_DESCRIPTIONS } from '@/lib/site'
 
 const TITLE = 'Blog | Noé Tatoud'
-const DESCRIPTION = 'Articles on software engineering.'
+const DESCRIPTION = PAGE_DESCRIPTIONS.blog
 
 export const Route = createFileRoute('/blog/')({
   component: BlogPageRoute,
