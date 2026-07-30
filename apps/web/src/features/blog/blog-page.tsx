@@ -3,7 +3,7 @@ import type { BlogPost } from '@ntatoud/content'
 import { ContentList } from '@/components/content-list'
 
 type BlogPageProps = {
-  posts: BlogPost[]
+  posts: readonly BlogPost[]
 }
 
 export function BlogPage({ posts }: BlogPageProps) {

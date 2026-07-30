@@ -1,3 +1,4 @@
+import { content } from '@ntatoud/content/vite'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
@@ -13,6 +14,9 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     devtools(),
     ...(mode !== 'development' ? [netlify()] : []),
+    // Bakes every collection into `virtual:content` at build time, so pages read
+    // content from the bundle instead of calling a serverless function.
+    content(),
     tailwindcss(),
     // Prerender every page reachable from / at build time so first loads are
     // served statically from the CDN instead of invoking the SSR function

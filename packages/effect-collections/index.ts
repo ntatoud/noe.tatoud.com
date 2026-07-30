@@ -6,8 +6,8 @@ import {
 import { NodeFileSystem, NodePath } from '@effect/platform-node'
 import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
 
-import { CollectionError, DocumentNotFound } from './errors'
-import { DocumentDirectory } from './image'
+import { CollectionError, DocumentNotFound } from './errors.ts'
+import { DocumentDirectory } from './image.ts'
 
 /** Curried `mapError` that tags a boundary failure with the operation that produced it. */
 const collectionError =
@@ -20,9 +20,9 @@ const collectionError =
       (cause) => new CollectionError({ operation, cause }),
     )
 
-export { CollectionError, DocumentNotFound } from './errors'
-export { DocumentDirectory, Image } from './image'
-export type { ImageValue } from './image'
+export { CollectionError, DocumentNotFound } from './errors.ts'
+export { DocumentDirectory, Image } from './image.ts'
+export type { ImageValue } from './image.ts'
 
 export interface CollectionMeta {
   readonly slug: string

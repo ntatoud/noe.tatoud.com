@@ -1,7 +1,6 @@
-import { getBlogPosts, getProjects, getTalks } from '@ntatoud/content'
+import { blogPosts, projects, talks } from 'virtual:content'
 
 import { SITE_URL } from '@/lib/site'
-import { runtime } from '@/server/runtime'
 
 export type SitemapUrl = {
   path: string
@@ -25,16 +24,10 @@ function latestTalkDate(talk: {
 }
 
 /** Every crawlable page on the site, static and content-backed. */
-export async function getSitemapUrls(): Promise<SitemapUrl[]> {
-  const [posts, projects, talks] = await Promise.all([
-    runtime.runPromise(getBlogPosts),
-    runtime.runPromise(getProjects),
-    runtime.runPromise(getTalks),
-  ])
-
+export function getSitemapUrls(): SitemapUrl[] {
   return [
     ...STATIC_PATHS.map((path) => ({ path })),
-    ...posts.map((post) => ({ path: post.url, lastmod: post.date })),
+    ...blogPosts.map((post) => ({ path: post.url, lastmod: post.date })),
     ...projects.map((project) => ({
       path: `/projects/${project.slug}`,
       lastmod: project.date,

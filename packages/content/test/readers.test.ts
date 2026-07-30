@@ -3,10 +3,10 @@ import { CollectionsLive } from '@ntatoud/effect-collections'
 import { expect, layer } from '@effect/vitest'
 import { Effect } from 'effect'
 
-import { getBlogPosts } from '../readers/blog'
-import { getExperiences } from '../readers/experiences'
-import { getProjects } from '../readers/projects'
-import { getTalks } from '../readers/talks'
+import { getBlogPosts } from '../readers/blog.ts'
+import { getExperiences } from '../readers/experiences.ts'
+import { getProjects } from '../readers/projects.ts'
+import { getTalks } from '../readers/talks.ts'
 
 /**
  * Splits a derived public image URL into its directory prefix and filename, so

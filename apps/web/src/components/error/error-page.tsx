@@ -1,8 +1,6 @@
 /**
- * Shown when a route loader fails for any reason other than missing content —
- * a genuine read, compile, or decode failure. Deliberately says nothing about
- * the underlying error: the details are logged server-side (see
- * `apps/web/src/server/content.tsx`), and the failure value can carry absolute
+ * Shown when a route loader fails for any reason other than missing content.
+ * Deliberately says nothing about the underlying error, which can carry absolute
  * server paths that must not reach a visitor.
  */
 export function ErrorPage() {

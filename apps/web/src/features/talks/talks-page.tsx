@@ -3,7 +3,7 @@ import type { StageItem } from '@ntatoud/content'
 import { ContentList } from '@/components/content-list'
 
 type TalksPageProps = {
-  talks: StageItem[]
+  talks: readonly StageItem[]
 }
 
 export function TalksPage({ talks }: TalksPageProps) {

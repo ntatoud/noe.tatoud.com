@@ -5,7 +5,7 @@ import { ContentList } from '@/components/content-list'
 import { Slice } from './slice'
 
 type BlogSliceProps = {
-  posts: BlogPost[]
+  posts: readonly BlogPost[]
 }
 
 export function BlogSlice({ posts }: BlogSliceProps) {

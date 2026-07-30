@@ -1,18 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { blogPosts } from 'virtual:content'
+
 import { BlogPage } from '@/features/blog/blog-page'
 import { toMetaTags } from '@/features/og/metadata'
-import { getBlogPosts } from '@/server/content'
 
 const TITLE = 'Blog | Noé Tatoud'
 const DESCRIPTION = 'Articles on software engineering.'
 
 export const Route = createFileRoute('/blog/')({
   component: BlogPageRoute,
-  loader: async () => {
-    const posts = await getBlogPosts()
-    return { posts }
-  },
   head: () => ({
     meta: toMetaTags({
       title: TITLE,
@@ -24,6 +21,5 @@ export const Route = createFileRoute('/blog/')({
 })
 
 function BlogPageRoute() {
-  const { posts } = Route.useLoaderData()
-  return <BlogPage posts={posts} />
+  return <BlogPage posts={blogPosts} />
 }

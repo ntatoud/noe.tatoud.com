@@ -6,10 +6,10 @@ import { parseMarkdown } from '@tanstack/markdown/parser'
 import { Context, Effect, Layer } from 'effect'
 import { parse as parseYaml } from 'yaml'
 
-import { MarkdownParseError } from './errors'
-import { highlighter } from './languages'
+import { MarkdownParseError } from './errors.ts'
+import { highlighter } from './languages.ts'
 
-export { MarkdownParseError } from './errors'
+export { MarkdownParseError } from './errors.ts'
 
 export interface Markdown {
   readonly frontmatter: Record<string, unknown>

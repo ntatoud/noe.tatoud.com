@@ -1,15 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
+
+import { loadProject } from 'virtual:content'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { ProjectPage } from '@/features/projects/project-page'
-import { getProject } from '@/server/content'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ProjectPageRoute,
   loader: async ({ params }) => {
-    // See the blog detail route: the server function owns the 404/500 split.
-    const project = await getProject({ data: params.slug })
-    return { project }
+    const load = loadProject[params.slug]
+    if (!load) throw notFound()
+    return { project: (await load()).default }
   },
   head: ({ loaderData, match }) => {
     if (!loaderData) return {}

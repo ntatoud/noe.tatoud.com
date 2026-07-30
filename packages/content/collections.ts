@@ -7,10 +7,10 @@ import type { CollectionMeta, ImageValue } from '@ntatoud/effect-collections'
 
 import { Effect } from 'effect'
 
-import { BlogPostSchema } from './schemas/blog'
-import { ExperienceSchema } from './schemas/experiences'
-import { ProjectSchema } from './schemas/projects'
-import { StageItemSchema } from './schemas/talks'
+import { BlogPostSchema } from './schemas/blog.ts'
+import { ExperienceSchema } from './schemas/experiences.ts'
+import { ProjectSchema } from './schemas/projects.ts'
+import { StageItemSchema } from './schemas/talks.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
@@ -45,22 +45,42 @@ const findContentRoot = () => {
   return path.resolve(here, '../../content')
 }
 
-const contentRoot = findContentRoot()
+// Exported for the Vite plugin (`./vite`), which watches this directory.
+export const contentRoot = findContentRoot()
+
+const CONTENT_URL_BASE = '/content'
+
+/**
+ * The public URL of something inside `content/`:
+ * `/content/<collection>/<slug>[/<file>]`.
+ *
+ * This scheme and its inverse below are the seam between the collections and the
+ * Vite plugin, which turns such a URL back into a path on disk to import as a
+ * hashed asset. Both directions live here so the `/content` prefix is written in
+ * exactly one place — a mismatch would not fail loudly, it would degrade into
+ * "image not found" warnings and unbundled images.
+ */
+export const contentUrl = (
+  collectionDirectory: string,
+  ...segments: ReadonlyArray<string>
+) =>
+  [CONTENT_URL_BASE, path.basename(collectionDirectory), ...segments].join('/')
+
+/** Inverse of `contentUrl`: the file on disk it points at, or `null`. */
+export const contentFilePath = (url: string): string | null =>
+  url.startsWith(`${CONTENT_URL_BASE}/`)
+    ? path.join(contentRoot, url.slice(CONTENT_URL_BASE.length + 1))
+    : null
 
 // `Image` decodes a frontmatter path into an absolute filesystem path, which is
-// meaningless to a browser. Every collection carrying an image derives a
-// portable `/content/<collection>/<slug>/<file>` URL here — once — rather than
-// in its Reader; the App maps that back to a hashed asset URL via
-// `resolveContentImage`. Separators are forced to `/` so the value stays a URL
-// on Windows, where `path.relative` returns backslashes.
-const publicImageUrl = (image: ImageValue, meta: CollectionMeta) => {
-  const collection = path.basename(meta.directory)
-  const relative = path
-    .relative(meta.directory, image.path)
-    .split(path.sep)
-    .join('/')
-  return `/content/${collection}/${relative}`
-}
+// meaningless to a browser. Every collection carrying an image derives a portable
+// URL here — once — rather than in its Reader. Separators are forced to `/` so
+// the value stays a URL on Windows, where `path.relative` returns backslashes.
+const publicImageUrl = (image: ImageValue, meta: CollectionMeta) =>
+  contentUrl(
+    meta.directory,
+    path.relative(meta.directory, image.path).split(path.sep).join('/'),
+  )
 
 export const blogPosts = defineCollection({
   name: 'blogPosts',

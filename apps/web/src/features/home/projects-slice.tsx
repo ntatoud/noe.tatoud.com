@@ -5,7 +5,7 @@ import { ContentList } from '@/components/content-list'
 import { Slice } from './slice'
 
 type ProjectsSliceProps = {
-  projects: Project[]
+  projects: readonly Project[]
 }
 
 export function ProjectsSlice({ projects }: ProjectsSliceProps) {
