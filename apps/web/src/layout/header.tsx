@@ -19,6 +19,19 @@ import { menuIcon, navItems, trophyIcon } from './site-config'
 
 const logoLabel = 'noe.tatoud.com — home'
 
+/**
+ * `data-status="active"` (and `aria-current="page"`) are set by TanStack
+ * Router's `Link` on the rendered anchor, so the active styles can live in the
+ * same className the header already passes down.
+ *
+ * The active pill uses `accent` rather than `muted`: `muted` is what the ghost
+ * variant already uses on hover, and in the light theme it sits too close to
+ * `background` to read as a highlight on its own. The border fills the ghost
+ * button's transparent one, so it costs no layout shift.
+ */
+const navLinkClassName =
+  'text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-border data-[status=active]:bg-accent data-[status=active]:font-semibold data-[status=active]:text-accent-foreground'
+
 export function Header() {
   return (
     <header className="w-full" data-slot="header">
@@ -57,7 +70,7 @@ function PrimaryNav({ className }: { className?: string }) {
           to={item.href}
           variant="ghost"
           size="sm"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className={navLinkClassName}
           data-nav={item.label.toLowerCase()}
         >
           {item.label}
@@ -120,7 +133,7 @@ function MobileMenu({ className }: { className?: string }) {
                   to={item.href}
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start"
+                  className={cn('w-full justify-start', navLinkClassName)}
                   onClick={() => setOpen(false)}
                   data-nav={item.label.toLowerCase()}
                 >
