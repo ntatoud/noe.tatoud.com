@@ -29,7 +29,7 @@
       "@ntatoud/effect-og": ["./packages/effect-og/index.ts"],
       "@ntatoud/effect-og/image": ["./packages/effect-og/image.ts"],
       "@ntatoud/effect-rss": ["./packages/effect-rss/index.ts"],
-      "@ntatoud/effect-mdx": ["./packages/effect-mdx/index.ts"],
+      "@ntatoud/effect-markdown": ["./packages/effect-markdown/index.ts"],
       "@ntatoud/web": ["./apps/web/package.json"]
     }
   },

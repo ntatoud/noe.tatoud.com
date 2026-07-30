@@ -9,7 +9,7 @@ import { resolveContentImage } from '@/lib/content-images'
 import { formatDate } from '@/lib/format'
 
 type BlogPostPageProps = {
-  post: Omit<BlogPostDetail, 'Content'> & { bodyHtml: string }
+  post: BlogPostDetail
 }
 
 export function BlogPostPage({ post }: BlogPostPageProps) {
@@ -58,7 +58,7 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
       <div
         className="typeset typeset-docs mt-8"
         data-slot="blog-post-content"
-        dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
+        dangerouslySetInnerHTML={{ __html: post.html }}
       />
     </main>
   )

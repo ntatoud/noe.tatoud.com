@@ -1,10 +1,7 @@
 import { fileURLToPath } from 'node:url'
 
-import { createElement } from 'react'
-
 import { expect, layer } from '@effect/vitest'
 import { Effect, Schema } from 'effect'
-import { renderToStaticMarkup } from 'react-dom/server'
 
 import {
   CollectionError,
@@ -92,7 +89,7 @@ layer(CollectionsLive)('Collections', (it) => {
   )
 
   it.effect(
-    'getBySlug returns a document whose data matches its frontmatter and whose body is compiled',
+    'getBySlug returns a document whose data matches its frontmatter and whose body is rendered',
     () =>
       Effect.gen(function* () {
         const collections = yield* Collections
@@ -101,11 +98,11 @@ layer(CollectionsLive)('Collections', (it) => {
         expect(doc.slug).toBe('hello-world')
         expect(doc.data).toEqual(helloWorldData)
 
-        // The body compiled into a real component that renders the MDX markup.
-        const html = renderToStaticMarkup(createElement(doc.Content))
-        expect(html).toContain('<h1')
-        expect(html).toContain('Hello')
-        expect(html).toContain('<strong>first</strong>')
+        // The body rendered to HTML, and the frontmatter block is not in it.
+        expect(doc.html).toContain('<h1')
+        expect(doc.html).toContain('Hello')
+        expect(doc.html).toContain('<strong>first</strong>')
+        expect(doc.html).not.toContain('title:')
       }),
   )
 

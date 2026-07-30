@@ -1,8 +1,6 @@
 import { getBlogPost, getBlogPosts } from '@ntatoud/content'
 import type { FeedItemInput } from '@ntatoud/effect-rss'
 
-import { renderToStaticMarkup } from 'react-dom/server'
-
 import { SITE_URL } from '@/lib/site'
 import { Feed, readContent, runtime } from '@/server/runtime'
 
@@ -49,7 +47,7 @@ export async function getFeedItems(): Promise<FeedItemInput[]> {
       return {
         ...base,
         path: post.url,
-        content: renderToStaticMarkup(<detail.Content />),
+        content: detail.html,
       }
     }),
   )

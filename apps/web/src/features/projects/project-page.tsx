@@ -5,9 +5,10 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
+import { ProjectCta } from '@/features/projects/project-cta'
 
 type ProjectPageProps = {
-  project: Omit<ProjectDetail, 'Content'> & { bodyHtml: string }
+  project: ProjectDetail
 }
 
 export function ProjectPage({ project }: ProjectPageProps) {
@@ -80,8 +81,10 @@ export function ProjectPage({ project }: ProjectPageProps) {
       <div
         className="typeset typeset-docs mt-8"
         data-slot="project-content"
-        dangerouslySetInnerHTML={{ __html: project.bodyHtml }}
+        dangerouslySetInnerHTML={{ __html: project.html }}
       />
+
+      {project.cta && <ProjectCta {...project.cta} />}
     </main>
   )
 }

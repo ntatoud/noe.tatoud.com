@@ -1,0 +1,112 @@
+/* Syntax highlighting theme for @tanstack/highlight.
+
+   The highlighter emits semantic classes (`th-token th-keyword`) rather than
+   inline colors — the palette lives here, so recoloring never means
+   re-highlighting. Values are the `github-dark` theme shipped as
+   `@tanstack/highlight/themes/github-dark`, matching what rehype-pretty-code
+   used to inline. The site is dark-only, so there is a single palette; the
+   token list is exhaustive (`themeTokenClasses`) so an unstyled token class
+   can't silently fall back to the prose color. */
+
+:root {
+  --th-token: #c9d1d9;
+  --th-attr: #79c0ff;
+  --th-code-inline: #ffa657;
+  --th-command: #d2a8ff;
+  --th-comment: #8b949e;
+  --th-deleted: #ff7b72;
+  --th-function: #d2a8ff;
+  --th-heading: #79c0ff;
+  --th-inserted: #7ee787;
+  --th-keyword: #ff7b72;
+  --th-link: #58a6ff;
+  --th-literal: #79c0ff;
+  --th-meta: #8b949e;
+  --th-number: #79c0ff;
+  --th-operator: #d2a8ff;
+  --th-property: #79c0ff;
+  --th-selector: #7ee787;
+  --th-string: #a5d6ff;
+  --th-tag: #7ee787;
+  --th-type: #ffa657;
+  --th-variable: #ffa657;
+}
+
+.th-token {
+  color: var(--th-token);
+}
+.th-attr {
+  color: var(--th-attr);
+}
+.th-code-inline {
+  color: var(--th-code-inline);
+}
+.th-command {
+  color: var(--th-command);
+}
+.th-comment {
+  color: var(--th-comment);
+  font-style: italic;
+}
+.th-deleted {
+  color: var(--th-deleted);
+}
+.th-function {
+  color: var(--th-function);
+}
+.th-heading {
+  color: var(--th-heading);
+}
+.th-inserted {
+  color: var(--th-inserted);
+}
+.th-keyword {
+  color: var(--th-keyword);
+}
+.th-link {
+  color: var(--th-link);
+}
+.th-literal {
+  color: var(--th-literal);
+}
+.th-meta {
+  color: var(--th-meta);
+}
+.th-number {
+  color: var(--th-number);
+}
+.th-operator {
+  color: var(--th-operator);
+}
+.th-property {
+  color: var(--th-property);
+}
+.th-selector {
+  color: var(--th-selector);
+}
+.th-string {
+  color: var(--th-string);
+}
+.th-tag {
+  color: var(--th-tag);
+}
+.th-type {
+  color: var(--th-type);
+}
+.th-variable {
+  color: var(--th-variable);
+}
+
+/* Line wrappers only appear on fences that ask for line highlighting (via
+   ```ts {1,4}). They stay inline: the newline that follows each one is what
+   breaks the line inside `pre`, so making them blocks would double-space the
+   code. The marker is therefore a left rule plus a tinted background rather
+   than a full-width band. */
+.th-line--highlighted {
+  background-color: color-mix(in oklab, var(--th-token) 12%, transparent);
+  box-shadow: -0.5em 0 0 color-mix(in oklab, var(--th-token) 12%, transparent);
+  border-inline-start: 2px solid
+    color-mix(in oklab, var(--th-keyword) 70%, transparent);
+  padding-inline-start: 0.5em;
+  margin-inline-start: -0.5em;
+}

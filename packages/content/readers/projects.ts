@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-
 import { Collections } from '@ntatoud/effect-collections'
 import type { CollectionData } from '@ntatoud/effect-collections'
 
@@ -10,7 +8,8 @@ import { projects as projectsCollection } from '../collections'
 export type Project = CollectionData<typeof projectsCollection>
 
 export type ProjectDetail = Project & {
-  Content: ComponentType
+  /** The rendered body, as HTML. */
+  html: string
 }
 
 export const getProjects = Collections.use((collections) =>
@@ -30,6 +29,4 @@ export const getProjects = Collections.use((collections) =>
 export const getProject = (slug: string) =>
   Collections.use((collections) =>
     collections.getBySlug(projectsCollection, slug),
-  ).pipe(
-    Effect.map((doc): ProjectDetail => ({ ...doc.data, Content: doc.Content })),
-  )
+  ).pipe(Effect.map((doc): ProjectDetail => ({ ...doc.data, html: doc.html })))

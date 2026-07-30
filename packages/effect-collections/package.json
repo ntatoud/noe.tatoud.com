@@ -13,16 +13,12 @@
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
-    "@ntatoud/effect-mdx": "workspace:*",
+    "@ntatoud/effect-markdown": "workspace:*",
     "effect": "catalog:",
     "image-size": "catalog:"
   },
   "devDependencies": {
     "@effect/vitest": "catalog:",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
     "vitest": "catalog:"
   }
 }

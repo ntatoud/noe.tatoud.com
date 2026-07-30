@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-
 import { Collections } from '@ntatoud/effect-collections'
 import type { CollectionData } from '@ntatoud/effect-collections'
 
@@ -10,7 +8,8 @@ import { blogPosts as blogPostsCollection } from '../collections'
 export type BlogPost = CollectionData<typeof blogPostsCollection>
 
 export type BlogPostDetail = BlogPost & {
-  Content: ComponentType
+  /** The rendered body, as HTML. */
+  html: string
 }
 
 export const getBlogPosts = Collections.use((collections) =>
@@ -27,8 +26,4 @@ export const getBlogPosts = Collections.use((collections) =>
 export const getBlogPost = (slug: string) =>
   Collections.use((collections) =>
     collections.getBySlug(blogPostsCollection, slug),
-  ).pipe(
-    Effect.map(
-      (doc): BlogPostDetail => ({ ...doc.data, Content: doc.Content }),
-    ),
-  )
+  ).pipe(Effect.map((doc): BlogPostDetail => ({ ...doc.data, html: doc.html })))
