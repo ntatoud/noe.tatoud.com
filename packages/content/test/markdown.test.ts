@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import handler, {
+  config as edgeConfig,
   markdownPath as edgeMarkdownPath,
   prefersMarkdown as edgePrefersMarkdown,
 } from '../../../netlify/edge-functions/markdown-negotiation.ts'
@@ -412,6 +413,31 @@ describe('edge function parity', () => {
         edgePrefersMarkdown(accept),
         `disagreed on Accept: ${JSON.stringify(accept)}`,
       ).toBe(prefersMarkdown(accept))
+    }
+  })
+
+  /**
+   * `config.header` is a pre-filter Netlify evaluates before invoking the
+   * function, so it keeps browser traffic from paying for this feature at all.
+   * That makes it load-bearing in the dangerous direction: anything it rejects
+   * never reaches `prefersMarkdown`, so a regex that is too narrow silently
+   * disables markdown for the clients it excludes — with no error anywhere.
+   *
+   * The invariant is one-way. The regex may over-match (the handler then turns the
+   * request away properly); it must never under-match.
+   */
+  it('never pre-filters away a request that should get markdown', () => {
+    const pattern = edgeConfig.header?.accept
+    expect(typeof pattern).toBe('string')
+    const accepts = new RegExp(pattern as string, 'i')
+
+    for (const accept of CASES) {
+      if (!prefersMarkdown(accept)) continue
+      expect(
+        accepts.test(accept ?? ''),
+        `config.header would skip the function for Accept: ${JSON.stringify(accept)}, ` +
+          'which prefersMarkdown accepts',
+      ).toBe(true)
     }
   })
 

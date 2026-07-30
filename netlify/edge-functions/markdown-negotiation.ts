@@ -135,6 +135,17 @@ export default async function handler(
  */
 export const config: Config = {
   path: '/*',
+  /**
+   * A cheap pre-filter, evaluated by Netlify *before* the function is invoked: a
+   * request whose `Accept` never mentions markdown skips it entirely, at no cost.
+   * Browsers never send it, so browser traffic pays nothing for this feature —
+   * page HTML keeps coming straight off the CDN with no edge hop.
+   *
+   * This is a necessary condition, not the decision. It is a substring-ish regex
+   * and cannot weigh q-values, so `text/markdown;q=0.5, text/html` still matches
+   * here and is then correctly turned away by `prefersMarkdown`.
+   */
+  header: { accept: 'text/(x-)?markdown' },
   // Keeps the function off everything that could not have a markdown twin: hashed
   // bundles, images, the feeds, and the already-markdown files themselves.
   excludedPath: [
