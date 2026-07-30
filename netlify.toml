@@ -1,6 +1,7 @@
 [build]
 command = "pnpm run build"
 publish = "apps/web/dist/client"
+edge_functions = "netlify/edge-functions"
 
 [build.environment]
 NODE_VERSION = "24"
@@ -33,6 +34,14 @@ for = "/content/*"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 
+# Markdown twins (ADR-0009). Served directly by URL as well as through content
+# negotiation, so they get the same revalidate policy the edge function sets.
+[[headers]]
+for = "/*.md"
+[headers.values]
+Content-Type = "text/markdown; charset=utf-8"
+Cache-Control = "public, max-age=0, must-revalidate"
+
 # Netlify image CDN — content-addressed by URL params, safe to cache long-term
 # Note: Netlify forces a 1-day browser Cache-Control on /.netlify/images
 # responses; this override only takes effect if Netlify lifts that restriction.
@@ -48,11 +57,37 @@ for = "/assets/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
-# Agent discovery — RFC 8288 Link relation headers (RFC 9727 §3)
+# Agent discovery — RFC 8288 Link relation headers (RFC 9727 §3).
+# `/llms.txt` is generated into the client build by `@ntatoud/content/vite-markdown`.
 [[headers]]
 for = "/"
 [headers.values]
-Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"'
+Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml", </index.md>; rel="alternate"; type="text/markdown"'
+
+# Two representations live at every page URL — HTML, and the markdown the
+# markdown-negotiation edge function returns for `Accept: text/markdown` — so any
+# cache in between has to key on that header. Scoped to the page routes rather
+# than `/*` on purpose: a hashed asset has exactly one representation, and `Vary`
+# there would fragment its cache entry for nothing.
+[[headers]]
+for = "/"
+[headers.values]
+Vary = "Accept"
+
+[[headers]]
+for = "/blog/*"
+[headers.values]
+Vary = "Accept"
+
+[[headers]]
+for = "/projects/*"
+[headers.values]
+Vary = "Accept"
+
+[[headers]]
+for = "/talks/*"
+[headers.values]
+Vary = "Accept"
 
 [functions]
 node_bundler = "esbuild"

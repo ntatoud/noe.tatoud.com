@@ -4,9 +4,10 @@ import { projects } from 'virtual:content'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { ProjectsPage } from '@/features/projects/projects-page'
+import { PAGE_DESCRIPTIONS } from '@/lib/site'
 
 const TITLE = 'Projects | Noé Tatoud'
-const DESCRIPTION = 'Personal and open-source projects.'
+const DESCRIPTION = PAGE_DESCRIPTIONS.projects
 
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPageRoute,
