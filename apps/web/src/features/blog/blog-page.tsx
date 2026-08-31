@@ -14,7 +14,7 @@ export function BlogPage({ posts }: BlogPageProps) {
         Long-form posts on frontend, tooling, and craft.
       </p>
       <ul
-        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
         data-slot="blog-page-list"
       >
         {posts.map((post) => (

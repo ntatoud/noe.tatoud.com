@@ -9,12 +9,12 @@ type BlogSliceProps = {
 }
 
 export function BlogSlice({ posts }: BlogSliceProps) {
-  const latest = posts.slice(0, 3)
+  const latest = posts.slice(0, 4)
 
   return (
     <Slice title="Blog" seeAllHref="/blog" data-slot="blog-slice">
       <ul
-        className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         data-slot="blog-slice-list"
       >
         {latest.map((post) => (

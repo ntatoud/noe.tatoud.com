@@ -8,7 +8,7 @@ type ProjectsPageProps = {
 
 export function ProjectsPage({ projects }: ProjectsPageProps) {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12" data-slot="projects-page">
+    <main className="mx-auto max-w-5xl px-4 py-12" data-slot="projects-page">
       <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
       <p className="mt-2 text-muted-foreground">
         Things I've built and shipped.

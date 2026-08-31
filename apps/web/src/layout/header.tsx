@@ -25,7 +25,7 @@ const navLinkClassName =
 export function Header() {
   return (
     <header className="w-full" data-slot="header">
-      <div className="mx-auto flex h-14 max-w-3xl items-center gap-4 px-4">
+      <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
         <Logo />
         <PrimaryNav className="hidden md:flex" />
         <div className="ml-auto hidden items-center gap-1 md:flex">
