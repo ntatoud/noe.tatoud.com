@@ -1,6 +1,6 @@
 import type { BlogPost } from '@ntatoud/content'
 
-import { ContentList } from '@/components/content-list'
+import { BlogCard } from '@/features/blog/blog-card'
 
 import { Slice } from './slice'
 
@@ -9,18 +9,18 @@ type BlogSliceProps = {
 }
 
 export function BlogSlice({ posts }: BlogSliceProps) {
-  const latest = posts.slice(0, 3)
+  const latest = posts.slice(0, 4)
 
   return (
     <Slice title="Blog" seeAllHref="/blog" data-slot="blog-slice">
-      <ContentList
-        items={latest.map((post) => ({
-          key: post.slug,
-          href: post.externalUrl ?? post.url,
-          title: post.title,
-          external: post.externalUrl !== null,
-        }))}
-      />
+      <ul
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        data-slot="blog-slice-list"
+      >
+        {latest.map((post) => (
+          <BlogCard key={post.slug} post={post} />
+        ))}
+      </ul>
     </Slice>
   )
 }

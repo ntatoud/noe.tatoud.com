@@ -10,7 +10,7 @@ const resumeHref = '/Noe_Tatoud_CV_React_EN.pdf'
 export function Hero() {
   return (
     <section
-      className="mx-auto max-w-3xl px-4 pt-16 pb-12"
+      className="mx-auto max-w-5xl px-4 pt-16 pb-12"
       data-slot="home-hero"
     >
       <img

@@ -22,7 +22,7 @@ export function Slice({
 }: SliceProps) {
   return (
     <section
-      className={cn('mx-auto max-w-3xl px-4 py-8', className)}
+      className={cn('mx-auto max-w-5xl px-4 py-8', className)}
       data-slot="home-slice"
     >
       <div className="mb-4 flex items-baseline justify-between">
