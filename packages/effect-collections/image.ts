@@ -2,7 +2,6 @@ import {
   Context,
   Effect,
   FileSystem,
-  Option,
   Path,
   Schema,
   SchemaGetter,
@@ -34,20 +33,21 @@ const readDimensions = (relativePath: string) =>
     const path = yield* Path.Path
     const fs = yield* FileSystem.FileSystem
     const absolutePath = path.join(directory, relativePath)
-    const bytes = yield* fs.readFile(absolutePath).pipe(
-      Effect.mapError(
-        (cause) =>
-          new SchemaIssue.InvalidValue(Option.some(relativePath), {
-            message: String(cause),
-          }),
-      ),
-    )
+    const bytes = yield* fs
+      .readFile(absolutePath)
+      .pipe(
+        Effect.mapError(
+          (cause) =>
+            new SchemaIssue.InvalidValue(
+              { message: String(cause) },
+              relativePath,
+            ),
+        ),
+      )
     const { width, height } = yield* Effect.try({
       try: () => imageSize(bytes),
       catch: (cause) =>
-        new SchemaIssue.InvalidValue(Option.some(relativePath), {
-          message: String(cause),
-        }),
+        new SchemaIssue.InvalidValue({ message: String(cause) }, relativePath),
     })
     return { path: absolutePath, width, height }
   })

@@ -6,13 +6,13 @@ publicHoistPattern:
   - '@takumi-rs/core-*'
 
 catalog:
-  '@effect/platform-node': 4.0.0-beta.99
-  '@effect/vitest': 4.0.0-beta.99
-  '@takumi-rs/core': 2.3.0
+  '@effect/platform-node': 4.0.0-rc.112
+  '@effect/vitest': 4.0.0-rc.112
+  '@takumi-rs/core': 2.13.5
   '@types/node': 24.13.3
-  effect: 4.0.0-beta.99
+  effect: 4.0.0-rc.112
   image-size: 2.0.2
-  takumi-js: 2.3.0
+  takumi-js: 2.13.5
   typescript: 7.0.2
-  vite: 8.1.4
-  vitest: 4.1.10
+  vite: 8.2.2
+  vitest: 4.1.11

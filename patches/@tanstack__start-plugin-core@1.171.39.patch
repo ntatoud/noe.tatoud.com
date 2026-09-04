@@ -1,8 +1,7 @@
 diff --git a/dist/esm/vite/prerender.js b/dist/esm/vite/prerender.js
-index 10ef7b95091c49b24d8a70f82b0f6cab656f627c..d4f7289b8bb990aa35415473a9974ecbc11ea558 100644
 --- a/dist/esm/vite/prerender.js
 +++ b/dist/esm/vite/prerender.js
-@@ -33,6 +33,13 @@ async function startPreviewServer(viteConfig) {
+@@ -33,6 +33,13 @@
  		return await vite.preview({
  			configFile: viteConfig.configFile,
  			preview: {

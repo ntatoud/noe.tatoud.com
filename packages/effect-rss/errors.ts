@@ -5,7 +5,7 @@ import { Schema } from 'effect'
  * serializing a feed. `operation` names the step that failed so callers get a
  * useful diagnostic instead of an opaque parse error.
  */
-export class FeedError extends Schema.TaggedErrorClass<FeedError>()(
+export class FeedError extends Schema.TaggedError<FeedError>()(
   'effect-rss/FeedError',
   {
     operation: Schema.String,
