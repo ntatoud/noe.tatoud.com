@@ -97,6 +97,11 @@ CONTEXT.md            # domain glossary
 - **Every page has a markdown twin** (ADR-0009). `vite-markdown.ts` emits `/index.md`, `/blog.md`, `/blog/<slug>.md`, … plus `/llms.txt` into `dist/client` at build time, and `netlify/edge-functions/markdown-negotiation.ts` serves them to requests carrying `Accept: text/markdown`. Adding a collection with pages means adding it there too, and the `Accept`/path logic is deliberately duplicated between the plugin and the edge function — **edge functions are the one part of this repo that runs on Deno, not Node**, and deploy separately from the workspace. `test/markdown.test.ts` pins the two copies together, so change both.
 - **No custom components in content.** `@tanstack/markdown` does not evaluate JSX, so a content body is plain markdown (plus raw HTML, which is passed through untouched — `allowHtml`). Anything that needs a React component is driven from frontmatter and rendered by the page instead: see `cta` in `ProjectSchema` → `apps/web/src/features/projects/project-cta.tsx`.
 
+### Effect
+
+- **Effect v4** (`4.0.0-rc.112`, `catalog:` in `pnpm-workspace.yaml`) — a rewrite of v3, and most training data describes v3. **Read the relevant v4 doc page before writing or modifying Effect code**, starting at <https://effect.website/docs/v4/onboarding>.
+- Every docs page has a markdown twin — append `.md` (`curl -sSL https://effect.website/docs/v4/requirements-management/services.md`). Full page index in `docs/agents/effect.md`.
+
 ### Theming
 
 - Dark mode only (body has `className="dark"`).
@@ -130,3 +135,7 @@ Uses the five canonical triage labels (`needs-triage`, `needs-info`, `ready-for-
 ### Domain docs
 
 Single-context layout — `CONTEXT.md` at repo root, ADRs in `docs/adr/`. See `docs/agents/domain.md`.
+
+### Effect docs
+
+Effect v4 doc index + how to fetch pages as markdown. See `docs/agents/effect.md`.

@@ -5,7 +5,8 @@
   "references": {
     "effect": {
       "repository": "github.com/Effect-TS/effect-smol",
-      "description": "Use for Effect v4 and effect-smol implementation details",
+      "documentation": "https://effect.website/docs/v4/onboarding",
+      "description": "Effect v4 (pinned 4.0.0-rc.112). Read the docs before writing Effect code — every page has a markdown twin, append `.md` to the URL. Full index in docs/agents/effect.md. Use effect-smol for implementation details the docs don't cover.",
     },
   },
   "mcp": {},
