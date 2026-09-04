@@ -13,12 +13,12 @@
     "postinstall": "lefthook install"
   },
   "devDependencies": {
-    "@netlify/edge-functions": "3.0.8",
+    "@netlify/edge-functions": "4.0.0",
     "@types/node": "catalog:",
-    "knip": "6.26.0",
-    "lefthook": "2.1.10",
-    "oxfmt": "0.58.0",
-    "oxlint": "1.73.0",
+    "knip": "6.34.0",
+    "lefthook": "2.1.12",
+    "oxfmt": "0.66.0",
+    "oxlint": "1.81.0",
     "typescript": "catalog:"
   },
   "engines": {
@@ -32,7 +32,7 @@
       "lefthook"
     ],
     "patchedDependencies": {
-      "@tanstack/start-plugin-core@1.171.19": "patches/@tanstack__start-plugin-core@1.171.19.patch"
+      "@tanstack/start-plugin-core@1.171.39": "patches/@tanstack__start-plugin-core@1.171.39.patch"
     }
   }
 }

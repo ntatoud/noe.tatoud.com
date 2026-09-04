@@ -9,7 +9,7 @@ import { Schema } from 'effect'
  * absolute directory, so encoding this error (as an `HttpApi` error schema
  * would) can never disclose a server filesystem path.
  */
-export class DocumentNotFound extends Schema.TaggedErrorClass<DocumentNotFound>()(
+export class DocumentNotFound extends Schema.TaggedError<DocumentNotFound>()(
   'effect-collections/DocumentNotFound',
   {
     collection: Schema.String,
@@ -17,7 +17,7 @@ export class DocumentNotFound extends Schema.TaggedErrorClass<DocumentNotFound>(
   },
 ) {}
 
-export class CollectionError extends Schema.TaggedErrorClass<CollectionError>()(
+export class CollectionError extends Schema.TaggedError<CollectionError>()(
   'effect-collections/CollectionError',
   {
     operation: Schema.String,

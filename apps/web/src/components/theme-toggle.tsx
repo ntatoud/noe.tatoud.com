@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { HugeiconsIcon } from '@hugeicons/react'
 
@@ -9,6 +9,27 @@ type Theme = 'light' | 'dark'
 
 const STORAGE_KEY = 'theme'
 
+// The `dark` class on <html> is the source of truth: the inline script in
+// __root.tsx sets it before hydration, so the DOM already holds the theme by
+// the time React runs. Reading it through a store keeps the button in sync
+// with that external state without a mount effect.
+const listeners = new Set<() => void>()
+
+function subscribe(onStoreChange: () => void) {
+  listeners.add(onStoreChange)
+  return () => {
+    listeners.delete(onStoreChange)
+  }
+}
+
+function getSnapshot(): Theme {
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+function getServerSnapshot(): Theme {
+  return 'dark'
+}
+
 function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle('dark', theme === 'dark')
   try {
@@ -16,16 +37,11 @@ function applyTheme(theme: Theme) {
   } catch {
     // localStorage unavailable (private mode, disabled storage) — theme just won't persist
   }
+  for (const listener of listeners) listener()
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>('dark')
-
-  useEffect(() => {
-    setTheme(
-      document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-    )
-  }, [])
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   return (
     <Button
@@ -35,9 +51,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label="Toggle theme"
       data-slot="theme-toggle"
       onClick={() => {
-        const next = theme === 'dark' ? 'light' : 'dark'
-        setTheme(next)
-        applyTheme(next)
+        applyTheme(theme === 'dark' ? 'light' : 'dark')
       }}
     >
       <HugeiconsIcon icon={theme === 'dark' ? sunIcon : moonIcon} size={18} />
