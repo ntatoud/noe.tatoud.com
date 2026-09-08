@@ -1,11 +1,10 @@
-import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
+import { ButtonLink } from '@/components/ui/button-link'
 import { SocialLinks } from '@/layout/social-links'
 
 const ownerName = 'Noé Tatoud'
 const tagline =
   'Fullstack developer crafting pixel-perfect interfaces and thoughtful web experiences.'
 const photoSrc = '/pixel-avatar.webp'
-const resumeHref = '/Noe_Tatoud_CV_React_EN.pdf'
 
 export function Hero() {
   return (
@@ -30,14 +29,6 @@ export function Hero() {
         <ButtonLink to="/blog" data-slot="hero-cta-blog">
           Read the blog
         </ButtonLink>
-        <ButtonAnchor
-          href={resumeHref}
-          variant="secondary"
-          download
-          data-slot="hero-cta-resume"
-        >
-          Download resume
-        </ButtonAnchor>
         <SocialLinks />
       </div>
     </section>
