@@ -1,6 +1,6 @@
 import type { StageItem } from '@ntatoud/content'
 
-import { ContentList } from '@/components/content-list'
+import { TalkCard } from '@/features/talks/talk-card'
 
 type TalksPageProps = {
   talks: readonly StageItem[]
@@ -13,14 +13,14 @@ export function TalksPage({ talks }: TalksPageProps) {
       <p className="mt-2 text-muted-foreground">
         Conference talks and stage sessions.
       </p>
-      <ContentList
-        className="mt-8"
-        items={talks.map((talk) => ({
-          key: talk.slug,
-          href: `/talks/${talk.slug}`,
-          title: talk.title,
-        }))}
-      />
+      <ul
+        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        data-slot="talks-page-list"
+      >
+        {talks.map((talk) => (
+          <TalkCard key={talk.slug} talk={talk} />
+        ))}
+      </ul>
     </main>
   )
 }

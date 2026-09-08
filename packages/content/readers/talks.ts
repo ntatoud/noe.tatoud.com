@@ -4,9 +4,10 @@ import type { CollectionData } from '@ntatoud/effect-collections'
 import { Effect } from 'effect'
 
 import { talks as talksCollection } from '../collections.ts'
-import type { StageEvent } from '../schemas/talks.ts'
 
 export type StageItem = CollectionData<typeof talksCollection>
+
+export type TalkEvent = StageItem['events'][number]
 
 export type TalkDetail = StageItem & {
   /** The rendered body, as HTML. */
@@ -15,8 +16,8 @@ export type TalkDetail = StageItem & {
 
 /** Returns the event with the most recent date, or undefined. */
 function latestEvent(
-  events: ReadonlyArray<StageEvent> | undefined,
-): StageEvent | undefined {
+  events: ReadonlyArray<TalkEvent> | undefined,
+): TalkEvent | undefined {
   if (!events || events.length === 0) return undefined
   return events.reduce((latest, e) =>
     new Date(e.date) > new Date(latest.date) ? e : latest,

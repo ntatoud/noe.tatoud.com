@@ -1,6 +1,6 @@
 import type { StageItem } from '@ntatoud/content'
 
-import { ContentList } from '@/components/content-list'
+import { TalkCard } from '@/features/talks/talk-card'
 
 import { Slice } from './slice'
 
@@ -13,13 +13,14 @@ export function TalksSlice({ talks }: TalksSliceProps) {
 
   return (
     <Slice title="Talks" seeAllHref="/talks" data-slot="talks-slice">
-      <ContentList
-        items={recent.map((talk) => ({
-          key: talk.slug,
-          href: `/talks/${talk.slug}`,
-          title: talk.title,
-        }))}
-      />
+      <ul
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        data-slot="talks-slice-list"
+      >
+        {recent.map((talk) => (
+          <TalkCard key={talk.slug} talk={talk} />
+        ))}
+      </ul>
     </Slice>
   )
 }

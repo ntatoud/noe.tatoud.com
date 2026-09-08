@@ -1,3 +1,5 @@
+import { Image } from '@ntatoud/effect-collections'
+
 import { Effect, Schema } from 'effect'
 
 const StageEventSchema = Schema.Struct({
@@ -5,7 +7,7 @@ const StageEventSchema = Schema.Struct({
   city: Schema.String,
   date: Schema.String,
   url: Schema.optionalKey(Schema.String),
-  logo: Schema.optionalKey(Schema.String),
+  logo: Schema.optionalKey(Image),
 })
 
 const StageResourceSchema = Schema.Struct({

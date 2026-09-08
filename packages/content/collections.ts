@@ -124,5 +124,13 @@ export const talks = defineCollection({
   name: 'talks',
   directory: path.join(contentRoot, 'talks'),
   schema: StageItemSchema,
-  transform: (data, meta) => Effect.succeed({ ...data, slug: meta.slug }),
+  transform: ({ events, ...data }, meta) =>
+    Effect.succeed({
+      ...data,
+      slug: meta.slug,
+      events: events.map(({ logo, ...event }) => ({
+        ...event,
+        logo: logo ? publicImageUrl(logo, meta) : null,
+      })),
+    }),
 })
