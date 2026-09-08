@@ -1,6 +1,6 @@
 import type { Project } from '@ntatoud/content'
 
-import { ContentList } from '@/components/content-list'
+import { ProjectCard } from '@/features/projects/project-card'
 
 type ProjectsPageProps = {
   projects: readonly Project[]
@@ -13,18 +13,14 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
       <p className="mt-2 text-muted-foreground">
         Things I've built and shipped.
       </p>
-      <ContentList
-        className="mt-8"
-        items={projects.map((project) => ({
-          key: project.slug,
-          href:
-            project.kind === 'contribution' && project.url
-              ? project.url
-              : `/projects/${project.slug}`,
-          external: project.kind === 'contribution' && !!project.url,
-          title: project.title,
-        }))}
-      />
+      <ul
+        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        data-slot="projects-page-list"
+      >
+        {projects.map((project) => (
+          <ProjectCard key={project.slug} project={project} />
+        ))}
+      </ul>
     </main>
   )
 }

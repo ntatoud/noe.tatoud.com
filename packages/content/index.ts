@@ -16,6 +16,7 @@ export {
   getTalks,
   type StageItem,
   type TalkDetail,
+  type TalkEvent,
 } from './readers/talks.ts'
 
 export type { ExperienceFrontmatter } from './schemas/experiences.ts'

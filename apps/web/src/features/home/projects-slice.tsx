@@ -1,6 +1,6 @@
 import type { Project } from '@ntatoud/content'
 
-import { ContentList } from '@/components/content-list'
+import { ProjectCard } from '@/features/projects/project-card'
 
 import { Slice } from './slice'
 
@@ -13,17 +13,14 @@ export function ProjectsSlice({ projects }: ProjectsSliceProps) {
 
   return (
     <Slice title="Projects" seeAllHref="/projects" data-slot="projects-slice">
-      <ContentList
-        items={featured.map((project) => {
-          const href = project.url ?? project.repo
-          return {
-            key: project.slug,
-            href,
-            title: project.title,
-            external: href !== undefined,
-          }
-        })}
-      />
+      <ul
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        data-slot="projects-slice-list"
+      >
+        {featured.map((project) => (
+          <ProjectCard key={project.slug} project={project} />
+        ))}
+      </ul>
     </Slice>
   )
 }
