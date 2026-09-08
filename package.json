@@ -17,8 +17,8 @@
     "@types/node": "catalog:",
     "knip": "6.34.0",
     "lefthook": "2.1.12",
-    "oxfmt": "0.66.0",
-    "oxlint": "1.81.0",
+    "oxfmt": "0.67.0",
+    "oxlint": "1.82.0",
     "typescript": "catalog:"
   },
   "engines": {
@@ -32,7 +32,7 @@
       "lefthook"
     ],
     "patchedDependencies": {
-      "@tanstack/start-plugin-core@1.171.39": "patches/@tanstack__start-plugin-core@1.171.39.patch"
+      "@tanstack/start-plugin-core@1.171.40": "patches/@tanstack__start-plugin-core@1.171.40.patch"
     }
   }
 }
