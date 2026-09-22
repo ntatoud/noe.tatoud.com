@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@netlify/edge-functions": "4.0.0",
+    "@shadcn/lint": "0.1.5",
     "@types/node": "catalog:",
     "knip": "6.34.0",
     "lefthook": "2.1.12",

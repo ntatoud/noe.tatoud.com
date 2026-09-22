@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from '@/components/ui/badge'
@@ -299,8 +301,10 @@ function StyleguidePage() {
                     {n}
                   </span>
                   <div
-                    className="bg-moss-200 dark:bg-moss-800"
-                    style={{ width: `${n * 0.25}rem`, height: '1rem' }}
+                    className="h-4 w-(--swatch-width) bg-moss-200 dark:bg-moss-800"
+                    style={
+                      { '--swatch-width': `${n * 0.25}rem` } as CSSProperties
+                    }
                   />
                 </div>
               ))}

@@ -55,7 +55,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {project.description}
             </p>
           )}
-          <div className="mt-auto flex min-h-[22px] flex-wrap gap-1 pt-2">
+          <div className="mt-auto flex min-h-5.5 flex-wrap gap-1 pt-2">
             {project.tags?.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="outline">
                 {tag}

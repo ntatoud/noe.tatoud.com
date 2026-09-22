@@ -63,7 +63,7 @@ export function BlogCard({ post }: BlogCardProps) {
           <p className="line-clamp-2 min-h-[2lh] text-sm text-muted-foreground">
             {post.description}
           </p>
-          <div className="mt-auto flex min-h-[22px] flex-wrap gap-1 pt-2">
+          <div className="mt-auto flex min-h-5.5 flex-wrap gap-1 pt-2">
             {post.tags?.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="outline">
                 {tag}

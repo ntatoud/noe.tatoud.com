@@ -30,9 +30,8 @@ export function Slice({
         {seeAllHref && (
           <ButtonLink
             to={seeAllHref}
-            variant="ghost"
+            variant="muted"
             size="sm"
-            className="text-muted-foreground hover:text-foreground"
             data-slot="slice-see-all"
           >
             {seeAllLabel}
