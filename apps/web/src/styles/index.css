@@ -158,6 +158,10 @@
 }
 
 @theme {
+  /* 10px step, below Tailwind's text-xs (12px). Used by the compact
+     initials inside event logos. */
+  --text-2xs: 0.625rem;
+
   /* Moss tonal palette */
   --color-moss-50: oklch(0.97 0.01 155);
   --color-moss-100: oklch(0.94 0.015 155);
@@ -183,6 +187,10 @@
   --color-honey-800: oklch(0.45 0.08 75);
   --color-honey-900: oklch(0.35 0.06 72);
   --color-honey-950: oklch(0.25 0.04 70);
+}
+
+@utility pixelated {
+  image-rendering: pixelated;
 }
 
 @layer base {

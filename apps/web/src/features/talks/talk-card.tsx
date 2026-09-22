@@ -46,7 +46,7 @@ export function TalkCard({ talk }: TalkCardProps) {
           <p className="line-clamp-2 min-h-[2lh] text-sm text-muted-foreground">
             {talk.description}
           </p>
-          <div className="flex min-h-[22px] flex-wrap gap-1 pt-2">
+          <div className="flex min-h-5.5 flex-wrap gap-1 pt-2">
             {talk.tags?.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="outline">
                 {tag}
@@ -55,7 +55,7 @@ export function TalkCard({ talk }: TalkCardProps) {
           </div>
           {event && (
             <div className="mt-auto flex items-center gap-2 border-t border-border/50 pt-3">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-moss-500 to-honey-500 text-[10px] font-bold text-white transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-moss-500 to-honey-500 text-2xs font-bold text-white transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3">
                 {event.logo ? (
                   <img
                     src={event.logo}

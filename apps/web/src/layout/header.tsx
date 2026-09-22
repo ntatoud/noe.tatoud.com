@@ -19,9 +19,6 @@ import { menuIcon, navItems, trophyIcon } from './site-config'
 
 const logoLabel = 'noe.tatoud.com — home'
 
-const navLinkClassName =
-  'text-sm text-muted-foreground hover:text-foreground data-[status=active]:border-border data-[status=active]:bg-accent data-[status=active]:font-semibold data-[status=active]:text-accent-foreground'
-
 export function Header() {
   return (
     <header className="w-full" data-slot="header">
@@ -58,9 +55,8 @@ function PrimaryNav({ className }: { className?: string }) {
         <ButtonLink
           key={item.href}
           to={item.href}
-          variant="ghost"
+          variant="nav"
           size="sm"
-          className={navLinkClassName}
           data-nav={item.label.toLowerCase()}
         >
           {item.label}
@@ -78,7 +74,7 @@ export function TrophyLink({ className }: { className?: string }) {
           <Button
             variant="ghost"
             size="icon"
-            className={cn('opacity-50', className)}
+            className={className}
             aria-label="Achievements"
             aria-disabled="true"
             data-slot="trophy-link"
@@ -121,9 +117,9 @@ function MobileMenu({ className }: { className?: string }) {
                 <ButtonLink
                   key={item.href}
                   to={item.href}
-                  variant="ghost"
+                  variant="nav"
                   size="sm"
-                  className={cn('w-full justify-start', navLinkClassName)}
+                  className="w-full justify-start"
                   onClick={() => setOpen(false)}
                   data-nav={item.label.toLowerCase()}
                 >
