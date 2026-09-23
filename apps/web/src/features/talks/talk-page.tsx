@@ -1,10 +1,6 @@
 import type { TalkDetail } from '@ntatoud/content'
 
-import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
-
-import { Badge } from '@/components/ui/badge'
-import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
+import { DetailPage, ExternalLinkButton } from '@/components/detail-page'
 import { formatDate } from '@/lib/format'
 
 type TalkPageProps = {
@@ -13,51 +9,23 @@ type TalkPageProps = {
 
 export function TalkPage({ talk }: TalkPageProps) {
   return (
-    <main
-      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
-      data-slot="talk-page"
+    <DetailPage
+      slot="talk"
+      back={{ to: '/talks', label: 'Talks' }}
+      title={talk.title}
+      badge={talk.kind}
+      description={talk.description}
+      tags={talk.tags}
+      html={talk.html}
     >
-      <ButtonLink to="/talks" variant="ghost" size="sm">
-        <HugeiconsIcon
-          icon={ArrowLeft02Icon}
-          size={16}
-          data-icon="inline-start"
-        />
-        Talks
-      </ButtonLink>
-      <div className="mt-6 flex items-center gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">{talk.title}</h1>
-        <Badge>{talk.kind}</Badge>
-      </div>
-      <p className="mt-2 text-muted-foreground">{talk.description}</p>
-
-      {talk.tags && talk.tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1">
-          {talk.tags.map((tag) => (
-            <Badge key={tag} variant="outline">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
-
       {talk.resource && (
-        <ButtonAnchor
+        <ExternalLinkButton
           href={talk.resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="ghost"
-          size="sm"
           className="mt-4"
           data-slot="talk-resource"
         >
           {talk.resource.kind}
-          <HugeiconsIcon
-            icon={ArrowRight02Icon}
-            size={16}
-            data-icon="inline-end"
-          />
-        </ButtonAnchor>
+        </ExternalLinkButton>
       )}
 
       {talk.events.length > 0 && (
@@ -72,12 +40,6 @@ export function TalkPage({ talk }: TalkPageProps) {
           ))}
         </ul>
       )}
-
-      <div
-        className="typeset typeset-docs mt-8"
-        data-slot="talk-content"
-        dangerouslySetInnerHTML={{ __html: talk.html }}
-      />
-    </main>
+    </DetailPage>
   )
 }

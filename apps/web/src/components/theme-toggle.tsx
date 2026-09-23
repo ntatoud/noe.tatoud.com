@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from 'react'
 
+import { Moon02Icon, Sun01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Button } from '@/components/ui/button'
-import { moonIcon, sunIcon } from '@/layout/site-config'
 
 type Theme = 'light' | 'dark'
 
@@ -54,7 +54,10 @@ export function ThemeToggle({ className }: { className?: string }) {
         applyTheme(theme === 'dark' ? 'light' : 'dark')
       }}
     >
-      <HugeiconsIcon icon={theme === 'dark' ? sunIcon : moonIcon} size={18} />
+      <HugeiconsIcon
+        icon={theme === 'dark' ? Sun01Icon : Moon02Icon}
+        size={18}
+      />
     </Button>
   )
 }

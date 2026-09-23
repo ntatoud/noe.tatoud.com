@@ -1,18 +1,15 @@
 export {
-  getBlogPost,
   getBlogPosts,
   type BlogPost,
   type BlogPostDetail,
 } from './readers/blog.ts'
 export { getExperiences, type Experience } from './readers/experiences.ts'
 export {
-  getProject,
   getProjects,
   type Project,
   type ProjectDetail,
 } from './readers/projects.ts'
 export {
-  getTalk,
   getTalks,
   type StageItem,
   type TalkDetail,

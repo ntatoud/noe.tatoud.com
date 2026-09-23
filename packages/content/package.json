@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@ntatoud/effect-collections": "workspace:*",
+    "@ntatoud/effect-markdown": "workspace:*",
     "effect": "catalog:"
   },
   "devDependencies": {

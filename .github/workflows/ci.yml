@@ -30,8 +30,11 @@ jobs:
       - name: 🧹 Lint
         run: pnpm run lint
 
+      - name: 🪦 Dead code
+        run: pnpm run knip
+
       - name: 🔎 Typecheck
-        run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck
+        run: pnpm run typecheck
 
       - name: 🧪 Test
         run: pnpm run test

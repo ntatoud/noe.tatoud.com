@@ -13,8 +13,18 @@
  * string, so the interesting cases are testable without running a build.
  */
 
-/** Srcs a client already resolves correctly, so they must be left alone. */
+/** Srcs a client already resolves on its own, so they are never rewritten. */
 const ABSOLUTE_SRC = /^(?:https?:|\/\/|\/|data:|#|mailto:)/
+
+/**
+ * The `/content/...` URL a body image src points at, or `null` when the src is
+ * already absolute. Bodies reference images relative to their document.
+ */
+export const bodyImageUrl = (
+  documentUrl: string,
+  src: string,
+): string | null =>
+  ABSOLUTE_SRC.test(src) ? null : `${documentUrl}/${src.replace(/^\.\//, '')}`
 
 /**
  * Resolves a `/content/...` URL to the URL that actually serves that file in the
@@ -74,8 +84,8 @@ function rewriteImages(
   warn: (message: string) => void,
 ): string {
   const resolve = (src: string): string | null => {
-    if (ABSOLUTE_SRC.test(src)) return null
-    const publicUrl = `${documentUrl}/${src.replace(/^\.\//, '')}`
+    const publicUrl = bodyImageUrl(documentUrl, src)
+    if (publicUrl === null) return null
     const resolved = resolveAsset(publicUrl)
     if (resolved === null) {
       warn(`image not found, left as-is: ${publicUrl}`)

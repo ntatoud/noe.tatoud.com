@@ -9,7 +9,7 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Monorepo**: pnpm workspaces — `apps/web`, `packages/content`, `packages/effect-markdown`, `packages/effect-collections`
+- **Monorepo**: pnpm workspaces: `apps/web`, `packages/content`, `packages/effect-collections`, `packages/effect-markdown`, `packages/effect-og`, `packages/effect-rss`
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
@@ -26,6 +26,8 @@ Personal website & blog — **noe.tatoud.com**
 pnpm run dev       # dev server (delegates to @ntatoud/web)
 pnpm run build     # production build (delegates to @ntatoud/web)
 pnpm run check     # format check + oxlint
+pnpm run typecheck # tsc in every workspace package
+pnpm test          # package tests (vitest)
 pnpm run knip      # dead code detection
 ```
 
@@ -36,7 +38,7 @@ apps/web/              # @ntatoud/web — TanStack Start app
   src/
     routes/           # TanStack Router file-based routes
     features/         # feature modules (blog, projects, experiences, talks, home)
-    components/       # shadcn/ui primitives, custom pixel icons
+    components/       # shadcn/ui primitives (ui/) + shared shells (content-card, detail-page, listing-page)
     layout/           # shared layout: header, footer, nav, hero, section
     lib/              # utils.ts (cn), format.ts, etc.
     styles/           # index.css, utilities/
@@ -46,6 +48,7 @@ packages/content/      # @ntatoud/content — content pipeline
   schemas/            # Effect Schema structs (one file per collection)
   readers/            # reader functions (typed data access)
   collections.ts      # collection definitions (@ntatoud/effect-collections)
+  snapshot.ts         # reads every collection once for both Vite plugins
   vite.ts             # Vite plugin: bakes collections into `virtual:content` at build time
   vite-markdown.ts    # Vite plugin: emits the `.md` twins + /llms.txt (ADR-0009)
   markdown.ts         # renders those twins (pure, unit-tested)
@@ -54,7 +57,9 @@ netlify/
   edge-functions/     # markdown-negotiation.ts — serves .md on Accept: text/markdown
 packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
-content/              # MDX files (blog, projects, experiences, talks)
+packages/effect-og/           # OG metadata helpers + server-only OG image renderer
+packages/effect-rss/          # RSS / Atom / JSON Feed rendering
+content/              # markdown documents (blog, projects, experiences, talks)
 docs/
   adr/                # architectural decision records
   agents/             # agent skill configs
@@ -79,14 +84,15 @@ CONTEXT.md            # domain glossary
 ### Components
 
 - UI primitives go in `apps/web/src/components/ui/`; feature-specific components go in `apps/web/src/features/<feature>/`.
-- Use `cn()` from `@/lib/utils` to merge classNames (clsx + tailwind-merge).
+- Use `cn()` from `@/lib/utils` (re-exported from the `cn` package) to merge classNames.
 - Use `cva` from `class-variance-authority` for variant-based styling.
 - Use `data-slot` attributes for styling hooks (shadcn pattern).
 
 ### Content & data
 
-- Content MDX files live in `content/<collection>/<slug>/index.mdx` at the repo root.
-- All MDX frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
+- Content documents live in `content/<collection>/<slug>/index.mdx` at the repo root. Bodies are plain markdown; the `.mdx` name is historical.
+- All frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
+- Blog posts expose their route as `url`; projects and talks as `path` (on projects, `url` is the external website). Talk `events` are sorted newest first by the collection, so the latest event is `events[0]`.
 - The content package exports reader functions (e.g., `getBlogPosts()`), but **the app does not call them** — they run at build time inside the Vite plugin (`packages/content/vite.ts`).
 - **Pages read content from `virtual:content`, never over the network** (ADR-0008). There are no content server functions.
   - Listings: `import { blogPosts, projects, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
@@ -99,9 +105,9 @@ CONTEXT.md            # domain glossary
 
 ### Theming
 
-- Dark mode only (body has `className="dark"`).
+- Dark by default, with a light theme via `components/theme-toggle.tsx`. The `dark` class lives on `<html>` and is set before hydration by the inline script in `routes/__root.tsx`.
 - Colors use oklch color space via CSS variables.
-- Fonts: Manrope (default, body + headings), loaded via `@fontsource/manrope` CSS import. Atkinson Hyperlegible Next is still imported and used as the mono font in blog code blocks (`--font-atkinson-next-light`, see `typeset.css`).
+- Fonts: Manrope for body text (`@fontsource/manrope`), Fraunces for headings (`@fontsource-variable/fraunces`), Atkinson Hyperlegible Next (weight 200) for code inside article bodies (`.typeset-docs` in `index.css`).
 
 ## Git hooks (lefthook)
 
@@ -110,7 +116,7 @@ CONTEXT.md            # domain glossary
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`, as two parallel jobs: format check + lint + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
+Runs on push/PR to `main`, as two parallel jobs: format check + lint + knip + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
 
 ## Deployment
 

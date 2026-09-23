@@ -13,7 +13,7 @@ export { MarkdownParseError } from './errors.ts'
 
 export interface Markdown {
   readonly frontmatter: Record<string, unknown>
-  /** The body rendered to an HTML string — no React, so it is RPC-serializable. */
+  /** The body rendered to an HTML string, with no React involved. */
   readonly html: string
 }
 

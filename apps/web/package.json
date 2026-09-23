@@ -6,8 +6,6 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "oxlint --config ../../oxlint.config.ts",
-    "format": "oxfmt",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

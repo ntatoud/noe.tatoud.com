@@ -1,8 +1,5 @@
 import * as path from 'node:path'
 
-import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
-
-import { ManagedRuntime } from 'effect'
 import type { Plugin } from 'vite'
 
 import {
@@ -25,10 +22,7 @@ import {
   renderIndex,
   renderLlmsTxt,
 } from './markdown.ts'
-import { getBlogPosts } from './readers/blog.ts'
-import { getExperiences } from './readers/experiences.ts'
-import { getProjects } from './readers/projects.ts'
-import { getTalks } from './readers/talks.ts'
+import { readContent } from './snapshot.ts'
 
 /**
  * Emits a markdown twin of every page into the client build, plus `/llms.txt`.
@@ -43,9 +37,6 @@ import { getTalks } from './readers/talks.ts'
  * *into the JS bundle*, and nothing it generates is involved here. This one only
  * ever writes static files to the output directory.
  */
-
-/** One runtime for the plugin; `ManagedRuntime` builds its layer on first use. */
-const runtime = ManagedRuntime.make(CollectionsLive)
 
 /** Joins the parts of a one-line summary, skipping the ones a document omitted. */
 const joinNonEmpty = (values: ReadonlyArray<string | null | undefined>) =>
@@ -112,40 +103,16 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
   }
 
   const generate = async (resolveAsset: ResolveAsset) => {
-    const [posts, projectList, talkList, experienceList] = await Promise.all([
-      runtime.runPromise(getBlogPosts),
-      runtime.runPromise(getProjects),
-      runtime.runPromise(getTalks),
-      runtime.runPromise(getExperiences),
-    ])
-
-    /**
-     * `getAll` rather than the per-document readers: it hands back `source`
-     * without compiling the body, so this costs one file read per document instead
-     * of a second run through the markdown and highlighting stack. It also
-     * includes drafts, matching the detail pages `content()` generates — an
-     * unpublished document keeps a reachable page, so it gets a reachable markdown
-     * twin. The published, ordered listings above are what the indexes use.
-     *
-     * Spelled out per collection rather than looped over a table, because each
-     * collection has its own document type and a table erases them to a union
-     * (the same reason `vite.ts` avoids one).
-     */
-    const [postDocuments, projectDocuments, talkDocuments] = await Promise.all([
-      runtime.runPromise(
-        Collections.use((collections) =>
-          collections.getAll(blogPostsCollection),
-        ),
-      ),
-      runtime.runPromise(
-        Collections.use((collections) =>
-          collections.getAll(projectsCollection),
-        ),
-      ),
-      runtime.runPromise(
-        Collections.use((collections) => collections.getAll(talksCollection)),
-      ),
-    ])
+    const content = await readContent()
+    const posts = content.blogPosts
+    const projectList = content.projects
+    const talkList = content.talks
+    const experienceList = content.experiences
+    // Drafts included, matching the detail pages `content()` generates: an
+    // unpublished document keeps a reachable page, so it gets a markdown twin.
+    const postDocuments = content.documents.blogPosts
+    const projectDocuments = content.documents.projects
+    const talkDocuments = content.documents.talks
 
     const files: Array<{ fileName: string; source: string }> = []
 

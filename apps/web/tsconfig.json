@@ -7,8 +7,7 @@
     // it from.
     "types": ["vite/client", "node", "@ntatoud/content/virtual"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@ntatoud/content": ["../../packages/content/index.ts"]
+      "@/*": ["./src/*"]
     }
   }
 }

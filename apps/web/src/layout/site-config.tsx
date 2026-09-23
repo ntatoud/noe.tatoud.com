@@ -1,13 +1,9 @@
 import {
   BlueskyIcon,
-  ChampionIcon,
   Github01Icon,
   Linkedin01Icon,
   Mail01Icon,
-  Menu01Icon,
-  Moon02Icon,
   NewTwitterIcon,
-  Sun01Icon,
 } from '@hugeicons/core-free-icons'
 
 import type { RouteTo } from '@/lib/routes'
@@ -64,9 +60,3 @@ export const socialLinks: readonly SocialLink[] = [
     icon: Mail01Icon,
   },
 ] as const
-
-/** Trophy icon used by the header's disabled "Achievements" nav button. */
-export const trophyIcon = ChampionIcon
-export const menuIcon = Menu01Icon
-export const sunIcon = Sun01Icon
-export const moonIcon = Moon02Icon

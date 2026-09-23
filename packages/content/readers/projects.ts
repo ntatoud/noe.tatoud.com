@@ -25,8 +25,3 @@ export const getProjects = Collections.use((collections) =>
       }),
   ),
 )
-
-export const getProject = (slug: string) =>
-  Collections.use((collections) =>
-    collections.getBySlug(projectsCollection, slug),
-  ).pipe(Effect.map((doc): ProjectDetail => ({ ...doc.data, html: doc.html })))

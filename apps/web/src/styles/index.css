@@ -4,10 +4,6 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource/atkinson-hyperlegible-next/200.css';
-@import '@fontsource/atkinson-hyperlegible-next/400.css';
-@import '@fontsource/atkinson-hyperlegible-next/500.css';
-@import '@fontsource/atkinson-hyperlegible-next/600.css';
-@import '@fontsource/atkinson-hyperlegible-next/700.css';
 @import '@fontsource/manrope';
 @import '@fontsource/manrope/500.css';
 @import '@fontsource/manrope/600.css';
@@ -15,12 +11,10 @@
 @import '@fontsource-variable/fraunces';
 
 .typeset-docs {
-  --typeset-font-body: var(--font-manrope);
+  --typeset-font-body: var(--font-sans);
   --typeset-font-heading: var(--font-fraunces);
   --typeset-font-mono: var(--font-atkinson-next-light);
   --typeset-size: 16px;
-  --typeset-leading: 1.75;
-  --typeset-flow: 1.25em;
 
   & :where(pre, :not(pre) > code) {
     font-weight: 200;
@@ -52,27 +46,12 @@
   --accent: oklch(0.92 0.015 155);
   --accent-foreground: oklch(0.25 0.02 155);
   --destructive: oklch(0.55 0.2 25);
-  --destructive-foreground: oklch(0.98 0.005 155);
   --border: oklch(0.88 0.015 155);
   --input: oklch(0.88 0.015 155);
   --ring: oklch(0.45 0.08 155);
-  --chart-1: oklch(0.45 0.08 155);
-  --chart-2: oklch(0.55 0.06 155);
-  --chart-3: oklch(0.65 0.04 155);
-  --chart-4: oklch(0.75 0.03 155);
-  --chart-5: oklch(0.85 0.02 155);
-  --sidebar: oklch(0.96 0.01 155);
-  --sidebar-foreground: oklch(0.15 0.01 155);
-  --sidebar-primary: oklch(0.45 0.08 155);
-  --sidebar-primary-foreground: oklch(0.98 0.005 155);
-  --sidebar-accent: oklch(0.94 0.01 155);
-  --sidebar-accent-foreground: oklch(0.25 0.02 155);
-  --sidebar-border: oklch(0.88 0.015 155);
-  --sidebar-ring: oklch(0.45 0.08 155);
 
   --font-sans: 'Manrope', sans-serif;
   --font-mono: ui-monospace, monospace;
-  --font-manrope: 'Manrope', sans-serif;
   --font-fraunces: 'Fraunces Variable', serif;
   --font-atkinson-next-light:
     'Atkinson Hyperlegible Next', ui-monospace, monospace;
@@ -96,23 +75,9 @@
   --accent: oklch(0.22 0.025 155);
   --accent-foreground: oklch(0.95 0.01 155);
   --destructive: oklch(0.6 0.18 25);
-  --destructive-foreground: oklch(0.95 0.01 155);
   --border: oklch(0.25 0.02 155);
   --input: oklch(0.25 0.02 155);
   --ring: oklch(0.65 0.1 155);
-  --chart-1: oklch(0.65 0.1 155);
-  --chart-2: oklch(0.55 0.08 155);
-  --chart-3: oklch(0.45 0.06 155);
-  --chart-4: oklch(0.35 0.04 155);
-  --chart-5: oklch(0.25 0.02 155);
-  --sidebar: oklch(0.1 0.015 155);
-  --sidebar-foreground: oklch(0.95 0.01 155);
-  --sidebar-primary: oklch(0.65 0.1 155);
-  --sidebar-primary-foreground: oklch(0.08 0.01 155);
-  --sidebar-accent: oklch(0.18 0.02 155);
-  --sidebar-accent-foreground: oklch(0.95 0.01 155);
-  --sidebar-border: oklch(0.25 0.02 155);
-  --sidebar-ring: oklch(0.65 0.1 155);
 }
 
 @theme inline {
@@ -134,23 +99,9 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -187,10 +138,6 @@
   --color-honey-800: oklch(0.45 0.08 75);
   --color-honey-900: oklch(0.35 0.06 72);
   --color-honey-950: oklch(0.25 0.04 70);
-}
-
-@utility pixelated {
-  image-rendering: pixelated;
 }
 
 @layer base {

@@ -22,8 +22,3 @@ export const getBlogPosts = Collections.use((collections) =>
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
   ),
 )
-
-export const getBlogPost = (slug: string) =>
-  Collections.use((collections) =>
-    collections.getBySlug(blogPostsCollection, slug),
-  ).pipe(Effect.map((doc): BlogPostDetail => ({ ...doc.data, html: doc.html })))
