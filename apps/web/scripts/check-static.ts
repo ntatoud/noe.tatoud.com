@@ -6,8 +6,17 @@
  * Run after `vite build`. Node runs this file directly by stripping its types,
  * so it only uses erasable TypeScript syntax.
  */
+import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+
+import { ogImagePath } from '../src/lib/site.ts'
+
+// `apps/web` has no test runner, so the one naming rule the meta tags and the
+// OG build share is pinned here.
+assert.equal(ogImagePath('/'), '/og/index.png')
+assert.equal(ogImagePath('/blog'), '/og/blog.png')
+assert.equal(ogImagePath('/blog/x/'), '/og/blog/x.png')
 
 const ORIGIN = 'https://noe.tatoud.com'
 
@@ -21,29 +30,37 @@ const REQUIRED_FILES = [
   'index.md',
 ]
 
+const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47]
+
 const client = new URL('../dist/client/', import.meta.url)
 const file = (relative: string) => fileURLToPath(new URL(relative, client))
 
 const missing = REQUIRED_FILES.filter((name) => !existsSync(file(name)))
 
-// Every page the sitemap advertises must have been prerendered.
-const pages = existsSync(file('sitemap.xml'))
-  ? [
-      ...readFileSync(file('sitemap.xml'), 'utf8').matchAll(
-        /<loc>([^<]+)<\/loc>/g,
-      ),
-    ]
-      .map(([, loc]) =>
-        loc!
-          .trim()
-          .replace(ORIGIN, '')
-          .replace(/^\/+|\/+$/g, ''),
-      )
-      .map((path) => (path ? `${path}/index.html` : 'index.html'))
-  : []
+// Every page the sitemap advertises must have been prerendered, and must have
+// the social card its meta tags point at.
+const paths = new Set(['/'])
+if (existsSync(file('sitemap.xml'))) {
+  const sitemap = readFileSync(file('sitemap.xml'), 'utf8')
+  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    paths.add(loc!.trim().replace(ORIGIN, '') || '/')
+  }
+}
 
-for (const page of pages) {
+for (const path of paths) {
+  const trimmed = path.replace(/^\/+|\/+$/g, '')
+  const page = trimmed ? `${trimmed}/index.html` : 'index.html'
   if (!existsSync(file(page))) missing.push(page)
+
+  const image = ogImagePath(path).slice(1)
+  if (!existsSync(file(image))) {
+    missing.push(image)
+    continue
+  }
+  const header = readFileSync(file(image)).subarray(0, PNG_SIGNATURE.length)
+  if (!PNG_SIGNATURE.every((byte, i) => header[i] === byte)) {
+    missing.push(`${image} (not a PNG)`)
+  }
 }
 
 if (missing.length > 0) {
@@ -51,4 +68,4 @@ if (missing.length > 0) {
   process.exit(1)
 }
 
-console.log(`ok (${pages.length} pages)`)
+console.log(`ok (${paths.size} pages)`)

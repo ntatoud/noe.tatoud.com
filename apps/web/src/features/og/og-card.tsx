@@ -1,7 +1,14 @@
 import type { CSSProperties } from 'react'
 
-import type { OgKind } from '@/features/og/metadata'
-import { OG_FONT_FAMILY } from '@/features/og/og-fonts'
+// This card is rendered at build time by `plugins/og-images.ts`, which the Vite
+// config imports. Nothing here may use the app's path alias or a Vite-only
+// import, because the config loader resolves neither.
+
+/** The content kinds a card can carry a badge for. */
+export type OgKind = 'blog' | 'project' | 'talk'
+
+/** The family the build registers the card's fonts under. */
+export const OG_FONT_FAMILY = 'Atkinson Hyperlegible Next'
 
 /** Takumi's flowing-text clamp — not part of the standard CSSProperties type. */
 type ClampStyle = CSSProperties & { lineClamp?: number }

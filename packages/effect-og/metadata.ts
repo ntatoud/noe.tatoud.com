@@ -14,18 +14,13 @@ export type MetaTag =
 
 // --- Configuration ---------------------------------------------------------
 
-export interface OgMetadataConfig<Kinds extends ReadonlyArray<string>> {
+export interface OgMetadataConfig {
   /** Absolute site origin, e.g. `https://example.com` (no trailing slash). */
   readonly siteUrl: string
   /** Value for `og:site_name`. */
   readonly siteName: string
-  /**
-   * Content kinds this site publishes. Drives the typed `OgKind` guard and the
-   * `kind` query param on the OG image URL. Pass `[]` if the site has no kinds.
-   */
-  readonly kinds: Kinds
-  /** Path of the OG image endpoint. @default '/api/og' */
-  readonly imagePath?: string
+  /** Path of a page's OG image, e.g. `/og/blog/post.png`. */
+  readonly imagePath: (pagePath: string) => string
   /** Default `og:type`. @default 'website' */
   readonly ogType?: string
   /** Default `twitter:card`. @default 'summary_large_image' */
@@ -49,26 +44,16 @@ export interface OgMetadataConfig<Kinds extends ReadonlyArray<string>> {
  * Kept dependency-free (no `effect`) since this module is imported from the
  * root route and ships in every client bundle.
  */
-export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
-  config: OgMetadataConfig<Kinds>,
-) {
+export function defineOgMetadata(config: OgMetadataConfig) {
   const {
     siteUrl,
     siteName,
-    kinds,
-    imagePath = '/api/og',
+    imagePath,
     ogType = 'website',
     twitterCard = 'summary_large_image',
     imageWidth = 1200,
     imageHeight = 630,
   } = config
-
-  type OgKind = Kinds[number]
-  const kindSet = new Set<string>(kinds)
-
-  /** Runtime guard for `OgKind` — use to validate untrusted input (e.g. query params). */
-  const isOgKind = (value: unknown): value is OgKind =>
-    typeof value === 'string' && kindSet.has(value)
 
   /** Semantic, page-level metadata — the composable surface routes describe. */
   interface PageMetadataInput {
@@ -76,25 +61,11 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
     title: string
     /** Summary — drives `description`, `og:description`, `twitter:description`. */
     description?: string
-    /** Canonical pathname, e.g. `/blog/my-post` — drives `og:url`. */
+    /** Canonical pathname, e.g. `/blog/my-post`: drives `og:url` and the OG image. */
     path?: string
-    /** Content kind — drives the OG image badge. */
-    kind?: OgKind
     ogType?: string
     siteName?: string
     twitterCard?: string
-  }
-
-  /** Build the OG image endpoint URL for a page. */
-  const buildOgImageUrl = (params: {
-    title: string
-    description?: string
-    kind?: OgKind
-  }) => {
-    const search = new URLSearchParams({ title: params.title })
-    if (params.description) search.set('description', params.description)
-    if (params.kind) search.set('kind', params.kind)
-    return `${siteUrl}${imagePath}?${search.toString()}`
   }
 
   /** Site-wide tags for the root document, never repeated per page. */
@@ -109,13 +80,12 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
       title,
       description,
       path = '/',
-      kind,
       ogType: pageOgType = ogType,
       siteName: pageSiteName = siteName,
       twitterCard: pageTwitterCard = twitterCard,
     } = input
     const url = `${siteUrl}${path}`
-    const image = buildOgImageUrl({ title, description, kind })
+    const image = `${siteUrl}${imagePath(path)}`
 
     return [
       { title },
@@ -141,8 +111,6 @@ export function defineOgMetadata<const Kinds extends ReadonlyArray<string>>(
   }
 
   return {
-    isOgKind,
-    buildOgImageUrl,
     BASE_META_TAGS,
     toMetaTags,
   }

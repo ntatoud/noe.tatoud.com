@@ -3,7 +3,7 @@ import * as fs from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import { blogPosts, projects, talks } from '../collections.ts'
-import { readContentPaths } from '../pages.ts'
+import { readContentPages, readContentPaths } from '../pages.ts'
 
 /**
  * Pins the list handed to the prerender pass against the real `content/`
@@ -43,6 +43,35 @@ describe('readContentPaths', () => {
   it('only returns content routes', async () => {
     for (const path of await readContentPaths()) {
       expect(path).toMatch(/^\/(?:blog|projects|talks)\/[^/]+$/)
+    }
+  })
+})
+
+const KIND_BY_PREFIX = {
+  blog: 'blog',
+  projects: 'project',
+  talks: 'talk',
+} as const
+
+describe('readContentPages', () => {
+  // Each page's title is what its social card shows, so an empty one is a
+  // blank card rather than an error.
+  it('gives every page a non-empty title', async () => {
+    for (const page of await readContentPages()) {
+      expect(page.title.trim(), `${page.path}: empty title`).not.toBe('')
+    }
+  })
+
+  it('gives every page the kind its path belongs to', async () => {
+    for (const page of await readContentPages()) {
+      const prefix = page.path.split('/')[1] as keyof typeof KIND_BY_PREFIX
+      expect(page.kind, page.path).toBe(KIND_BY_PREFIX[prefix])
+    }
+  })
+
+  it('omits the description key rather than setting it to undefined', async () => {
+    for (const page of await readContentPages()) {
+      if ('description' in page) expect(page.description).toBeTruthy()
     }
   })
 })

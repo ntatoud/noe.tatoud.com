@@ -4,19 +4,17 @@ import { talks } from 'virtual:content'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { TalksPage } from '@/features/talks/talks-page'
-import { PAGE_DESCRIPTIONS } from '@/lib/site'
+import { STATIC_PAGES } from '@/lib/site'
 
-const TITLE = 'Talks | Noé Tatoud'
-const DESCRIPTION = PAGE_DESCRIPTIONS.talks
+const PAGE = STATIC_PAGES.talks
 
 export const Route = createFileRoute('/talks/')({
   component: TalksPageRoute,
   head: () => ({
     meta: toMetaTags({
-      title: TITLE,
-      description: DESCRIPTION,
-      kind: 'talk',
-      path: '/talks',
+      title: PAGE.title,
+      description: PAGE.description,
+      path: PAGE.path,
     }),
   }),
 })
