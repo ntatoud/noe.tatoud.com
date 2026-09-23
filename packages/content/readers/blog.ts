@@ -1,7 +1,4 @@
-import { Collections } from '@ntatoud/effect-collections'
-import type { CollectionData } from '@ntatoud/effect-collections'
-
-import { Effect } from 'effect'
+import type { CollectionData, DocumentMeta } from '@ntatoud/effect-collections'
 
 import { blogPosts as blogPostsCollection } from '../collections.ts'
 
@@ -12,13 +9,11 @@ export type BlogPostDetail = BlogPost & {
   html: string
 }
 
-export const getBlogPosts = Collections.use((collections) =>
-  collections.getAll(blogPostsCollection),
-).pipe(
-  Effect.map((docs) =>
-    docs
-      .map((doc) => doc.data)
-      .filter((post) => post.published)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-  ),
-)
+/** Published posts, newest first: what the blog listing shows. */
+export const getBlogPosts = (
+  documents: ReadonlyArray<DocumentMeta<BlogPost>>,
+): ReadonlyArray<BlogPost> =>
+  documents
+    .map((doc) => doc.data)
+    .filter((post) => post.published)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
