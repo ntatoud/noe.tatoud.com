@@ -8,7 +8,12 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { ButtonLink } from '@/components/ui/button-link'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 import { navItems } from './site-config'
@@ -84,6 +89,7 @@ function MobileMenu({ className }: { className?: string }) {
           className="w-full sm:max-w-none"
           data-slot="mobile-menu"
         >
+          <SheetTitle className="sr-only">Menu</SheetTitle>
           <div className="flex flex-col gap-4 p-4">
             <nav className="flex flex-col gap-1" aria-label="Mobile primary">
               {navItems.map((item) => (
