@@ -1,8 +1,5 @@
 import * as fs from 'node:fs'
 
-import { CollectionsLive } from '@ntatoud/effect-collections'
-
-import { ManagedRuntime } from 'effect'
 import type { Plugin } from 'vite'
 
 import {
@@ -13,10 +10,8 @@ import {
   projects as projectsCollection,
   talks as talksCollection,
 } from './collections.ts'
-import { getBlogPost, getBlogPosts } from './readers/blog.ts'
-import { getExperiences } from './readers/experiences.ts'
-import { getProject, getProjects } from './readers/projects.ts'
-import { getTalk, getTalks } from './readers/talks.ts'
+import { bodyImageUrl } from './markdown.ts'
+import { readContent, renderBody, type ContentSnapshot } from './snapshot.ts'
 
 /**
  * Reads every collection at build time and serves the result as a virtual
@@ -46,42 +41,27 @@ const DETAIL_PREFIX = `${VIRTUAL_ID}/detail/`
 // read it off the filesystem.
 const RESOLVED_PREFIX = '\0'
 
-// One runtime for the whole plugin. `ManagedRuntime` builds its layer lazily on
-// the first run, so declaring it here costs nothing until a module is generated.
-const runtime = ManagedRuntime.make(CollectionsLive)
-
 /**
- * A rendered document, loosely typed on purpose: the plugin only ever splits the
- * body off the frontmatter and serializes the rest generically, so naming each
- * collection's exact shape here would buy nothing.
- */
-type Detail = Record<string, unknown> & { readonly html: string }
-
-/**
- * The detail side of each collection that has pages. `directory` supplies the
- * slugs, `read` renders one document, `loader` is the accessor the generated map
- * is exported as. Reading goes through `packages/content`'s own readers, so the
- * schema, transform and body pipeline stay defined in one place.
+ * The detail side of each collection that has pages. `directory` locates the
+ * document's images, `loader` is the accessor the generated map is exported as.
+ * Slugs and data come from the content snapshot.
  */
 const DETAILS = {
   blogPosts: {
     directory: blogPostsCollection.directory,
     loader: 'loadBlogPost',
-    read: (slug: string): Promise<Detail> =>
-      runtime.runPromise(getBlogPost(slug)),
   },
   projects: {
     directory: projectsCollection.directory,
     loader: 'loadProject',
-    read: (slug: string): Promise<Detail> =>
-      runtime.runPromise(getProject(slug)),
   },
   talks: {
     directory: talksCollection.directory,
     loader: 'loadTalk',
-    read: (slug: string): Promise<Detail> => runtime.runPromise(getTalk(slug)),
   },
 } as const
+
+const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
 
 type DetailCollection = keyof typeof DETAILS
 
@@ -92,9 +72,6 @@ type DetailCollection = keyof typeof DETAILS
  * URL (an external `logo` on a talk event, say) is rejected by `ref` below.
  */
 const IMAGE_EXTENSION = /\.(?:avif|gif|jpe?g|png|svg|webp)$/i
-
-/** Srcs a browser already resolves correctly, so they must be left alone. */
-const ABSOLUTE_SRC = /^(?:https?:|\/\/|\/|data:|#)/
 
 type AssetRef = (publicUrl: string) => string | null
 
@@ -175,9 +152,10 @@ function serializeHtml(
 
   for (const match of html.matchAll(/\bsrc="([^"]*)"/g)) {
     const src = match[1]
-    if (src === undefined || ABSOLUTE_SRC.test(src)) continue
+    if (src === undefined) continue
+    const publicUrl = bodyImageUrl(documentUrl, src)
+    if (publicUrl === null) continue
 
-    const publicUrl = `${documentUrl}/${src.replace(/^\.\//, '')}`
     const identifier = ref(publicUrl)
     if (identifier === null) {
       warn(`image not found, left as-is: ${publicUrl}`)
@@ -196,41 +174,32 @@ function serializeHtml(
   return chunks.join('+')
 }
 
-/**
- * Every slug on disk, unfiltered — drafts included. A directory per document is
- * what `Collections.getAll` treats as a slug, so reading them here agrees with
- * it while keeping the listing's `published` filter where it belongs: in the
- * reader. That is what lets an unpublished document keep a reachable page, as
- * reading per request allowed.
- */
-const readSlugs = (directory: string) =>
-  fs
-    .readdirSync(directory, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort()
-
 export function content(): Plugin {
   let warn: (message: string) => void = () => {}
 
+  // One read per build. In dev the watcher below drops it, so an edit is
+  // picked up by the next module load.
+  let snapshot: Promise<ContentSnapshot> | undefined
+  const getSnapshot = () => (snapshot ??= readContent())
+
   const loadIndex = async () => {
     const assets = createAssets()
+    const current = await getSnapshot()
 
-    // Spelled out one per line rather than looped over a table: each reader has
-    // its own document type, which a table erases to a union. Sequential awaits
-    // are deliberate — the four readers together take ~5ms.
-    const lines = [
-      `export const blogPosts = ${serialize(await runtime.runPromise(getBlogPosts), assets.ref)}`,
-      `export const projects = ${serialize(await runtime.runPromise(getProjects), assets.ref)}`,
-      `export const experiences = ${serialize(await runtime.runPromise(getExperiences), assets.ref)}`,
-      `export const talks = ${serialize(await runtime.runPromise(getTalks), assets.ref)}`,
-    ]
+    const lines = LISTINGS.map(
+      (name) =>
+        `export const ${name} = ${serialize(current[name], assets.ref)}`,
+    )
 
-    for (const [name, { directory, loader }] of Object.entries(DETAILS)) {
-      const entries = readSlugs(directory).map((slug) => {
-        const id = `${DETAIL_PREFIX}${name}/${slug}`
-        return `${JSON.stringify(slug)}:() => import(${JSON.stringify(id)})`
-      })
+    // Every document gets a page, drafts included; only the listings above
+    // apply the `published` filter.
+    for (const [name, { loader }] of Object.entries(DETAILS)) {
+      const entries = current.documents[name as DetailCollection].map(
+        ({ slug }) => {
+          const id = `${DETAIL_PREFIX}${name}/${slug}`
+          return `${JSON.stringify(slug)}:() => import(${JSON.stringify(id)})`
+        },
+      )
       lines.push(`export const ${loader} = {${entries.join(',')}}`)
     }
 
@@ -238,17 +207,22 @@ export function content(): Plugin {
   }
 
   const loadDetail = async (collection: DetailCollection, slug: string) => {
-    const assets = createAssets()
-    const { directory, read } = DETAILS[collection]
-    const { html, ...data } = await read(slug)
+    const document = (await getSnapshot()).documents[collection].find(
+      (candidate) => candidate.slug === slug,
+    )
+    if (!document) {
+      throw new Error(`[content] no ${collection} document with slug "${slug}"`)
+    }
 
+    const assets = createAssets()
+    const html = await renderBody(document.source)
     const body = serializeHtml(
       html,
-      contentUrl(directory, slug),
+      contentUrl(DETAILS[collection].directory, slug),
       assets.ref,
       warn,
     )
-    const frontmatter = serialize(data, assets.ref)
+    const frontmatter = serialize(document.data, assets.ref)
 
     return assets.emit(
       `export default Object.assign(${frontmatter}, { html: ${body} })`,
@@ -297,6 +271,7 @@ export function content(): Plugin {
 
       server.watcher.on('all', (_event, changed) => {
         if (!changed.startsWith(contentRoot)) return
+        snapshot = undefined
 
         // Drop every generated module: which document changed is not worth
         // tracking for a content set this size, and the listings depend on all

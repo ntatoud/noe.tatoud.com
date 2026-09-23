@@ -6,6 +6,7 @@ import handler, {
   prefersMarkdown as edgePrefersMarkdown,
 } from '../../../netlify/edge-functions/markdown-negotiation.ts'
 import {
+  bodyImageUrl,
   markdownFileName,
   markdownPath,
   renderDocument,
@@ -51,6 +52,22 @@ describe('markdownPath', () => {
   it('yields a build-output name with no leading slash', () => {
     expect(markdownFileName('/')).toBe('index.md')
     expect(markdownFileName('/blog/what-is-mcp')).toBe('blog/what-is-mcp.md')
+  })
+})
+
+describe('bodyImageUrl', () => {
+  it('resolves a document-relative src against its content URL', () => {
+    expect(bodyImageUrl('/content/blog/a', './x.png')).toBe(
+      '/content/blog/a/x.png',
+    )
+    expect(bodyImageUrl('/content/blog/a', 'x.png')).toBe(
+      '/content/blog/a/x.png',
+    )
+  })
+
+  it('leaves an absolute src alone', () => {
+    expect(bodyImageUrl('/content/blog/a', 'https://e.com/x.png')).toBeNull()
+    expect(bodyImageUrl('/content/blog/a', '/x.png')).toBeNull()
   })
 })
 

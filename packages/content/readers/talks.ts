@@ -37,8 +37,3 @@ export const getTalks = Collections.use((collections) =>
       ),
   ),
 )
-
-export const getTalk = (slug: string) =>
-  Collections.use((collections) =>
-    collections.getBySlug(talksCollection, slug),
-  ).pipe(Effect.map((doc): TalkDetail => ({ ...doc.data, html: doc.html })))

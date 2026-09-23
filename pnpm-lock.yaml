@@ -170,6 +170,9 @@ importers:
       '@ntatoud/effect-collections':
         specifier: workspace:*
         version: link:../effect-collections
+      '@ntatoud/effect-markdown':
+        specifier: workspace:*
+        version: link:../effect-markdown
       effect:
         specifier: 'catalog:'
         version: 4.0.0-rc.112
