@@ -2,6 +2,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url'
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url'
+
 import { ErrorPage } from '@/components/error/error-page'
 import { NotFound } from '@/components/error/not-found'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
@@ -26,6 +29,20 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      {
+        rel: 'preload',
+        href: manropeLatin,
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        href: frauncesLatin,
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
       {
