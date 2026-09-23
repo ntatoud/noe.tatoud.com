@@ -2,20 +2,16 @@ import { useState } from 'react'
 
 import { Link } from '@tanstack/react-router'
 
+import { Menu01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-import { menuIcon, navItems, trophyIcon } from './site-config'
+import { navItems } from './site-config'
 
 const logoLabel = 'noe.tatoud.com — home'
 
@@ -27,7 +23,6 @@ export function Header() {
         <PrimaryNav className="hidden md:flex" />
         <div className="ml-auto hidden items-center gap-1 md:flex">
           <ThemeToggle />
-          <TrophyLink />
         </div>
         <MobileMenu className="md:hidden" />
       </div>
@@ -66,28 +61,6 @@ function PrimaryNav({ className }: { className?: string }) {
   )
 }
 
-export function TrophyLink({ className }: { className?: string }) {
-  return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon"
-            className={className}
-            aria-label="Achievements"
-            aria-disabled="true"
-            data-slot="trophy-link"
-          />
-        }
-      >
-        <HugeiconsIcon icon={trophyIcon} size={18} />
-      </TooltipTrigger>
-      <TooltipContent>Available soon</TooltipContent>
-    </Tooltip>
-  )
-}
-
 function MobileMenu({ className }: { className?: string }) {
   const [open, setOpen] = useState(false)
 
@@ -104,7 +77,7 @@ function MobileMenu({ className }: { className?: string }) {
             />
           }
         >
-          <HugeiconsIcon icon={menuIcon} size={20} />
+          <HugeiconsIcon icon={Menu01Icon} size={20} />
         </SheetTrigger>
         <SheetContent
           side="top"
@@ -130,7 +103,6 @@ function MobileMenu({ className }: { className?: string }) {
 
             <div className="flex items-center gap-1">
               <ThemeToggle />
-              <TrophyLink />
             </div>
           </div>
         </SheetContent>

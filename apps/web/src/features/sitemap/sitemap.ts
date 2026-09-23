@@ -14,27 +14,18 @@ const STATIC_PATHS: ReadonlyArray<string> = [
   '/talks',
 ]
 
-/** Most recent event date for a talk, or `undefined` if it has none. */
-function latestTalkDate(talk: {
-  events: ReadonlyArray<{ date: string }> | undefined
-}): string | undefined {
-  if (!talk.events || talk.events.length === 0) return undefined
-  return talk.events.reduce((latest, e) => (e.date > latest.date ? e : latest))
-    .date
-}
-
 /** Every crawlable page on the site, static and content-backed. */
 export function getSitemapUrls(): SitemapUrl[] {
   return [
     ...STATIC_PATHS.map((path) => ({ path })),
     ...blogPosts.map((post) => ({ path: post.url, lastmod: post.date })),
     ...projects.map((project) => ({
-      path: `/projects/${project.slug}`,
+      path: project.path,
       lastmod: project.date,
     })),
     ...talks.map((talk) => ({
-      path: `/talks/${talk.slug}`,
-      lastmod: latestTalkDate(talk),
+      path: talk.path,
+      lastmod: talk.events[0]?.date,
     })),
   ]
 }

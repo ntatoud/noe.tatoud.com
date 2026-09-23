@@ -1,6 +1,6 @@
 import { defineOgMetadata } from '@ntatoud/effect-og'
 
-import { SITE_URL } from '@/lib/site'
+import { SITE_NAME, SITE_URL } from '@/lib/site'
 
 /**
  * OG/metadata toolkit bound to this site. See `@ntatoud/effect-og` for the
@@ -10,7 +10,7 @@ const OG_KINDS = ['blog', 'project', 'talk'] as const
 
 export const { isOgKind, toMetaTags, BASE_META_TAGS } = defineOgMetadata({
   siteUrl: SITE_URL,
-  siteName: 'noe.tatoud.com',
+  siteName: SITE_NAME,
   kinds: OG_KINDS,
 })
 

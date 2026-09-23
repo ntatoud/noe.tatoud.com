@@ -18,7 +18,7 @@ type ProjectCardProps = {
 export function ProjectCard({ project }: ProjectCardProps) {
   const isContribution = project.kind === 'contribution'
   const external = isContribution && !!project.url
-  const href = external ? project.url : `/projects/${project.slug}`
+  const href = external ? project.url : project.path
 
   return (
     <li data-slot="project-card">

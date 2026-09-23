@@ -98,6 +98,11 @@ layer(CollectionsLive)('content readers', (it) => {
       expect(projects.length).toBeGreaterThan(0)
       expect(projects.every((project) => project.published)).toBe(true)
       expect(projects.every((project) => project.slug.length > 0)).toBe(true)
+      expect(
+        projects.every(
+          (project) => project.path === `/projects/${project.slug}`,
+        ),
+      ).toBe(true)
 
       const firstContribution = projects.findIndex(
         (project) => project.kind === 'contribution',
@@ -123,6 +128,14 @@ layer(CollectionsLive)('content readers', (it) => {
         Math.max(0, ...asTimes(talk.events.map((event) => event.date))),
       )
       expect(descending(latest)).toBe(true)
+
+      // Each talk's own events are newest first, so `events[0]` is the latest.
+      for (const talk of talks) {
+        expect(
+          descending(asTimes(talk.events.map((event) => event.date))),
+        ).toBe(true)
+        expect(talk.path).toBe(`/talks/${talk.slug}`)
+      }
     }),
   )
 })

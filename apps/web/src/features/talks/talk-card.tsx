@@ -1,4 +1,4 @@
-import type { StageItem, TalkEvent } from '@ntatoud/content'
+import type { StageItem } from '@ntatoud/content'
 
 import { Mic01Icon, Wrench01Icon } from '@hugeicons/core-free-icons'
 
@@ -10,21 +10,14 @@ type TalkCardProps = {
   talk: StageItem
 }
 
-function latestEvent(events: ReadonlyArray<TalkEvent>): TalkEvent | undefined {
-  if (events.length === 0) return undefined
-  return events.reduce((latest, event) =>
-    new Date(event.date) > new Date(latest.date) ? event : latest,
-  )
-}
-
 export function TalkCard({ talk }: TalkCardProps) {
-  const event = latestEvent(talk.events)
+  const event = talk.events[0]
   const isWorkshop = talk.kind === 'workshop'
 
   return (
     <li data-slot="talk-card">
       <a
-        href={`/talks/${talk.slug}`}
+        href={talk.path}
         className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card outline-none transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-lg hover:shadow-black/5 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:hover:shadow-black/20"
       >
         <div className="flex flex-1 flex-col gap-2 p-4">

@@ -189,10 +189,6 @@
   --color-honey-950: oklch(0.25 0.04 70);
 }
 
-@utility pixelated {
-  image-rendering: pixelated;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

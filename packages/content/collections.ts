@@ -74,7 +74,12 @@ export const projects = defineCollection({
   name: 'projects',
   directory: path.join(contentRoot, 'projects'),
   schema: ProjectSchema,
-  transform: (data, meta) => Effect.succeed({ ...data, slug: meta.slug }),
+  transform: (data, meta) =>
+    Effect.succeed({
+      ...data,
+      slug: meta.slug,
+      path: `/projects/${meta.slug}`,
+    }),
 })
 
 export const experiences = defineCollection({
@@ -97,9 +102,16 @@ export const talks = defineCollection({
     Effect.succeed({
       ...data,
       slug: meta.slug,
-      events: events.map(({ logo, ...event }) => ({
-        ...event,
-        logo: logo ? publicImageUrl(logo, meta) : null,
-      })),
+      path: `/talks/${meta.slug}`,
+      // Newest first, so "the latest event" is always `events[0]` for every
+      // consumer (cards, sitemap, listing order, markdown twins).
+      events: events
+        .map(({ logo, ...event }) => ({
+          ...event,
+          logo: logo ? publicImageUrl(logo, meta) : null,
+        }))
+        .sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        ),
     }),
 })
