@@ -8,7 +8,7 @@ Netlify publishes `apps/web/dist/client` and nothing else, plus the markdown-neg
 
 **A function for 404s still costs a cold start.** The handler was a `path: "/*"` catch-all with `preferStatic: true`, so Netlify invoked it for every URL without a file: mistyped links, scanners probing for `/wp-admin`, stale links to removed pages. Each could pay a cold start (ADR-0008 measured 6.9 s) to render a page that never changes.
 
-**The packaging existed only for the function.** `included_files` shipped the Linux `@takumi-rs/core` binary into the Lambda, and `publicHoistPattern` existed only to put that binary at a predictable path in the root `node_modules`. Neither is needed once no image is rendered at request time. Takumi still runs at build time, resolved normally from `packages/effect-og`.
+**The packaging existed only for the function.** `included_files` shipped the Linux `@takumi-rs/core` binary into the Lambda, and `publicHoistPattern` existed only to put that binary at a predictable path in the root `node_modules`. Neither is needed once no image is rendered at request time. Takumi still runs at build time, resolved normally from `apps/web` (the OG image plugin, see ADR-0010).
 
 ## What changed
 
