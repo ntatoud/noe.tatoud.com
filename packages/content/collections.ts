@@ -1,4 +1,3 @@
-import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -14,39 +13,9 @@ import { StageItemSchema } from './schemas/talks.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
-// Resolve the repo-root `content/` directory. Relying on the source-file
-// location (`import.meta.url`) breaks once this module is bundled into a
-// serverless function, where the emitted file no longer sits next to the
-// content folder. Walk up from both the current working directory and the
-// module location, returning the first ancestor that contains a `content/`
-// directory. Falls back to the source-relative path for local dev safety.
-//
-// A candidate holding a `package.json` is rejected: this Package is itself
-// named `content`, so walking up from anywhere inside `packages/` would
-// otherwise stop at `packages/content` (the Package) rather than the repo-root
-// content folder, which is plain data and has no manifest.
-const isContentRoot = (candidate: string) =>
-  fs.statSync(candidate, { throwIfNoEntry: false })?.isDirectory() === true &&
-  !fs.existsSync(path.join(candidate, 'package.json'))
-
-const findContentRoot = () => {
-  for (const start of [process.cwd(), here]) {
-    let dir = start
-    while (true) {
-      const candidate = path.join(dir, 'content')
-      if (isContentRoot(candidate)) {
-        return candidate
-      }
-      const parent = path.dirname(dir)
-      if (parent === dir) break
-      dir = parent
-    }
-  }
-  return path.resolve(here, '../../content')
-}
-
-// Exported for the Vite plugin (`./vite`), which watches this directory.
-export const contentRoot = findContentRoot()
+// The repo-root `content/` folder. This module only ever runs from source,
+// inside the Vite plugins and their tests, so its own location is reliable.
+export const contentRoot = path.resolve(here, '../../content')
 
 const CONTENT_URL_BASE = '/content'
 

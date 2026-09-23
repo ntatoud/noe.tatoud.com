@@ -6,7 +6,7 @@ import {
 import { NodeFileSystem, NodePath } from '@effect/platform-node'
 import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
 
-import { CollectionError, DocumentNotFound } from './errors.ts'
+import { CollectionError } from './errors.ts'
 import { DocumentDirectory } from './image.ts'
 
 /** Curried `mapError` that tags a boundary failure with the operation that produced it. */
@@ -20,7 +20,7 @@ const collectionError =
       (cause) => new CollectionError({ operation, cause }),
     )
 
-export { CollectionError, DocumentNotFound } from './errors.ts'
+export { CollectionError } from './errors.ts'
 export { DocumentDirectory, Image } from './image.ts'
 export type { ImageValue } from './image.ts'
 
@@ -41,7 +41,7 @@ export interface Collection<S extends Schema.Constraint, A> {
 
 /**
  * The shape a document's `data` takes once the collection's `transform` has
- * run — i.e. what `getAll`/`getBySlug` hand back. Lets consumers name a
+ * run — i.e. what `getAll` hands back. Lets consumers name a
  * collection's output type without restating it, so it cannot drift from the
  * schema and transform that actually produce it.
  *
@@ -94,13 +94,8 @@ export interface DocumentMeta<A> {
   readonly source: string
 }
 
-export interface Document<A> extends DocumentMeta<A> {
-  /** The body as an HTML string — a plain value, so it survives RPC. */
-  readonly html: string
-}
-
-// `DocumentDirectory` is always satisfied internally — `readDocument`
-// provides it per-document before decoding — so it never leaks into what
+// `DocumentDirectory` is always satisfied internally (`decodeData` provides it
+// per document before decoding), so it never leaks into what
 // callers must provide, even though it shows up in a schema's raw
 // `DecodingServices` for schemas using `Image` fields. `FileSystem`/`Path`
 // remain part of the requirement: `CollectionsLive` provides them, but
@@ -112,14 +107,6 @@ type ExternalDecodingServices<S extends Schema.Constraint> = Exclude<
 >
 
 export interface CollectionsShape {
-  readonly getBySlug: <S extends Schema.Constraint, A>(
-    collection: Collection<S, A>,
-    slug: string,
-  ) => Effect.Effect<
-    Document<A>,
-    DocumentNotFound | CollectionError,
-    FileSystem.FileSystem | Path.Path | ExternalDecodingServices<S>
-  >
   readonly getAll: <S extends Schema.Constraint, A>(
     collection: Collection<S, A>,
   ) => Effect.Effect<
@@ -133,31 +120,6 @@ export class Collections extends Context.Service<
   Collections,
   CollectionsShape
 >()('effect-collections/Collections') {}
-
-/** `NAME_MAX`: the longest single filesystem name Linux and macOS accept. */
-const MAX_SLUG_BYTES = 255
-
-/**
- * Whether a slug could name a document directory directly inside a collection.
- *
- * Slugs reach `getBySlug` straight from a URL segment, so they are arbitrary
- * attacker-controlled strings and are screened before they ever reach the
- * filesystem. Rejecting them here is what
- * - keeps `path.join` from walking outside the collection directory
- *   (`'../other-collection/doc'` would otherwise read a real document from a
- *   sibling collection), and
- * - keeps a value the OS cannot name — too long, or holding a NUL — from
- *   failing `stat` with a reason other than `NotFound`, which would surface as a
- *   500 for what is plainly just a junk URL a crawler invented.
- */
-const isDocumentSlug = (slug: string): boolean =>
-  slug.length > 0 &&
-  new TextEncoder().encode(slug).length <= MAX_SLUG_BYTES &&
-  !slug.includes('/') &&
-  !slug.includes('\\') &&
-  !slug.includes('\0') &&
-  slug !== '.' &&
-  slug !== '..'
 
 const make = Layer.effect(
   Collections,
@@ -195,65 +157,9 @@ const make = Layer.effect(
         })
       })
 
-    const readDocument = <S extends Schema.Constraint, A>(
-      collection: Collection<S, A>,
-      slug: string,
-    ) =>
-      Effect.gen(function* () {
-        // `getBySlug` is fed arbitrary slugs (a URL segment), so a genuinely
-        // missing document is expected input rather than a failure of the read.
-        // Only an unusable slug or a `NotFound` stat reason becomes
-        // `DocumentNotFound` — any other reason (e.g. `PermissionDenied`) stays
-        // a `CollectionError`, so a real IO problem can never masquerade as
-        // missing content.
-        const documentNotFound = () =>
-          new DocumentNotFound({ collection: collection.name, slug })
-
-        if (!isDocumentSlug(slug)) {
-          return yield* Effect.fail(documentNotFound())
-        }
-
-        const info = yield* fs.stat(path.join(collection.directory, slug)).pipe(
-          Effect.catch((error) =>
-            Effect.gen(function* () {
-              if (error.reason._tag !== 'NotFound') {
-                return yield* Effect.fail(
-                  new CollectionError({ operation: 'stat', cause: error }),
-                )
-              }
-              // A missing path means a missing *document* only if the collection
-              // directory itself is there. When the whole directory is gone —
-              // a content root that did not ship with the deploy, say — every
-              // detail page would otherwise answer a silent 404, with nothing
-              // logged, instead of reporting the misconfiguration.
-              const collectionExists = yield* fs
-                .exists(collection.directory)
-                .pipe(collectionError('exists'))
-              return yield* Effect.fail(
-                collectionExists
-                  ? documentNotFound()
-                  : new CollectionError({ operation: 'stat', cause: error }),
-              )
-            }),
-          ),
-        )
-
-        // A file (or socket, device, …) sitting where a document directory
-        // should be is not a readable document either.
-        if (info.type !== 'Directory') {
-          return yield* Effect.fail(documentNotFound())
-        }
-
-        const source = yield* readSource(collection, slug)
-        const { frontmatter, html } = yield* markdownCompiler
-          .toHtml(source)
-          .pipe(collectionError('toHtml'))
-        const data = yield* decodeData(collection, slug, frontmatter)
-        return { slug, data, source, html } satisfies Document<A>
-      })
-
-    // Frontmatter-only read: skips MDX compilation, which list views never
-    // need and which dominates the cost of `getAll` over a whole collection.
+    // Frontmatter-only read: skips rendering the body, which dominates the
+    // cost of reading a document and which `getAll` callers render themselves
+    // when they need it.
     const readDocumentMeta = <S extends Schema.Constraint, A>(
       collection: Collection<S, A>,
       slug: string,
@@ -268,7 +174,6 @@ const make = Layer.effect(
       })
 
     return Collections.of({
-      getBySlug: readDocument,
       getAll: (collection) =>
         Effect.gen(function* () {
           const names = yield* fs

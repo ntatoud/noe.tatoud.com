@@ -3,13 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { expect, layer } from '@effect/vitest'
 import { Effect, Schema } from 'effect'
 
-import {
-  CollectionError,
-  Collections,
-  CollectionsLive,
-  defineCollection,
-  DocumentNotFound,
-} from '../index.ts'
+import { Collections, CollectionsLive, defineCollection } from '../index.ts'
 
 // A fixture Content Collection checked in under the package's test fixtures.
 // `defineCollection`'s `directory` param points the real service at it, so no
@@ -29,7 +23,7 @@ const postsDirectory = fileURLToPath(
 )
 
 // A `transform` that derives a public URL from the slug — the extension point
-// under test. `getAll`/`getBySlug` return the transformed shape, not raw
+// under test. `getAll` returns the transformed shape, not raw
 // frontmatter.
 const posts = defineCollection({
   name: 'posts',
@@ -39,23 +33,7 @@ const posts = defineCollection({
     Effect.succeed({ ...data, url: `/posts/${meta.slug}` }),
 })
 
-// A fixture collection whose one document directory exists but has no
-// `index.mdx` — the "present but unreadable" case.
-const malformed = defineCollection({
-  name: 'malformed',
-  directory: fileURLToPath(new URL('./fixtures/malformed', import.meta.url)),
-  schema: PostSchema,
-})
-
-// Points at a directory that does not exist — the misconfigured-collection case.
-const absentCollection = defineCollection({
-  name: 'absent',
-  directory: fileURLToPath(new URL('./fixtures/absent', import.meta.url)),
-  schema: PostSchema,
-})
-
-// The expected decoded + transformed shape for the `hello-world` fixture,
-// shared by the `getAll` and `getBySlug` assertions.
+// The expected decoded + transformed shape for the `hello-world` fixture.
 const helloWorldData = {
   title: 'Hello World',
   published: true,
@@ -78,6 +56,11 @@ layer(CollectionsLive)('Collections', (it) => {
         ])
 
         expect(bySlug.get('hello-world')?.data).toEqual(helloWorldData)
+        // `source` is the raw file, frontmatter included: the markdown twins and
+        // the detail modules are built from it.
+        expect(bySlug.get('hello-world')?.source).toContain(
+          'title: Hello World',
+        )
 
         // `published` defaulted to `false`; absent optional `tags` stays absent.
         expect(bySlug.get('second-post')?.data).toEqual({
@@ -85,108 +68,6 @@ layer(CollectionsLive)('Collections', (it) => {
           published: false,
           url: '/posts/second-post',
         })
-      }),
-  )
-
-  it.effect(
-    'getBySlug returns a document whose data matches its frontmatter and whose body is rendered',
-    () =>
-      Effect.gen(function* () {
-        const collections = yield* Collections
-        const doc = yield* collections.getBySlug(posts, 'hello-world')
-
-        expect(doc.slug).toBe('hello-world')
-        expect(doc.data).toEqual(helloWorldData)
-
-        // The body rendered to HTML, and the frontmatter block is not in it.
-        expect(doc.html).toContain('<h1')
-        expect(doc.html).toContain('Hello')
-        expect(doc.html).toContain('<strong>first</strong>')
-        expect(doc.html).not.toContain('title:')
-      }),
-  )
-
-  it.effect('getBySlug raises DocumentNotFound for an absent slug', () =>
-    Effect.gen(function* () {
-      const collections = yield* Collections
-      const error = yield* collections
-        .getBySlug(posts, 'nonexistent')
-        .pipe(Effect.flip)
-
-      expect(error).toBeInstanceOf(DocumentNotFound)
-      // Carries the collection *name*, never its absolute directory — the error
-      // is serializable without disclosing a server filesystem path.
-      expect(error).toMatchObject({
-        collection: 'posts',
-        slug: 'nonexistent',
-      })
-      expect(JSON.stringify(error)).not.toContain(postsDirectory)
-    }),
-  )
-
-  // The other half of the not-found contract: only a genuinely absent document
-  // is `DocumentNotFound`. A document that exists but cannot be read stays a
-  // `CollectionError`, so a real bug surfaces as a 500 instead of a fake 404.
-  it.effect(
-    'getBySlug raises CollectionError when a present document cannot be read',
-    () =>
-      Effect.gen(function* () {
-        const collections = yield* Collections
-        const error = yield* collections
-          .getBySlug(malformed, 'no-index')
-          .pipe(Effect.flip)
-
-        expect(error).toBeInstanceOf(CollectionError)
-        expect(error).not.toBeInstanceOf(DocumentNotFound)
-        expect(error).toMatchObject({ operation: 'readFile' })
-      }),
-  )
-
-  // Slugs arrive from a URL segment, so they must not be able to address
-  // anything but a direct child of the collection directory. Without this,
-  // `../posts/hello-world` reads a real document from outside the collection
-  // the caller asked about.
-  it.effect('getBySlug refuses to escape the collection directory', () =>
-    Effect.gen(function* () {
-      const collections = yield* Collections
-
-      for (const slug of [
-        '../posts/hello-world',
-        '..',
-        '.',
-        '',
-        'nested/hello-world',
-        'hello-world\0',
-        // Longer than NAME_MAX. The OS rejects this with a reason other than
-        // `NotFound`, so without the length screen it would 500 rather than 404
-        // — and junk URLs this long are exactly what crawlers generate.
-        'a'.repeat(300),
-      ]) {
-        const error = yield* collections
-          .getBySlug(posts, slug)
-          .pipe(Effect.flip)
-        expect(error, `slug ${JSON.stringify(slug)}`).toBeInstanceOf(
-          DocumentNotFound,
-        )
-      }
-    }),
-  )
-
-  // A whole collection directory going missing is a misconfiguration, not a
-  // missing document. Reporting it as `DocumentNotFound` would turn every detail
-  // page into a silent 404 — and since not-found is deliberately never logged,
-  // there would be nothing at all to notice it by.
-  it.effect(
-    'getBySlug raises CollectionError when the collection directory is absent',
-    () =>
-      Effect.gen(function* () {
-        const collections = yield* Collections
-        const error = yield* collections
-          .getBySlug(absentCollection, 'hello-world')
-          .pipe(Effect.flip)
-
-        expect(error).toBeInstanceOf(CollectionError)
-        expect(error).not.toBeInstanceOf(DocumentNotFound)
       }),
   )
 })
