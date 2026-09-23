@@ -10,7 +10,7 @@ import type { Plugin } from 'vite'
 
 import { OG_FONT_FAMILY, OgCard } from '../src/features/og/og-card.tsx'
 import type { OgKind } from '../src/features/og/og-card.tsx'
-import { ogImagePath } from '../src/lib/site'
+import { ogImagePath } from '../src/lib/site.ts'
 
 /** A page that gets a social card, and what the card shows. */
 export interface OgPage {

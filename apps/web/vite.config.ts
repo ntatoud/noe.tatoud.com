@@ -8,14 +8,14 @@ import tailwindcss from '@tailwindcss/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-import { ogImages } from './plugins/og-images'
+import { ogImages } from './plugins/og-images.ts'
 import {
   PAGE_DESCRIPTIONS,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
   STATIC_PAGES,
-} from './src/lib/site'
+} from './src/lib/site.ts'
 
 // Server routes with no `<a>` pointing at them, so the crawler never finds them.
 const FEED_PATHS = ['/rss.xml', '/atom.xml', '/feed.json', '/sitemap.xml']
