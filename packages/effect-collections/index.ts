@@ -9,15 +9,18 @@ import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
 import { CollectionError } from './errors.ts'
 import { DocumentDirectory } from './image.ts'
 
-/** Curried `mapError` that tags a boundary failure with the operation that produced it. */
+/**
+ * Curried `mapError` that tags a boundary failure with the operation that
+ * produced it and the file or directory it was working on.
+ */
 const collectionError =
-  (operation: string) =>
+  (operation: string, path: string) =>
   <A, E, R>(
     effect: Effect.Effect<A, E, R>,
   ): Effect.Effect<A, CollectionError, R> =>
     Effect.mapError(
       effect,
-      (cause) => new CollectionError({ operation, cause }),
+      (cause) => new CollectionError({ operation, path, cause }),
     )
 
 export { CollectionError } from './errors.ts'
@@ -128,17 +131,10 @@ const make = Layer.effect(
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
-    const readSource = <S extends Schema.Constraint, A>(
-      collection: Collection<S, A>,
-      slug: string,
-    ) =>
-      fs
-        .readFileString(path.join(collection.directory, slug, 'index.mdx'))
-        .pipe(collectionError('readFile'))
-
     const decodeData = <S extends Schema.Constraint, A>(
       collection: Collection<S, A>,
       slug: string,
+      file: string,
       frontmatter: Record<string, unknown>,
     ) =>
       Effect.gen(function* () {
@@ -149,7 +145,7 @@ const make = Layer.effect(
             DocumentDirectory,
             path.join(collection.directory, slug),
           ),
-          collectionError('decode'),
+          collectionError('decode', file),
         )
         return yield* collection.transform(decoded, {
           slug,
@@ -165,11 +161,14 @@ const make = Layer.effect(
       slug: string,
     ) =>
       Effect.gen(function* () {
-        const source = yield* readSource(collection, slug)
+        const file = path.join(collection.directory, slug, 'index.mdx')
+        const source = yield* fs
+          .readFileString(file)
+          .pipe(collectionError('readFile', file))
         const frontmatter = yield* markdownCompiler
           .frontmatter(source)
-          .pipe(collectionError('frontmatter'))
-        const data = yield* decodeData(collection, slug, frontmatter)
+          .pipe(collectionError('frontmatter', file))
+        const data = yield* decodeData(collection, slug, file, frontmatter)
         return { slug, data, source } satisfies DocumentMeta<A>
       })
 
@@ -178,7 +177,7 @@ const make = Layer.effect(
         Effect.gen(function* () {
           const names = yield* fs
             .readDirectory(collection.directory)
-            .pipe(collectionError('readDirectory'))
+            .pipe(collectionError('readDirectory', collection.directory))
           const slugs = yield* Effect.filter(names, (name) =>
             fs.stat(path.join(collection.directory, name)).pipe(
               Effect.map((info) => info.type === 'Directory'),
