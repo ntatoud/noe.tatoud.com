@@ -13,4 +13,4 @@ pre-push:
     lint:
       run: pnpm run lint
     typecheck:
-      run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck
+      run: pnpm run typecheck

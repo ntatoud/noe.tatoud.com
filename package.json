@@ -9,6 +9,7 @@
     "format": "oxfmt",
     "check": "oxfmt --check . && oxlint --config oxlint.config.ts",
     "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r typecheck",
     "knip": "knip",
     "postinstall": "lefthook install"
   },

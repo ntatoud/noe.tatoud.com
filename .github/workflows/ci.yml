@@ -31,7 +31,7 @@ jobs:
         run: pnpm run lint
 
       - name: 🔎 Typecheck
-        run: pnpm --filter @ntatoud/content --filter @ntatoud/web typecheck
+        run: pnpm run typecheck
 
       - name: 🧪 Test
         run: pnpm run test
