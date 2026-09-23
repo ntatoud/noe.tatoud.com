@@ -14,7 +14,7 @@ Personal website & blog — **noe.tatoud.com**
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
 - **Content**: `@ntatoud/effect-collections` (Effect `Schema` frontmatter + `@ntatoud/effect-markdown` markdown→HTML), baked into the bundle at build time by the `@ntatoud/content/vite` plugin (ADR-0008)
-- **Package manager**: pnpm
+- **Package manager**: pnpm. Every external dependency version lives once in the `catalog` of `pnpm-workspace.yaml` and workspaces reference it as `catalog:` (`catalogMode: strict`). pnpm settings (built deps, patches) live there too, not in `package.json`.
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
 - **Dead code**: knip (`pnpm run knip`)

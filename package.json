@@ -14,27 +14,18 @@
     "postinstall": "lefthook install"
   },
   "devDependencies": {
-    "@netlify/edge-functions": "4.0.0",
-    "@shadcn/lint": "0.1.5",
+    "@netlify/edge-functions": "catalog:",
+    "@shadcn/lint": "catalog:",
     "@types/node": "catalog:",
-    "knip": "6.34.0",
-    "lefthook": "2.1.12",
-    "oxfmt": "0.67.0",
-    "oxlint": "1.82.0",
+    "knip": "catalog:",
+    "lefthook": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
     "typescript": "catalog:"
   },
   "engines": {
     "node": ">=24.0.0",
     "pnpm": ">=10.26.0"
   },
-  "packageManager": "pnpm@10.34.5",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lefthook"
-    ],
-    "patchedDependencies": {
-      "@tanstack/start-plugin-core@1.171.40": "patches/@tanstack__start-plugin-core@1.171.40.patch"
-    }
-  }
+  "packageManager": "pnpm@10.34.5"
 }
