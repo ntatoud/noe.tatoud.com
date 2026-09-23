@@ -4,7 +4,6 @@ import { contentMarkdown } from '@ntatoud/content/vite-markdown'
 import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
-import netlify from '@netlify/vite-plugin-tanstack-start'
 import tailwindcss from '@tailwindcss/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
@@ -21,15 +20,14 @@ import {
 // Server routes with no `<a>` pointing at them, so the crawler never finds them.
 const FEED_PATHS = ['/rss.xml', '/atom.xml', '/feed.json', '/sitemap.xml']
 
-export default defineConfig(async ({ mode }) => ({
+export default defineConfig(async () => ({
   resolve: {
     tsconfigPaths: true,
   },
   plugins: [
     devtools(),
-    ...(mode !== 'development' ? [netlify()] : []),
     // Bakes every collection into `virtual:content` at build time, so pages read
-    // content from the bundle instead of calling a serverless function.
+    // content from the bundle instead of the filesystem.
     content(),
     // Emits a `.md` twin of every page plus `/llms.txt` into the client build, so
     // the edge function can answer `Accept: text/markdown` from a static file
@@ -51,16 +49,19 @@ export default defineConfig(async ({ mode }) => ({
       ],
     }),
     tailwindcss(),
-    // Prerender every page at build time so first loads are served statically
-    // from the CDN instead of invoking the SSR function (cold start + content
-    // pipeline). Crawling alone misses every page nothing links to: documents
-    // whose cards link off-site, the feeds, the sitemap. Listing them
-    // explicitly keeps every route a static file, so none of them falls back
-    // to the serverless function. Unmatched paths still fall back to SSR.
+    // Prerender every page at build time: the deploy is `dist/client` and
+    // nothing else, so a route that is not prerendered does not exist in
+    // production (ADR-0011). Crawling alone misses every page nothing links
+    // to: documents whose cards link off-site, the feeds, the sitemap, the
+    // 404 page. Listing them explicitly keeps every route a static file.
     tanstackStart({
-      pages: [...(await readContentPaths()), ...FEED_PATHS].map((path) => ({
-        path,
-      })),
+      pages: [
+        ...[...(await readContentPaths()), ...FEED_PATHS].map((path) => ({
+          path,
+        })),
+        // Netlify serves `404.html` for any path without a file.
+        { path: '/404', prerender: { outputPath: '/404.html' } },
+      ],
       prerender: {
         enabled: true,
         crawlLinks: true,

@@ -1,5 +1,7 @@
 # ADR-0008: content is baked into the bundle at build time
 
+> Superseded in part by [ADR-0011](./0011-static-deploy.md): there is no serverless function anymore.
+
 ADR-0006 removed the codegen step and had the App read collections through Effect's `FileSystem` at request time, behind `createServerFn`. That is reversed: a Vite plugin, `@ntatoud/content/vite`, reads every collection during the build and emits `virtual:content`. No page reads the filesystem at runtime, and there are no content server functions left.
 
 ## Why

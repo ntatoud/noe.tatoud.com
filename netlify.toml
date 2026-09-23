@@ -1,3 +1,6 @@
+# The publish directory is the entire site: every page, feed and image is
+# prerendered into it, and there is no serverless function (ADR-0011). The
+# markdown-negotiation edge function is the only code that runs per request.
 [build]
 command = "pnpm run build"
 publish = "apps/web/dist/client"
@@ -117,8 +120,3 @@ Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="
 # Residual gap: an agent-side cache that fetched a page as HTML and later asks for
 # markdown. If that shows up in practice, add `Vary = "Accept"` back on the page
 # routes and accept the fragmentation.
-[functions]
-node_bundler = "esbuild"
-# `content/**` is deliberately absent: content is baked into the bundle at build
-# time (ADR-0008), so nothing reads it from the filesystem at runtime.
-included_files = ["node_modules/@takumi-rs/core-linux-x64-gnu/**/*.*"]
