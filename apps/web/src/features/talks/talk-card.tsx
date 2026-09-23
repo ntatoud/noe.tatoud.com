@@ -20,7 +20,10 @@ export function TalkCard({ talk }: TalkCardProps) {
   const isWorkshop = talk.kind === 'workshop'
 
   return (
-    <ContentCard slot="talk-card" href={talk.path}>
+    <ContentCard
+      slot="talk-card"
+      link={{ to: '/talks/$slug', slug: talk.slug }}
+    >
       <div className="flex items-center justify-between gap-2">
         <KindChip
           icon={isWorkshop ? Wrench01Icon : Mic01Icon}
@@ -28,7 +31,10 @@ export function TalkCard({ talk }: TalkCardProps) {
           tone={isWorkshop ? 'moss' : 'honey'}
         />
         {event && (
-          <time className="text-xs text-muted-foreground tabular-nums">
+          <time
+            dateTime={event.date}
+            className="text-xs text-muted-foreground tabular-nums"
+          >
             {formatMonthYear(event.date)}
           </time>
         )}

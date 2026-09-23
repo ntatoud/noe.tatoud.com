@@ -2,9 +2,11 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url'
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url'
+
 import { ErrorPage } from '@/components/error/error-page'
 import { NotFound } from '@/components/error/not-found'
-import { TooltipProvider } from '@/components/ui/tooltip'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
@@ -27,6 +29,20 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      {
+        rel: 'preload',
+        href: manropeLatin,
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'preload',
+        href: frauncesLatin,
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
       {
@@ -66,11 +82,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-full flex-col">
-        <TooltipProvider>
-          <Header />
-          {children}
-          <Footer />
-        </TooltipProvider>
+        <a
+          href="#main"
+          className="sr-only rounded-lg border border-ring bg-background px-4 py-2 text-foreground outline-none ring-ring/50 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:ring-3"
+        >
+          Skip to content
+        </a>
+        <Header />
+        {children}
+        <Footer />
         {import.meta.env.DEV && (
           <TanStackDevtools
             plugins={[

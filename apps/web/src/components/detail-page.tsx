@@ -39,6 +39,7 @@ export function DetailPage({
 }: DetailPageProps) {
   return (
     <main
+      id="main"
       className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
       data-slot={`${slot}-page`}
     >

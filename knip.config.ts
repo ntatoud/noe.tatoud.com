@@ -23,11 +23,9 @@ const config: KnipConfig = {
       ignoreDependencies: [
         // imported from src/styles/index.css, which knip does not follow
         '@fontsource-variable/fraunces',
+        '@fontsource-variable/manrope',
         '@fontsource/atkinson-hyperlegible-next',
-        '@fontsource/manrope',
-        'shadcn',
         'tailwindcss',
-        'tw-animate-css',
       ],
     },
   },

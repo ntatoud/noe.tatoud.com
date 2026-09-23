@@ -1,13 +1,8 @@
 @import 'tailwindcss';
 @import './typeset.css';
 @import './highlight.css';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 @import '@fontsource/atkinson-hyperlegible-next/200.css';
-@import '@fontsource/manrope';
-@import '@fontsource/manrope/500.css';
-@import '@fontsource/manrope/600.css';
-@import '@fontsource/manrope/700.css';
+@import '@fontsource-variable/manrope';
 @import '@fontsource-variable/fraunces';
 
 .typeset-docs {
@@ -50,7 +45,7 @@
   --input: oklch(0.88 0.015 155);
   --ring: oklch(0.45 0.08 155);
 
-  --font-sans: 'Manrope', sans-serif;
+  --font-sans: 'Manrope Variable', sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-fraunces: 'Fraunces Variable', serif;
   --font-atkinson-next-light:

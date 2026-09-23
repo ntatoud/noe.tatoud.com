@@ -24,6 +24,9 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
         <img
           src={post.hero}
           alt=""
+          width={post.heroDimensions?.width}
+          height={post.heroDimensions?.height}
+          fetchPriority="high"
           className="mt-6 w-full rounded-lg border border-border object-cover"
           data-slot="blog-post-hero"
         />

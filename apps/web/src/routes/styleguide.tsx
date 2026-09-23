@@ -21,7 +21,7 @@ export const Route = createFileRoute('/styleguide')({
 
 function StyleguidePage() {
   return (
-    <main className="mx-auto max-w-4xl px-4 py-16">
+    <main id="main" className="mx-auto max-w-4xl px-4 py-16">
       {/* Hero */}
       <section className="mb-24">
         <Badge className="mb-4" variant="outline">
