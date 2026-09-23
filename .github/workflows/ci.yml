@@ -43,7 +43,7 @@ jobs:
   # is a broken build rather than a broken request. The unit tests above cover
   # the plugin's output on its own; this covers the whole chain it feeds —
   # Rollup resolving the emitted asset imports, and the prerender pass actually
-  # rendering all 16 pages. Both failure modes only show up in a real build.
+  # rendering every page. Both failure modes only show up in a real build.
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
@@ -63,3 +63,6 @@ jobs:
 
       - name: 🏗️ Build
         run: pnpm run build
+
+      - name: 📦 Check static output
+        run: pnpm --filter @ntatoud/web check:static

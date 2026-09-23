@@ -1,3 +1,4 @@
+import { readContentPaths } from '@ntatoud/content/pages'
 import { content } from '@ntatoud/content/vite'
 import { contentMarkdown } from '@ntatoud/content/vite-markdown'
 import { devtools } from '@tanstack/devtools-vite'
@@ -15,7 +16,10 @@ import {
   SITE_URL,
 } from './src/lib/site'
 
-export default defineConfig(({ mode }) => ({
+// Server routes with no `<a>` pointing at them, so the crawler never finds them.
+const FEED_PATHS = ['/rss.xml', '/atom.xml', '/feed.json', '/sitemap.xml']
+
+export default defineConfig(async ({ mode }) => ({
   resolve: {
     tsconfigPaths: true,
   },
@@ -37,10 +41,16 @@ export default defineConfig(({ mode }) => ({
       ],
     }),
     tailwindcss(),
-    // Prerender every page reachable from / at build time so first loads are
-    // served statically from the CDN instead of invoking the SSR function
-    // (cold start + content pipeline). Unmatched paths still fall back to SSR.
+    // Prerender every page at build time so first loads are served statically
+    // from the CDN instead of invoking the SSR function (cold start + content
+    // pipeline). Crawling alone misses every page nothing links to: documents
+    // whose cards link off-site, the feeds, the sitemap. Listing them
+    // explicitly keeps every route a static file, so none of them falls back
+    // to the serverless function. Unmatched paths still fall back to SSR.
     tanstackStart({
+      pages: [...(await readContentPaths()), ...FEED_PATHS].map((path) => ({
+        path,
+      })),
       prerender: {
         enabled: true,
         crawlLinks: true,

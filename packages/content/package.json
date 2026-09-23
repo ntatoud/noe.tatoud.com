@@ -6,6 +6,7 @@
     ".": "./index.ts",
     "./vite": "./vite.ts",
     "./vite-markdown": "./vite-markdown.ts",
+    "./pages": "./pages.ts",
     "./virtual": "./virtual.d.ts"
   },
   "scripts": {
