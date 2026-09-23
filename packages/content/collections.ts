@@ -4,8 +4,6 @@ import { fileURLToPath } from 'node:url'
 import { defineCollection } from '@ntatoud/effect-collections'
 import type { CollectionMeta, ImageValue } from '@ntatoud/effect-collections'
 
-import { Effect } from 'effect'
-
 import { BlogPostSchema } from './schemas/blog.ts'
 import { ExperienceSchema } from './schemas/experiences.ts'
 import { ProjectSchema } from './schemas/projects.ts'
@@ -59,59 +57,53 @@ export const blogPosts = defineCollection({
   // "no external link" has one representation across the derived data, matching
   // `hero` — the App branches on it, so flipping it to `undefined` here would
   // silently mark every post as external.
-  transform: ({ hero, externalUrl, ...data }, meta) =>
-    Effect.succeed({
-      ...data,
-      slug: meta.slug,
-      url: `/blog/${meta.slug}`,
-      externalUrl: externalUrl ?? null,
-      hero: hero ? publicImageUrl(hero, meta) : null,
-      heroDimensions: hero ? { width: hero.width, height: hero.height } : null,
-    }),
+  transform: ({ hero, externalUrl, ...data }, meta) => ({
+    ...data,
+    slug: meta.slug,
+    url: `/blog/${meta.slug}`,
+    externalUrl: externalUrl ?? null,
+    hero: hero ? publicImageUrl(hero, meta) : null,
+    heroDimensions: hero ? { width: hero.width, height: hero.height } : null,
+  }),
 })
 
 export const projects = defineCollection({
   name: 'projects',
   directory: path.join(contentRoot, 'projects'),
   schema: ProjectSchema,
-  transform: (data, meta) =>
-    Effect.succeed({
-      ...data,
-      slug: meta.slug,
-      path: `/projects/${meta.slug}`,
-    }),
+  transform: (data, meta) => ({
+    ...data,
+    slug: meta.slug,
+    path: `/projects/${meta.slug}`,
+  }),
 })
 
 export const experiences = defineCollection({
   name: 'experiences',
   directory: path.join(contentRoot, 'experiences'),
   schema: ExperienceSchema,
-  transform: ({ logo, ...data }, meta) =>
-    Effect.succeed({
-      ...data,
-      slug: meta.slug,
-      logo: logo ? publicImageUrl(logo, meta) : null,
-    }),
+  transform: ({ logo, ...data }, meta) => ({
+    ...data,
+    slug: meta.slug,
+    logo: logo ? publicImageUrl(logo, meta) : null,
+  }),
 })
 
 export const talks = defineCollection({
   name: 'talks',
   directory: path.join(contentRoot, 'talks'),
   schema: StageItemSchema,
-  transform: ({ events, ...data }, meta) =>
-    Effect.succeed({
-      ...data,
-      slug: meta.slug,
-      path: `/talks/${meta.slug}`,
-      // Newest first, so "the latest event" is always `events[0]` for every
-      // consumer (cards, sitemap, listing order, markdown twins).
-      events: events
-        .map(({ logo, ...event }) => ({
-          ...event,
-          logo: logo ? publicImageUrl(logo, meta) : null,
-        }))
-        .sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-        ),
-    }),
+  transform: ({ events, ...data }, meta) => ({
+    ...data,
+    slug: meta.slug,
+    path: `/talks/${meta.slug}`,
+    // Newest first, so "the latest event" is always `events[0]` for every
+    // consumer (cards, sitemap, listing order, markdown twins).
+    events: events
+      .map(({ logo, ...event }) => ({
+        ...event,
+        logo: logo ? publicImageUrl(logo, meta) : null,
+      }))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+  }),
 })
