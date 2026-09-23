@@ -1,8 +1,14 @@
-import { CollectionsLive } from '@ntatoud/effect-collections'
+import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
 
 import { expect, layer } from '@effect/vitest'
 import { Effect } from 'effect'
 
+import {
+  blogPosts as blogPostsCollection,
+  experiences as experiencesCollection,
+  projects as projectsCollection,
+  talks as talksCollection,
+} from '../collections.ts'
 import { getBlogPosts } from '../readers/blog.ts'
 import { getExperiences } from '../readers/experiences.ts'
 import { getProjects } from '../readers/projects.ts'
@@ -28,15 +34,17 @@ const asTimes = (dates: ReadonlyArray<string>) =>
 // describe invariants of the pipeline rather than the contents of any one
 // document — adding or editing content must not break them.
 //
-// Each reader is read once per test: the readers are Effects, not memoized
-// values, so splitting assertions across `it.effect` blocks would re-read and
-// re-measure every image file.
+// Each collection is read once per test: splitting assertions across
+// `it.effect` blocks would re-read and re-measure every image file.
 layer(CollectionsLive)('content readers', (it) => {
   it.effect(
     'getBlogPosts derives portable hero URLs and sorts newest first',
     () =>
       Effect.gen(function* () {
-        const posts = yield* getBlogPosts
+        const collections = yield* Collections
+        const posts = getBlogPosts(
+          yield* collections.getAll(blogPostsCollection),
+        )
 
         expect(posts.length).toBeGreaterThan(0)
         expect(posts.every((post) => post.published)).toBe(true)
@@ -73,7 +81,10 @@ layer(CollectionsLive)('content readers', (it) => {
 
   it.effect('getExperiences derives portable logo URLs, newest first', () =>
     Effect.gen(function* () {
-      const experiences = yield* getExperiences
+      const collections = yield* Collections
+      const experiences = getExperiences(
+        yield* collections.getAll(experiencesCollection),
+      )
 
       expect(experiences.length).toBeGreaterThan(0)
       expect(descending(asTimes(experiences.map((exp) => exp.startDate)))).toBe(
@@ -93,7 +104,10 @@ layer(CollectionsLive)('content readers', (it) => {
 
   it.effect('getProjects returns only published projects, personal first', () =>
     Effect.gen(function* () {
-      const projects = yield* getProjects
+      const collections = yield* Collections
+      const projects = getProjects(
+        yield* collections.getAll(projectsCollection),
+      )
 
       expect(projects.length).toBeGreaterThan(0)
       expect(projects.every((project) => project.published)).toBe(true)
@@ -119,7 +133,8 @@ layer(CollectionsLive)('content readers', (it) => {
 
   it.effect('getTalks sorts by the most recent event date', () =>
     Effect.gen(function* () {
-      const talks = yield* getTalks
+      const collections = yield* Collections
+      const talks = getTalks(yield* collections.getAll(talksCollection))
 
       expect(talks.length).toBeGreaterThan(0)
       expect(talks.every((talk) => talk.slug.length > 0)).toBe(true)

@@ -9,6 +9,7 @@ import { Effect, Layer, ManagedRuntime } from 'effect'
 
 import {
   blogPosts as blogPostsCollection,
+  experiences as experiencesCollection,
   projects as projectsCollection,
   talks as talksCollection,
 } from './collections.ts'
@@ -54,23 +55,27 @@ export const readContent = (): Promise<ContentSnapshot> =>
   runtime.runPromise(
     Effect.gen(function* () {
       const collections = yield* Collections
-      const [blogPosts, projects, experiences, talks] = yield* Effect.all([
-        getBlogPosts,
-        getProjects,
-        getExperiences,
-        getTalks,
-      ])
-      const [blogPostDocuments, projectDocuments, talkDocuments] =
-        yield* Effect.all([
+      // Each collection is read from disk exactly once; the listings and the
+      // per-document pages are both derived from that one read.
+      const [
+        blogPostDocuments,
+        projectDocuments,
+        experienceDocuments,
+        talkDocuments,
+      ] = yield* Effect.all(
+        [
           collections.getAll(blogPostsCollection),
           collections.getAll(projectsCollection),
+          collections.getAll(experiencesCollection),
           collections.getAll(talksCollection),
-        ])
+        ],
+        { concurrency: 'unbounded' },
+      )
       return {
-        blogPosts,
-        projects,
-        experiences,
-        talks,
+        blogPosts: getBlogPosts(blogPostDocuments),
+        projects: getProjects(projectDocuments),
+        experiences: getExperiences(experienceDocuments),
+        talks: getTalks(talkDocuments),
         documents: {
           blogPosts: bySlug(blogPostDocuments),
           projects: bySlug(projectDocuments),

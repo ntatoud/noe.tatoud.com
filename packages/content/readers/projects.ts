@@ -1,7 +1,4 @@
-import { Collections } from '@ntatoud/effect-collections'
-import type { CollectionData } from '@ntatoud/effect-collections'
-
-import { Effect } from 'effect'
+import type { CollectionData, DocumentMeta } from '@ntatoud/effect-collections'
 
 import { projects as projectsCollection } from '../collections.ts'
 
@@ -12,16 +9,14 @@ export type ProjectDetail = Project & {
   html: string
 }
 
-export const getProjects = Collections.use((collections) =>
-  collections.getAll(projectsCollection),
-).pipe(
-  Effect.map((docs) =>
-    docs
-      .map((doc) => doc.data)
-      .filter((project) => project.published)
-      .sort((a, b) => {
-        if (a.kind !== b.kind) return a.kind === 'personal' ? -1 : 1
-        return 0
-      }),
-  ),
-)
+/** Published projects, personal ones before contributions. */
+export const getProjects = (
+  documents: ReadonlyArray<DocumentMeta<Project>>,
+): ReadonlyArray<Project> =>
+  documents
+    .map((doc) => doc.data)
+    .filter((project) => project.published)
+    .sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === 'personal' ? -1 : 1
+      return 0
+    })
