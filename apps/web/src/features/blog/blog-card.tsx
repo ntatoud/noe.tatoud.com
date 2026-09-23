@@ -21,8 +21,11 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <ContentCard
       slot="blog-card"
-      href={post.externalUrl ?? post.url}
-      external={external}
+      link={
+        post.externalUrl !== null
+          ? { external: true, href: post.externalUrl }
+          : { to: '/blog/$slug', slug: post.slug }
+      }
       lift={false}
       media={
         <div className="aspect-video w-full shrink-0 overflow-hidden bg-muted">

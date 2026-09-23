@@ -22,8 +22,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <ContentCard
       slot="project-card"
-      href={(external && project.url) || project.path}
-      external={external}
+      link={
+        external && project.url
+          ? { external: true, href: project.url }
+          : { to: '/projects/$slug', slug: project.slug }
+      }
     >
       <div className="flex items-center justify-between gap-2">
         <KindChip

@@ -1,15 +1,24 @@
 import type { ReactNode } from 'react'
 
+import { Link } from '@tanstack/react-router'
+
 import { ArrowUpRight02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
+type CardLink =
+  | { external: true; href: string }
+  | {
+      external?: false
+      to: '/blog/$slug' | '/projects/$slug' | '/talks/$slug'
+      slug: string
+    }
+
 type ContentCardProps = {
   slot: string
-  href: string
-  external?: boolean
+  link: CardLink
   /** Lift and cast a shadow on hover; the blog card only recolours its border. */
   lift?: boolean
   /** Rendered edge to edge above the padded body, e.g. a hero image. */
@@ -20,28 +29,41 @@ type ContentCardProps = {
 /** The linked card shell shared by the blog, project and talk grids. */
 export function ContentCard({
   slot,
-  href,
-  external = false,
+  link,
   lift = true,
   media,
   children,
 }: ContentCardProps) {
+  const className = cn(
+    'group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card outline-none hover:border-foreground/20 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
+    lift
+      ? 'transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20'
+      : 'transition-colors',
+  )
+
   return (
     <li data-slot={slot}>
-      <a
-        href={href}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noreferrer' : undefined}
-        className={cn(
-          'group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card outline-none hover:border-foreground/20 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
-          lift
-            ? 'transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20'
-            : 'transition-colors',
-        )}
-      >
-        {media}
-        <div className="flex flex-1 flex-col gap-2 p-4">{children}</div>
-      </a>
+      {link.external ? (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noreferrer"
+          className={className}
+        >
+          {media}
+          <div className="flex flex-1 flex-col gap-2 p-4">{children}</div>
+        </a>
+      ) : (
+        <Link
+          to={link.to}
+          params={{ slug: link.slug }}
+          preload="intent"
+          className={className}
+        >
+          {media}
+          <div className="flex flex-1 flex-col gap-2 p-4">{children}</div>
+        </Link>
+      )}
     </li>
   )
 }
