@@ -2,14 +2,57 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+# Every external dependency is pinned here, once, and workspaces reference it
+# as `catalog:`. `strict` makes `pnpm add` refuse a version that is not in the
+# catalog, so two workspaces cannot drift apart on the same package.
+catalogMode: strict
+
 catalog:
-  '@effect/platform-node': 4.0.0-rc.112
-  '@effect/vitest': 4.0.0-rc.112
-  '@takumi-rs/core': 2.13.7
-  '@types/node': 26.5.0
-  effect: 4.0.0-rc.112
-  image-size: 2.0.2
-  takumi-js: 2.13.7
+  '@base-ui/react': 1.8.0
+  '@effect/platform-node': 4.0.0-rc.117
+  '@effect/vitest': 4.0.0-rc.117
+  '@fontsource-variable/fraunces': 5.3.0
+  '@fontsource-variable/manrope': 5.3.0
+  '@fontsource/atkinson-hyperlegible-next': 5.3.0
+  '@hugeicons/core-free-icons': 4.3.5
+  '@hugeicons/react': 1.1.10
+  '@netlify/edge-functions': 4.0.0
+  '@shadcn/lint': 0.2.0
+  '@tailwindcss/vite': 4.3.3
+  '@takumi-rs/core': 2.14.0
+  '@tanstack/devtools-vite': 0.8.5
+  '@tanstack/highlight': 0.1.0
+  '@tanstack/markdown': 0.0.15
+  '@tanstack/react-devtools': 0.10.13
+  '@tanstack/react-router': 1.170.39
+  '@tanstack/react-router-devtools': 1.167.2
+  '@tanstack/react-start': 1.168.58
+  # Matches the Node major in `.nvmrc` and `netlify.toml`, not the latest
+  # release: types for a newer Node would accept APIs the build cannot call.
+  '@types/node': 24.13.6
+  '@types/react': 19.3.0
+  '@types/react-dom': 19.3.0
+  '@vitejs/plugin-react': 6.1.1
+  class-variance-authority: 0.7.1
+  cn: 0.4.0
+  effect: 4.0.0-rc.117
+  image-size: 2.0.4
+  knip: 6.38.0
+  lefthook: 2.1.14
+  oxfmt: 0.70.0
+  oxlint: 1.85.0
+  react: 19.3.0
+  react-dom: 19.3.0
+  takumi-js: 2.14.0
+  tailwindcss: 4.3.3
   typescript: 7.0.2
-  vite: 8.2.2
-  vitest: 4.1.11
+  vite: 8.3.0
+  vitest: 5.0.1
+  yaml: 2.9.1
+
+onlyBuiltDependencies:
+  - esbuild
+  - lefthook
+
+patchedDependencies:
+  '@tanstack/start-plugin-core@1.171.47': patches/@tanstack__start-plugin-core@1.171.47.patch

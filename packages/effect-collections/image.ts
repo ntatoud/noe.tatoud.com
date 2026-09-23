@@ -58,7 +58,7 @@ const readDimensions = (relativePath: string) =>
  */
 export const Image = Schema.String.pipe(
   Schema.decodeTo(ImageStruct, {
-    decode: SchemaGetter.transformOrFail(readDimensions),
+    decode: SchemaGetter.transformEffect(readDimensions),
     encode: SchemaGetter.transform((image: ImageValue) => image.path),
   }),
 )
