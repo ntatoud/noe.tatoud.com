@@ -42,6 +42,13 @@ for = "/*.md"
 Content-Type = "text/markdown; charset=utf-8"
 Cache-Control = "public, max-age=0, must-revalidate"
 
+# Social cards, rendered at build time (ADR-0010). Not `immutable`: the file
+# names are stable across deploys, so a changed title must replace the image.
+[[headers]]
+for = "/og/*"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
 # Feeds and the sitemap are prerendered to static files by TanStack Start, not
 # served by a function, so they get the types and policy their handlers set.
 [[headers]]

@@ -19,7 +19,6 @@ export const Route = createFileRoute('/blog/$slug')({
       meta: toMetaTags({
         title: post.title,
         description: post.description,
-        kind: 'blog',
         path: match.pathname,
       }),
     }

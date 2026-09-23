@@ -4,19 +4,17 @@ import { projects } from 'virtual:content'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { ProjectsPage } from '@/features/projects/projects-page'
-import { PAGE_DESCRIPTIONS } from '@/lib/site'
+import { STATIC_PAGES } from '@/lib/site'
 
-const TITLE = 'Projects | Noé Tatoud'
-const DESCRIPTION = PAGE_DESCRIPTIONS.projects
+const PAGE = STATIC_PAGES.projects
 
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPageRoute,
   head: () => ({
     meta: toMetaTags({
-      title: TITLE,
-      description: DESCRIPTION,
-      kind: 'project',
-      path: '/projects',
+      title: PAGE.title,
+      description: PAGE.description,
+      path: PAGE.path,
     }),
   }),
 })

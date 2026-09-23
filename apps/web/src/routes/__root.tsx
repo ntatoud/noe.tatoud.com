@@ -8,7 +8,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
-import { SITE_DESCRIPTION } from '@/lib/site'
+import { STATIC_PAGES } from '@/lib/site'
 
 import appCss from '@/styles/index.css?url'
 
@@ -20,9 +20,9 @@ export const Route = createRootRoute({
     meta: [
       ...BASE_META_TAGS,
       ...toMetaTags({
-        title: 'Noé Tatoud',
-        description: SITE_DESCRIPTION,
-        path: '/',
+        title: STATIC_PAGES.home.title,
+        description: STATIC_PAGES.home.description,
+        path: STATIC_PAGES.home.path,
       }),
     ],
     links: [

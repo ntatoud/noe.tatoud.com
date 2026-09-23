@@ -1,4 +1,4 @@
-import { readContentPaths } from '@ntatoud/content/pages'
+import { readContentPages, readContentPaths } from '@ntatoud/content/pages'
 import { content } from '@ntatoud/content/vite'
 import { contentMarkdown } from '@ntatoud/content/vite-markdown'
 import { devtools } from '@tanstack/devtools-vite'
@@ -9,11 +9,13 @@ import tailwindcss from '@tailwindcss/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+import { ogImages } from './plugins/og-images'
 import {
   PAGE_DESCRIPTIONS,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
+  STATIC_PAGES,
 } from './src/lib/site'
 
 // Server routes with no `<a>` pointing at them, so the crawler never finds them.
@@ -38,6 +40,14 @@ export default defineConfig(async ({ mode }) => ({
       optionalLinks: [
         { title: 'Sitemap', path: '/sitemap.xml' },
         { title: 'RSS feed', path: '/rss.xml' },
+      ],
+    }),
+    // Renders every page's social card to `/og/<path>.png` at build time, so no
+    // request runs the image renderer (ADR-0010).
+    ogImages({
+      pages: async () => [
+        ...Object.values(STATIC_PAGES),
+        ...(await readContentPages()),
       ],
     }),
     tailwindcss(),
