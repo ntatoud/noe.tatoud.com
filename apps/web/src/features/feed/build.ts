@@ -11,20 +11,6 @@ import { FeedItem, type FeedConfig, type FeedItemInput } from './schema'
 
 const decodeItems = Schema.decodeUnknownEffect(Schema.Array(FeedItem))
 
-/** Parse an item's date string, failing into the error channel when invalid. */
-const parseDate = (raw: string, title: string) =>
-  Effect.suspend(() => {
-    const date = new Date(raw)
-    return Number.isNaN(date.getTime())
-      ? Effect.fail(
-          new FeedError({
-            operation: 'parseDate',
-            cause: `Invalid date "${raw}" for item "${title}"`,
-          }),
-        )
-      : Effect.succeed(date)
-  })
-
 /** Resolve a possibly-relative link/image against the configured origin. */
 const toAbsoluteUrl = (value: string, siteUrl: string) =>
   Effect.try({
@@ -34,7 +20,6 @@ const toAbsoluteUrl = (value: string, siteUrl: string) =>
 
 const resolveItem = (config: FeedConfig, item: FeedItem) =>
   Effect.gen(function* () {
-    const date = yield* parseDate(item.date, item.title)
     const url = yield* toAbsoluteUrl(item.path, config.siteUrl)
     const image = item.image
       ? yield* toAbsoluteUrl(item.image, config.siteUrl)
@@ -44,7 +29,7 @@ const resolveItem = (config: FeedConfig, item: FeedItem) =>
       title: item.title,
       url,
       id: item.id ?? url,
-      date,
+      date: item.date,
       description: item.description,
       content: item.content,
       author: item.author ?? config.author,

@@ -1,5 +1,7 @@
 import { Effect, Schema } from 'effect'
 
+import { DateString } from './date.ts'
+
 /**
  * A closing call-to-action for a project page. Lives in frontmatter rather than
  * in the body because the body is plain markdown — it has no way to name a
@@ -17,7 +19,7 @@ export type ProjectCtaFrontmatter = (typeof ProjectCtaSchema)['Type']
 export const ProjectSchema = Schema.Struct({
   title: Schema.String,
   description: Schema.optionalKey(Schema.String),
-  date: Schema.String,
+  date: DateString,
   published: Schema.Boolean.pipe(
     Schema.withDecodingDefaultTypeKey(Effect.succeed(false)),
   ),

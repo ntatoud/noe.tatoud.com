@@ -11,4 +11,10 @@ export class FeedError extends Schema.TaggedError<FeedError>()(
     operation: Schema.String,
     cause: Schema.Unknown,
   },
-) {}
+) {
+  override get message(): string {
+    const reason =
+      this.cause instanceof Error ? this.cause.message : String(this.cause)
+    return `${this.operation} failed: ${reason}`
+  }
+}
