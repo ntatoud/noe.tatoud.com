@@ -13,7 +13,7 @@ export type FeedAuthor = typeof FeedAuthor.Type
 
 /**
  * One entry in a feed, described semantically. Absolute URLs, GUIDs, and date
- * formatting are derived by the {@link Feed} service, so callers only supply
+ * formatting are derived by `buildFeed` (`./build.ts`), so callers only supply
  * what they know: a title, a link (relative or absolute), and a date.
  */
 export const FeedItem = Schema.Struct({
@@ -24,8 +24,11 @@ export const FeedItem = Schema.Struct({
    * against `siteUrl`) or an absolute URL (used verbatim, e.g. a cross-post).
    */
   path: Schema.NonEmptyString,
-  /** Publication date. Any string `new Date(...)` accepts, e.g. `2026-07-18`. */
-  date: Schema.String,
+  /**
+   * Publication date: any string `new Date(...)` accepts, e.g. `2026-07-18`.
+   * Decodes to a `Date`; an unparseable string fails the decode.
+   */
+  date: Schema.DateFromString,
   /** Short summary — becomes RSS `<description>` / Atom `<summary>`. */
   description: Schema.optionalKey(Schema.String),
   /** Full HTML body — becomes RSS `<content:encoded>` / Atom `<content>`. */

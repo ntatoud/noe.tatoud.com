@@ -2,11 +2,13 @@ import { Image } from '@ntatoud/effect-collections'
 
 import { Effect, Schema } from 'effect'
 
+import { DateString } from './date.ts'
+
 export const BlogPostSchema = Schema.Struct({
   title: Schema.String,
   description: Schema.optionalKey(Schema.String),
   author: Schema.String,
-  date: Schema.String,
+  date: DateString,
   published: Schema.Boolean.pipe(
     Schema.withDecodingDefaultTypeKey(Effect.succeed(false)),
   ),
