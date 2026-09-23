@@ -1,11 +1,8 @@
 import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
 import type { DocumentMeta } from '@ntatoud/effect-collections'
-import {
-  MarkdownCompiler,
-  MarkdownCompilerLive,
-} from '@ntatoud/effect-markdown'
+import { toHtml } from '@ntatoud/effect-markdown'
 
-import { Effect, Layer, ManagedRuntime } from 'effect'
+import { Effect, ManagedRuntime } from 'effect'
 
 import {
   blogPosts as blogPostsCollection,
@@ -40,9 +37,7 @@ export interface ContentSnapshot {
   }
 }
 
-const runtime = ManagedRuntime.make(
-  Layer.mergeAll(CollectionsLive, MarkdownCompilerLive),
-)
+const runtime = ManagedRuntime.make(CollectionsLive)
 
 // Plain code-unit order, so the generated loader maps list slugs the same way
 // on every machine.
@@ -87,8 +82,6 @@ export const readContent = (): Promise<ContentSnapshot> =>
 
 /** Renders one document's body (frontmatter excluded) to HTML. */
 export const renderBody = (source: string): Promise<string> =>
-  runtime.runPromise(
-    MarkdownCompiler.use((compiler) => compiler.toHtml(source)).pipe(
-      Effect.map((markdown) => markdown.html),
-    ),
+  Effect.runPromise(
+    toHtml(source).pipe(Effect.map((markdown) => markdown.html)),
   )
