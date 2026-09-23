@@ -1,7 +1,4 @@
-import {
-  MarkdownCompiler,
-  MarkdownCompilerLive,
-} from '@ntatoud/effect-markdown'
+import { parseFrontmatter } from '@ntatoud/effect-markdown'
 
 import { NodeFileSystem, NodePath } from '@effect/platform-node'
 import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
@@ -97,7 +94,6 @@ export class Collections extends Context.Service<
 const make = Layer.effect(
   Collections,
   Effect.gen(function* () {
-    const markdownCompiler = yield* MarkdownCompiler
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
@@ -140,9 +136,9 @@ const make = Layer.effect(
         const source = yield* fs
           .readFileString(file)
           .pipe(collectionError('readFile', file))
-        const frontmatter = yield* markdownCompiler
-          .frontmatter(source)
-          .pipe(collectionError('frontmatter', file))
+        const frontmatter = yield* parseFrontmatter(source).pipe(
+          collectionError('frontmatter', file),
+        )
         const data = yield* decodeData(collection, slug, file, frontmatter)
         return { slug, data, source } satisfies DocumentMeta<A>
       })
@@ -170,7 +166,6 @@ const make = Layer.effect(
 )
 
 export const CollectionsLive = make.pipe(
-  Layer.provide(MarkdownCompilerLive),
   Layer.provide(NodeFileSystem.layer),
   Layer.provide(NodePath.layer),
 )

@@ -56,7 +56,7 @@ packages/content/      # @ntatoud/content — content pipeline
   virtual.d.ts        # types for `virtual:content`
 netlify/
   edge-functions/     # markdown-negotiation.ts — serves .md on Accept: text/markdown
-packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
+packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect functions)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
 content/              # markdown documents (blog, projects, experiences, talks)
 docs/
