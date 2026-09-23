@@ -1,23 +1,24 @@
-import type { FeedItemInput } from '@ntatoud/effect-rss'
-
+import { Effect } from 'effect'
 import { blogPosts, loadBlogPost } from 'virtual:content'
 
+import { buildFeed } from '@/features/feed/build'
+import { FEED_CONFIG } from '@/features/feed/feed-config'
+import type { FeedItemInput } from '@/features/feed/schema'
 import { SITE_URL } from '@/lib/site'
-import { Feed, runtime } from '@/server/runtime'
 
 /**
- * Blog feed serializers bound to this site, backed by the shared App runtime's
- * `Feed` service. Reuse them from the `/rss.xml`, `/atom.xml`, and `/feed.json`
- * route handlers, which run once, during the build's prerender pass
- * (ADR-0011). The channel config lives in `./feed-config`.
+ * Blog feed serializers bound to this site's channel config
+ * (`./feed-config`). Reuse them from the `/rss.xml`, `/atom.xml`, and
+ * `/feed.json` route handlers, which run once, during the build's prerender
+ * pass (ADR-0011).
  */
 export const feed = {
   rss: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
-    runtime.runPromise(Feed.use((f) => f.rss(items))),
+    Effect.runPromise(buildFeed('rss', FEED_CONFIG, items)),
   atom: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
-    runtime.runPromise(Feed.use((f) => f.atom(items))),
+    Effect.runPromise(buildFeed('atom', FEED_CONFIG, items)),
   json: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>
-    runtime.runPromise(Feed.use((f) => f.json(items))),
+    Effect.runPromise(buildFeed('json', FEED_CONFIG, items)),
 }
 
 /**

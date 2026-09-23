@@ -16,7 +16,7 @@ One image per page, named by `ogImagePath` in `apps/web/src/lib/site.ts`: `/` be
 
 The pages come from `STATIC_PAGES` (also in `site.ts`, shared with the listing routes' `head`) and `readContentPages()` from `@ntatoud/content/pages`, the same list that drives the prerender pass. Drafts get a card, just as they keep a page.
 
-Fonts are still registered on Takumi's `Renderer` through `@ntatoud/effect-og/image`'s `layer`. Passing them as a render option is a no-op in `takumi-js` v2.3.0, and the card silently falls back to the default face.
+Fonts are still registered on Takumi's `Renderer`. Passing them as a render option is a no-op in `takumi-js` v2.3.0, and the card silently falls back to the default face. The renderer now lives in the plugin itself, which calls `@takumi-rs/core` and `takumi-js` directly; the `@ntatoud/effect-og` package that first wrapped it has been folded into the app.
 
 ## Consequences
 

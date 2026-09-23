@@ -3,10 +3,9 @@ import * as path from 'node:path'
 
 import { createElement } from 'react'
 
-import { OgImage, layer } from '@ntatoud/effect-og/image'
-import type { OgFont } from '@ntatoud/effect-og/image'
-
-import { Effect, ManagedRuntime } from 'effect'
+import { Renderer } from '@takumi-rs/core'
+import type { FontDetails } from '@takumi-rs/core'
+import { render } from 'takumi-js'
 import type { Plugin } from 'vite'
 
 import { OG_FONT_FAMILY, OgCard } from '../src/features/og/og-card.tsx'
@@ -58,47 +57,34 @@ export function ogImages(options: {
           ),
         )
 
-      // Fonts are registered on the `Renderer`, which the `layer` does. Passing
-      // them through `takumi-js`'s `fonts` render option instead is a no-op in
-      // v2.3.0 (verified: byte-identical output), and the card silently falls
-      // back to the default face.
-      const fonts: OgFont[] = [
+      // Fonts are registered on the `Renderer` itself. Passing them through
+      // `takumi-js`'s `fonts` render option instead is a no-op in v2.3.0
+      // (verified: byte-identical output), and the card silently falls back
+      // to the default face.
+      const fonts: FontDetails[] = [
         { name: OG_FONT_FAMILY, weight: 700, data: font(700) },
         { name: OG_FONT_FAMILY, weight: 400, data: font(400) },
       ]
-      const runtime = ManagedRuntime.make(
-        layer({ fonts, width: 1200, height: 630 }),
-      )
+      const renderer = new Renderer()
+      for (const face of fonts) await renderer.registerFont(face)
 
-      try {
-        const pages = await options.pages()
-        const images = await runtime.runPromise(
-          Effect.forEach(
-            pages,
-            ({ path: pagePath, title, description, kind }) =>
-              OgImage.use((og) =>
-                og.render(createElement(OgCard, { title, description, kind })),
-              ).pipe(
-                Effect.flatMap((response) =>
-                  Effect.promise(() => response.arrayBuffer()),
-                ),
-                Effect.map((buffer) => ({
-                  // `fileName` rather than `name`: the meta tags point at this
-                  // exact path, so it must not go through `assetFileNames`
-                  // hashing.
-                  fileName: ogImagePath(pagePath).slice(1),
-                  source: new Uint8Array(buffer),
-                })),
-              ),
-            { concurrency: 4 },
-          ),
+      for (const {
+        path: pagePath,
+        title,
+        description,
+        kind,
+      } of await options.pages()) {
+        const source = await render(
+          createElement(OgCard, { title, description, kind }),
+          { width: 1200, height: 630, format: 'png', renderer },
         )
-
-        for (const { fileName, source } of images) {
-          this.emitFile({ type: 'asset', fileName, source })
-        }
-      } finally {
-        await runtime.dispose()
+        this.emitFile({
+          type: 'asset',
+          // `fileName` rather than `name`: the meta tags point at this exact
+          // path, so it must not go through `assetFileNames` hashing.
+          fileName: ogImagePath(pagePath).slice(1),
+          source,
+        })
       }
     },
   }

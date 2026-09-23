@@ -6,7 +6,7 @@ import { Schema } from 'effect'
  * useful diagnostic instead of an opaque parse error.
  */
 export class FeedError extends Schema.TaggedError<FeedError>()(
-  'effect-rss/FeedError',
+  'feed/FeedError',
   {
     operation: Schema.String,
     cause: Schema.Unknown,

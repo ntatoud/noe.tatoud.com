@@ -1,7 +1,7 @@
 // Pure, synchronous serializers for RSS 2.0, Atom 1.0, and JSON Feed 1.1.
 // Every value that ends up in the document is already resolved (absolute URLs,
-// real `Date`s) by the time it reaches here — see `feed.ts`.
-import type { FeedAuthor, FeedConfig } from './schema.ts'
+// real `Date`s) by the time it reaches here: see `build.ts`.
+import type { FeedAuthor, FeedConfig } from './schema'
 
 /** A feed item with everything the serializers need pre-computed. */
 export interface ResolvedFeedItem {

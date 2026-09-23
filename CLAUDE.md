@@ -9,7 +9,7 @@ Personal website & blog — **noe.tatoud.com**
 
 ## Stack
 
-- **Monorepo**: pnpm workspaces: `apps/web`, `packages/content`, `packages/effect-collections`, `packages/effect-markdown`, `packages/effect-og`, `packages/effect-rss`
+- **Monorepo**: pnpm workspaces: `apps/web`, `packages/content`, `packages/effect-collections`, `packages/effect-markdown`
 - **Framework**: TanStack Start (React meta-framework) on Vite
 - **React**: 19
 - **Styling**: Tailwind CSS 4, tw-animate-css, shadcn/ui (base-nova style)
@@ -43,8 +43,7 @@ apps/web/              # @ntatoud/web — TanStack Start app
     lib/              # utils.ts (cn), format.ts, etc.
     styles/           # index.css, utilities/
   public/             # static assets
-  src/server/         # runtime.ts: Effect runtime for Feed, used by the feed routes during prerender
-  plugins/            # og-images.ts: Vite plugin that renders every OG card to /og/*.png (ADR-0010)
+  plugins/            # build-time Vite plugins owned by the app, e.g. OG images (og-images.ts, ADR-0010)
   scripts/            # check-static.ts: asserts every route is a file in dist/client (`check:static`)
 packages/content/      # @ntatoud/content — content pipeline
   schemas/            # Effect Schema structs (one file per collection)
@@ -59,8 +58,6 @@ netlify/
   edge-functions/     # markdown-negotiation.ts — serves .md on Accept: text/markdown
 packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect service)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
-packages/effect-og/           # OG metadata helpers + server-only OG image renderer
-packages/effect-rss/          # RSS / Atom / JSON Feed rendering
 content/              # markdown documents (blog, projects, experiences, talks)
 docs/
   adr/                # architectural decision records
