@@ -20,7 +20,7 @@ export function ListingPage({
   children,
 }: ListingPageProps) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-12" data-slot={slot}>
+    <main id="main" className="mx-auto max-w-5xl px-4 py-12" data-slot={slot}>
       <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
       <p className="mt-2 text-muted-foreground">{subtitle}</p>
       <ul

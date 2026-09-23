@@ -20,7 +20,7 @@ export function HomePage({
   experiences,
 }: HomePageProps) {
   return (
-    <main data-slot="home-page">
+    <main id="main" data-slot="home-page">
       <Hero />
       <BlogSlice posts={posts} />
       <ProjectsSlice projects={projects} />

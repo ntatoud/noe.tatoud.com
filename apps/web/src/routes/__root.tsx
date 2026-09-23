@@ -65,6 +65,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-full flex-col">
+        <a
+          href="#main"
+          className="sr-only rounded-lg border border-ring bg-background px-4 py-2 text-foreground outline-none ring-ring/50 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:ring-3"
+        >
+          Skip to content
+        </a>
         <Header />
         {children}
         <Footer />
