@@ -47,7 +47,7 @@ export type FeedItemInput = typeof FeedItem.Encoded
 // --- Config ----------------------------------------------------------------
 
 /** Paths of the served feed endpoints, used to emit self-referential links. */
-export interface FeedPaths {
+interface FeedPaths {
   /** @default '/rss.xml' */
   readonly rss?: string
   /** @default '/atom.xml' */

@@ -1,13 +1,13 @@
-import { Context, Effect, Layer, Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 
-import { FeedError } from './errors.ts'
+import { FeedError } from './errors'
 import {
   renderAtom,
   renderJsonFeed,
   renderRss,
   type ResolvedFeedItem,
-} from './render.ts'
-import { FeedItem, type FeedConfig, type FeedItemInput } from './schema.ts'
+} from './render'
+import { FeedItem, type FeedConfig, type FeedItemInput } from './schema'
 
 const decodeItems = Schema.decodeUnknownEffect(Schema.Array(FeedItem))
 
@@ -74,45 +74,22 @@ const serialize = (
     catch: (cause) => new FeedError({ operation, cause }),
   })
 
-export interface FeedShape {
-  /** Serialize an RSS 2.0 document. */
-  readonly rss: (
-    items: ReadonlyArray<FeedItemInput>,
-  ) => Effect.Effect<string, FeedError>
-  /** Serialize an Atom 1.0 document. */
-  readonly atom: (
-    items: ReadonlyArray<FeedItemInput>,
-  ) => Effect.Effect<string, FeedError>
-  /** Serialize a JSON Feed 1.1 document. */
-  readonly json: (
-    items: ReadonlyArray<FeedItemInput>,
-  ) => Effect.Effect<string, FeedError>
-}
+const RENDERERS = {
+  rss: { operation: 'renderRss', render: renderRss },
+  atom: { operation: 'renderAtom', render: renderAtom },
+  json: { operation: 'renderJsonFeed', render: renderJsonFeed },
+} as const
 
-/** Effect service for building syndication feeds. Provide it with {@link layer}. */
-export class Feed extends Context.Service<Feed, FeedShape>()(
-  'effect-rss/Feed',
-) {}
-
-/** Build the {@link Feed} layer bound to a site's channel configuration. */
-export const layer = (config: FeedConfig): Layer.Layer<Feed> =>
-  Layer.sync(Feed, () =>
-    Feed.of({
-      rss: Effect.fn('Feed.rss')(function* (items) {
-        const resolved = yield* prepare(config, items)
-        return yield* serialize('renderRss', () => renderRss(config, resolved))
-      }),
-      atom: Effect.fn('Feed.atom')(function* (items) {
-        const resolved = yield* prepare(config, items)
-        return yield* serialize('renderAtom', () =>
-          renderAtom(config, resolved),
-        )
-      }),
-      json: Effect.fn('Feed.json')(function* (items) {
-        const resolved = yield* prepare(config, items)
-        return yield* serialize('renderJsonFeed', () =>
-          renderJsonFeed(config, resolved),
-        )
-      }),
-    }),
-  )
+/**
+ * Build an RSS 2.0, Atom 1.0 or JSON Feed 1.1 document from raw feed items:
+ * decode them, resolve their URLs and dates, then serialize.
+ */
+export const buildFeed = Effect.fn('Feed.build')(function* (
+  format: keyof typeof RENDERERS,
+  config: FeedConfig,
+  items: ReadonlyArray<FeedItemInput>,
+) {
+  const resolved = yield* prepare(config, items)
+  const { operation, render } = RENDERERS[format]
+  return yield* serialize(operation, () => render(config, resolved))
+})

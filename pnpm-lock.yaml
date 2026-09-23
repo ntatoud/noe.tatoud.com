@@ -94,12 +94,6 @@ importers:
       '@ntatoud/content':
         specifier: workspace:*
         version: link:../../packages/content
-      '@ntatoud/effect-og':
-        specifier: workspace:*
-        version: link:../../packages/effect-og
-      '@ntatoud/effect-rss':
-        specifier: workspace:*
-        version: link:../../packages/effect-rss
       '@tailwindcss/vite':
         specifier: 4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.5.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -134,6 +128,9 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
     devDependencies:
+      '@takumi-rs/core':
+        specifier: 'catalog:'
+        version: 2.13.7(csstype@3.2.3)(react@19.2.8)
       '@tanstack/devtools-vite':
         specifier: 0.8.5
         version: 0.8.5(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(vite@8.2.2(@types/node@26.5.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -155,6 +152,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 6.1.1
         version: 6.1.1(vite@8.2.2(@types/node@26.5.0)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
+      takumi-js:
+        specifier: 'catalog:'
+        version: 2.13.7(csstype@3.2.3)(react@19.2.8)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -226,35 +226,6 @@ importers:
       yaml:
         specifier: 2.9.0
         version: 2.9.0
-
-  packages/effect-og:
-    dependencies:
-      '@takumi-rs/core':
-        specifier: 'catalog:'
-        version: 2.13.7(csstype@3.2.3)(react@19.2.8)
-      effect:
-        specifier: 'catalog:'
-        version: 4.0.0-rc.112
-      takumi-js:
-        specifier: 'catalog:'
-        version: 2.13.7(csstype@3.2.3)(react@19.2.8)
-    devDependencies:
-      '@types/react':
-        specifier: 19.2.18
-        version: 19.2.18
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
-
-  packages/effect-rss:
-    dependencies:
-      effect:
-        specifier: 'catalog:'
-        version: 4.0.0-rc.112
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
 
 packages:
 

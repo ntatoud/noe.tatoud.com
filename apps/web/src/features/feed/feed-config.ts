@@ -1,12 +1,12 @@
-import type { FeedConfig } from '@ntatoud/effect-rss'
-
 import { SITE_URL } from '@/lib/site'
+
+import type { FeedConfig } from './schema'
 
 const AUTHOR = { name: 'Noé Tatoud' } as const
 
 /**
- * Blog feed channel config bound to this site. Consumed by the shared App
- * runtime (`@/server/runtime`) to build the `Feed` layer.
+ * Blog feed channel config bound to this site. Passed to `buildFeed` by the
+ * serializers in `./feed`.
  */
 export const FEED_CONFIG: FeedConfig = {
   title: 'Noé Tatoud — Blog',
