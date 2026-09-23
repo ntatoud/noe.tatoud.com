@@ -36,10 +36,8 @@ export interface Collection<S extends Schema.Constraint, A> {
   readonly name: string
   readonly directory: string
   readonly schema: S
-  readonly transform: (
-    data: S['Type'],
-    meta: CollectionMeta,
-  ) => Effect.Effect<A, CollectionError, FileSystem.FileSystem | Path.Path>
+  /** Derives a document's final data from its decoded frontmatter. */
+  readonly transform: (data: S['Type'], meta: CollectionMeta) => A
 }
 
 /**
@@ -57,34 +55,10 @@ export interface Collection<S extends Schema.Constraint, A> {
 export type CollectionData<C> =
   C extends Collection<infer _S, infer A> ? A : never
 
-export function defineCollection<S extends Schema.Constraint, A>(collection: {
-  readonly name: string
-  readonly directory: string
-  readonly schema: S
-  readonly transform: (
-    data: S['Type'],
-    meta: CollectionMeta,
-  ) => Effect.Effect<A, CollectionError, FileSystem.FileSystem | Path.Path>
-}): Collection<S, A>
-export function defineCollection<S extends Schema.Constraint>(collection: {
-  readonly name: string
-  readonly directory: string
-  readonly schema: S
-}): Collection<S, S['Type']>
-export function defineCollection<S extends Schema.Constraint, A>(collection: {
-  readonly name: string
-  readonly directory: string
-  readonly schema: S
-  readonly transform?: (
-    data: S['Type'],
-    meta: CollectionMeta,
-  ) => Effect.Effect<A, CollectionError, FileSystem.FileSystem | Path.Path>
-}): Collection<S, A> {
-  return {
-    ...collection,
-    transform: collection.transform ?? ((data) => Effect.succeed(data as A)),
-  }
-}
+/** Identity at runtime; exists so `S` and `A` are inferred from the literal. */
+export const defineCollection = <S extends Schema.Constraint, A>(
+  collection: Collection<S, A>,
+): Collection<S, A> => collection
 
 /**
  * A document without its rendered body. `getAll` returns these: rendering the
@@ -97,16 +71,12 @@ export interface DocumentMeta<A> {
   readonly source: string
 }
 
-// `DocumentDirectory` is always satisfied internally (`decodeData` provides it
-// per document before decoding), so it never leaks into what
-// callers must provide, even though it shows up in a schema's raw
-// `DecodingServices` for schemas using `Image` fields. `FileSystem`/`Path`
-// remain part of the requirement: `CollectionsLive` provides them, but
-// callers still provide that layer explicitly (same as `Collection.transform`
-// implementations, which may also need them).
+// `Collections` provides `DocumentDirectory`, `FileSystem` and `Path` to every
+// decode itself (the `Image` schema needs all three), so they never leak into
+// what callers must provide. Only services a schema needs beyond those remain.
 type ExternalDecodingServices<S extends Schema.Constraint> = Exclude<
   S['DecodingServices'],
-  DocumentDirectory
+  DocumentDirectory | FileSystem.FileSystem | Path.Path
 >
 
 export interface CollectionsShape {
@@ -115,7 +85,7 @@ export interface CollectionsShape {
   ) => Effect.Effect<
     ReadonlyArray<DocumentMeta<A>>,
     CollectionError,
-    FileSystem.FileSystem | Path.Path | ExternalDecodingServices<S>
+    ExternalDecodingServices<S>
   >
 }
 
@@ -141,13 +111,18 @@ const make = Layer.effect(
         const decoded = yield* Schema.decodeUnknownEffect(collection.schema)(
           frontmatter,
         ).pipe(
-          Effect.provideService(
-            DocumentDirectory,
-            path.join(collection.directory, slug),
+          Effect.provide(
+            Context.make(
+              DocumentDirectory,
+              path.join(collection.directory, slug),
+            ).pipe(
+              Context.add(FileSystem.FileSystem, fs),
+              Context.add(Path.Path, path),
+            ),
           ),
           collectionError('decode', file),
         )
-        return yield* collection.transform(decoded, {
+        return collection.transform(decoded, {
           slug,
           directory: collection.directory,
         })
@@ -196,9 +171,6 @@ const make = Layer.effect(
 
 export const CollectionsLive = make.pipe(
   Layer.provide(MarkdownCompilerLive),
-  // Kept visible (provideMerge, not provide): `Collection.transform`
-  // implementations may need FileSystem/Path themselves (e.g. to read a
-  // hero image referenced in frontmatter).
-  Layer.provideMerge(NodeFileSystem.layer),
-  Layer.provideMerge(NodePath.layer),
+  Layer.provide(NodeFileSystem.layer),
+  Layer.provide(NodePath.layer),
 )

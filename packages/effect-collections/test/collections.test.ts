@@ -30,8 +30,7 @@ const posts = defineCollection({
   name: 'posts',
   directory: postsDirectory,
   schema: PostSchema,
-  transform: (data, meta) =>
-    Effect.succeed({ ...data, url: `/posts/${meta.slug}` }),
+  transform: (data, meta) => ({ ...data, url: `/posts/${meta.slug}` }),
 })
 
 // A fixture whose only document omits the required `title`, so decoding fails.
@@ -43,7 +42,7 @@ const broken = defineCollection({
   name: 'broken',
   directory: brokenDirectory,
   schema: PostSchema,
-  transform: (data) => Effect.succeed(data),
+  transform: (data) => data,
 })
 
 // The expected decoded + transformed shape for the `hello-world` fixture.
