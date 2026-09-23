@@ -8,7 +8,8 @@ import { Feed, runtime } from '@/server/runtime'
 /**
  * Blog feed serializers bound to this site, backed by the shared App runtime's
  * `Feed` service. Reuse them from the `/rss.xml`, `/atom.xml`, and `/feed.json`
- * route handlers — the channel config lives in `./feed-config`.
+ * route handlers, which run once, during the build's prerender pass
+ * (ADR-0011). The channel config lives in `./feed-config`.
  */
 export const feed = {
   rss: (items: ReadonlyArray<FeedItemInput>): Promise<string> =>

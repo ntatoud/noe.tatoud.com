@@ -8,11 +8,11 @@ export { Feed } from '@ntatoud/effect-rss'
 
 /**
  * The single App-wide Effect runtime. It provides `Feed` (syndication) to the
- * feed routes, which the prerender pass runs at build time.
+ * feed routes, and nothing else uses it. Those routes run once, during the
+ * build's prerender pass: the deploy is static files only (ADR-0011).
  *
  * `OgImage` used to be in here too. It is not anymore: social cards are
- * rendered to static files at build time by `plugins/og-images.ts` (ADR-0010),
- * so nothing renders an image per request.
+ * rendered to static files at build time by `plugins/og-images.ts` (ADR-0010).
  *
  * Neither is `Collections`: content is baked into `virtual:content` at build
  * time (ADR-0008), so nothing reads the filesystem at runtime. That also keeps
