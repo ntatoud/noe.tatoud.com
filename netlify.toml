@@ -42,6 +42,32 @@ for = "/*.md"
 Content-Type = "text/markdown; charset=utf-8"
 Cache-Control = "public, max-age=0, must-revalidate"
 
+# Feeds and the sitemap are prerendered to static files by TanStack Start, not
+# served by a function, so they get the types and policy their handlers set.
+[[headers]]
+for = "/rss.xml"
+[headers.values]
+Content-Type = "application/rss+xml; charset=utf-8"
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/atom.xml"
+[headers.values]
+Content-Type = "application/atom+xml; charset=utf-8"
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/feed.json"
+[headers.values]
+Content-Type = "application/feed+json; charset=utf-8"
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/sitemap.xml"
+[headers.values]
+Content-Type = "application/xml; charset=utf-8"
+Cache-Control = "public, max-age=0, must-revalidate"
+
 # Netlify image CDN — content-addressed by URL params, safe to cache long-term
 # Note: Netlify forces a 1-day browser Cache-Control on /.netlify/images
 # responses; this override only takes effect if Netlify lifts that restriction.

@@ -11,6 +11,7 @@ const config: KnipConfig = {
         'src/lib/utils.ts',
         // shadcn primitives: keep their full export surface
         'src/components/ui/*.tsx',
+        'scripts/*.ts',
       ],
       project: ['src/**/*.{ts,tsx}'],
       ignoreDependencies: [
