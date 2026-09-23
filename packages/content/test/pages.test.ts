@@ -2,7 +2,7 @@ import * as fs from 'node:fs'
 
 import { describe, expect, it } from 'vitest'
 
-import { blogPosts, projects, talks } from '../collections.ts'
+import { blogPosts, caseStudies, projects, talks } from '../collections.ts'
 import { readContentPages, readContentPaths } from '../pages.ts'
 
 /**
@@ -21,7 +21,7 @@ const slugsOnDisk = (directory: string) =>
 describe('readContentPaths', () => {
   it('returns one path per document on disk, drafts included', async () => {
     const paths = await readContentPaths()
-    const documents = [blogPosts, projects, talks].reduce(
+    const documents = [blogPosts, projects, caseStudies, talks].reduce(
       (count, collection) => count + slugsOnDisk(collection.directory).length,
       0,
     )
@@ -42,7 +42,7 @@ describe('readContentPaths', () => {
 
   it('only returns content routes', async () => {
     for (const path of await readContentPaths()) {
-      expect(path).toMatch(/^\/(?:blog|projects|talks)\/[^/]+$/)
+      expect(path).toMatch(/^\/(?:blog|projects|case-studies|talks)\/[^/]+$/)
     }
   })
 })
@@ -50,6 +50,7 @@ describe('readContentPaths', () => {
 const KIND_BY_PREFIX = {
   blog: 'blog',
   projects: 'project',
+  'case-studies': 'case-study',
   talks: 'talk',
 } as const
 

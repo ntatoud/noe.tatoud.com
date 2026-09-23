@@ -4,6 +4,7 @@ import type { Plugin } from 'vite'
 
 import {
   blogPosts as blogPostsCollection,
+  caseStudies as caseStudiesCollection,
   contentFilePath,
   contentRoot,
   contentUrl,
@@ -55,13 +56,23 @@ const DETAILS = {
     directory: projectsCollection.directory,
     loader: 'loadProject',
   },
+  caseStudies: {
+    directory: caseStudiesCollection.directory,
+    loader: 'loadCaseStudy',
+  },
   talks: {
     directory: talksCollection.directory,
     loader: 'loadTalk',
   },
 } as const
 
-const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
+const LISTINGS = [
+  'blogPosts',
+  'projects',
+  'caseStudies',
+  'experiences',
+  'talks',
+] as const
 
 type DetailCollection = keyof typeof DETAILS
 

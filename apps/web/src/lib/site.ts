@@ -20,6 +20,7 @@ export const PAGE_DESCRIPTIONS = {
   home: SITE_DESCRIPTION,
   blog: 'Articles on software engineering.',
   projects: 'Personal and open-source projects.',
+  caseStudies: 'Client work, told in depth.',
   talks: 'Conference talks and workshops.',
 } as const
 
@@ -50,6 +51,12 @@ export const STATIC_PAGES = {
     title: 'Projects | Noé Tatoud',
     description: PAGE_DESCRIPTIONS.projects,
     kind: 'project',
+  },
+  caseStudies: {
+    path: '/case-studies',
+    title: 'Case studies | Noé Tatoud',
+    description: PAGE_DESCRIPTIONS.caseStudies,
+    kind: 'case-study',
   },
   talks: {
     path: '/talks',

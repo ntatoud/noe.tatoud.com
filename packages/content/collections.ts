@@ -5,6 +5,7 @@ import { defineCollection } from '@ntatoud/effect-collections'
 import type { CollectionMeta, ImageValue } from '@ntatoud/effect-collections'
 
 import { BlogPostSchema } from './schemas/blog.ts'
+import { CaseStudySchema } from './schemas/case-studies.ts'
 import { ExperienceSchema } from './schemas/experiences.ts'
 import { ProjectSchema } from './schemas/projects.ts'
 import { StageItemSchema } from './schemas/talks.ts'
@@ -75,6 +76,17 @@ export const projects = defineCollection({
     ...data,
     slug: meta.slug,
     path: `/projects/${meta.slug}`,
+  }),
+})
+
+export const caseStudies = defineCollection({
+  name: 'caseStudies',
+  directory: path.join(contentRoot, 'case-studies'),
+  schema: CaseStudySchema,
+  transform: (data, meta) => ({
+    ...data,
+    slug: meta.slug,
+    path: `/case-studies/${meta.slug}`,
   }),
 })
 

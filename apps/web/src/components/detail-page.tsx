@@ -9,7 +9,7 @@ import type { RouteTo } from '@/lib/routes'
 
 type DetailPageProps = {
   /** Prefix of the page's `data-slot` hooks: `<slot>-page`, `<slot>-content`. */
-  slot: 'blog-post' | 'project' | 'talk'
+  slot: 'blog-post' | 'project' | 'case-study' | 'talk'
   back: { to: RouteTo; label: string }
   title: string
   badge?: string

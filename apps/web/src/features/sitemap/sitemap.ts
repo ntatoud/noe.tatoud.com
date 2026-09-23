@@ -1,4 +1,4 @@
-import { blogPosts, projects, talks } from 'virtual:content'
+import { blogPosts, caseStudies, projects, talks } from 'virtual:content'
 
 import { SITE_URL } from '@/lib/site'
 
@@ -11,6 +11,7 @@ const STATIC_PATHS: ReadonlyArray<string> = [
   '/',
   '/blog',
   '/projects',
+  '/case-studies',
   '/talks',
 ]
 
@@ -22,6 +23,10 @@ export function getSitemapUrls(): SitemapUrl[] {
     ...projects.map((project) => ({
       path: project.path,
       lastmod: project.date,
+    })),
+    ...caseStudies.map((caseStudy) => ({
+      path: caseStudy.path,
+      lastmod: caseStudy.date,
     })),
     ...talks.map((talk) => ({
       path: talk.path,

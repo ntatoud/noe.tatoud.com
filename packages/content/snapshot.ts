@@ -6,11 +6,13 @@ import { Effect, ManagedRuntime } from 'effect'
 
 import {
   blogPosts as blogPostsCollection,
+  caseStudies as caseStudiesCollection,
   experiences as experiencesCollection,
   projects as projectsCollection,
   talks as talksCollection,
 } from './collections.ts'
 import { getBlogPosts, type BlogPost } from './readers/blog.ts'
+import { getCaseStudies, type CaseStudy } from './readers/case-studies.ts'
 import { getExperiences, type Experience } from './readers/experiences.ts'
 import { getProjects, type Project } from './readers/projects.ts'
 import { getTalks, type StageItem } from './readers/talks.ts'
@@ -24,6 +26,7 @@ export interface ContentSnapshot {
   /** Published documents, ordered by their reader: what listings show. */
   readonly blogPosts: ReadonlyArray<BlogPost>
   readonly projects: ReadonlyArray<Project>
+  readonly caseStudies: ReadonlyArray<CaseStudy>
   readonly experiences: ReadonlyArray<Experience>
   readonly talks: ReadonlyArray<StageItem>
   /**
@@ -33,6 +36,7 @@ export interface ContentSnapshot {
   readonly documents: {
     readonly blogPosts: ReadonlyArray<DocumentMeta<BlogPost>>
     readonly projects: ReadonlyArray<DocumentMeta<Project>>
+    readonly caseStudies: ReadonlyArray<DocumentMeta<CaseStudy>>
     readonly talks: ReadonlyArray<DocumentMeta<StageItem>>
   }
 }
@@ -55,12 +59,14 @@ export const readContent = (): Promise<ContentSnapshot> =>
       const [
         blogPostDocuments,
         projectDocuments,
+        caseStudyDocuments,
         experienceDocuments,
         talkDocuments,
       ] = yield* Effect.all(
         [
           collections.getAll(blogPostsCollection),
           collections.getAll(projectsCollection),
+          collections.getAll(caseStudiesCollection),
           collections.getAll(experiencesCollection),
           collections.getAll(talksCollection),
         ],
@@ -69,11 +75,13 @@ export const readContent = (): Promise<ContentSnapshot> =>
       return {
         blogPosts: getBlogPosts(blogPostDocuments),
         projects: getProjects(projectDocuments),
+        caseStudies: getCaseStudies(caseStudyDocuments),
         experiences: getExperiences(experienceDocuments),
         talks: getTalks(talkDocuments),
         documents: {
           blogPosts: bySlug(blogPostDocuments),
           projects: bySlug(projectDocuments),
+          caseStudies: bySlug(caseStudyDocuments),
           talks: bySlug(talkDocuments),
         },
       }

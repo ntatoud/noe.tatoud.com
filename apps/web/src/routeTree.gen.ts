@@ -18,6 +18,8 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies/index'
+import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies/$slug'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
 import { Route as TalksIndexRouteImport } from './routes/talks/index'
@@ -68,6 +70,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaseStudiesIndexRoute = CaseStudiesIndexRouteImport.update({
+  id: '/case-studies/',
+  path: '/case-studies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaseStudiesSlugRoute = CaseStudiesSlugRouteImport.update({
+  id: '/case-studies/$slug',
+  path: '/case-studies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -98,9 +110,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/case-studies/': typeof CaseStudiesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/talks/': typeof TalksIndexRoute
 }
@@ -113,9 +127,11 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/case-studies': typeof CaseStudiesIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/talks': typeof TalksIndexRoute
 }
@@ -129,9 +145,11 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/talks/$slug': typeof TalksSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/case-studies/': typeof CaseStudiesIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/talks/': typeof TalksIndexRoute
 }
@@ -146,9 +164,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/styleguide'
     | '/blog/$slug'
+    | '/case-studies/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
+    | '/case-studies/'
     | '/projects/'
     | '/talks/'
   fileRoutesByTo: FileRoutesByTo
@@ -161,9 +181,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/styleguide'
     | '/blog/$slug'
+    | '/case-studies/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog'
+    | '/case-studies'
     | '/projects'
     | '/talks'
   id:
@@ -176,9 +198,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/styleguide'
     | '/blog/$slug'
+    | '/case-studies/$slug'
     | '/projects/$slug'
     | '/talks/$slug'
     | '/blog/'
+    | '/case-studies/'
     | '/projects/'
     | '/talks/'
   fileRoutesById: FileRoutesById
@@ -192,9 +216,11 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleguideRoute: typeof StyleguideRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   TalksSlugRoute: typeof TalksSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   TalksIndexRoute: typeof TalksIndexRoute
 }
@@ -264,6 +290,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/case-studies/': {
+      id: '/case-studies/'
+      path: '/case-studies'
+      fullPath: '/case-studies/'
+      preLoaderRoute: typeof CaseStudiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/case-studies/$slug': {
+      id: '/case-studies/$slug'
+      path: '/case-studies/$slug'
+      fullPath: '/case-studies/$slug'
+      preLoaderRoute: typeof CaseStudiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/': {
       id: '/projects/'
       path: '/projects'
@@ -304,9 +344,11 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleguideRoute: StyleguideRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   TalksSlugRoute: TalksSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   TalksIndexRoute: TalksIndexRoute,
 }

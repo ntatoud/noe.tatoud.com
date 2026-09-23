@@ -8,6 +8,8 @@ declare module 'virtual:content' {
   import type {
     BlogPost,
     BlogPostDetail,
+    CaseStudy,
+    CaseStudyDetail,
     Experience,
     Project,
     ProjectDetail,
@@ -18,6 +20,7 @@ declare module 'virtual:content' {
   /** Published documents, ordered as the corresponding reader orders them. */
   export const blogPosts: ReadonlyArray<BlogPost>
   export const projects: ReadonlyArray<Project>
+  export const caseStudies: ReadonlyArray<CaseStudy>
   export const experiences: ReadonlyArray<Experience>
   export const talks: ReadonlyArray<StageItem>
 
@@ -32,6 +35,9 @@ declare module 'virtual:content' {
   >
   export const loadProject: Readonly<
     Record<string, (() => Promise<{ default: ProjectDetail }>) | undefined>
+  >
+  export const loadCaseStudy: Readonly<
+    Record<string, (() => Promise<{ default: CaseStudyDetail }>) | undefined>
   >
   export const loadTalk: Readonly<
     Record<string, (() => Promise<{ default: TalkDetail }>) | undefined>

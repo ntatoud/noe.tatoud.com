@@ -5,7 +5,7 @@ export interface ContentPage {
   readonly path: string
   readonly title: string
   readonly description?: string
-  readonly kind: 'blog' | 'project' | 'talk'
+  readonly kind: 'blog' | 'project' | 'case-study' | 'talk'
 }
 
 const toPage = (
@@ -28,6 +28,9 @@ export const readContentPages = async (): Promise<
   return [
     ...documents.blogPosts.map(({ data }) => toPage(data.url, 'blog', data)),
     ...documents.projects.map(({ data }) => toPage(data.path, 'project', data)),
+    ...documents.caseStudies.map(({ data }) =>
+      toPage(data.path, 'case-study', data),
+    ),
     ...documents.talks.map(({ data }) => toPage(data.path, 'talk', data)),
   ]
 }

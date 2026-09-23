@@ -3,6 +3,11 @@ export {
   type BlogPost,
   type BlogPostDetail,
 } from './readers/blog.ts'
+export {
+  getCaseStudies,
+  type CaseStudy,
+  type CaseStudyDetail,
+} from './readers/case-studies.ts'
 export { getExperiences, type Experience } from './readers/experiences.ts'
 export {
   getProjects,
@@ -16,6 +21,7 @@ export {
   type TalkEvent,
 } from './readers/talks.ts'
 
+export type { CaseStudyFrontmatter } from './schemas/case-studies.ts'
 export type { ExperienceFrontmatter } from './schemas/experiences.ts'
 export type {
   ProjectCtaFrontmatter,

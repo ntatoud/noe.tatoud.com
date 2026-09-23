@@ -5,11 +5,13 @@ import { Effect } from 'effect'
 
 import {
   blogPosts as blogPostsCollection,
+  caseStudies as caseStudiesCollection,
   experiences as experiencesCollection,
   projects as projectsCollection,
   talks as talksCollection,
 } from '../collections.ts'
 import { getBlogPosts } from '../readers/blog.ts'
+import { getCaseStudies } from '../readers/case-studies.ts'
 import { getExperiences } from '../readers/experiences.ts'
 import { getProjects } from '../readers/projects.ts'
 import { getTalks } from '../readers/talks.ts'
@@ -128,6 +130,27 @@ layer(CollectionsLive)('content readers', (it) => {
             .every((project) => project.kind === 'contribution'),
         ).toBe(true)
       }
+    }),
+  )
+
+  // Every case study may still be a draft, so the listing is allowed to be
+  // empty; the invariants hold for whatever it does contain.
+  it.effect('getCaseStudies returns only published ones, newest first', () =>
+    Effect.gen(function* () {
+      const collections = yield* Collections
+      const caseStudies = getCaseStudies(
+        yield* collections.getAll(caseStudiesCollection),
+      )
+
+      expect(caseStudies.every((caseStudy) => caseStudy.published)).toBe(true)
+      expect(
+        caseStudies.every(
+          (caseStudy) => caseStudy.path === `/case-studies/${caseStudy.slug}`,
+        ),
+      ).toBe(true)
+      expect(
+        descending(asTimes(caseStudies.map((caseStudy) => caseStudy.date))),
+      ).toBe(true)
     }),
   )
 

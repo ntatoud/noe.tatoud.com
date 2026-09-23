@@ -12,7 +12,11 @@ type CardLink =
   | { external: true; href: string }
   | {
       external?: false
-      to: '/blog/$slug' | '/projects/$slug' | '/talks/$slug'
+      to:
+        | '/blog/$slug'
+        | '/projects/$slug'
+        | '/case-studies/$slug'
+        | '/talks/$slug'
       slug: string
     }
 

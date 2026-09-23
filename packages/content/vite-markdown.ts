@@ -4,6 +4,7 @@ import type { Plugin } from 'vite'
 
 import {
   blogPosts as blogPostsCollection,
+  caseStudies as caseStudiesCollection,
   contentFilePath,
   contentUrl,
   projects as projectsCollection,
@@ -49,6 +50,7 @@ export interface ContentMarkdownOptions {
     readonly home: string
     readonly blog: string
     readonly projects: string
+    readonly caseStudies: string
     readonly talks: string
   }
   /** Extra links to advertise under llms.txt's `## Optional` heading. */
@@ -106,12 +108,14 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
     const content = await readContent()
     const posts = content.blogPosts
     const projectList = content.projects
+    const caseStudyList = content.caseStudies
     const talkList = content.talks
     const experienceList = content.experiences
     // Drafts included, matching the detail pages `content()` generates: an
     // unpublished document keeps a reachable page, so it gets a markdown twin.
     const postDocuments = content.documents.blogPosts
     const projectDocuments = content.documents.projects
+    const caseStudyDocuments = content.documents.caseStudies
     const talkDocuments = content.documents.talks
 
     const files: Array<{ fileName: string; source: string }> = []
@@ -193,6 +197,23 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
       })
     }
 
+    for (const { slug, data, source } of caseStudyDocuments) {
+      emitDocument({
+        collection: caseStudiesCollection,
+        slug,
+        routePath: `/case-studies/${slug}`,
+        source,
+        title: data.title,
+        description: data.description,
+        details: [
+          `- Date: ${data.date}`,
+          data.client ? `- Client: ${data.client}` : null,
+          data.role ? `- Role: ${data.role}` : null,
+          metaList('Tags', data.tags),
+        ],
+      })
+    }
+
     for (const { slug, data, source } of talkDocuments) {
       emitDocument({
         collection: talksCollection,
@@ -235,6 +256,15 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
       }),
     )
 
+    const caseStudyEntries: ReadonlyArray<IndexEntry> = caseStudyList.map(
+      (caseStudy) => ({
+        title: caseStudy.title,
+        routePath: `/case-studies/${caseStudy.slug}`,
+        description: caseStudy.description,
+        note: caseStudy.client,
+      }),
+    )
+
     const talkEntries: ReadonlyArray<IndexEntry> = talkList.map((talk) => ({
       title: talk.title,
       routePath: `/talks/${talk.slug}`,
@@ -273,6 +303,12 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
         entries: projectEntries,
       },
       {
+        routePath: '/case-studies',
+        title: 'Case studies',
+        description: pages.caseStudies,
+        entries: caseStudyEntries,
+      },
+      {
         routePath: '/talks',
         title: 'Talks',
         description: pages.talks,
@@ -299,6 +335,11 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
         title: 'Projects',
         description: pages.projects,
         entries: projectEntries,
+      },
+      {
+        title: 'Case studies',
+        description: pages.caseStudies,
+        entries: caseStudyEntries,
       },
       { title: 'Talks', description: pages.talks, entries: talkEntries },
       { title: 'Experience', entries: experienceEntries },

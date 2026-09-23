@@ -3,7 +3,13 @@ import * as path from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { blogPosts, contentRoot, projects, talks } from '../collections.ts'
+import {
+  blogPosts,
+  caseStudies,
+  contentRoot,
+  projects,
+  talks,
+} from '../collections.ts'
 import { content } from '../vite.ts'
 
 /**
@@ -86,11 +92,18 @@ const slugsOnDisk = (directory: string) =>
     .map((entry) => entry.name)
     .sort()
 
-const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
+const LISTINGS = [
+  'blogPosts',
+  'projects',
+  'caseStudies',
+  'experiences',
+  'talks',
+] as const
 
 const DETAIL_COLLECTIONS = [
   { name: 'blogPosts', loader: 'loadBlogPost', collection: blogPosts },
   { name: 'projects', loader: 'loadProject', collection: projects },
+  { name: 'caseStudies', loader: 'loadCaseStudy', collection: caseStudies },
   { name: 'talks', loader: 'loadTalk', collection: talks },
 ] as const
 
@@ -101,9 +114,16 @@ describe('virtual:content', () => {
 
     for (const name of LISTINGS) {
       expect(exports[name], `missing export: ${name}`).toBeInstanceOf(Array)
+    }
+
+    // A listing can be legitimately empty while all its documents are drafts,
+    // so "the collection did read" is asserted on the loader maps, which list
+    // drafts too, and on experiences, which have no pages.
+    expect(exports.experiences.length).toBeGreaterThan(0)
+    for (const { loader } of DETAIL_COLLECTIONS) {
       expect(
-        exports[name].length,
-        `${name} is empty — the collection did not read`,
+        Object.keys(exports[loader]).length,
+        `${loader} is empty: the collection did not read`,
       ).toBeGreaterThan(0)
     }
   })
@@ -251,7 +271,7 @@ describe('content on disk', () => {
   // ADR-0007. It is what `@ntatoud/effect-collections` reads, so a document
   // directory without one is invisible to every reader.
   it('gives every document an index.mdx', () => {
-    for (const collection of [blogPosts, projects, talks]) {
+    for (const collection of [blogPosts, projects, caseStudies, talks]) {
       for (const slug of slugsOnDisk(collection.directory)) {
         const file = path.join(collection.directory, slug, 'index.mdx')
         expect(fs.existsSync(file), `missing ${file}`).toBe(true)

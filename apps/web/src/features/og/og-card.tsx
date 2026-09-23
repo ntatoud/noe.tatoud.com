@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react'
 // import, because the config loader resolves neither.
 
 /** The content kinds a card can carry a badge for. */
-export type OgKind = 'blog' | 'project' | 'talk'
+export type OgKind = 'blog' | 'project' | 'case-study' | 'talk'
 
 /** The family the build registers the card's fonts under. */
 export const OG_FONT_FAMILY = 'Atkinson Hyperlegible Next'
@@ -16,6 +16,7 @@ type ClampStyle = CSSProperties & { lineClamp?: number }
 const KIND_LABELS: Record<OgKind, string> = {
   blog: 'Blog',
   project: 'Project',
+  'case-study': 'Case study',
   talk: 'Talk',
 }
 

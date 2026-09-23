@@ -26,7 +26,7 @@ A function exported by the content package that returns typed, ready-to-use data
 _Avoid_: loader, getter, fetcher
 
 **Feature**:
-A cohesive area of the site (blog, projects, experiences, talks). Features own their routes and UI components. They read content from `virtual:content`, whose data the content package's readers produced at build time — they do not define schemas or touch the content pipeline.
+A cohesive area of the site (blog, projects, case studies, experiences, talks). Features own their routes and UI components. They read content from `virtual:content`, whose data the content package's readers produced at build time — they do not define schemas or touch the content pipeline.
 _Avoid_: section, page (a page is a route; a feature is broader)
 
 **Hero**:
@@ -36,6 +36,10 @@ _Avoid_: header (the header is site chrome, the hero is home page content)
 **Slice**:
 A curated preview of a single collection shown on the home page — a heading, a small ordered subset of items (latest/featured/recent), and a "See all" link to the collection's full route. Four slices exist: Blog, Projects, Talks, Experiences.
 _Avoid_: section (a section is any vertical block of a page; a slice is specifically a home-page collection preview)
+
+**Case Study**:
+An in-depth, anonymised write-up of client work: the client is described (`client`, e.g. "a mutual insurance group"), never named, and there is no public website or repository to link. Lives at `/case-studies/$slug`, separate from Projects, which are the author's own or open-source work.
+_Avoid_: project (a project is something shippable you can link to), portfolio entry
 
 **Talk**:
 A reusable piece of speaking content — a title, description, kind (talk/workshop), optional slides/docs resource, and a markdown body. A talk is delivered at one or more Events.

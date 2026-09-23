@@ -37,7 +37,7 @@ pnpm run knip      # dead code detection
 apps/web/              # @ntatoud/web — TanStack Start app
   src/
     routes/           # TanStack Router file-based routes
-    features/         # feature modules (blog, projects, experiences, talks, home)
+    features/         # feature modules (blog, projects, case-studies, experiences, talks, home)
     components/       # shadcn/ui primitives (ui/) + shared shells (content-card, detail-page, listing-page)
     layout/           # shared layout: header, footer, nav, hero, section
     lib/              # utils.ts (cn), format.ts, etc.
@@ -58,7 +58,7 @@ netlify/
   edge-functions/     # markdown-negotiation.ts — serves .md on Accept: text/markdown
 packages/effect-markdown/     # @ntatoud/effect-markdown — markdown→HTML compiler (Effect functions)
 packages/effect-collections/  # @ntatoud/effect-collections — generic file-backed collections
-content/              # markdown documents (blog, projects, experiences, talks)
+content/              # markdown documents (blog, projects, case-studies, experiences, talks)
 docs/
   adr/                # architectural decision records
   agents/             # agent skill configs
@@ -91,11 +91,11 @@ CONTEXT.md            # domain glossary
 
 - Content documents live in `content/<collection>/<slug>/index.mdx` at the repo root. Bodies are plain markdown; the `.mdx` name is historical.
 - All frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
-- Blog posts expose their route as `url`; projects and talks as `path` (on projects, `url` is the external website). Talk `events` are sorted newest first by the collection, so the latest event is `events[0]`.
+- Blog posts expose their route as `url`; projects, case studies and talks as `path` (on projects, `url` is the external website). Talk `events` are sorted newest first by the collection, so the latest event is `events[0]`.
 - The content package exports reader functions (e.g., `getBlogPosts()`), but **the app does not call them** — they run at build time inside the Vite plugin (`packages/content/vite.ts`).
 - **Pages read content from `virtual:content`, never over the network** (ADR-0008). There are no content server functions.
-  - Listings: `import { blogPosts, projects, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
-  - Details: `loadBlogPost` / `loadProject` / `loadTalk` map a slug to a lazily-imported chunk holding that document's `html`. A missing slug means `notFound()`. Detail pages display the body via `dangerouslySetInnerHTML`.
+  - Listings: `import { blogPosts, projects, caseStudies, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
+  - Details: `loadBlogPost` / `loadProject` / `loadCaseStudy` / `loadTalk` map a slug to a lazily-imported chunk holding that document's `html`. A missing slug means `notFound()`. Detail pages display the body via `dangerouslySetInnerHTML`.
 - Frontmatter image fields (`hero`, `logo`) and relative body image srcs are already **hashed asset URLs** — the plugin turns them into real Vite `?url` imports. Do not try to resolve them at runtime.
 - Adding a collection means adding its declaration to `packages/content/virtual.d.ts` too, and its pages to `readContentPages` in `packages/content/pages.ts` (which drives both the prerender list and the OG images).
 - **Every route must be prerendered** (ADR-0011): production is the static files in `apps/web/dist/client` and nothing else, so a route that works in `pnpm dev` but is not prerendered is a 404 in production. Content documents are listed through `readContentPages`; a new page or server route without a document goes into `pages` in `apps/web/vite.config.ts`, and `pnpm --filter @ntatoud/web check:static` (run in CI after the build) fails if a sitemap page, feed, OG image or `404.html` is missing.
