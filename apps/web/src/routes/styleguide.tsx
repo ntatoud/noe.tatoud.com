@@ -199,7 +199,7 @@ function StyleguidePage() {
 
           <div>
             <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-              Mono — Atkinson Hyperlegible Next
+              Mono (system monospace)
             </h3>
             <div className="space-y-4">
               <TypeSpecimen label="Code" className="font-mono text-sm">
