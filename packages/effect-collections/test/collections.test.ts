@@ -1,3 +1,4 @@
+import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { expect, layer } from '@effect/vitest'
@@ -31,6 +32,18 @@ const posts = defineCollection({
   schema: PostSchema,
   transform: (data, meta) =>
     Effect.succeed({ ...data, url: `/posts/${meta.slug}` }),
+})
+
+// A fixture whose only document omits the required `title`, so decoding fails.
+const brokenDirectory = fileURLToPath(
+  new URL('./fixtures/broken', import.meta.url),
+)
+
+const broken = defineCollection({
+  name: 'broken',
+  directory: brokenDirectory,
+  schema: PostSchema,
+  transform: (data) => Effect.succeed(data),
 })
 
 // The expected decoded + transformed shape for the `hello-world` fixture.
@@ -69,5 +82,22 @@ layer(CollectionsLive)('Collections', (it) => {
           url: '/posts/second-post',
         })
       }),
+  )
+
+  it.effect('getAll failures name the document and the schema issue', () =>
+    Effect.gen(function* () {
+      const collections = yield* Collections
+      const error = yield* Effect.flip(collections.getAll(broken))
+
+      expect(error._tag).toBe('effect-collections/CollectionError')
+      expect(error.operation).toBe('decode')
+      expect(error.path).toBe(
+        path.join(brokenDirectory, 'missing-title', 'index.mdx'),
+      )
+      // The message is what a failed build prints: it must say which file to
+      // fix and why, not be an empty string.
+      expect(error.message).toContain(path.join('missing-title', 'index.mdx'))
+      expect(error.message).toContain('title')
+    }),
   )
 })
