@@ -34,7 +34,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
           label={isContribution ? 'Contribution' : 'Personal'}
           tone={isContribution ? 'honey' : 'moss'}
         />
-        <time className="text-xs text-muted-foreground tabular-nums">
+        <time
+          dateTime={project.date}
+          className="text-xs text-muted-foreground tabular-nums"
+        >
           {formatMonthYear(project.date)}
         </time>
       </div>

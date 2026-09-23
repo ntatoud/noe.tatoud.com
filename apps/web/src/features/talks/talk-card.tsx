@@ -31,7 +31,10 @@ export function TalkCard({ talk }: TalkCardProps) {
           tone={isWorkshop ? 'moss' : 'honey'}
         />
         {event && (
-          <time className="text-xs text-muted-foreground tabular-nums">
+          <time
+            dateTime={event.date}
+            className="text-xs text-muted-foreground tabular-nums"
+          >
             {formatMonthYear(event.date)}
           </time>
         )}

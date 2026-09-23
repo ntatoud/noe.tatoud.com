@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import type { Experience } from '@ntatoud/content'
 
 import { formatMonthYear } from '@/lib/format'
@@ -8,12 +10,23 @@ type ExperiencesSliceProps = {
   experiences: readonly Experience[]
 }
 
-function experienceDateRange(experience: Experience): string {
-  const start = formatMonthYear(experience.startDate)
-  const end = experience.endDate
-    ? formatMonthYear(experience.endDate)
-    : 'Present'
-  return `${start} – ${end}`
+function ExperienceDateRange({ experience }: { experience: Experience }) {
+  const end: ReactNode = experience.endDate ? (
+    <time dateTime={experience.endDate}>
+      {formatMonthYear(experience.endDate)}
+    </time>
+  ) : (
+    'Present'
+  )
+
+  return (
+    <>
+      <time dateTime={experience.startDate}>
+        {formatMonthYear(experience.startDate)}
+      </time>{' '}
+      – {end}
+    </>
+  )
 }
 
 export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
@@ -42,9 +55,9 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
                 {!isLast && <span className="w-px flex-1 bg-border" />}
               </div>
               <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 pb-8">
-                <time className="text-xs text-muted-foreground tabular-nums group-hover:text-foreground">
-                  {experienceDateRange(exp)}
-                </time>
+                <span className="text-xs text-muted-foreground tabular-nums group-hover:text-foreground">
+                  <ExperienceDateRange experience={exp} />
+                </span>
                 <span className="text-sm text-foreground underline-offset-4 group-hover:underline">
                   {exp.title} · {exp.organization}
                 </span>
