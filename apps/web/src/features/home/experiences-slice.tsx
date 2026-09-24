@@ -5,11 +5,6 @@ import type { Experience } from '@ntatoud/content'
 import { GraduationCapIcon, SparklesIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
 import { formatMonthRange, formatMonthYear, initials } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -132,17 +127,31 @@ function ExperienceLogo({ experience }: { experience: Experience }) {
   )
 }
 
+/** Where a link's preview card opens, relative to the link. */
+type PreviewPlacement = {
+  side: 'above' | 'below'
+  align: 'start' | 'end'
+}
+
 /**
- * A link to an experience's website that previews it on hover with the site's
- * Open Graph image, stored alongside the entry (see `preview` in the schema).
+ * A link to an experience's website that previews it on hover (or keyboard
+ * focus) with the site's Open Graph image, stored alongside the entry (see
+ * `preview` in the schema).
+ *
+ * The card is plain CSS, not a popover component: the timeline knows where
+ * every link sits, so it picks a side that stays inside the chart instead of
+ * measuring the viewport. The card is `display: none` until shown, which also
+ * keeps its lazy image from loading before the first hover.
  */
 function ExperienceLink({
   experience,
+  placement,
   className,
   label,
   children,
 }: {
   experience: Experience
+  placement: PreviewPlacement
   className?: string
   /** Accessible name, for a link with no text of its own (a bar). */
   label?: string
@@ -152,23 +161,21 @@ function ExperienceLink({
   if (!url) return <div className={cn('group', className)}>{children}</div>
 
   return (
-    <HoverCard>
-      <HoverCardTrigger
-        render={
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={label}
-            className={cn('group', className)}
-          />
-        }
-      >
-        {children}
-      </HoverCardTrigger>
-      <HoverCardContent
-        side="top"
-        className="w-72"
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className={cn('group/preview group', className)}
+    >
+      {children}
+      <span
+        className={cn(
+          'pointer-events-none absolute z-50 hidden w-72 flex-col overflow-hidden rounded-lg bg-popover text-left text-popover-foreground shadow-md ring-1 ring-foreground/10 transition-opacity transition-discrete delay-150 duration-150 group-hover/preview:flex group-focus-visible/preview:flex starting:opacity-0',
+          placement.side === 'above' ? 'bottom-full mb-2' : 'top-full mt-2',
+          placement.align === 'start' ? 'left-0' : 'right-0',
+        )}
+        aria-hidden
         data-slot="experience-preview"
       >
         {preview && (
@@ -177,19 +184,20 @@ function ExperienceLink({
             alt=""
             width={640}
             height={360}
+            loading="lazy"
             className="aspect-video w-full border-b border-border object-cover object-top"
           />
         )}
-        <div className="flex flex-col gap-0.5 p-2.5">
+        <span className="flex flex-col gap-0.5 p-2.5">
           <span className="text-sm text-foreground">
             {title} · {organization}
           </span>
           <span className="truncate text-xs text-muted-foreground">
             {new URL(url).host}
           </span>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
+        </span>
+      </span>
+    </a>
   )
 }
 
@@ -232,9 +240,16 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
                 />
                 <ExperienceLink
                   experience={exp}
+                  // Milestones sit above every lane: their card opens below.
+                  placement={{
+                    side: 'below',
+                    align: alignEnd ? 'end' : 'start',
+                  }}
                   // Shifted by half the icon, so the icon sits on the line.
+                  // Lifted over the lanes, which come later in the page and
+                  // would otherwise paint over its card.
                   className={cn(
-                    'absolute flex w-max items-center gap-2',
+                    'absolute z-10 flex w-max items-center gap-2',
                     alignEnd
                       ? 'right-0 translate-x-3.5 flex-row-reverse text-right'
                       : 'left-0 -translate-x-3.5',
@@ -275,7 +290,7 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
           })}
 
           <ol className="relative flex flex-col gap-6 pt-4 pb-6">
-            {lanes.map(({ organization, roles }) => {
+            {lanes.map(({ organization, roles }, laneIndex) => {
               const [first] = roles as [Experience, ...Experience[]]
               const last = roles.at(-1) ?? first
               const start = position(first.startDate)
@@ -283,6 +298,9 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
               // A lane in the right half hangs its labels off its end, so the
               // text never runs past the scale.
               const alignEnd = start > 50
+              // Cards open toward the middle of the chart, never off an edge
+              // of its scroll container, which would clip them.
+              const side = laneIndex < lanes.length / 2 ? 'below' : 'above'
 
               return (
                 <li
@@ -298,8 +316,9 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
                   >
                     <ExperienceLink
                       experience={last}
+                      placement={{ side, align: alignEnd ? 'end' : 'start' }}
                       className={cn(
-                        'flex items-center gap-2 rounded-md bg-background',
+                        'relative flex items-center gap-2 rounded-md bg-background',
                         alignEnd && 'flex-row-reverse',
                       )}
                     >
@@ -337,18 +356,29 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
                           <ExperienceLink
                             experience={exp}
                             label={`${exp.title} at ${exp.organization}`}
-                            className={cn(
-                              'block h-full rounded-full transition hover:brightness-110',
-                              exp.color
-                                ? 'brand-fill'
-                                : exp.kind === 'work' ||
-                                    exp.kind === 'internship'
-                                  ? 'bg-primary'
-                                  : 'bg-secondary',
-                              exp.kind === 'internship' && 'opacity-50',
-                              !exp.endDate && 'rounded-r-none',
-                            )}
-                          />
+                            placement={{
+                              side,
+                              align: from > 50 ? 'end' : 'start',
+                            }}
+                            className="relative block h-full"
+                          >
+                            {/* The fill is its own element: opacity or a
+                                filter on the link would also apply to, and
+                                trap, its preview card. */}
+                            <span
+                              className={cn(
+                                'block h-full rounded-full transition group-hover:brightness-110',
+                                exp.color
+                                  ? 'brand-fill'
+                                  : exp.kind === 'work' ||
+                                      exp.kind === 'internship'
+                                    ? 'bg-primary'
+                                    : 'bg-secondary',
+                                exp.kind === 'internship' && 'opacity-50',
+                                !exp.endDate && 'rounded-r-none',
+                              )}
+                            />
+                          </ExperienceLink>
                           <span
                             className={cn(
                               'absolute top-4 flex w-max max-w-(--room) flex-col bg-background',
