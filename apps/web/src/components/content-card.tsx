@@ -23,6 +23,8 @@ type ContentCardProps = {
   lift?: boolean
   /** Rendered edge to edge above the padded body, e.g. a hero image. */
   media?: ReactNode
+  /** Span the whole grid row and, from `md` up, sit the media beside the body. */
+  featured?: boolean
   children: ReactNode
 }
 
@@ -32,6 +34,7 @@ export function ContentCard({
   link,
   lift = true,
   media,
+  featured = false,
   children,
 }: ContentCardProps) {
   const className = cn(
@@ -39,10 +42,19 @@ export function ContentCard({
     lift
       ? 'transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20'
       : 'transition-colors',
+    featured && 'md:flex-row',
+  )
+  const bodyClassName = cn(
+    'flex flex-1 flex-col gap-2 p-4',
+    featured && 'md:justify-center md:gap-3 md:p-8',
   )
 
   return (
-    <li data-slot={slot}>
+    <li
+      className={cn(featured && 'sm:col-span-full')}
+      data-slot={slot}
+      data-featured={featured || undefined}
+    >
       {link.external ? (
         <a
           href={link.href}
@@ -51,7 +63,7 @@ export function ContentCard({
           className={className}
         >
           {media}
-          <div className="flex flex-1 flex-col gap-2 p-4">{children}</div>
+          <div className={bodyClassName}>{children}</div>
         </a>
       ) : (
         <Link
@@ -61,7 +73,7 @@ export function ContentCard({
           className={className}
         >
           {media}
-          <div className="flex flex-1 flex-col gap-2 p-4">{children}</div>
+          <div className={bodyClassName}>{children}</div>
         </Link>
       )}
     </li>
@@ -71,12 +83,19 @@ export function ContentCard({
 export function CardTitle({
   children,
   external = false,
+  className,
 }: {
   children: ReactNode
   external?: boolean
+  className?: string
 }) {
   return (
-    <h3 className="line-clamp-2 min-h-[2lh] font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline">
+    <h3
+      className={cn(
+        'line-clamp-2 min-h-[2lh] font-semibold tracking-tight text-foreground underline-offset-4 group-hover:underline',
+        className,
+      )}
+    >
       {children}
       {external && (
         <HugeiconsIcon
@@ -90,9 +109,20 @@ export function CardTitle({
   )
 }
 
-export function CardDescription({ children }: { children: ReactNode }) {
+export function CardDescription({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
   return (
-    <p className="line-clamp-2 min-h-[2lh] text-sm text-muted-foreground">
+    <p
+      className={cn(
+        'line-clamp-2 min-h-[2lh] text-sm text-muted-foreground',
+        className,
+      )}
+    >
       {children}
     </p>
   )

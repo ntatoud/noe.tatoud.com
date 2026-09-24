@@ -10,12 +10,15 @@ import {
   ContentCard,
 } from '@/components/content-card'
 import { formatDate } from '@/lib/format'
+import { cn } from '@/lib/utils'
 
 type BlogCardProps = {
   post: BlogPost
+  /** The most recent post: a full-width, side-by-side card with a larger title. */
+  featured?: boolean
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({ post, featured = false }: BlogCardProps) {
   const external = post.externalUrl !== null
 
   return (
@@ -27,8 +30,14 @@ export function BlogCard({ post }: BlogCardProps) {
           : { to: '/blog/$slug', slug: post.slug }
       }
       lift={false}
+      featured={featured}
       media={
-        <div className="aspect-video w-full shrink-0 overflow-hidden bg-muted">
+        <div
+          className={cn(
+            'aspect-video w-full shrink-0 overflow-hidden bg-muted',
+            featured && 'md:aspect-auto md:min-h-80 md:w-3/5',
+          )}
+        >
           {post.hero ? (
             <img
               src={post.hero}
@@ -53,11 +62,27 @@ export function BlogCard({ post }: BlogCardProps) {
         </div>
       }
     >
-      <time dateTime={post.date} className="text-xs text-muted-foreground">
-        {formatDate(post.date)}
-      </time>
-      <CardTitle external={external}>{post.title}</CardTitle>
-      <CardDescription>{post.description}</CardDescription>
+      <div className="flex items-center gap-2">
+        {featured && (
+          <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground">
+            Latest
+          </span>
+        )}
+        <time dateTime={post.date} className="text-xs text-muted-foreground">
+          {formatDate(post.date)}
+        </time>
+      </div>
+      <CardTitle
+        external={external}
+        className={cn(featured && 'text-2xl sm:text-3xl md:line-clamp-3')}
+      >
+        {post.title}
+      </CardTitle>
+      <CardDescription
+        className={cn(featured && 'text-base md:line-clamp-4 md:min-h-0')}
+      >
+        {post.description}
+      </CardDescription>
       <CardTags tags={post.tags} />
     </ContentCard>
   )

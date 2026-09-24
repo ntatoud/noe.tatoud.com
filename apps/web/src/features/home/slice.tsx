@@ -22,11 +22,11 @@ export function Slice({
 }: SliceProps) {
   return (
     <section
-      className={cn('mx-auto max-w-5xl px-4 py-8', className)}
+      className={cn('mx-auto max-w-5xl px-4 py-12 sm:py-16', className)}
       data-slot="home-slice"
     >
-      <div className="mb-4 flex items-baseline justify-between">
-        <h2 className="text-xl font-semibold">{title}</h2>
+      <div className="mb-8 flex items-baseline justify-between">
+        <h2 className="text-3xl">{title}</h2>
         {seeAllHref && (
           <ButtonLink
             to={seeAllHref}

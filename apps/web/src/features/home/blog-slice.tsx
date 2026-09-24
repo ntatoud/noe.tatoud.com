@@ -9,7 +9,7 @@ type BlogSliceProps = {
 }
 
 export function BlogSlice({ posts }: BlogSliceProps) {
-  const latest = posts.slice(0, 4)
+  const latest = posts.slice(0, 3)
 
   return (
     <Slice title="Blog" seeAllHref="/blog" data-slot="blog-slice">
@@ -17,8 +17,8 @@ export function BlogSlice({ posts }: BlogSliceProps) {
         className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         data-slot="blog-slice-list"
       >
-        {latest.map((post) => (
-          <BlogCard key={post.slug} post={post} />
+        {latest.map((post, index) => (
+          <BlogCard key={post.slug} post={post} featured={index === 0} />
         ))}
       </ul>
     </Slice>

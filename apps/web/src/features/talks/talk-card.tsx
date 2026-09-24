@@ -28,7 +28,7 @@ export function TalkCard({ talk }: TalkCardProps) {
         <KindChip
           icon={isWorkshop ? Wrench01Icon : Mic01Icon}
           label={isWorkshop ? 'Workshop' : 'Talk'}
-          tone={isWorkshop ? 'moss' : 'honey'}
+          tone={isWorkshop ? 'clay' : 'olive'}
         />
         {event && (
           <time
@@ -44,7 +44,7 @@ export function TalkCard({ talk }: TalkCardProps) {
       <CardTags tags={talk.tags} pinToBottom={false} />
       {event && (
         <div className="mt-auto flex items-center gap-2 border-t border-border/50 pt-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-moss-500 to-honey-500 text-2xs font-bold text-white transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-clay-500 to-olive-500 text-2xs font-bold text-white transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3">
             {event.logo ? (
               <img
                 src={event.logo}

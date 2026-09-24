@@ -3,12 +3,12 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { cn } from '@/lib/utils'
 
-type Tone = 'moss' | 'honey'
+type Tone = 'clay' | 'olive'
 
 const toneClasses: Record<Tone, string> = {
-  moss: 'bg-moss-500/15 text-moss-700 dark:bg-moss-400/15 dark:text-moss-300',
-  honey:
-    'bg-honey-500/20 text-honey-800 dark:bg-honey-400/20 dark:text-honey-200',
+  clay: 'bg-clay-500/15 text-clay-700 dark:bg-clay-400/15 dark:text-clay-300',
+  olive:
+    'bg-olive-500/20 text-olive-800 dark:bg-olive-400/20 dark:text-olive-200',
 }
 
 type KindChipProps = {

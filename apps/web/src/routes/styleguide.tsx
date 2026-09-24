@@ -9,11 +9,11 @@ export const Route = createFileRoute('/styleguide')({
   component: StyleguidePage,
   head: () => ({
     meta: [
-      { title: 'Moss Design System — Noé Tatoud' },
+      { title: 'Clay Design System — Noé Tatoud' },
       {
         name: 'description',
         content:
-          'Moss is the design system for noe.tatoud.com. Technical warmth through deep forest green, editorial typography, and systematic precision.',
+          'Clay is the design system for noe.tatoud.com. Soft warmth through sand, terracotta and olive, a friendly serif, and generous spacing.',
       },
     ],
   }),
@@ -27,9 +27,7 @@ function StyleguidePage() {
         <Badge className="mb-4" variant="outline">
           Design System v1
         </Badge>
-        <h1 className="mb-4 font-fraunces text-5xl font-semibold tracking-tight">
-          Moss
-        </h1>
+        <h1 className="mb-4 font-serif text-5xl">Clay</h1>
         <p className="max-w-2xl text-lg text-muted-foreground">
           Technical warmth through deep forest green, editorial typography, and
           systematic precision. Built for noe.tatoud.com and beyond.
@@ -38,45 +36,43 @@ function StyleguidePage() {
 
       {/* Color Palette */}
       <section className="mb-24">
-        <h2 className="mb-8 font-fraunces text-3xl font-semibold">
-          Color Palette
-        </h2>
+        <h2 className="mb-8 font-serif text-3xl">Color Palette</h2>
 
         <div className="mb-12">
           <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-            Moss Tones — Primary
+            Clay Tones — Primary
           </h3>
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-11">
-            <ColorSwatch name="50" className="bg-moss-50" />
-            <ColorSwatch name="100" className="bg-moss-100" />
-            <ColorSwatch name="200" className="bg-moss-200" />
-            <ColorSwatch name="300" className="bg-moss-300" />
-            <ColorSwatch name="400" className="bg-moss-400" />
-            <ColorSwatch name="500" className="bg-moss-500" primary />
-            <ColorSwatch name="600" className="bg-moss-600" />
-            <ColorSwatch name="700" className="bg-moss-700" />
-            <ColorSwatch name="800" className="bg-moss-800" />
-            <ColorSwatch name="900" className="bg-moss-900" />
-            <ColorSwatch name="950" className="bg-moss-950" />
+            <ColorSwatch name="50" className="bg-clay-50" />
+            <ColorSwatch name="100" className="bg-clay-100" />
+            <ColorSwatch name="200" className="bg-clay-200" />
+            <ColorSwatch name="300" className="bg-clay-300" />
+            <ColorSwatch name="400" className="bg-clay-400" />
+            <ColorSwatch name="500" className="bg-clay-500" primary />
+            <ColorSwatch name="600" className="bg-clay-600" />
+            <ColorSwatch name="700" className="bg-clay-700" />
+            <ColorSwatch name="800" className="bg-clay-800" />
+            <ColorSwatch name="900" className="bg-clay-900" />
+            <ColorSwatch name="950" className="bg-clay-950" />
           </div>
         </div>
 
         <div className="mb-12">
           <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-            Honey Tones — Secondary
+            Olive Tones — Secondary
           </h3>
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-11">
-            <ColorSwatch name="50" className="bg-honey-50" />
-            <ColorSwatch name="100" className="bg-honey-100" />
-            <ColorSwatch name="200" className="bg-honey-200" />
-            <ColorSwatch name="300" className="bg-honey-300" />
-            <ColorSwatch name="400" className="bg-honey-400" />
-            <ColorSwatch name="500" className="bg-honey-500" primary />
-            <ColorSwatch name="600" className="bg-honey-600" />
-            <ColorSwatch name="700" className="bg-honey-700" />
-            <ColorSwatch name="800" className="bg-honey-800" />
-            <ColorSwatch name="900" className="bg-honey-900" />
-            <ColorSwatch name="950" className="bg-honey-950" />
+            <ColorSwatch name="50" className="bg-olive-50" />
+            <ColorSwatch name="100" className="bg-olive-100" />
+            <ColorSwatch name="200" className="bg-olive-200" />
+            <ColorSwatch name="300" className="bg-olive-300" />
+            <ColorSwatch name="400" className="bg-olive-400" />
+            <ColorSwatch name="500" className="bg-olive-500" primary />
+            <ColorSwatch name="600" className="bg-olive-600" />
+            <ColorSwatch name="700" className="bg-olive-700" />
+            <ColorSwatch name="800" className="bg-olive-800" />
+            <ColorSwatch name="900" className="bg-olive-900" />
+            <ColorSwatch name="950" className="bg-olive-950" />
           </div>
         </div>
 
@@ -103,28 +99,28 @@ function StyleguidePage() {
             </h3>
             <div className="space-y-4 text-sm text-muted-foreground">
               <p>
-                <strong className="text-foreground">Moss (primary)</strong> is
+                <strong className="text-foreground">Clay (primary)</strong> is
                 your signature. Use for primary actions, links, and brand
                 moments.
               </p>
               <p>
-                <strong className="text-foreground">Honey (secondary)</strong>{' '}
+                <strong className="text-foreground">Olive (secondary)</strong>{' '}
                 is the warm counterpoint. Use for secondary actions, badges, and
-                highlights — like sunlight through leaves.
+                highlights — like olive leaves against terracotta.
               </p>
               <p>
                 <strong className="text-foreground">
-                  Muted (moss-100/200)
+                  Muted (clay-100/200)
                 </strong>{' '}
                 for subtle backgrounds, hover states, and secondary surfaces.
               </p>
               <p>
-                <strong className="text-foreground">Deep (moss-800/900)</strong>{' '}
+                <strong className="text-foreground">Deep (clay-800/900)</strong>{' '}
                 for emphasis, selected states, and high-contrast text.
               </p>
               <p>
                 <strong className="text-foreground">Never</strong> use pure
-                black or white — always tint toward moss.
+                black or white — always tint toward sand.
               </p>
             </div>
           </div>
@@ -133,38 +129,24 @@ function StyleguidePage() {
 
       {/* Typography */}
       <section className="mb-24">
-        <h2 className="mb-8 font-fraunces text-3xl font-semibold">
-          Typography
-        </h2>
+        <h2 className="mb-8 font-serif text-3xl">Typography</h2>
 
         <div className="space-y-12">
           <div>
             <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-              Display — Fraunces
+              Display — Young Serif
             </h3>
             <div className="space-y-4">
-              <TypeSpecimen
-                label="Heading 1"
-                className="font-fraunces text-5xl font-semibold tracking-tight"
-              >
+              <TypeSpecimen label="Heading 1" className="font-serif text-5xl">
                 The quick brown fox jumps over the lazy dog
               </TypeSpecimen>
-              <TypeSpecimen
-                label="Heading 2"
-                className="font-fraunces text-4xl font-semibold tracking-tight"
-              >
+              <TypeSpecimen label="Heading 2" className="font-serif text-4xl">
                 The quick brown fox jumps over the lazy dog
               </TypeSpecimen>
-              <TypeSpecimen
-                label="Heading 3"
-                className="font-fraunces text-3xl font-semibold"
-              >
+              <TypeSpecimen label="Heading 3" className="font-serif text-3xl">
                 The quick brown fox jumps over the lazy dog
               </TypeSpecimen>
-              <TypeSpecimen
-                label="Heading 4"
-                className="font-fraunces text-2xl font-semibold"
-              >
+              <TypeSpecimen label="Heading 4" className="font-serif text-2xl">
                 The quick brown fox jumps over the lazy dog
               </TypeSpecimen>
             </div>
@@ -172,7 +154,7 @@ function StyleguidePage() {
 
           <div>
             <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-              Body — Manrope
+              Body — DM Sans
             </h3>
             <div className="space-y-4">
               <TypeSpecimen label="Body Large" className="text-lg">
@@ -203,7 +185,7 @@ function StyleguidePage() {
             </h3>
             <div className="space-y-4">
               <TypeSpecimen label="Code" className="font-mono text-sm">
-                const moss = 'technical warmth'
+                const clay = 'soft warmth'
               </TypeSpecimen>
               <TypeSpecimen
                 label="Code Block"
@@ -220,7 +202,7 @@ function StyleguidePage() {
 
       {/* Buttons */}
       <section className="mb-24">
-        <h2 className="mb-8 font-fraunces text-3xl font-semibold">Buttons</h2>
+        <h2 className="mb-8 font-serif text-3xl">Buttons</h2>
 
         <div className="space-y-8">
           <div>
@@ -237,9 +219,9 @@ function StyleguidePage() {
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
               <strong className="text-foreground">Default</strong> uses primary
-              (moss) for main actions.{' '}
-              <strong className="text-foreground">Secondary</strong> uses honey
-              for warm accents.
+              (clay) for main actions.{' '}
+              <strong className="text-foreground">Secondary</strong> uses olive
+              for calm accents.
             </p>
           </div>
 
@@ -273,9 +255,7 @@ function StyleguidePage() {
 
       {/* Spacing & Radius */}
       <section className="mb-24">
-        <h2 className="mb-8 font-fraunces text-3xl font-semibold">
-          Spacing & Radius
-        </h2>
+        <h2 className="mb-8 font-serif text-3xl">Spacing & Radius</h2>
 
         <div className="grid gap-8 sm:grid-cols-2">
           <div>
@@ -301,7 +281,7 @@ function StyleguidePage() {
                     {n}
                   </span>
                   <div
-                    className="h-4 w-(--swatch-width) bg-moss-200 dark:bg-moss-800"
+                    className="h-4 w-(--swatch-width) bg-clay-200 dark:bg-clay-800"
                     style={
                       { '--swatch-width': `${n * 0.25}rem` } as CSSProperties
                     }
@@ -316,7 +296,7 @@ function StyleguidePage() {
       {/* Footer */}
       <section className="border-t pt-8">
         <p className="text-sm text-muted-foreground">
-          Moss Design System v1.0 — Built with technical warmth.
+          Clay Design System v1.0 — Built with soft warmth.
         </p>
       </section>
     </main>
@@ -336,7 +316,7 @@ function ColorSwatch({
     <div className="space-y-1">
       <div
         className={`h-16 rounded-lg border ${className} ${
-          primary ? 'ring-2 ring-moss-500 ring-offset-2' : ''
+          primary ? 'ring-2 ring-clay-500 ring-offset-2' : ''
         }`}
       />
       <p className="text-center text-xs text-muted-foreground">{name}</p>
@@ -379,7 +359,7 @@ function TypeSpecimen({
 function RadiusDemo({ name, className }: { name: string; className: string }) {
   return (
     <div className="flex items-center gap-4">
-      <div className={`size-16 bg-moss-200 dark:bg-moss-800 ${className}`} />
+      <div className={`size-16 bg-clay-200 dark:bg-clay-800 ${className}`} />
       <span className="text-sm text-muted-foreground">{name}</span>
     </div>
   )

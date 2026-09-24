@@ -32,7 +32,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <KindChip
           icon={isContribution ? HandshakeIcon : Rocket01Icon}
           label={isContribution ? 'Contribution' : 'Personal'}
-          tone={isContribution ? 'honey' : 'moss'}
+          tone={isContribution ? 'olive' : 'clay'}
         />
         <time
           dateTime={project.date}
