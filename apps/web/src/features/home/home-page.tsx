@@ -21,7 +21,7 @@ export function HomePage({
 }: HomePageProps) {
   return (
     <main id="main" data-slot="home-page">
-      <Hero />
+      <Hero current={experiences.find((exp) => !exp.endDate)} />
       <BlogSlice posts={posts} />
       <ProjectsSlice projects={projects} />
       <TalksSlice talks={talks} />

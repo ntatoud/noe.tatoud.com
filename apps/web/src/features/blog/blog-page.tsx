@@ -16,8 +16,8 @@ export function BlogPage({ posts }: BlogPageProps) {
       subtitle="Long-form posts on frontend, tooling, and craft."
       columns={2}
     >
-      {posts.map((post) => (
-        <BlogCard key={post.slug} post={post} />
+      {posts.map((post, index) => (
+        <BlogCard key={post.slug} post={post} featured={index === 0} />
       ))}
     </ListingPage>
   )

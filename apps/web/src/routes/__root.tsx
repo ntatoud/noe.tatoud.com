@@ -2,8 +2,8 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
-import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url'
-import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url'
+import dmSansLatin from '@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2?url'
+import youngSerifLatin from '@fontsource/young-serif/files/young-serif-latin-400-normal.woff2?url'
 
 import { ErrorPage } from '@/components/error/error-page'
 import { NotFound } from '@/components/error/not-found'
@@ -31,14 +31,14 @@ export const Route = createRootRoute({
       { rel: 'stylesheet', href: appCss },
       {
         rel: 'preload',
-        href: manropeLatin,
+        href: dmSansLatin,
         as: 'font',
         type: 'font/woff2',
         crossOrigin: 'anonymous',
       },
       {
         rel: 'preload',
-        href: frauncesLatin,
+        href: youngSerifLatin,
         as: 'font',
         type: 'font/woff2',
         crossOrigin: 'anonymous',

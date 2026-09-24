@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@base-ui/react": "catalog:",
-    "@fontsource-variable/fraunces": "catalog:",
-    "@fontsource-variable/manrope": "catalog:",
+    "@fontsource-variable/dm-sans": "catalog:",
     "@fontsource/atkinson-hyperlegible-next": "catalog:",
+    "@fontsource/young-serif": "catalog:",
     "@hugeicons/core-free-icons": "catalog:",
     "@hugeicons/react": "catalog:",
     "@ntatoud/content": "workspace:*",

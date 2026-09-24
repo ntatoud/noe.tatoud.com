@@ -107,7 +107,8 @@ CONTEXT.md            # domain glossary
 
 - Dark by default, with a light theme via `components/theme-toggle.tsx`. The `dark` class lives on `<html>` and is set before hydration by the inline script in `routes/__root.tsx`.
 - Colors use oklch color space via CSS variables.
-- Fonts: Manrope for body text (`@fontsource/manrope`), Fraunces for headings (`@fontsource-variable/fraunces`), Atkinson Hyperlegible Next (weight 200) for code inside article bodies (`.typeset-docs` in `index.css`).
+- Design system is **Clay** (see `CONTEXT.md`): sand backgrounds, terracotta (`clay-*`) primary, olive (`olive-*`) secondary, `--radius: 1rem`.
+- Fonts: DM Sans for body text (`@fontsource-variable/dm-sans`), Young Serif for headings (`@fontsource/young-serif`, single weight 400, so headings never use `font-semibold`/`font-bold`), Atkinson Hyperlegible Next (weight 200) for code inside article bodies (`.typeset-docs` in `index.css`).
 
 ## Git hooks (lefthook)
 
