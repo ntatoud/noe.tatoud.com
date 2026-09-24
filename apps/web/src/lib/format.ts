@@ -19,6 +19,21 @@ export function formatMonthYear(date: string): string {
   return monthYearFormatter.format(new Date(date))
 }
 
+const monthFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  timeZone: 'UTC',
+})
+
+/** "Mar – Aug 2024" within one year, "Mar 2024 – Sep 2026" across years. */
+export function formatMonthRange(start: string, end: string): [string, string] {
+  const sameYear =
+    new Date(start).getUTCFullYear() === new Date(end).getUTCFullYear()
+  return [
+    sameYear ? monthFormatter.format(new Date(start)) : formatMonthYear(start),
+    formatMonthYear(end),
+  ]
+}
+
 /** First letter of the first two words, e.g. "DevQuest 2026" -> "DQ". */
 export function initials(text: string): string {
   const words = text.match(/\p{L}+/gu) ?? []

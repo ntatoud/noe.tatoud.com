@@ -176,4 +176,16 @@
       color-mix(in oklch, var(--primary) 55%, transparent);
     user-select: none;
   }
+
+  /* A logo's brand color (`--brand`) as a fill. Logos are drawn for dark
+     grounds more often than not, so on the light theme the color is capped in
+     lightness: a neon yellow would vanish into the sand background. */
+  .brand-fill {
+    background-color: var(--brand);
+    background-color: oklch(from var(--brand) min(l, 0.72) c h);
+  }
+
+  .dark .brand-fill {
+    background-color: var(--brand);
+  }
 }

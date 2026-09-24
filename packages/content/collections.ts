@@ -82,10 +82,11 @@ export const experiences = defineCollection({
   name: 'experiences',
   directory: path.join(contentRoot, 'experiences'),
   schema: ExperienceSchema,
-  transform: ({ logo, ...data }, meta) => ({
+  transform: ({ logo, preview, ...data }, meta) => ({
     ...data,
     slug: meta.slug,
     logo: logo ? publicImageUrl(logo, meta) : null,
+    preview: preview ? publicImageUrl(preview, meta) : null,
   }),
 })
 

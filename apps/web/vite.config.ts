@@ -28,6 +28,13 @@ export default defineConfig(async () => {
     resolve: {
       tsconfigPaths: true,
     },
+    // The site is static, so "today" is the day it was built. A constant keeps
+    // the prerendered HTML and the hydrated client agreeing on it.
+    define: {
+      'import.meta.env.BUILD_DATE': JSON.stringify(
+        new Date().toISOString().slice(0, 10),
+      ),
+    },
     plugins: [
       devtools(),
       // Bakes every collection into `virtual:content` at build time, so pages read
