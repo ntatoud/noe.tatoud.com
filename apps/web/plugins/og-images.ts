@@ -30,9 +30,7 @@ const FONTS_DIRECTORY = 'src/features/og/fonts'
  *
  * Does nothing in `pnpm dev`: the meta tags point at absolute production URLs.
  */
-export function ogImages(options: {
-  pages: () => Promise<ReadonlyArray<OgPage>>
-}): Plugin {
+export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
   let root = ''
 
   return {
@@ -73,7 +71,7 @@ export function ogImages(options: {
         title,
         description,
         kind,
-      } of await options.pages()) {
+      } of options.pages) {
         const source = await render(
           createElement(OgCard, { title, description, kind }),
           { width: 1200, height: 630, format: 'png', renderer },

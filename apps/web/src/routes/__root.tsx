@@ -10,7 +10,7 @@ import { NotFound } from '@/components/error/not-found'
 import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
-import { STATIC_PAGES } from '@/lib/site'
+import { FEEDS, FEED_TITLE, STATIC_PAGES } from '@/lib/site'
 
 import appCss from '@/styles/index.css?url'
 
@@ -45,24 +45,12 @@ export const Route = createRootRoute({
       },
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
-      {
+      ...Object.values(FEEDS).map((feed) => ({
         rel: 'alternate',
-        type: 'application/rss+xml',
-        title: 'Noé Tatoud — Blog (RSS)',
-        href: '/rss.xml',
-      },
-      {
-        rel: 'alternate',
-        type: 'application/atom+xml',
-        title: 'Noé Tatoud — Blog (Atom)',
-        href: '/atom.xml',
-      },
-      {
-        rel: 'alternate',
-        type: 'application/feed+json',
-        title: 'Noé Tatoud — Blog (JSON Feed)',
-        href: '/feed.json',
-      },
+        type: feed.type,
+        title: `${FEED_TITLE} (${feed.label})`,
+        href: feed.path,
+      })),
     ],
   }),
 

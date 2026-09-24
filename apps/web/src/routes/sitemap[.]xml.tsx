@@ -1,19 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { getSitemapUrls, renderSitemap } from '@/features/sitemap/sitemap'
+import { sitemapResponse } from '@/features/sitemap/sitemap'
 
 export const Route = createFileRoute('/sitemap.xml')({
-  server: {
-    handlers: {
-      GET() {
-        const xml = renderSitemap(getSitemapUrls())
-        return new Response(xml, {
-          headers: {
-            'Content-Type': 'application/xml; charset=utf-8',
-            'Cache-Control': 'public, max-age=0, must-revalidate',
-          },
-        })
-      },
-    },
-  },
+  server: { handlers: { GET: sitemapResponse } },
 })

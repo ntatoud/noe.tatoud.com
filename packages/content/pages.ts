@@ -31,7 +31,3 @@ export const readContentPages = async (): Promise<
     ...documents.talks.map(({ data }) => toPage(data.path, 'talk', data)),
   ]
 }
-
-/** The routes of {@link readContentPages}, for the prerender pass. */
-export const readContentPaths = async (): Promise<ReadonlyArray<string>> =>
-  (await readContentPages()).map(({ path }) => path)

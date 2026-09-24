@@ -3,7 +3,10 @@ import * as fs from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import { blogPosts, projects, talks } from '../collections.ts'
-import { readContentPages, readContentPaths } from '../pages.ts'
+import { readContentPages } from '../pages.ts'
+
+const readContentPaths = async () =>
+  (await readContentPages()).map((page) => page.path)
 
 /**
  * Pins the list handed to the prerender pass against the real `content/`
@@ -18,7 +21,7 @@ const slugsOnDisk = (directory: string) =>
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
 
-describe('readContentPaths', () => {
+describe('readContentPages paths', () => {
   it('returns one path per document on disk, drafts included', async () => {
     const paths = await readContentPaths()
     const documents = [blogPosts, projects, talks].reduce(
