@@ -1,7 +1,9 @@
 import type { TalkDetail } from '@ntatoud/content'
 
-import { DetailPage, ExternalLinkButton } from '@/components/detail-page'
+import { DetailPage } from '@/components/detail-page'
 import { formatDate } from '@/lib/format'
+
+import { TalkResourcePreview } from './talk-resource-preview'
 
 type TalkPageProps = {
   talk: TalkDetail
@@ -18,16 +20,6 @@ export function TalkPage({ talk }: TalkPageProps) {
       tags={talk.tags}
       html={talk.html}
     >
-      {talk.resource && (
-        <ExternalLinkButton
-          href={talk.resource.url}
-          className="mt-4"
-          data-slot="talk-resource"
-        >
-          {talk.resource.kind}
-        </ExternalLinkButton>
-      )}
-
       {talk.events.length > 0 && (
         <ul className="mt-6 flex flex-col gap-2" data-slot="talk-events">
           {talk.events.map((event) => (
@@ -40,6 +32,8 @@ export function TalkPage({ talk }: TalkPageProps) {
           ))}
         </ul>
       )}
+
+      {talk.resource && <TalkResourcePreview {...talk.resource} />}
     </DetailPage>
   )
 }
