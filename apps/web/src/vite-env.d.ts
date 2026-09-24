@@ -5,3 +5,8 @@ declare module '*?inline' {
   const dataUrl: string
   export default dataUrl
 }
+
+interface ImportMetaEnv {
+  /** ISO date of the build, set by `vite.config.ts`: the site's "today". */
+  readonly BUILD_DATE: string
+}
