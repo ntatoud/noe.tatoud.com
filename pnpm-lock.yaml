@@ -193,9 +193,6 @@ importers:
       cn:
         specifier: 'catalog:'
         version: 0.4.0
-      effect:
-        specifier: 'catalog:'
-        version: 4.0.0-rc.117
       react:
         specifier: 'catalog:'
         version: 19.3.0

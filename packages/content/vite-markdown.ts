@@ -2,26 +2,9 @@ import * as path from 'node:path'
 
 import type { Plugin } from 'vite'
 
-import {
-  blogPosts as blogPostsCollection,
-  contentFilePath,
-  contentUrl,
-  projects as projectsCollection,
-  talks as talksCollection,
-} from './collections.ts'
-import type {
-  IndexEntry,
-  IndexSection,
-  ResolveAsset,
-  SiteConfig,
-} from './markdown.ts'
-import {
-  markdownFileName,
-  metaList,
-  renderDocument,
-  renderIndex,
-  renderLlmsTxt,
-} from './markdown.ts'
+import { contentFilePath } from './collections.ts'
+import type { MarkdownFilesOptions, ResolveAsset } from './markdown.ts'
+import { markdownFileName, renderMarkdownFiles } from './markdown.ts'
 import { readContent } from './snapshot.ts'
 
 /**
@@ -38,28 +21,13 @@ import { readContent } from './snapshot.ts'
  * ever writes static files to the output directory.
  */
 
-/** Joins the parts of a one-line summary, skipping the ones a document omitted. */
-const joinNonEmpty = (values: ReadonlyArray<string | null | undefined>) =>
-  values.filter(Boolean).join(' · ')
-
-export interface ContentMarkdownOptions {
-  readonly site: SiteConfig
-  /** Copy for the generated listing and home markdown, keyed by route. */
-  readonly pages: {
-    readonly home: string
-    readonly blog: string
-    readonly projects: string
-    readonly talks: string
-  }
-  /** Extra links to advertise under llms.txt's `## Optional` heading. */
-  readonly optionalLinks?: ReadonlyArray<{
-    readonly title: string
-    readonly path: string
-  }>
-}
+export type ContentMarkdownOptions = Pick<
+  MarkdownFilesOptions,
+  'site' | 'pages' | 'optionalLinks'
+>
 
 export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
-  const { site, pages } = options
+  const { site } = options
   let warn: (message: string) => void = () => {}
   let root = process.cwd()
   let base = '/'
@@ -102,232 +70,8 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
     }
   }
 
-  const generate = async (resolveAsset: ResolveAsset) => {
-    const content = await readContent()
-    const posts = content.blogPosts
-    const projectList = content.projects
-    const talkList = content.talks
-    const experienceList = content.experiences
-    // Drafts included, matching the detail pages `content()` generates: an
-    // unpublished document keeps a reachable page, so it gets a markdown twin.
-    const postDocuments = content.documents.blogPosts
-    const projectDocuments = content.documents.projects
-    const talkDocuments = content.documents.talks
-
-    const files: Array<{ fileName: string; source: string }> = []
-
-    /**
-     * Emits one document's markdown. `meta` is spelled out per collection rather
-     * than derived generically, because what belongs in the header is a judgement
-     * about that collection's frontmatter, not a mechanical dump of it.
-     */
-    const emitDocument = (options: {
-      readonly collection: { readonly directory: string }
-      readonly slug: string
-      readonly routePath: string
-      readonly source: string
-      readonly title: string
-      readonly description?: string | undefined
-      readonly details: ReadonlyArray<string | null>
-    }) => {
-      files.push({
-        fileName: markdownFileName(options.routePath),
-        source: renderDocument({
-          site,
-          routePath: options.routePath,
-          meta: {
-            title: options.title,
-            description: options.description,
-            details: options.details,
-          },
-          source: options.source,
-          documentUrl: contentUrl(options.collection.directory, options.slug),
-          resolveAsset,
-          warn,
-        }),
-      })
-    }
-
-    // --- Documents -----------------------------------------------------------
-
-    for (const { slug, data, source } of postDocuments) {
-      emitDocument({
-        collection: blogPostsCollection,
-        slug,
-        routePath: `/blog/${slug}`,
-        source,
-        title: data.title,
-        description: data.description,
-        details: [
-          `- Published: ${data.date}`,
-          `- Author: ${data.author}`,
-          metaList('Tags', data.tags),
-          data.externalUrl
-            ? `- Originally published: ${data.externalUrl}`
-            : null,
-          metaList(
-            'Translations',
-            data.translations?.map(
-              (translation) => `${translation.lang}: ${translation.url}`,
-            ),
-          ),
-        ],
-      })
-    }
-
-    for (const { slug, data, source } of projectDocuments) {
-      emitDocument({
-        collection: projectsCollection,
-        slug,
-        routePath: `/projects/${slug}`,
-        source,
-        title: data.title,
-        description: data.description,
-        details: [
-          `- Date: ${data.date}`,
-          `- Kind: ${data.kind}`,
-          data.url ? `- Website: ${data.url}` : null,
-          data.repo ? `- Repository: ${data.repo}` : null,
-          metaList('Tags', data.tags),
-        ],
-      })
-    }
-
-    for (const { slug, data, source } of talkDocuments) {
-      emitDocument({
-        collection: talksCollection,
-        slug,
-        routePath: `/talks/${slug}`,
-        source,
-        title: data.title,
-        description: data.description,
-        details: [
-          `- Kind: ${data.kind}`,
-          data.resource
-            ? `- ${data.resource.kind}: ${data.resource.url}`
-            : null,
-          metaList('Tags', data.tags),
-          metaList(
-            'Presented at',
-            data.events.map((event) =>
-              joinNonEmpty([event.event, event.city, event.date]),
-            ),
-          ),
-        ],
-      })
-    }
-
-    // --- Listings ------------------------------------------------------------
-
-    const blogEntries: ReadonlyArray<IndexEntry> = posts.map((post) => ({
-      title: post.title,
-      routePath: `/blog/${post.slug}`,
-      description: post.description,
-      note: post.date,
-    }))
-
-    const projectEntries: ReadonlyArray<IndexEntry> = projectList.map(
-      (project) => ({
-        title: project.title,
-        routePath: `/projects/${project.slug}`,
-        description: project.description,
-        note: project.kind,
-      }),
-    )
-
-    const talkEntries: ReadonlyArray<IndexEntry> = talkList.map((talk) => ({
-      title: talk.title,
-      routePath: `/talks/${talk.slug}`,
-      description: talk.description,
-      note: talk.events[0]
-        ? joinNonEmpty([talk.events[0].event, talk.events[0].date])
-        : talk.kind,
-    }))
-
-    // Experiences have no detail page — they only ever render inline — so they
-    // are listed without a link rather than pointed at a markdown twin that
-    // would 404.
-    const experienceEntries: ReadonlyArray<IndexEntry> = experienceList.map(
-      (experience) => ({
-        title: `${experience.title}, ${experience.organization}`,
-        routePath: null,
-        note: joinNonEmpty([
-          experience.kind,
-          `${experience.startDate}–${experience.endDate ?? 'present'}`,
-        ]),
-        description: experience.url,
-      }),
-    )
-
-    const LISTINGS = [
-      {
-        routePath: '/blog',
-        title: 'Blog',
-        description: pages.blog,
-        entries: blogEntries,
-      },
-      {
-        routePath: '/projects',
-        title: 'Projects',
-        description: pages.projects,
-        entries: projectEntries,
-      },
-      {
-        routePath: '/talks',
-        title: 'Talks',
-        description: pages.talks,
-        entries: talkEntries,
-      },
-    ] as const
-
-    for (const listing of LISTINGS) {
-      files.push({
-        fileName: markdownFileName(listing.routePath),
-        source: renderIndex({
-          site,
-          routePath: listing.routePath,
-          title: listing.title,
-          description: listing.description,
-          sections: [{ title: listing.title, entries: listing.entries }],
-        }),
-      })
-    }
-
-    const sections: ReadonlyArray<IndexSection> = [
-      { title: 'Blog', description: pages.blog, entries: blogEntries },
-      {
-        title: 'Projects',
-        description: pages.projects,
-        entries: projectEntries,
-      },
-      { title: 'Talks', description: pages.talks, entries: talkEntries },
-      { title: 'Experience', entries: experienceEntries },
-    ]
-
-    files.push({
-      fileName: markdownFileName('/'),
-      source: renderIndex({
-        site,
-        routePath: '/',
-        title: site.name,
-        description: pages.home,
-        sections,
-      }),
-    })
-
-    files.push({
-      fileName: 'llms.txt',
-      source: renderLlmsTxt({
-        site,
-        sections,
-        optional: options.optionalLinks?.map(
-          (link) => `- [${link.title}](${site.url}${link.path})`,
-        ),
-      }),
-    })
-
-    return files
-  }
+  const generate = async (resolveAsset: ResolveAsset) =>
+    renderMarkdownFiles(await readContent(), { ...options, resolveAsset, warn })
 
   return {
     name: 'ntatoud:content-markdown',

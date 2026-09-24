@@ -11,7 +11,9 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { ogImagePath } from '../src/lib/site.ts'
+import { readContentPages } from '@ntatoud/content/pages'
+
+import { FILE_ROUTES, STATIC_PAGES, ogImagePath } from '../src/lib/site.ts'
 
 // `apps/web` has no test runner, so the one naming rule the meta tags and the
 // OG build share is pinned here.
@@ -19,14 +21,9 @@ assert.equal(ogImagePath('/'), '/og/index.png')
 assert.equal(ogImagePath('/blog'), '/og/blog.png')
 assert.equal(ogImagePath('/blog/x/'), '/og/blog/x.png')
 
-const ORIGIN = 'https://noe.tatoud.com'
-
-// Files that are not pages, so the sitemap does not list them.
+// Files that are not pages, so they have no social card.
 const REQUIRED_FILES = [
-  'rss.xml',
-  'atom.xml',
-  'feed.json',
-  'sitemap.xml',
+  ...FILE_ROUTES.map((route) => route.slice(1)),
   'llms.txt',
   'index.md',
   '404.html',
@@ -48,15 +45,12 @@ const forbidden = FORBIDDEN_PATHS.filter((name) =>
   existsSync(fileURLToPath(new URL(name, app))),
 )
 
-// Every page the sitemap advertises must have been prerendered, and must have
-// the social card its meta tags point at.
-const paths = new Set(['/'])
-if (existsSync(file('sitemap.xml'))) {
-  const sitemap = readFileSync(file('sitemap.xml'), 'utf8')
-  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
-    paths.add(loc!.trim().replace(ORIGIN, '') || '/')
-  }
-}
+// Every page must have been prerendered, drafts included, and must have the
+// social card its meta tags point at.
+const paths = [
+  ...Object.values(STATIC_PAGES),
+  ...(await readContentPages()),
+].map((page) => page.path)
 
 for (const path of paths) {
   const trimmed = path.replace(/^\/+|\/+$/g, '')
@@ -80,4 +74,4 @@ if (missing.length > 0 || forbidden.length > 0) {
   process.exit(1)
 }
 
-console.log(`ok (${paths.size} pages)`)
+console.log(`ok (${paths.length} pages)`)

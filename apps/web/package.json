@@ -21,7 +21,6 @@
     "@tanstack/react-start": "catalog:",
     "class-variance-authority": "catalog:",
     "cn": "catalog:",
-    "effect": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:"

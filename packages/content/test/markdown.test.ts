@@ -12,7 +12,9 @@ import {
   renderDocument,
   renderIndex,
   renderLlmsTxt,
+  renderMarkdownFiles,
 } from '../markdown.ts'
+import { readContent } from '../snapshot.ts'
 import { estimateTokens, prefersMarkdown } from '../vite-markdown.ts'
 
 /**
@@ -472,5 +474,48 @@ describe('edge function parity', () => {
         markdownPath(route),
       )
     }
+  })
+})
+
+describe('renderMarkdownFiles', () => {
+  const PAGES = {
+    home: { description: 'Home.' },
+    blog: { description: 'Posts.' },
+    projects: { description: 'Projects.' },
+    talks: { description: 'Talks.' },
+  }
+
+  it('gives every document on disk a twin, drafts included', async () => {
+    const content = await readContent()
+    const names = renderMarkdownFiles(content, {
+      site: SITE,
+      pages: PAGES,
+      resolveAsset: noAssets,
+      warn: noWarnings,
+    }).map((file) => file.fileName)
+
+    const routes = [
+      ...content.documents.blogPosts.map(({ data }) => data.url),
+      ...content.documents.projects.map(({ data }) => data.path),
+      ...content.documents.talks.map(({ data }) => data.path),
+    ]
+    for (const route of routes) expect(names).toContain(markdownFileName(route))
+    for (const name of ['blog.md', 'projects.md', 'talks.md', 'index.md']) {
+      expect(names).toContain(name)
+    }
+    expect(names).toContain('llms.txt')
+    expect(new Set(names).size).toBe(names.length)
+  })
+
+  it('lists only published documents', async () => {
+    const content = await readContent()
+    const blog = renderMarkdownFiles(content, {
+      site: SITE,
+      pages: PAGES,
+      resolveAsset: noAssets,
+      warn: noWarnings,
+    }).find((file) => file.fileName === 'blog.md')
+
+    expect(blog?.source.match(/^- \[/gm)).toHaveLength(content.blogPosts.length)
   })
 })

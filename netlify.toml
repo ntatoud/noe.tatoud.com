@@ -53,7 +53,7 @@ for = "/og/*"
 Cache-Control = "public, max-age=86400"
 
 # Feeds and the sitemap are prerendered to static files by TanStack Start, not
-# served by a function, so they get the types and policy their handlers set.
+# served by a function, so their types and cache policy are set here.
 [[headers]]
 for = "/rss.xml"
 [headers.values]

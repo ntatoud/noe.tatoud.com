@@ -9,9 +9,18 @@
  * the part frontmatter carries and the body does not: the title, the description,
  * and the metadata a page shows in its chrome.
  *
- * Everything here is a pure function of decoded frontmatter plus a source
- * string, so the interesting cases are testable without running a build.
+ * Everything here is a pure function of the content snapshot, so the
+ * interesting cases are testable without running a build; `vite-markdown.ts`
+ * only emits and serves what {@link renderMarkdownFiles} returns.
  */
+
+import {
+  blogPosts as blogPostsCollection,
+  contentUrl,
+  projects as projectsCollection,
+  talks as talksCollection,
+} from './collections.ts'
+import type { ContentSnapshot } from './snapshot.ts'
 
 /** Srcs a client already resolves on its own, so they are never rewritten. */
 const ABSOLUTE_SRC = /^(?:https?:|\/\/|\/|data:|#|mailto:)/
@@ -126,13 +135,11 @@ const block = (...entries: ReadonlyArray<string | null | false>) =>
  * One `- Label: a, b, c` metadata line, or nothing when the field is absent or
  * empty — so an optional frontmatter array never leaves a dangling label behind.
  */
-export const metaList = (
-  label: string,
-  values: ReadonlyArray<string> | undefined,
-) => (values && values.length > 0 ? `- ${label}: ${values.join(', ')}` : null)
+const metaList = (label: string, values: ReadonlyArray<string> | undefined) =>
+  values && values.length > 0 ? `- ${label}: ${values.join(', ')}` : null
 
 /** The frontmatter fields every collection's markdown header can draw on. */
-export interface DocumentMeta {
+interface DocumentMeta {
   readonly title: string
   readonly description?: string | undefined
   /** Metadata lines specific to the collection, already formatted as `- Key: value`. */
@@ -181,7 +188,7 @@ export function renderDocument(options: {
 }
 
 /** One `- [Title](url.md): description` entry, the shape llms.txt asks for. */
-export interface IndexEntry {
+interface IndexEntry {
   readonly title: string
   /**
    * The page this entry is about, linked as its markdown twin. `null` for things
@@ -272,4 +279,215 @@ export function renderLlmsTxt(options: {
       ? block('## Optional', optional.join('\n'))
       : null,
   )}\n`
+}
+
+/** Joins the parts of a one-line summary, skipping the ones a document omitted. */
+const joinNonEmpty = (values: ReadonlyArray<string | null | undefined>) =>
+  values.filter(Boolean).join(' · ')
+
+/** A file the build publishes, named by its path under the output directory. */
+export interface MarkdownFile {
+  readonly fileName: string
+  readonly source: string
+}
+
+export interface MarkdownFilesOptions {
+  readonly site: SiteConfig
+  /** The listing and home pages, whose descriptions head their markdown. */
+  readonly pages: Readonly<
+    Record<
+      'home' | 'blog' | 'projects' | 'talks',
+      { readonly description: string }
+    >
+  >
+  /** Extra links to advertise under llms.txt's `## Optional` heading. */
+  readonly optionalLinks?:
+    | ReadonlyArray<{ readonly title: string; readonly path: string }>
+    | undefined
+  readonly resolveAsset: ResolveAsset
+  readonly warn: (message: string) => void
+}
+
+/**
+ * Every markdown file the build publishes: a twin of each document and listing,
+ * the home page's, and `/llms.txt`.
+ */
+export function renderMarkdownFiles(
+  content: ContentSnapshot,
+  options: MarkdownFilesOptions,
+): ReadonlyArray<MarkdownFile> {
+  const { site, pages, resolveAsset, warn } = options
+
+  // Drafts included, matching the detail pages `content()` generates: an
+  // unpublished document keeps a reachable page, so it gets a markdown twin.
+  // `details` is spelled out per collection rather than derived generically,
+  // because what belongs in the header is a judgement about that collection's
+  // frontmatter, not a mechanical dump of it.
+  const documents = [
+    ...content.documents.blogPosts.map(({ slug, data, source }) => ({
+      directory: blogPostsCollection.directory,
+      slug,
+      source,
+      routePath: data.url,
+      meta: {
+        title: data.title,
+        description: data.description,
+        details: [
+          `- Published: ${data.date}`,
+          `- Author: ${data.author}`,
+          metaList('Tags', data.tags),
+          data.externalUrl
+            ? `- Originally published: ${data.externalUrl}`
+            : null,
+          metaList(
+            'Translations',
+            data.translations?.map(({ lang, url }) => `${lang}: ${url}`),
+          ),
+        ],
+      },
+    })),
+    ...content.documents.projects.map(({ slug, data, source }) => ({
+      directory: projectsCollection.directory,
+      slug,
+      source,
+      routePath: data.path,
+      meta: {
+        title: data.title,
+        description: data.description,
+        details: [
+          `- Date: ${data.date}`,
+          `- Kind: ${data.kind}`,
+          data.url ? `- Website: ${data.url}` : null,
+          data.repo ? `- Repository: ${data.repo}` : null,
+          metaList('Tags', data.tags),
+        ],
+      },
+    })),
+    ...content.documents.talks.map(({ slug, data, source }) => ({
+      directory: talksCollection.directory,
+      slug,
+      source,
+      routePath: data.path,
+      meta: {
+        title: data.title,
+        description: data.description,
+        details: [
+          `- Kind: ${data.kind}`,
+          data.resource
+            ? `- ${data.resource.kind}: ${data.resource.url}`
+            : null,
+          metaList('Tags', data.tags),
+          metaList(
+            'Presented at',
+            data.events.map((event) =>
+              joinNonEmpty([event.event, event.city, event.date]),
+            ),
+          ),
+        ],
+      },
+    })),
+  ]
+
+  // Published documents only, in listing order.
+  const listings = [
+    {
+      title: 'Blog',
+      routePath: '/blog',
+      description: pages.blog.description,
+      entries: content.blogPosts.map((post) => ({
+        title: post.title,
+        routePath: post.url,
+        description: post.description,
+        note: post.date,
+      })),
+    },
+    {
+      title: 'Projects',
+      routePath: '/projects',
+      description: pages.projects.description,
+      entries: content.projects.map((project) => ({
+        title: project.title,
+        routePath: project.path,
+        description: project.description,
+        note: project.kind,
+      })),
+    },
+    {
+      title: 'Talks',
+      routePath: '/talks',
+      description: pages.talks.description,
+      entries: content.talks.map((talk) => ({
+        title: talk.title,
+        routePath: talk.path,
+        description: talk.description,
+        note: talk.events[0]
+          ? joinNonEmpty([talk.events[0].event, talk.events[0].date])
+          : talk.kind,
+      })),
+    },
+  ] satisfies ReadonlyArray<IndexSection & { readonly routePath: string }>
+
+  // Experiences have no detail page (they only ever render inline), so they
+  // are listed without a link rather than pointed at a markdown twin that
+  // would 404.
+  const sections: ReadonlyArray<IndexSection> = [
+    ...listings,
+    {
+      title: 'Experience',
+      entries: content.experiences.map((experience) => ({
+        title: `${experience.title}, ${experience.organization}`,
+        routePath: null,
+        note: joinNonEmpty([
+          experience.kind,
+          `${experience.startDate}–${experience.endDate ?? 'present'}`,
+        ]),
+        description: experience.url,
+      })),
+    },
+  ]
+
+  return [
+    ...documents.map((document) => ({
+      fileName: markdownFileName(document.routePath),
+      source: renderDocument({
+        site,
+        routePath: document.routePath,
+        meta: document.meta,
+        source: document.source,
+        documentUrl: contentUrl(document.directory, document.slug),
+        resolveAsset,
+        warn,
+      }),
+    })),
+    ...listings.map(({ title, routePath, description, entries }) => ({
+      fileName: markdownFileName(routePath),
+      source: renderIndex({
+        site,
+        routePath,
+        title,
+        description,
+        sections: [{ title, entries }],
+      }),
+    })),
+    {
+      fileName: markdownFileName('/'),
+      source: renderIndex({
+        site,
+        routePath: '/',
+        title: site.name,
+        description: pages.home.description,
+        sections,
+      }),
+    },
+    {
+      fileName: 'llms.txt',
+      source: renderLlmsTxt({
+        site,
+        sections,
+        optional: options.optionalLinks?.map(
+          (link) => `- [${link.title}](${site.url}${link.path})`,
+        ),
+      }),
+    },
+  ]
 }
