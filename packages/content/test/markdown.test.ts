@@ -16,6 +16,7 @@ import {
 } from '../markdown.ts'
 import { readContent } from '../snapshot.ts'
 import { estimateTokens, prefersMarkdown } from '../vite-markdown.ts'
+import { PAGES } from './helpers.ts'
 
 /**
  * Covers the markdown twins served for `Accept: text/markdown` (ADR-0009).
@@ -478,13 +479,6 @@ describe('edge function parity', () => {
 })
 
 describe('renderMarkdownFiles', () => {
-  const PAGES = {
-    home: { description: 'Home.' },
-    blog: { description: 'Posts.' },
-    projects: { description: 'Projects.' },
-    talks: { description: 'Talks.' },
-  }
-
   it('gives every document on disk a twin, drafts included', async () => {
     const content = await readContent()
     const names = renderMarkdownFiles(content, {
@@ -495,9 +489,9 @@ describe('renderMarkdownFiles', () => {
     }).map((file) => file.fileName)
 
     const routes = [
-      ...content.documents.blogPosts.map(({ data }) => data.url),
-      ...content.documents.projects.map(({ data }) => data.path),
-      ...content.documents.talks.map(({ data }) => data.path),
+      ...content.blogPosts.detail!.documents.map(({ data }) => data.url),
+      ...content.projects.detail!.documents.map(({ data }) => data.path),
+      ...content.talks.detail!.documents.map(({ data }) => data.path),
     ]
     for (const route of routes) expect(names).toContain(markdownFileName(route))
     for (const name of ['blog.md', 'projects.md', 'talks.md', 'index.md']) {
@@ -516,6 +510,8 @@ describe('renderMarkdownFiles', () => {
       warn: noWarnings,
     }).find((file) => file.fileName === 'blog.md')
 
-    expect(blog?.source.match(/^- \[/gm)).toHaveLength(content.blogPosts.length)
+    expect(blog?.source.match(/^- \[/gm)).toHaveLength(
+      content.blogPosts.listing.length,
+    )
   })
 })

@@ -3,16 +3,10 @@ import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
 import { expect, layer } from '@effect/vitest'
 import { Effect } from 'effect'
 
-import {
-  blogPosts as blogPostsCollection,
-  experiences as experiencesCollection,
-  projects as projectsCollection,
-  talks as talksCollection,
-} from '../collections.ts'
-import { getBlogPosts } from '../readers/blog.ts'
-import { getExperiences } from '../readers/experiences.ts'
-import { getProjects } from '../readers/projects.ts'
-import { getTalks } from '../readers/talks.ts'
+import { blog } from '../catalog/blog.ts'
+import { experiences as experiencesEntry } from '../catalog/experiences.ts'
+import { projects as projectsEntry } from '../catalog/projects.ts'
+import { talks as talksEntry } from '../catalog/talks.ts'
 
 /**
  * Splits a derived public image URL into its directory prefix and filename, so
@@ -38,13 +32,11 @@ const asTimes = (dates: ReadonlyArray<string>) =>
 // `it.effect` blocks would re-read and re-measure every image file.
 layer(CollectionsLive)('content readers', (it) => {
   it.effect(
-    'getBlogPosts derives portable hero URLs and sorts newest first',
+    'blog reader derives portable hero URLs and sorts newest first',
     () =>
       Effect.gen(function* () {
         const collections = yield* Collections
-        const posts = getBlogPosts(
-          yield* collections.getAll(blogPostsCollection),
-        )
+        const posts = blog.reader(yield* collections.getAll(blog.collection))
 
         expect(posts.length).toBeGreaterThan(0)
         expect(posts.every((post) => post.published)).toBe(true)
@@ -79,11 +71,11 @@ layer(CollectionsLive)('content readers', (it) => {
       }),
   )
 
-  it.effect('getExperiences derives portable logo URLs, newest first', () =>
+  it.effect('experiences reader derives portable logo URLs, newest first', () =>
     Effect.gen(function* () {
       const collections = yield* Collections
-      const experiences = getExperiences(
-        yield* collections.getAll(experiencesCollection),
+      const experiences = experiencesEntry.reader(
+        yield* collections.getAll(experiencesEntry.collection),
       )
 
       expect(experiences.length).toBeGreaterThan(0)
@@ -102,39 +94,43 @@ layer(CollectionsLive)('content readers', (it) => {
     }),
   )
 
-  it.effect('getProjects returns only published projects, personal first', () =>
-    Effect.gen(function* () {
-      const collections = yield* Collections
-      const projects = getProjects(
-        yield* collections.getAll(projectsCollection),
-      )
+  it.effect(
+    'projects reader returns only published projects, personal first',
+    () =>
+      Effect.gen(function* () {
+        const collections = yield* Collections
+        const projects = projectsEntry.reader(
+          yield* collections.getAll(projectsEntry.collection),
+        )
 
-      expect(projects.length).toBeGreaterThan(0)
-      expect(projects.every((project) => project.published)).toBe(true)
-      expect(projects.every((project) => project.slug.length > 0)).toBe(true)
-      expect(
-        projects.every(
-          (project) => project.path === `/projects/${project.slug}`,
-        ),
-      ).toBe(true)
-
-      const firstContribution = projects.findIndex(
-        (project) => project.kind === 'contribution',
-      )
-      if (firstContribution !== -1) {
+        expect(projects.length).toBeGreaterThan(0)
+        expect(projects.every((project) => project.published)).toBe(true)
+        expect(projects.every((project) => project.slug.length > 0)).toBe(true)
         expect(
-          projects
-            .slice(firstContribution)
-            .every((project) => project.kind === 'contribution'),
+          projects.every(
+            (project) => project.path === `/projects/${project.slug}`,
+          ),
         ).toBe(true)
-      }
-    }),
+
+        const firstContribution = projects.findIndex(
+          (project) => project.kind === 'contribution',
+        )
+        if (firstContribution !== -1) {
+          expect(
+            projects
+              .slice(firstContribution)
+              .every((project) => project.kind === 'contribution'),
+          ).toBe(true)
+        }
+      }),
   )
 
-  it.effect('getTalks sorts by the most recent event date', () =>
+  it.effect('talks reader sorts by the most recent event date', () =>
     Effect.gen(function* () {
       const collections = yield* Collections
-      const talks = getTalks(yield* collections.getAll(talksCollection))
+      const talks = talksEntry.reader(
+        yield* collections.getAll(talksEntry.collection),
+      )
 
       expect(talks.length).toBeGreaterThan(0)
       expect(talks.every((talk) => talk.slug.length > 0)).toBe(true)

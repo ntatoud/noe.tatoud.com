@@ -3,8 +3,11 @@ import * as path from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { blogPosts, contentRoot, projects, talks } from '../collections.ts'
-import { content } from '../vite.ts'
+import { blog } from '../catalog/blog.ts'
+import { projects as projectsEntry } from '../catalog/projects.ts'
+import { talks as talksEntry } from '../catalog/talks.ts'
+import { contentRoot } from '../content-url.ts'
+import { createPlugin, readDeclaredExports } from './helpers.ts'
 
 /**
  * Pins the Vite plugin against the real `content/` directory: it is the only
@@ -18,29 +21,6 @@ import { content } from '../vite.ts'
  * surfaced during prerender, as `Failed to fetch /blog/…: Internal Server Error`.
  * Evaluating here turns that class of bug into a named assertion failure.
  */
-
-type Hook = (...args: any[]) => any
-
-/** The plugin under test, with its hooks reachable as plain functions. */
-function createPlugin() {
-  const warnings: string[] = []
-  const plugin = content() as unknown as {
-    configResolved: Hook
-    resolveId: Hook
-    load: Hook
-  }
-  plugin.configResolved({ logger: { warn: (m: string) => warnings.push(m) } })
-
-  const generate = async (id: string): Promise<string> => {
-    const resolved = plugin.resolveId(id)
-    expect(resolved, `plugin did not claim ${id}`).toBeTruthy()
-    const code = await plugin.load(resolved)
-    expect(code, `plugin generated nothing for ${id}`).toBeTruthy()
-    return code as string
-  }
-
-  return { generate, warnings }
-}
 
 /**
  * Runs a generated module and returns what it exported.
@@ -88,6 +68,10 @@ const slugsOnDisk = (directory: string) =>
 
 const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
 
+const blogPosts = blog.collection
+const projects = projectsEntry.collection
+const talks = talksEntry.collection
+
 const DETAIL_COLLECTIONS = [
   { name: 'blogPosts', loader: 'loadBlogPost', collection: blogPosts },
   { name: 'projects', loader: 'loadProject', collection: projects },
@@ -119,13 +103,7 @@ describe('virtual:content', () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
 
-    const declared = fs.readFileSync(
-      path.join(import.meta.dirname, '../virtual.d.ts'),
-      'utf8',
-    )
-    const declaredNames = [
-      ...declared.matchAll(/^\s*export const (\w+):/gm),
-    ].map(([, name]) => name)
+    const declaredNames = readDeclaredExports()
 
     expect(declaredNames.length).toBeGreaterThan(0)
     expect(Object.keys(exports).sort()).toEqual([...declaredNames].sort())

@@ -47,8 +47,8 @@ apps/web/              # @ntatoud/web — TanStack Start app
   scripts/            # check-static.ts: asserts every route is a file in dist/client (`check:static`)
 packages/content/      # @ntatoud/content — content pipeline
   schemas/            # Effect Schema structs (one file per collection)
-  readers/            # reader functions (typed data access)
-  collections.ts      # collection definitions (@ntatoud/effect-collections)
+  catalog/            # the Content Catalog: one module per collection (collection, Reader, pages, twin header)
+  content-url.ts      # the `/content/...` URL scheme and its inverse
   snapshot.ts         # reads every collection once for both Vite plugins
   vite.ts             # Vite plugin: bakes collections into `virtual:content` at build time
   vite-markdown.ts    # Vite plugin: emits the `.md` twins + /llms.txt (ADR-0009)
@@ -77,7 +77,7 @@ CONTEXT.md            # domain glossary
 
 - Use `@/` path alias for imports within the app.
 - Use `@ntatoud/content` for content types (its entry exports types only).
-- **Relative imports inside `packages/**` carry an explicit `.ts` extension** (`./errors.ts`, `../collections.ts`). `apps/web/vite.config.ts` imports the content plugin, so the package graph is loaded by Node's ESM loader, which does no extensionless resolution. `apps/web/src` deliberately does _not_ follow this — its `routeTree.gen.ts` is generated with extensionless imports.
+- **Relative imports inside `packages/**` carry an explicit `.ts` extension** (`./errors.ts`, `../content-url.ts`). `apps/web/vite.config.ts` imports the content plugin, so the package graph is loaded by Node's ESM loader, which does no extensionless resolution. `apps/web/src` deliberately does _not_ follow this — its `routeTree.gen.ts` is generated with extensionless imports.
 - oxfmt handles formatting: no semicolons, single quotes, trailing commas, 80-char width.
 
 ### Components
@@ -92,12 +92,12 @@ CONTEXT.md            # domain glossary
 - Content documents live in `content/<collection>/<slug>/index.mdx` at the repo root. Bodies are plain markdown; the `.mdx` name is historical.
 - All frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
 - Blog posts expose their route as `url`; projects and talks as `path` (on projects, `url` is the external website). Talk `events` are sorted newest first by the collection, so the latest event is `events[0]`.
-- The content package has reader functions (e.g., `getBlogPosts()`) in `readers/`, but **the app does not call them**: they run at build time inside the Vite plugin (via `packages/content/snapshot.ts`), so the package entry does not export them.
+- Each Content Collection is one module in `packages/content/catalog/` (its `defineCollection`, its Reader, its listing and detail pages, its markdown twin header), listed in order in `catalog/index.ts`. **The app does not call them**: the catalog runs at build time inside the Vite plugins (via `packages/content/snapshot.ts`), so the package entry exports only types.
 - **Pages read content from `virtual:content`, never over the network** (ADR-0008). There are no content server functions.
   - Listings: `import { blogPosts, projects, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
   - Details: `loadBlogPost` / `loadProject` / `loadTalk` map a slug to a lazily-imported chunk holding that document's `html`. A missing slug means `notFound()`. Detail pages display the body via `dangerouslySetInnerHTML`.
 - Frontmatter image fields (`hero`, `logo`) and relative body image srcs are already **hashed asset URLs** — the plugin turns them into real Vite `?url` imports. Do not try to resolve them at runtime.
-- Adding a collection means adding its declaration to `packages/content/virtual.d.ts` too, and its pages to `readContentPages` in `packages/content/pages.ts` (which drives the prerender list, the OG images and `check:static`), and its twin header and listing to `renderMarkdownFiles` in `packages/content/markdown.ts`.
+- Adding a collection means adding a module to `packages/content/catalog/` and listing it in `catalog/index.ts`: the snapshot, `virtual:content`, `readContentPages` (prerender list, OG images, `check:static`) and the markdown twins all iterate the catalog. Then declare its exports in `packages/content/virtual.d.ts` (`test/catalog.test.ts` fails until you do), and add its routes in the app.
 - **Every route must be prerendered** (ADR-0011): production is the static files in `apps/web/dist/client` and nothing else, so a route that works in `pnpm dev` but is not prerendered is a 404 in production. The page inventory is `readContentPages` (content documents, drafts included) plus `apps/web/src/lib/site.ts`: a new page without a document goes into `STATIC_PAGES`, a new server route into `FILE_ROUTES` (feeds live in `FEEDS`). `pnpm --filter @ntatoud/web check:static` (run in CI after the build) fails if any inventory page, its OG image, a file route, or `404.html` is missing.
 - Code blocks are syntax-highlighted automatically by `@tanstack/highlight` (wired into `@ntatoud/effect-markdown`) — no per-page setup needed. The highlighter emits semantic `th-*` classes; the `github-dark` palette lives in `apps/web/src/styles/highlight.css`. A fence may carry `title="main.ts"` and a `{1,4,12-36}` line-highlight range. Languages are registered explicitly in `packages/effect-markdown/languages.ts` — add one there before using it in a fence, or it falls back to plaintext.
 - **Every page has a markdown twin** (ADR-0009). `vite-markdown.ts` emits `/index.md`, `/blog.md`, `/blog/<slug>.md`, … plus `/llms.txt` into `dist/client` at build time, and `netlify/edge-functions/markdown-negotiation.ts` serves them to requests carrying `Accept: text/markdown`. Adding a collection with pages means adding it there too, and the `Accept`/path logic is deliberately duplicated between the plugin and the edge function — **edge functions are the one part of this repo that runs on Deno, not Node**, and deploy separately from the workspace. `test/markdown.test.ts` pins the two copies together, so change both.
