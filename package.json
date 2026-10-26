@@ -10,14 +10,14 @@
     "check": "oxfmt --check . && oxlint --config oxlint.config.ts",
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r typecheck",
-    "knip": "knip",
+    "fallow": "fallow",
     "postinstall": "lefthook install"
   },
   "devDependencies": {
     "@netlify/edge-functions": "catalog:",
     "@shadcn/lint": "catalog:",
     "@types/node": "catalog:",
-    "knip": "catalog:",
+    "fallow": "catalog:",
     "lefthook": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",

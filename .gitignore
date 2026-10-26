@@ -16,3 +16,6 @@ todos.json
 # Workspace member build outputs
 apps/*/dist
 packages/*/dist
+
+# `fallow viz` output
+fallow-viz.html

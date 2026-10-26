@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: fallow's health report reads git churn for hotspots.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
@@ -30,8 +33,9 @@ jobs:
       - name: 🧹 Lint
         run: pnpm run lint
 
-      - name: 🪦 Dead code
-        run: pnpm run knip
+      # Dead code, duplication and complexity in one pass (`.fallowrc.jsonc`).
+      - name: 🪦 Dead code & code health
+        run: pnpm run fallow
 
       - name: 🔎 Typecheck
         run: pnpm run typecheck
