@@ -1,17 +1,16 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { loadProject } from 'virtual:content'
 
 import { toMetaTags } from '@/features/og/metadata'
 import { ProjectPage } from '@/features/projects/project-page'
+import { loadDocument } from '@/lib/load-document'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ProjectPageRoute,
-  loader: async ({ params }) => {
-    const load = loadProject[params.slug]
-    if (!load) throw notFound()
-    return { project: (await load()).default }
-  },
+  loader: async ({ params }) => ({
+    project: await loadDocument(loadProject, params.slug),
+  }),
   head: ({ loaderData, match }) => {
     if (!loaderData) return {}
     const { project } = loaderData
