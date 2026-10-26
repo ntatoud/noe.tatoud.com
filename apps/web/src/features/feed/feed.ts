@@ -4,6 +4,7 @@
 import { blogPosts, loadBlogPost } from 'virtual:content'
 
 import { FEEDS, FEED_TITLE, SITE_URL } from '@/lib/site'
+import { escapeXml } from '@/lib/xml'
 
 const DESCRIPTION = 'Articles on software engineering by Noé Tatoud.'
 const AUTHOR = 'Noé Tatoud'
@@ -55,15 +56,6 @@ const readItems = (): Promise<ReadonlyArray<FeedItem>> =>
     }),
   )
 
-/** Escape text for use in an XML text node or attribute value. */
-const escape = (value: string): string =>
-  value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;')
-
 /** Wrap arbitrary HTML in a CDATA section, escaping any nested terminator. */
 const cdata = (value: string): string =>
   `<![CDATA[${value.replaceAll(']]>', ']]]]><![CDATA[>')}]]>`
@@ -79,9 +71,9 @@ const latestDate = (items: ReadonlyArray<FeedItem>): Date | undefined =>
 
 const rssItem = (item: FeedItem): ReadonlyArray<string> => [
   '    <item>',
-  `      <title>${escape(item.title)}</title>`,
-  `      <link>${escape(item.url)}</link>`,
-  `      <guid isPermaLink="${item.id === item.url}">${escape(item.id)}</guid>`,
+  `      <title>${escapeXml(item.title)}</title>`,
+  `      <link>${escapeXml(item.url)}</link>`,
+  `      <guid isPermaLink="${item.id === item.url}">${escapeXml(item.id)}</guid>`,
   `      <pubDate>${item.date.toUTCString()}</pubDate>`,
   ...(item.description
     ? [`      <description>${cdata(item.description)}</description>`]
@@ -89,7 +81,7 @@ const rssItem = (item: FeedItem): ReadonlyArray<string> => [
   ...(item.content
     ? [`      <content:encoded>${cdata(item.content)}</content:encoded>`]
     : []),
-  ...item.categories.map((c) => `      <category>${escape(c)}</category>`),
+  ...item.categories.map((c) => `      <category>${escapeXml(c)}</category>`),
   '    </item>',
 ]
 
@@ -99,15 +91,15 @@ const renderRss = (items: ReadonlyArray<FeedItem>): string => {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">',
     '  <channel>',
-    `    <title>${escape(FEED_TITLE)}</title>`,
-    `    <link>${escape(SITE_URL)}</link>`,
-    `    <description>${escape(DESCRIPTION)}</description>`,
-    `    <language>${escape(LANGUAGE)}</language>`,
-    `    <copyright>${escape(COPYRIGHT)}</copyright>`,
+    `    <title>${escapeXml(FEED_TITLE)}</title>`,
+    `    <link>${escapeXml(SITE_URL)}</link>`,
+    `    <description>${escapeXml(DESCRIPTION)}</description>`,
+    `    <language>${escapeXml(LANGUAGE)}</language>`,
+    `    <copyright>${escapeXml(COPYRIGHT)}</copyright>`,
     ...(build
       ? [`    <lastBuildDate>${build.toUTCString()}</lastBuildDate>`]
       : []),
-    `    <atom:link href="${escape(absolute(FEEDS.rss.path))}" rel="self" type="application/rss+xml"/>`,
+    `    <atom:link href="${escapeXml(absolute(FEEDS.rss.path))}" rel="self" type="application/rss+xml"/>`,
     ...items.flatMap(rssItem),
     '  </channel>',
     '</rss>',
@@ -118,7 +110,7 @@ const renderRss = (items: ReadonlyArray<FeedItem>): string => {
 
 const atomAuthor = (indent: string): ReadonlyArray<string> => [
   `${indent}<author>`,
-  `${indent}  <name>${escape(AUTHOR)}</name>`,
+  `${indent}  <name>${escapeXml(AUTHOR)}</name>`,
   `${indent}</author>`,
 ]
 
@@ -126,9 +118,9 @@ const atomEntry = (item: FeedItem): ReadonlyArray<string> => {
   const stamp = item.date.toISOString()
   return [
     '  <entry>',
-    `    <title>${escape(item.title)}</title>`,
-    `    <link href="${escape(item.url)}"/>`,
-    `    <id>${escape(item.id)}</id>`,
+    `    <title>${escapeXml(item.title)}</title>`,
+    `    <link href="${escapeXml(item.url)}"/>`,
+    `    <id>${escapeXml(item.id)}</id>`,
     `    <updated>${stamp}</updated>`,
     `    <published>${stamp}</published>`,
     ...atomAuthor('    '),
@@ -138,7 +130,7 @@ const atomEntry = (item: FeedItem): ReadonlyArray<string> => {
     ...(item.content
       ? [`    <content type="html">${cdata(item.content)}</content>`]
       : []),
-    ...item.categories.map((c) => `    <category term="${escape(c)}"/>`),
+    ...item.categories.map((c) => `    <category term="${escapeXml(c)}"/>`),
     '  </entry>',
   ]
 }
@@ -148,14 +140,14 @@ const renderAtom = (items: ReadonlyArray<FeedItem>): string => {
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<feed xmlns="http://www.w3.org/2005/Atom">',
-    `  <title>${escape(FEED_TITLE)}</title>`,
-    `  <subtitle>${escape(DESCRIPTION)}</subtitle>`,
-    `  <id>${escape(SITE_URL)}</id>`,
-    `  <link href="${escape(SITE_URL)}"/>`,
-    `  <link href="${escape(absolute(FEEDS.atom.path))}" rel="self" type="application/atom+xml"/>`,
+    `  <title>${escapeXml(FEED_TITLE)}</title>`,
+    `  <subtitle>${escapeXml(DESCRIPTION)}</subtitle>`,
+    `  <id>${escapeXml(SITE_URL)}</id>`,
+    `  <link href="${escapeXml(SITE_URL)}"/>`,
+    `  <link href="${escapeXml(absolute(FEEDS.atom.path))}" rel="self" type="application/atom+xml"/>`,
     ...(updated ? [`  <updated>${updated.toISOString()}</updated>`] : []),
     ...atomAuthor('  '),
-    `  <rights>${escape(COPYRIGHT)}</rights>`,
+    `  <rights>${escapeXml(COPYRIGHT)}</rights>`,
     ...items.flatMap(atomEntry),
     '</feed>',
   ].join('\n')

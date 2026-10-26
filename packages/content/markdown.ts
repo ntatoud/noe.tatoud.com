@@ -124,12 +124,16 @@ function rewriteImages(
   )
 }
 
-/** Drops blank entries and joins the rest into a block, so optional lines vanish. */
-const lines = (...entries: ReadonlyArray<string | null | false>) =>
-  entries.filter((entry): entry is string => Boolean(entry)).join('\n')
+type Entry = string | null | undefined | false
 
-const block = (...entries: ReadonlyArray<string | null | false>) =>
-  entries.filter((entry): entry is string => Boolean(entry)).join('\n\n')
+/** Drops blank entries, so optional lines vanish. */
+const present = (entries: ReadonlyArray<Entry>) =>
+  entries.filter((entry): entry is string => Boolean(entry))
+
+const lines = (...entries: ReadonlyArray<Entry>) => present(entries).join('\n')
+
+const block = (...entries: ReadonlyArray<Entry>) =>
+  present(entries).join('\n\n')
 
 /**
  * One `- Label: a, b, c` metadata line, or nothing when the field is absent or
@@ -216,6 +220,15 @@ export interface IndexSection {
   readonly entries: ReadonlyArray<IndexEntry>
 }
 
+const renderSection = (site: SiteConfig, section: IndexSection) =>
+  block(
+    `## ${section.title}`,
+    section.description,
+    section.entries.length > 0
+      ? section.entries.map((entry) => renderEntry(site, entry)).join('\n')
+      : '_Nothing here yet._',
+  )
+
 /**
  * A listing page's markdown twin — `/blog.md` and friends.
  *
@@ -236,15 +249,7 @@ export function renderIndex(options: {
     `# ${title}`,
     description ? `> ${description}` : null,
     `- Canonical: ${absolute(site, routePath)}`,
-    ...sections.flatMap((section) => [
-      block(
-        `## ${section.title}`,
-        section.description ? section.description : null,
-        section.entries.length > 0
-          ? section.entries.map((entry) => renderEntry(site, entry)).join('\n')
-          : '_Nothing here yet._',
-      ),
-    ]),
+    ...sections.map((section) => renderSection(site, section)),
   )}\n`
 }
 
@@ -268,13 +273,7 @@ export function renderLlmsTxt(options: {
     `> ${site.description}`,
     ...sections
       .filter((section) => section.entries.length > 0)
-      .map((section) =>
-        block(
-          `## ${section.title}`,
-          section.description ? section.description : null,
-          section.entries.map((entry) => renderEntry(site, entry)).join('\n'),
-        ),
-      ),
+      .map((section) => renderSection(site, section)),
     optional && optional.length > 0
       ? block('## Optional', optional.join('\n'))
       : null,

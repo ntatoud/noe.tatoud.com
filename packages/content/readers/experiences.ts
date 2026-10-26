@@ -1,6 +1,7 @@
 import type { CollectionData, DocumentMeta } from '@ntatoud/effect-collections'
 
 import { experiences as experiencesCollection } from '../collections.ts'
+import { newestFirst } from '../sort.ts'
 
 export type Experience = CollectionData<typeof experiencesCollection>
 
@@ -10,7 +11,4 @@ export const getExperiences = (
 ): ReadonlyArray<Experience> =>
   documents
     .map((doc) => doc.data)
-    .sort(
-      (a, b) =>
-        new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-    )
+    .sort(newestFirst((experience) => experience.startDate))

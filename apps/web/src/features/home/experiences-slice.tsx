@@ -456,7 +456,7 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
   const { origin, lanes, milestones, ticks, position } = timeScale(experiences)
 
   return (
-    <Slice title="Experiences" data-slot="experiences-slice">
+    <Slice title="Experiences" slot="experiences-slice">
       <div className="-mx-4 overflow-x-auto px-4 pb-2">
         <div
           className={cn(

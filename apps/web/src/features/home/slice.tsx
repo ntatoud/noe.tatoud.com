@@ -3,28 +3,18 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
-import { cn } from '@/lib/utils'
 
 type SliceProps = {
+  /** `data-slot` of the section. */
+  slot: string
   title: string
   seeAllHref?: RouteTo
-  seeAllLabel?: string
-  className?: string
   children: React.ReactNode
 }
 
-export function Slice({
-  title,
-  seeAllHref,
-  seeAllLabel = 'See all',
-  className,
-  children,
-}: SliceProps) {
+export function Slice({ slot, title, seeAllHref, children }: SliceProps) {
   return (
-    <section
-      className={cn('mx-auto max-w-5xl px-4 py-12 sm:py-16', className)}
-      data-slot="home-slice"
-    >
+    <section className="mx-auto max-w-5xl px-4 py-12 sm:py-16" data-slot={slot}>
       <div className="mb-8 flex items-baseline justify-between">
         <h2 className="text-3xl">{title}</h2>
         {seeAllHref && (
@@ -34,7 +24,7 @@ export function Slice({
             size="sm"
             data-slot="slice-see-all"
           >
-            {seeAllLabel}
+            See all
             <HugeiconsIcon
               icon={ArrowRight02Icon}
               size={16}

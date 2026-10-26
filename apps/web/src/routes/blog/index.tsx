@@ -6,17 +6,9 @@ import { BlogPage } from '@/features/blog/blog-page'
 import { toMetaTags } from '@/features/og/metadata'
 import { STATIC_PAGES } from '@/lib/site'
 
-const PAGE = STATIC_PAGES.blog
-
 export const Route = createFileRoute('/blog/')({
   component: BlogPageRoute,
-  head: () => ({
-    meta: toMetaTags({
-      title: PAGE.title,
-      description: PAGE.description,
-      path: PAGE.path,
-    }),
-  }),
+  head: () => ({ meta: toMetaTags(STATIC_PAGES.blog) }),
 })
 
 function BlogPageRoute() {

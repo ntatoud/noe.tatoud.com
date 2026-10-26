@@ -1,6 +1,7 @@
 import type { CollectionData, DocumentMeta } from '@ntatoud/effect-collections'
 
 import { talks as talksCollection } from '../collections.ts'
+import { newestFirst } from '../sort.ts'
 
 export type StageItem = CollectionData<typeof talksCollection>
 
@@ -15,8 +16,4 @@ export const getTalks = (
 ): ReadonlyArray<StageItem> =>
   documents
     .map((doc) => doc.data)
-    .sort(
-      (a, b) =>
-        new Date(b.events[0]?.date ?? 0).getTime() -
-        new Date(a.events[0]?.date ?? 0).getTime(),
-    )
+    .sort(newestFirst((talk) => talk.events[0]?.date))

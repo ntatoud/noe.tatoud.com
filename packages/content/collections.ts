@@ -8,6 +8,7 @@ import { BlogPostSchema } from './schemas/blog.ts'
 import { ExperienceSchema } from './schemas/experiences.ts'
 import { ProjectSchema } from './schemas/projects.ts'
 import { StageItemSchema } from './schemas/talks.ts'
+import { newestFirst } from './sort.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
@@ -105,6 +106,6 @@ export const talks = defineCollection({
         ...event,
         logo: logo ? publicImageUrl(logo, meta) : null,
       }))
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+      .sort(newestFirst((event) => event.date)),
   }),
 })

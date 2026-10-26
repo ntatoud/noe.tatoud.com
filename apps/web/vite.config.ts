@@ -62,11 +62,8 @@ export default defineConfig(async () => {
       // 404 page. Listing them explicitly keeps every route a static file.
       tanstackStart({
         pages: [
-          ...[...pages.map((page) => page.path), ...FILE_ROUTES].map(
-            (path) => ({
-              path,
-            }),
-          ),
+          ...pages.map(({ path }) => ({ path })),
+          ...FILE_ROUTES.map((path) => ({ path })),
           // Netlify serves `404.html` for any path without a file.
           { path: '/404', prerender: { outputPath: '/404.html' } },
         ],
