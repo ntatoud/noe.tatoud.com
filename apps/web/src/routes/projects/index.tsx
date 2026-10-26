@@ -6,17 +6,9 @@ import { toMetaTags } from '@/features/og/metadata'
 import { ProjectsPage } from '@/features/projects/projects-page'
 import { STATIC_PAGES } from '@/lib/site'
 
-const PAGE = STATIC_PAGES.projects
-
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPageRoute,
-  head: () => ({
-    meta: toMetaTags({
-      title: PAGE.title,
-      description: PAGE.description,
-      path: PAGE.path,
-    }),
-  }),
+  head: () => ({ meta: toMetaTags(STATIC_PAGES.projects) }),
 })
 
 function ProjectsPageRoute() {

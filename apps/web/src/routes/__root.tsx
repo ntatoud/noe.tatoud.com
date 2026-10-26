@@ -19,14 +19,7 @@ export const Route = createRootRoute({
   errorComponent: ErrorPage,
 
   head: () => ({
-    meta: [
-      ...BASE_META_TAGS,
-      ...toMetaTags({
-        title: STATIC_PAGES.home.title,
-        description: STATIC_PAGES.home.description,
-        path: STATIC_PAGES.home.path,
-      }),
-    ],
+    meta: [...BASE_META_TAGS, ...toMetaTags(STATIC_PAGES.home)],
     links: [
       { rel: 'stylesheet', href: appCss },
       {
