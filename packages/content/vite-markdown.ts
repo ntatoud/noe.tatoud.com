@@ -49,7 +49,6 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
         originalFileNames?: ReadonlyArray<string>
       }
     >,
-    base: string,
   ): ResolveAsset => {
     const byOriginal = new Map<string, string>()
     for (const output of Object.values(bundle)) {
@@ -87,7 +86,7 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
     applyToEnvironment: (environment) => environment.name === 'client',
 
     async generateBundle(_outputOptions, bundle) {
-      const files = await generate(createResolveAsset(bundle, base))
+      const files = await generate(createResolveAsset(bundle))
 
       for (const file of files) {
         this.emitFile({
