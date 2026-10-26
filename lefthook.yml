@@ -14,3 +14,6 @@ pre-push:
       run: pnpm run lint
     typecheck:
       run: pnpm run typecheck
+    # Only the findings this branch introduces, against its merge-base.
+    fallow:
+      run: pnpm exec fallow audit --quiet

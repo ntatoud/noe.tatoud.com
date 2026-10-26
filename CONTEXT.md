@@ -22,7 +22,7 @@ A typed group of markdown documents defined by a schema and a directory. Collect
 _Avoid_: collection (alone — too generic), content type
 
 **Reader**:
-A function exported by the content package that returns typed, ready-to-use data for a given collection (e.g., `getBlogPosts`). Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
+A function in the content package (`readers/`) that returns typed, ready-to-use data for a given collection (e.g., `getBlogPosts`). Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
 _Avoid_: loader, getter, fetcher
 
 **Feature**:

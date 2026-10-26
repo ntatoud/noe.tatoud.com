@@ -30,6 +30,4 @@ export const StageItemSchema = Schema.Struct({
   ),
 })
 
-export type StageEvent = (typeof StageEventSchema)['Type']
 export type StageResource = (typeof StageResourceSchema)['Type']
-export type StageFrontmatter = (typeof StageItemSchema)['Type']

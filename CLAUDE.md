@@ -17,7 +17,7 @@ Personal website & blog — **noe.tatoud.com**
 - **Package manager**: pnpm. Every external dependency version lives once in the `catalog` of `pnpm-workspace.yaml` and workspaces reference it as `catalog:` (`catalogMode: strict`). pnpm settings (built deps, patches) live there too, not in `package.json`.
 - **Formatting**: oxfmt (`pnpm run format`) — no semicolons, single quotes, trailing commas
 - **Linting**: oxlint via `oxlint.config.ts` (`pnpm run lint`)
-- **Dead code**: knip (`pnpm run knip`)
+- **Dead code & code health**: fallow via `.fallowrc.jsonc` (`pnpm run fallow`): unused files/exports/deps, duplication, complexity
 - **Language**: TypeScript 7 (strict mode, noUnusedLocals, noUnusedParameters)
 
 ## Commands
@@ -28,7 +28,7 @@ pnpm run build     # production build (delegates to @ntatoud/web)
 pnpm run check     # format check + oxlint
 pnpm run typecheck # tsc in every workspace package
 pnpm test          # package tests (vitest)
-pnpm run knip      # dead code detection
+pnpm run fallow    # dead code, duplication, complexity (fallow)
 ```
 
 ## Key paths
@@ -76,7 +76,7 @@ CONTEXT.md            # domain glossary
 ### Imports & code style
 
 - Use `@/` path alias for imports within the app.
-- Use `@ntatoud/content` for reader functions and content types.
+- Use `@ntatoud/content` for content types (its entry exports types only).
 - **Relative imports inside `packages/**` carry an explicit `.ts` extension** (`./errors.ts`, `../collections.ts`). `apps/web/vite.config.ts` imports the content plugin, so the package graph is loaded by Node's ESM loader, which does no extensionless resolution. `apps/web/src` deliberately does _not_ follow this — its `routeTree.gen.ts` is generated with extensionless imports.
 - oxfmt handles formatting: no semicolons, single quotes, trailing commas, 80-char width.
 
@@ -92,7 +92,7 @@ CONTEXT.md            # domain glossary
 - Content documents live in `content/<collection>/<slug>/index.mdx` at the repo root. Bodies are plain markdown; the `.mdx` name is historical.
 - All frontmatter is validated with Effect `Schema` structs (defined in `packages/content/schemas/`).
 - Blog posts expose their route as `url`; projects and talks as `path` (on projects, `url` is the external website). Talk `events` are sorted newest first by the collection, so the latest event is `events[0]`.
-- The content package exports reader functions (e.g., `getBlogPosts()`), but **the app does not call them** — they run at build time inside the Vite plugin (`packages/content/vite.ts`).
+- The content package has reader functions (e.g., `getBlogPosts()`) in `readers/`, but **the app does not call them**: they run at build time inside the Vite plugin (via `packages/content/snapshot.ts`), so the package entry does not export them.
 - **Pages read content from `virtual:content`, never over the network** (ADR-0008). There are no content server functions.
   - Listings: `import { blogPosts, projects, experiences, talks } from 'virtual:content'` — build-time constants, so listing routes have **no loader** (a loader would also serialize them into the SSR payload, shipping the same bytes twice).
   - Details: `loadBlogPost` / `loadProject` / `loadTalk` map a slug to a lazily-imported chunk holding that document's `html`. A missing slug means `notFound()`. Detail pages display the body via `dangerouslySetInnerHTML`.
@@ -113,11 +113,11 @@ CONTEXT.md            # domain glossary
 ## Git hooks (lefthook)
 
 - **pre-commit**: oxfmt formats staged files, auto-stages fixes.
-- **pre-push**: oxlint + tsc typecheck.
+- **pre-push**: oxlint + tsc typecheck + `fallow audit` (findings introduced by the branch).
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`, as two parallel jobs: format check + lint + knip + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
+Runs on push/PR to `main`, as two parallel jobs: format check + lint + fallow + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
 
 ## Deployment
 
