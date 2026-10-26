@@ -44,9 +44,18 @@ export function ContentCard({
       : 'transition-colors',
     featured && 'md:flex-row',
   )
-  const bodyClassName = cn(
-    'flex flex-1 flex-col gap-2 p-4',
-    featured && 'md:justify-center md:gap-3 md:p-8',
+  const body = (
+    <>
+      {media}
+      <div
+        className={cn(
+          'flex flex-1 flex-col gap-2 p-4',
+          featured && 'md:justify-center md:gap-3 md:p-8',
+        )}
+      >
+        {children}
+      </div>
+    </>
   )
 
   return (
@@ -62,8 +71,7 @@ export function ContentCard({
           rel="noreferrer"
           className={className}
         >
-          {media}
-          <div className={bodyClassName}>{children}</div>
+          {body}
         </a>
       ) : (
         <Link
@@ -72,8 +80,7 @@ export function ContentCard({
           preload="intent"
           className={className}
         >
-          {media}
-          <div className={bodyClassName}>{children}</div>
+          {body}
         </Link>
       )}
     </li>
