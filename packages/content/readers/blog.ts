@@ -1,6 +1,7 @@
 import type { CollectionData, DocumentMeta } from '@ntatoud/effect-collections'
 
 import { blogPosts as blogPostsCollection } from '../collections.ts'
+import { newestFirst } from '../sort.ts'
 
 export type BlogPost = CollectionData<typeof blogPostsCollection>
 
@@ -16,4 +17,4 @@ export const getBlogPosts = (
   documents
     .map((doc) => doc.data)
     .filter((post) => post.published)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort(newestFirst((post) => post.date))
