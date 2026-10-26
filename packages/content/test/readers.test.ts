@@ -3,16 +3,19 @@ import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
 import { expect, layer } from '@effect/vitest'
 import { Effect } from 'effect'
 
-import {
-  blogPosts as blogPostsCollection,
-  experiences as experiencesCollection,
-  projects as projectsCollection,
-  talks as talksCollection,
-} from '../collections.ts'
-import { getBlogPosts } from '../readers/blog.ts'
-import { getExperiences } from '../readers/experiences.ts'
-import { getProjects } from '../readers/projects.ts'
-import { getTalks } from '../readers/talks.ts'
+import { blog } from '../catalog/blog.ts'
+import { experiences as experiencesEntry } from '../catalog/experiences.ts'
+import { projects as projectsEntry } from '../catalog/projects.ts'
+import { talks as talksEntry } from '../catalog/talks.ts'
+
+const getBlogPosts = blog.reader
+const getExperiences = experiencesEntry.reader
+const getProjects = projectsEntry.reader
+const getTalks = talksEntry.reader
+const blogPostsCollection = blog.collection
+const experiencesCollection = experiencesEntry.collection
+const projectsCollection = projectsEntry.collection
+const talksCollection = talksEntry.collection
 
 /**
  * Splits a derived public image URL into its directory prefix and filename, so

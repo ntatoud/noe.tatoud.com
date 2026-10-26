@@ -495,9 +495,9 @@ describe('renderMarkdownFiles', () => {
     }).map((file) => file.fileName)
 
     const routes = [
-      ...content.documents.blogPosts.map(({ data }) => data.url),
-      ...content.documents.projects.map(({ data }) => data.path),
-      ...content.documents.talks.map(({ data }) => data.path),
+      ...content.blogPosts.detail!.documents.map(({ data }) => data.url),
+      ...content.projects.detail!.documents.map(({ data }) => data.path),
+      ...content.talks.detail!.documents.map(({ data }) => data.path),
     ]
     for (const route of routes) expect(names).toContain(markdownFileName(route))
     for (const name of ['blog.md', 'projects.md', 'talks.md', 'index.md']) {
@@ -516,6 +516,8 @@ describe('renderMarkdownFiles', () => {
       warn: noWarnings,
     }).find((file) => file.fileName === 'blog.md')
 
-    expect(blog?.source.match(/^- \[/gm)).toHaveLength(content.blogPosts.length)
+    expect(blog?.source.match(/^- \[/gm)).toHaveLength(
+      content.blogPosts.listing.length,
+    )
   })
 })

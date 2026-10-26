@@ -21,8 +21,12 @@ _Avoid_: library, module
 A typed group of markdown documents defined by a schema and a directory. Collections are read at build time by the content Vite plugin and baked into the bundle as `virtual:content`.
 _Avoid_: collection (alone — too generic), content type
 
+**Content Catalog**:
+The ordered list of Content Collections, each declaring its Reader, its pages (listing, detail) and its markdown twin. The build iterates it instead of naming collections, so adding a collection is one catalog entry. Its order is the output order of `/index.md`, `llms.txt` and the content pages.
+_Avoid_: registry, manifest
+
 **Reader**:
-A function in the content package (`readers/`) that returns typed, ready-to-use data for a given collection (e.g., `getBlogPosts`). Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
+A Content Catalog entry's `reader`: the function that turns a collection's documents into its typed, ready-to-use listing. Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
 _Avoid_: loader, getter, fetcher
 
 **Feature**:

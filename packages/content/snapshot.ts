@@ -1,82 +1,63 @@
-import { Collections, CollectionsLive } from '@ntatoud/effect-collections'
-import type { DocumentMeta } from '@ntatoud/effect-collections'
+import {
+  type CollectionError,
+  type Collections,
+  CollectionsLive,
+} from '@ntatoud/effect-collections'
 import { toHtml } from '@ntatoud/effect-markdown'
 
 import { Effect, ManagedRuntime } from 'effect'
 
+import type { CollectionSnapshot } from './catalog/define.ts'
 import {
-  blogPosts as blogPostsCollection,
-  experiences as experiencesCollection,
-  projects as projectsCollection,
-  talks as talksCollection,
-} from './collections.ts'
-import { getBlogPosts, type BlogPost } from './readers/blog.ts'
-import { getExperiences, type Experience } from './readers/experiences.ts'
-import { getProjects, type Project } from './readers/projects.ts'
-import { getTalks, type StageItem } from './readers/talks.ts'
+  catalog,
+  type CatalogEntry,
+  type ListingName,
+  type PageKind,
+} from './catalog/index.ts'
 
 /**
- * Everything the build knows about content. Both Vite plugins (`vite.ts` and
- * `vite-markdown.ts`) read it from here, so "which documents exist" is answered
- * in one place.
+ * Everything the build knows about content, keyed by each Content Collection's
+ * `key`. Both Vite plugins (`vite.ts` and `vite-markdown.ts`) read it from
+ * here, so "which documents exist" is answered in one place.
  */
-export interface ContentSnapshot {
-  /** Published documents, ordered by their reader: what listings show. */
-  readonly blogPosts: ReadonlyArray<BlogPost>
-  readonly projects: ReadonlyArray<Project>
-  readonly experiences: ReadonlyArray<Experience>
-  readonly talks: ReadonlyArray<StageItem>
-  /**
-   * Every document on disk, drafts included, sorted by slug: what gets a page
-   * and a markdown twin. Experiences have no pages, so they are absent.
-   */
-  readonly documents: {
-    readonly blogPosts: ReadonlyArray<DocumentMeta<BlogPost>>
-    readonly projects: ReadonlyArray<DocumentMeta<Project>>
-    readonly talks: ReadonlyArray<DocumentMeta<StageItem>>
-  }
+export type ContentSnapshot = {
+  readonly [E in CatalogEntry as E['key']]: Effect.Success<E['read']>
 }
 
-const runtime = ManagedRuntime.make(CollectionsLive)
+/** Any one collection's snapshot, for code that iterates the catalog. */
+export type AnyCollectionSnapshot = CollectionSnapshot<
+  string,
+  unknown,
+  PageKind,
+  ListingName
+>
 
-// Plain code-unit order, so the generated loader maps list slugs the same way
-// on every machine.
-const bySlug = <A>(documents: ReadonlyArray<DocumentMeta<A>>) =>
-  [...documents].sort((a, b) =>
-    a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0,
-  )
+/** The snapshot's collections, in catalog order. */
+export const collectionsOf = (
+  content: ContentSnapshot,
+): ReadonlyArray<AnyCollectionSnapshot> => Object.values(content)
+
+const runtime = ManagedRuntime.make(CollectionsLive)
 
 export const readContent = (): Promise<ContentSnapshot> =>
   runtime.runPromise(
     Effect.gen(function* () {
-      const collections = yield* Collections
       // Each collection is read from disk exactly once; the listings and the
       // per-document pages are both derived from that one read.
-      const [
-        blogPostDocuments,
-        projectDocuments,
-        experienceDocuments,
-        talkDocuments,
-      ] = yield* Effect.all(
-        [
-          collections.getAll(blogPostsCollection),
-          collections.getAll(projectsCollection),
-          collections.getAll(experiencesCollection),
-          collections.getAll(talksCollection),
-        ],
+      const collections = yield* Effect.forEach(
+        catalog,
+        // Widened so the entries' differently-typed reads form one array.
+        (
+          entry,
+        ): Effect.Effect<AnyCollectionSnapshot, CollectionError, Collections> =>
+          entry.read,
         { concurrency: 'unbounded' },
       )
-      return {
-        blogPosts: getBlogPosts(blogPostDocuments),
-        projects: getProjects(projectDocuments),
-        experiences: getExperiences(experienceDocuments),
-        talks: getTalks(talkDocuments),
-        documents: {
-          blogPosts: bySlug(blogPostDocuments),
-          projects: bySlug(projectDocuments),
-          talks: bySlug(talkDocuments),
-        },
-      }
+      // `Object.fromEntries` cannot see that each key is paired with its own
+      // collection's snapshot; `catalog` is the only source of both.
+      return Object.fromEntries(
+        collections.map((collection) => [collection.key, collection]),
+      ) as ContentSnapshot
     }),
   )
 

@@ -3,7 +3,10 @@ import * as path from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { blogPosts, contentRoot, projects, talks } from '../collections.ts'
+import { blog } from '../catalog/blog.ts'
+import { projects as projectsEntry } from '../catalog/projects.ts'
+import { talks as talksEntry } from '../catalog/talks.ts'
+import { contentRoot } from '../content-url.ts'
 import { content } from '../vite.ts'
 
 /**
@@ -87,6 +90,10 @@ const slugsOnDisk = (directory: string) =>
     .sort()
 
 const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
+
+const blogPosts = blog.collection
+const projects = projectsEntry.collection
+const talks = talksEntry.collection
 
 const DETAIL_COLLECTIONS = [
   { name: 'blogPosts', loader: 'loadBlogPost', collection: blogPosts },

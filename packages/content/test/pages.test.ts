@@ -2,7 +2,9 @@ import * as fs from 'node:fs'
 
 import { describe, expect, it } from 'vitest'
 
-import { blogPosts, projects, talks } from '../collections.ts'
+import { blog } from '../catalog/blog.ts'
+import { projects } from '../catalog/projects.ts'
+import { talks } from '../catalog/talks.ts'
 import { readContentPages } from '../pages.ts'
 
 const readContentPaths = async () =>
@@ -10,8 +12,8 @@ const readContentPaths = async () =>
 
 /**
  * Pins the list handed to the prerender pass against the real `content/`
- * directory. A document missing from it is not a build error: it silently
- * falls back to the serverless function on every request.
+ * directory. A document missing from it is not a build error: it is simply
+ * not prerendered, so it 404s in production (ADR-0011).
  */
 
 /** Document directories on disk, which is what a slug is. */
@@ -24,8 +26,9 @@ const slugsOnDisk = (directory: string) =>
 describe('readContentPages paths', () => {
   it('returns one path per document on disk, drafts included', async () => {
     const paths = await readContentPaths()
-    const documents = [blogPosts, projects, talks].reduce(
-      (count, collection) => count + slugsOnDisk(collection.directory).length,
+    const documents = [blog, projects, talks].reduce(
+      (count, { collection }) =>
+        count + slugsOnDisk(collection.directory).length,
       0,
     )
 

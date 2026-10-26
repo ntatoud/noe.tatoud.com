@@ -2,7 +2,7 @@ import * as path from 'node:path'
 
 import type { Plugin } from 'vite'
 
-import { contentFilePath } from './collections.ts'
+import { contentFilePath } from './content-url.ts'
 import type { MarkdownFilesOptions, ResolveAsset } from './markdown.ts'
 import { markdownFileName, renderMarkdownFiles } from './markdown.ts'
 import { readContent } from './snapshot.ts'

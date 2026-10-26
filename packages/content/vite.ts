@@ -2,16 +2,14 @@ import * as fs from 'node:fs'
 
 import type { Plugin } from 'vite'
 
-import {
-  blogPosts as blogPostsCollection,
-  contentFilePath,
-  contentRoot,
-  contentUrl,
-  projects as projectsCollection,
-  talks as talksCollection,
-} from './collections.ts'
+import { contentFilePath, contentRoot, contentUrl } from './content-url.ts'
 import { bodyImageUrl } from './markdown.ts'
-import { readContent, renderBody, type ContentSnapshot } from './snapshot.ts'
+import {
+  collectionsOf,
+  readContent,
+  renderBody,
+  type ContentSnapshot,
+} from './snapshot.ts'
 
 /**
  * Reads every collection at build time and serves the result as a virtual
@@ -40,30 +38,6 @@ const DETAIL_PREFIX = `${VIRTUAL_ID}/detail/`
 // prefixed with NUL, marking it as owned by a plugin so nothing else tries to
 // read it off the filesystem.
 const RESOLVED_PREFIX = '\0'
-
-/**
- * The detail side of each collection that has pages. `directory` locates the
- * document's images, `loader` is the accessor the generated map is exported as.
- * Slugs and data come from the content snapshot.
- */
-const DETAILS = {
-  blogPosts: {
-    directory: blogPostsCollection.directory,
-    loader: 'loadBlogPost',
-  },
-  projects: {
-    directory: projectsCollection.directory,
-    loader: 'loadProject',
-  },
-  talks: {
-    directory: talksCollection.directory,
-    loader: 'loadTalk',
-  },
-} as const
-
-const LISTINGS = ['blogPosts', 'projects', 'experiences', 'talks'] as const
-
-type DetailCollection = keyof typeof DETAILS
 
 /**
  * Image extensions worth turning into a real `?url` import, so Vite hashes,
@@ -184,41 +158,45 @@ export function content(): Plugin {
 
   const loadIndex = async () => {
     const assets = createAssets()
-    const current = await getSnapshot()
+    const collections = collectionsOf(await getSnapshot())
 
-    const lines = LISTINGS.map(
-      (name) =>
-        `export const ${name} = ${serialize(current[name], assets.ref)}`,
+    const lines = collections.map(
+      ({ key, listing }) =>
+        `export const ${key} = ${serialize(listing, assets.ref)}`,
     )
 
     // Every document gets a page, drafts included; only the listings above
     // apply the `published` filter.
-    for (const [name, { loader }] of Object.entries(DETAILS)) {
-      const entries = current.documents[name as DetailCollection].map(
-        ({ slug }) => {
-          const id = `${DETAIL_PREFIX}${name}/${slug}`
-          return `${JSON.stringify(slug)}:() => import(${JSON.stringify(id)})`
-        },
-      )
-      lines.push(`export const ${loader} = {${entries.join(',')}}`)
+    for (const { key, detail } of collections) {
+      if (!detail) continue
+      const entries = detail.documents.map(({ slug }) => {
+        const id = `${DETAIL_PREFIX}${key}/${slug}`
+        return `${JSON.stringify(slug)}:() => import(${JSON.stringify(id)})`
+      })
+      lines.push(`export const ${detail.loader} = {${entries.join(',')}}`)
     }
 
     return assets.emit(...lines)
   }
 
-  const loadDetail = async (collection: DetailCollection, slug: string) => {
-    const document = (await getSnapshot()).documents[collection].find(
+  const loadDetail = async (key: string, slug: string) => {
+    const collection = collectionsOf(await getSnapshot()).find(
+      (candidate) => candidate.key === key && candidate.detail,
+    )
+    if (!collection) return null
+
+    const document = collection.detail?.documents.find(
       (candidate) => candidate.slug === slug,
     )
     if (!document) {
-      throw new Error(`[content] no ${collection} document with slug "${slug}"`)
+      throw new Error(`[content] no ${key} document with slug "${slug}"`)
     }
 
     const assets = createAssets()
     const html = await renderBody(document.source)
     const body = serializeHtml(
       html,
-      contentUrl(DETAILS[collection].directory, slug),
+      contentUrl(collection.directory, slug),
       assets.ref,
       warn,
     )
@@ -256,9 +234,7 @@ export function content(): Plugin {
         const [collection, slug] = virtual
           .slice(DETAIL_PREFIX.length)
           .split('/')
-        if (collection && slug && collection in DETAILS) {
-          return loadDetail(collection as DetailCollection, slug)
-        }
+        if (collection && slug) return loadDetail(collection, slug)
       }
 
       return null
