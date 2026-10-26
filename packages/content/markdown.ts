@@ -302,11 +302,17 @@ export function renderMarkdownFiles(
 
   // Published documents only, in listing order. Collections with no listing
   // page (experiences) still get a section in `/index.md` and `/llms.txt`.
-  const sections = collections.map(({ index, listingPage }) => ({
-    title: index.title,
-    description: listingPage ? pages[listingPage.name].description : undefined,
-    entries: index.entries,
+  const listed = collections.map(({ index, listingPage }) => ({
+    listingPage,
+    section: {
+      title: index.title,
+      description: listingPage
+        ? pages[listingPage.name].description
+        : undefined,
+      entries: index.entries,
+    },
   }))
+  const sections = listed.map(({ section }) => section)
 
   return [
     // Drafts included, matching the detail pages `content()` generates: an
@@ -325,22 +331,22 @@ export function renderMarkdownFiles(
         }),
       })),
     ),
-    ...collections.flatMap(({ listingPage }, at) => {
-      if (!listingPage) return []
-      const { title, description, entries } = sections[at]!
-      return [
-        {
-          fileName: markdownFileName(listingPage.path),
-          source: renderIndex({
-            site,
-            routePath: listingPage.path,
-            title,
-            description,
-            sections: [{ title, entries }],
-          }),
-        },
-      ]
-    }),
+    ...listed.flatMap(({ listingPage, section }) =>
+      listingPage
+        ? [
+            {
+              fileName: markdownFileName(listingPage.path),
+              source: renderIndex({
+                site,
+                routePath: listingPage.path,
+                title: section.title,
+                description: section.description,
+                sections: [{ title: section.title, entries: section.entries }],
+              }),
+            },
+          ]
+        : [],
+    ),
     {
       fileName: markdownFileName('/'),
       source: renderIndex({

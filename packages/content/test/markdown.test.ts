@@ -16,6 +16,7 @@ import {
 } from '../markdown.ts'
 import { readContent } from '../snapshot.ts'
 import { estimateTokens, prefersMarkdown } from '../vite-markdown.ts'
+import { PAGES } from './helpers.ts'
 
 /**
  * Covers the markdown twins served for `Accept: text/markdown` (ADR-0009).
@@ -478,13 +479,6 @@ describe('edge function parity', () => {
 })
 
 describe('renderMarkdownFiles', () => {
-  const PAGES = {
-    home: { description: 'Home.' },
-    blog: { description: 'Posts.' },
-    projects: { description: 'Projects.' },
-    talks: { description: 'Talks.' },
-  }
-
   it('gives every document on disk a twin, drafts included', async () => {
     const content = await readContent()
     const names = renderMarkdownFiles(content, {

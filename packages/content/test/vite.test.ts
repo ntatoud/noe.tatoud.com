@@ -7,7 +7,7 @@ import { blog } from '../catalog/blog.ts'
 import { projects as projectsEntry } from '../catalog/projects.ts'
 import { talks as talksEntry } from '../catalog/talks.ts'
 import { contentRoot } from '../content-url.ts'
-import { content } from '../vite.ts'
+import { createPlugin, readDeclaredExports } from './helpers.ts'
 
 /**
  * Pins the Vite plugin against the real `content/` directory: it is the only
@@ -21,29 +21,6 @@ import { content } from '../vite.ts'
  * surfaced during prerender, as `Failed to fetch /blog/…: Internal Server Error`.
  * Evaluating here turns that class of bug into a named assertion failure.
  */
-
-type Hook = (...args: any[]) => any
-
-/** The plugin under test, with its hooks reachable as plain functions. */
-function createPlugin() {
-  const warnings: string[] = []
-  const plugin = content() as unknown as {
-    configResolved: Hook
-    resolveId: Hook
-    load: Hook
-  }
-  plugin.configResolved({ logger: { warn: (m: string) => warnings.push(m) } })
-
-  const generate = async (id: string): Promise<string> => {
-    const resolved = plugin.resolveId(id)
-    expect(resolved, `plugin did not claim ${id}`).toBeTruthy()
-    const code = await plugin.load(resolved)
-    expect(code, `plugin generated nothing for ${id}`).toBeTruthy()
-    return code as string
-  }
-
-  return { generate, warnings }
-}
 
 /**
  * Runs a generated module and returns what it exported.
@@ -126,13 +103,7 @@ describe('virtual:content', () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
 
-    const declared = fs.readFileSync(
-      path.join(import.meta.dirname, '../virtual.d.ts'),
-      'utf8',
-    )
-    const declaredNames = [
-      ...declared.matchAll(/^\s*export const (\w+):/gm),
-    ].map(([, name]) => name)
+    const declaredNames = readDeclaredExports()
 
     expect(declaredNames.length).toBeGreaterThan(0)
     expect(Object.keys(exports).sort()).toEqual([...declaredNames].sort())

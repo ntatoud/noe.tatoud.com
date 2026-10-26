@@ -1,14 +1,14 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { catalog } from '../catalog/index.ts'
 import { markdownFileName, renderMarkdownFiles } from '../markdown.ts'
 import { readContentPages, type ContentPage } from '../pages.ts'
-import { collectionsOf, readContent } from '../snapshot.ts'
-import type { AnyCollectionSnapshot } from '../snapshot.ts'
-import { content } from '../vite.ts'
+import {
+  collectionsOf,
+  readContent,
+  type AnyCollectionSnapshot,
+} from '../snapshot.ts'
+import { createPlugin, PAGES, readDeclaredExports } from './helpers.ts'
 
 /**
  * The Content Catalog's contract: every entry yields everything the build
@@ -16,20 +16,11 @@ import { content } from '../vite.ts'
  * catalog entry, so this is the test that says the entry was enough.
  */
 
-type Hook = (...args: any[]) => any
-
-const PAGES = {
-  home: { description: 'Home.' },
-  blog: { description: 'Posts.' },
-  projects: { description: 'Projects.' },
-  talks: { description: 'Talks.' },
-}
-
 let collections: ReadonlyArray<AnyCollectionSnapshot>
 let twins: Map<string, string>
 let pages: ReadonlyArray<ContentPage>
 let virtualExports: ReadonlyArray<string>
-let declaredExports: ReadonlyArray<string>
+const declaredExports = readDeclaredExports()
 
 beforeAll(async () => {
   const snapshot = await readContent()
@@ -46,17 +37,16 @@ beforeAll(async () => {
 
   pages = await readContentPages()
 
-  const plugin = content() as unknown as { resolveId: Hook; load: Hook }
-  const code: string = await plugin.load(plugin.resolveId('virtual:content'))
+  const code = await createPlugin().generate('virtual:content')
   virtualExports = [...code.matchAll(/^export const (\w+) = /gm)].map(
     ([, name]) => name!,
   )
+})
 
-  declaredExports = [
-    ...fs
-      .readFileSync(path.join(import.meta.dirname, '../virtual.d.ts'), 'utf8')
-      .matchAll(/^\s*export const (\w+):/gm),
-  ].map(([, name]) => name!)
+it('reads every entry into the snapshot, in catalog order', () => {
+  expect(collections.map((collection) => collection.key)).toEqual(
+    catalog.map(({ key }) => key),
+  )
 })
 
 describe.each(catalog.map((entry) => [entry.key, entry] as const))(
@@ -65,10 +55,7 @@ describe.each(catalog.map((entry) => [entry.key, entry] as const))(
     const snapshotOf = () =>
       collections.find((collection) => collection.key === key)!
 
-    it('is read into the snapshot, in catalog order', () => {
-      expect(collections.map((collection) => collection.key)).toEqual(
-        catalog.map(({ key }) => key),
-      )
+    it('lists at least one document', () => {
       expect(snapshotOf().listing.length).toBeGreaterThan(0)
     })
 

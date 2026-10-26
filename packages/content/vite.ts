@@ -181,11 +181,11 @@ export function content(): Plugin {
 
   const loadDetail = async (key: string, slug: string) => {
     const collection = collectionsOf(await getSnapshot()).find(
-      (candidate) => candidate.key === key && candidate.detail,
+      (candidate) => candidate.key === key,
     )
-    if (!collection) return null
+    if (!collection?.detail) return null
 
-    const document = collection.detail?.documents.find(
+    const document = collection.detail.documents.find(
       (candidate) => candidate.slug === slug,
     )
     if (!document) {
