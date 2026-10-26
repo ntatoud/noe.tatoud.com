@@ -17,14 +17,15 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const isContribution = project.kind === 'contribution'
-  const external = isContribution && !!project.url
+  // Contributions link out to the project they went into, when it has a site.
+  const externalUrl = isContribution ? project.url : undefined
 
   return (
     <ContentCard
       slot="project-card"
       link={
-        external && project.url
-          ? { external: true, href: project.url }
+        externalUrl
+          ? { external: true, href: externalUrl }
           : { to: '/projects/$slug', slug: project.slug }
       }
     >
@@ -41,7 +42,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {formatMonthYear(project.date)}
         </time>
       </div>
-      <CardTitle external={external}>{project.title}</CardTitle>
+      <CardTitle external={!!externalUrl}>{project.title}</CardTitle>
       {project.description && (
         <CardDescription>{project.description}</CardDescription>
       )}
