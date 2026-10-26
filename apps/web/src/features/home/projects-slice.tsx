@@ -12,7 +12,7 @@ export function ProjectsSlice({ projects }: ProjectsSliceProps) {
   const featured = projects.slice(0, 3)
 
   return (
-    <Slice title="Projects" seeAllHref="/projects" data-slot="projects-slice">
+    <Slice title="Projects" seeAllHref="/projects" slot="projects-slice">
       <ul
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
         data-slot="projects-slice-list"
