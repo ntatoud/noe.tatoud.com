@@ -1,28 +1,10 @@
-export {
-  getBlogPosts,
-  type BlogPost,
-  type BlogPostDetail,
-} from './readers/blog.ts'
-export { getExperiences, type Experience } from './readers/experiences.ts'
-export {
-  getProjects,
-  type Project,
-  type ProjectDetail,
-} from './readers/projects.ts'
-export {
-  getTalks,
-  type StageItem,
-  type TalkDetail,
-  type TalkEvent,
-} from './readers/talks.ts'
+// The app reads content from `virtual:content` (ADR-0008), so this entry only
+// carries the types its pages are written against. The readers themselves run
+// at build time, imported by `snapshot.ts`.
+export type { BlogPost, BlogPostDetail } from './readers/blog.ts'
+export type { Experience } from './readers/experiences.ts'
+export type { Project, ProjectDetail } from './readers/projects.ts'
+export type { StageItem, TalkDetail } from './readers/talks.ts'
 
-export type { ExperienceFrontmatter } from './schemas/experiences.ts'
-export type {
-  ProjectCtaFrontmatter,
-  ProjectFrontmatter,
-} from './schemas/projects.ts'
-export type {
-  StageEvent,
-  StageResource,
-  StageFrontmatter,
-} from './schemas/talks.ts'
+export type { ProjectCtaFrontmatter } from './schemas/projects.ts'
+export type { StageResource } from './schemas/talks.ts'

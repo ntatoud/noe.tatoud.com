@@ -35,5 +35,3 @@ export const ExperienceSchema = Schema.Struct({
     ),
   ),
 })
-
-export type ExperienceFrontmatter = (typeof ExperienceSchema)['Type']

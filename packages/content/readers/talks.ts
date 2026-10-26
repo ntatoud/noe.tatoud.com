@@ -4,8 +4,6 @@ import { talks as talksCollection } from '../collections.ts'
 
 export type StageItem = CollectionData<typeof talksCollection>
 
-export type TalkEvent = StageItem['events'][number]
-
 export type TalkDetail = StageItem & {
   /** The rendered body, as HTML. */
   html: string

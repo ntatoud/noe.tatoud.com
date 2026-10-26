@@ -201,6 +201,257 @@ function ExperienceLink({
   )
 }
 
+/** Maps a date to a percentage of the timeline's width. */
+type Position = (date: string) => number
+
+/** The bar's fill: a brand color when the entry has one, else by kind. */
+function roleFill(exp: Experience) {
+  if (exp.color) return 'brand-fill'
+  return exp.kind === 'work' || exp.kind === 'internship'
+    ? 'bg-primary'
+    : 'bg-secondary'
+}
+
+function TimelineMilestone({
+  experience: exp,
+  index,
+  position,
+}: {
+  experience: Experience
+  index: number
+  position: Position
+}) {
+  const date = exp.endDate ?? exp.startDate
+  // Every other milestone drops a row, so two close milestones never print
+  // their labels over each other.
+  const lower = index % 2 === 1
+  const at = position(date)
+  // In the right half the label hangs off the icon's left side, so it never
+  // runs past the scale.
+  const alignEnd = at > 50
+  return (
+    <div
+      className="absolute inset-y-0 left-(--at) w-0"
+      style={{ '--at': `${at}%`, '--brand': exp.color }}
+      data-slot="experiences-milestone"
+    >
+      <span
+        className={cn(
+          'absolute bottom-6 left-0 border-l border-dashed',
+          lower ? 'top-19' : 'top-9',
+          exp.color ? 'border-(--brand)/60' : 'border-olive-500/60',
+        )}
+        aria-hidden
+      />
+      <ExperienceLink
+        experience={exp}
+        // Milestones sit above every lane: their card opens below.
+        placement={{ side: 'below', align: alignEnd ? 'end' : 'start' }}
+        // Shifted by half the icon, so the icon sits on the line. Lifted over
+        // the lanes, which come later in the page and would otherwise paint
+        // over its card.
+        className={cn(
+          'absolute z-10 flex w-max items-center gap-2',
+          alignEnd
+            ? 'right-0 translate-x-3.5 flex-row-reverse text-right'
+            : 'left-0 -translate-x-3.5',
+          lower ? 'top-10' : 'top-0',
+        )}
+      >
+        <span
+          className={cn(
+            'flex size-7 items-center justify-center rounded-full',
+            exp.color
+              ? 'brand-fill text-primary-foreground'
+              : 'bg-secondary text-secondary-foreground',
+          )}
+        >
+          <HugeiconsIcon
+            icon={exp.kind === 'education' ? GraduationCapIcon : SparklesIcon}
+            size={16}
+          />
+        </span>
+        <span className="flex flex-col">
+          <time
+            dateTime={date}
+            className="text-xs text-muted-foreground tabular-nums group-hover:text-foreground"
+          >
+            {formatMonthYear(date)}
+          </time>
+          <span className="text-sm text-foreground underline-offset-4 group-hover:underline">
+            {exp.title} · {exp.organization}
+          </span>
+        </span>
+      </ExperienceLink>
+    </div>
+  )
+}
+
+function TimelineRole({
+  experience: exp,
+  next,
+  side,
+  alignEnd,
+  position,
+}: {
+  experience: Experience
+  /** The following role on the same lane, if any. */
+  next: Experience | undefined
+  side: PreviewPlacement['side']
+  alignEnd: boolean
+  position: Position
+}) {
+  const from = position(exp.startDate)
+  const to = position(exp.endDate ?? today)
+  // A label stops short of the next role on its lane and wraps instead of
+  // running into it. The width is a share of this role's own box, which is
+  // the label's parent.
+  const room =
+    next && to > from
+      ? `calc(${((position(next.startDate) - from) / (to - from)) * 100}% - 0.75rem)`
+      : 'none'
+  return (
+    <li
+      className="absolute inset-y-0 left-(--from) w-(--span)"
+      style={{
+        '--from': `${from}%`,
+        '--span': `${to - from}%`,
+        '--brand': exp.color,
+        '--room': room,
+      }}
+      data-slot="experiences-role"
+    >
+      <ExperienceLink
+        experience={exp}
+        label={`${exp.title} at ${exp.organization}`}
+        placement={{ side, align: from > 50 ? 'end' : 'start' }}
+        className="relative block h-full"
+      >
+        {/* The fill is its own element: opacity or a filter on the link would
+            also apply to, and trap, its preview card. */}
+        <span
+          className={cn(
+            'block h-full rounded-full transition group-hover:brightness-110',
+            roleFill(exp),
+            exp.kind === 'internship' && 'opacity-50',
+            !exp.endDate && 'rounded-r-none',
+          )}
+        />
+      </ExperienceLink>
+      <span
+        className={cn(
+          'absolute top-4 flex w-max max-w-(--room) flex-col bg-background',
+          alignEnd ? 'right-0 text-right' : 'left-0',
+        )}
+      >
+        <span className="text-xs text-muted-foreground tabular-nums">
+          <ExperienceDateRange experience={exp} />
+        </span>
+        <span className="text-sm text-foreground">{exp.title}</span>
+      </span>
+    </li>
+  )
+}
+
+function TimelineLane({
+  lane: { organization, roles },
+  side,
+  position,
+}: {
+  lane: Lane
+  side: PreviewPlacement['side']
+  position: Position
+}) {
+  const [first] = roles as [Experience, ...Experience[]]
+  const last = roles.at(-1) ?? first
+  const start = position(first.startDate)
+  const end = position(last.endDate ?? today)
+  // A lane in the right half hangs its labels off its end, so the text never
+  // runs past the scale.
+  const alignEnd = start > 50
+
+  return (
+    <li
+      style={{ '--start': `${start}%`, '--after': `${100 - end}%` }}
+      data-slot="experiences-lane"
+    >
+      <div
+        className={cn(
+          'mb-2 flex',
+          alignEnd ? 'justify-end pr-(--after)' : 'pl-(--start)',
+        )}
+      >
+        <ExperienceLink
+          experience={last}
+          placement={{ side, align: alignEnd ? 'end' : 'start' }}
+          className={cn(
+            'relative flex items-center gap-2 rounded-md bg-background',
+            alignEnd && 'flex-row-reverse',
+          )}
+        >
+          <ExperienceLogo experience={last} />
+          <span className="text-sm text-foreground underline-offset-4 group-hover:underline">
+            {organization}
+          </span>
+        </ExperienceLink>
+      </div>
+
+      <ol className="relative h-3">
+        {roles.map((exp, index) => (
+          <TimelineRole
+            key={exp.slug}
+            experience={exp}
+            next={roles[index + 1]}
+            side={side}
+            alignEnd={alignEnd}
+            position={position}
+          />
+        ))}
+      </ol>
+      <div className="h-16" aria-hidden />
+    </li>
+  )
+}
+
+function TimelineAxis({
+  origin,
+  ticks,
+  position,
+}: {
+  origin: string
+  ticks: ReadonlyArray<{ date: string; year?: number }>
+  position: Position
+}) {
+  return (
+    <div
+      className="relative h-6 border-t border-border text-xs text-muted-foreground tabular-nums"
+      aria-hidden
+      data-slot="experiences-axis"
+    >
+      {ticks.map((tick) => (
+        <span
+          key={tick.date}
+          className={cn(
+            'absolute top-0 left-(--at) w-px bg-border',
+            tick.year ? 'h-2' : 'h-1',
+          )}
+          style={{ '--at': `${position(tick.date)}%` }}
+        >
+          {tick.year && (
+            <span className="absolute top-2.5 -translate-x-1/2">
+              {tick.year}
+            </span>
+          )}
+        </span>
+      ))}
+      <time dateTime={origin} className="absolute top-2.5 left-0">
+        {formatMonthYear(origin)}
+      </time>
+      <span className="absolute top-2.5 right-0">Today</span>
+    </div>
+  )
+}
+
 export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
   const { origin, lanes, milestones, ticks, position } = timeScale(experiences)
 
@@ -214,220 +465,29 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
           )}
           data-slot="experiences-timeline"
         >
-          {milestones.map((exp, index) => {
-            const date = exp.endDate ?? exp.startDate
-            // Every other milestone drops a row, so two close milestones never
-            // print their labels over each other.
-            const lower = index % 2 === 1
-            const at = position(date)
-            // In the right half the label hangs off the icon's left side, so
-            // it never runs past the scale.
-            const alignEnd = at > 50
-            return (
-              <div
-                key={exp.slug}
-                className="absolute inset-y-0 left-(--at) w-0"
-                style={{ '--at': `${at}%`, '--brand': exp.color }}
-                data-slot="experiences-milestone"
-              >
-                <span
-                  className={cn(
-                    'absolute bottom-6 left-0 border-l border-dashed',
-                    lower ? 'top-19' : 'top-9',
-                    exp.color ? 'border-(--brand)/60' : 'border-olive-500/60',
-                  )}
-                  aria-hidden
-                />
-                <ExperienceLink
-                  experience={exp}
-                  // Milestones sit above every lane: their card opens below.
-                  placement={{
-                    side: 'below',
-                    align: alignEnd ? 'end' : 'start',
-                  }}
-                  // Shifted by half the icon, so the icon sits on the line.
-                  // Lifted over the lanes, which come later in the page and
-                  // would otherwise paint over its card.
-                  className={cn(
-                    'absolute z-10 flex w-max items-center gap-2',
-                    alignEnd
-                      ? 'right-0 translate-x-3.5 flex-row-reverse text-right'
-                      : 'left-0 -translate-x-3.5',
-                    lower ? 'top-10' : 'top-0',
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'flex size-7 items-center justify-center rounded-full',
-                      exp.color
-                        ? 'brand-fill text-primary-foreground'
-                        : 'bg-secondary text-secondary-foreground',
-                    )}
-                  >
-                    <HugeiconsIcon
-                      icon={
-                        exp.kind === 'education'
-                          ? GraduationCapIcon
-                          : SparklesIcon
-                      }
-                      size={16}
-                    />
-                  </span>
-                  <span className="flex flex-col">
-                    <time
-                      dateTime={date}
-                      className="text-xs text-muted-foreground tabular-nums group-hover:text-foreground"
-                    >
-                      {formatMonthYear(date)}
-                    </time>
-                    <span className="text-sm text-foreground underline-offset-4 group-hover:underline">
-                      {exp.title} · {exp.organization}
-                    </span>
-                  </span>
-                </ExperienceLink>
-              </div>
-            )
-          })}
+          {milestones.map((exp, index) => (
+            <TimelineMilestone
+              key={exp.slug}
+              experience={exp}
+              index={index}
+              position={position}
+            />
+          ))}
 
           <ol className="relative flex flex-col gap-6 pt-4 pb-6">
-            {lanes.map(({ organization, roles }, laneIndex) => {
-              const [first] = roles as [Experience, ...Experience[]]
-              const last = roles.at(-1) ?? first
-              const start = position(first.startDate)
-              const end = position(last.endDate ?? today)
-              // A lane in the right half hangs its labels off its end, so the
-              // text never runs past the scale.
-              const alignEnd = start > 50
-              // Cards open toward the middle of the chart, never off an edge
-              // of its scroll container, which would clip them.
-              const side = laneIndex < lanes.length / 2 ? 'below' : 'above'
-
-              return (
-                <li
-                  key={organization}
-                  style={{ '--start': `${start}%`, '--after': `${100 - end}%` }}
-                  data-slot="experiences-lane"
-                >
-                  <div
-                    className={cn(
-                      'mb-2 flex',
-                      alignEnd ? 'justify-end pr-(--after)' : 'pl-(--start)',
-                    )}
-                  >
-                    <ExperienceLink
-                      experience={last}
-                      placement={{ side, align: alignEnd ? 'end' : 'start' }}
-                      className={cn(
-                        'relative flex items-center gap-2 rounded-md bg-background',
-                        alignEnd && 'flex-row-reverse',
-                      )}
-                    >
-                      <ExperienceLogo experience={last} />
-                      <span className="text-sm text-foreground underline-offset-4 group-hover:underline">
-                        {organization}
-                      </span>
-                    </ExperienceLink>
-                  </div>
-
-                  <ol className="relative h-3">
-                    {roles.map((exp, index) => {
-                      const from = position(exp.startDate)
-                      const to = position(exp.endDate ?? today)
-                      const next = roles[index + 1]
-                      // A label stops short of the next role on its lane and
-                      // wraps instead of running into it. The width is a share
-                      // of this role's own box, which is the label's parent.
-                      const room =
-                        next && to > from
-                          ? `calc(${((position(next.startDate) - from) / (to - from)) * 100}% - 0.75rem)`
-                          : 'none'
-                      return (
-                        <li
-                          key={exp.slug}
-                          className="absolute inset-y-0 left-(--from) w-(--span)"
-                          style={{
-                            '--from': `${from}%`,
-                            '--span': `${to - from}%`,
-                            '--brand': exp.color,
-                            '--room': room,
-                          }}
-                          data-slot="experiences-role"
-                        >
-                          <ExperienceLink
-                            experience={exp}
-                            label={`${exp.title} at ${exp.organization}`}
-                            placement={{
-                              side,
-                              align: from > 50 ? 'end' : 'start',
-                            }}
-                            className="relative block h-full"
-                          >
-                            {/* The fill is its own element: opacity or a
-                                filter on the link would also apply to, and
-                                trap, its preview card. */}
-                            <span
-                              className={cn(
-                                'block h-full rounded-full transition group-hover:brightness-110',
-                                exp.color
-                                  ? 'brand-fill'
-                                  : exp.kind === 'work' ||
-                                      exp.kind === 'internship'
-                                    ? 'bg-primary'
-                                    : 'bg-secondary',
-                                exp.kind === 'internship' && 'opacity-50',
-                                !exp.endDate && 'rounded-r-none',
-                              )}
-                            />
-                          </ExperienceLink>
-                          <span
-                            className={cn(
-                              'absolute top-4 flex w-max max-w-(--room) flex-col bg-background',
-                              alignEnd ? 'right-0 text-right' : 'left-0',
-                            )}
-                          >
-                            <span className="text-xs text-muted-foreground tabular-nums">
-                              <ExperienceDateRange experience={exp} />
-                            </span>
-                            <span className="text-sm text-foreground">
-                              {exp.title}
-                            </span>
-                          </span>
-                        </li>
-                      )
-                    })}
-                  </ol>
-                  <div className="h-16" aria-hidden />
-                </li>
-              )
-            })}
+            {lanes.map((lane, laneIndex) => (
+              <TimelineLane
+                key={lane.organization}
+                lane={lane}
+                // Cards open toward the middle of the chart, never off an edge
+                // of its scroll container, which would clip them.
+                side={laneIndex < lanes.length / 2 ? 'below' : 'above'}
+                position={position}
+              />
+            ))}
           </ol>
 
-          <div
-            className="relative h-6 border-t border-border text-xs text-muted-foreground tabular-nums"
-            aria-hidden
-            data-slot="experiences-axis"
-          >
-            {ticks.map((tick) => (
-              <span
-                key={tick.date}
-                className={cn(
-                  'absolute top-0 left-(--at) w-px bg-border',
-                  tick.year ? 'h-2' : 'h-1',
-                )}
-                style={{ '--at': `${position(tick.date)}%` }}
-              >
-                {tick.year && (
-                  <span className="absolute top-2.5 -translate-x-1/2">
-                    {tick.year}
-                  </span>
-                )}
-              </span>
-            ))}
-            <time dateTime={origin} className="absolute top-2.5 left-0">
-              {formatMonthYear(origin)}
-            </time>
-            <span className="absolute top-2.5 right-0">Today</span>
-          </div>
+          <TimelineAxis origin={origin} ticks={ticks} position={position} />
         </div>
       </div>
     </Slice>

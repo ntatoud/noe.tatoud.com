@@ -31,5 +31,3 @@ export const ProjectSchema = Schema.Struct({
   tags: Schema.optionalKey(Schema.Array(Schema.String)),
   cta: Schema.optionalKey(ProjectCtaSchema),
 })
-
-export type ProjectFrontmatter = (typeof ProjectSchema)['Type']
