@@ -1,6 +1,7 @@
 import { blogPosts, projects, talks } from 'virtual:content'
 
 import { SITE_URL, STATIC_PAGES } from '@/lib/site'
+import { escapeXml } from '@/lib/xml'
 
 /** Every indexable page: static ones, then published documents (no drafts). */
 const URLS: ReadonlyArray<{ path: string; lastmod?: string | undefined }> = [
@@ -9,9 +10,6 @@ const URLS: ReadonlyArray<{ path: string; lastmod?: string | undefined }> = [
   ...projects.map((project) => ({ path: project.path, lastmod: project.date })),
   ...talks.map((talk) => ({ path: talk.path, lastmod: talk.events[0]?.date })),
 ]
-
-const escape = (value: string): string =>
-  value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 
 /** A sitemap 0.9 document (https://www.sitemaps.org/protocol.html). */
 export const sitemapResponse = (): Response =>
@@ -22,7 +20,7 @@ export const sitemapResponse = (): Response =>
       ...URLS.map(({ path, lastmod }) =>
         [
           '  <url>',
-          `    <loc>${escape(`${SITE_URL}${path}`)}</loc>`,
+          `    <loc>${escapeXml(`${SITE_URL}${path}`)}</loc>`,
           ...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
           '  </url>',
         ].join('\n'),
