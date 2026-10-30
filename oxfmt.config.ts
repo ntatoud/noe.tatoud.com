@@ -10,6 +10,8 @@ export default defineConfig({
     'pnpm-lock.yaml',
     'yarn.lock',
     '**/*.gen.ts',
+    // Vendored verbatim from mattpocock/skills, kept diffable against upstream.
+    '.claude/skills/**',
   ],
   sortImports: {
     newlinesBetween: true,
