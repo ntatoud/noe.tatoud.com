@@ -87,6 +87,11 @@ describe.each(catalog.map((entry) => [entry.key, entry] as const))(
       expect(declaredExports).toContain(entry.detail.loader)
 
       expect(detail.documents.length).toBeGreaterThan(0)
+      // `published` is the Reader's listing, matched by identity: a Reader
+      // that copied its documents would silently empty the sitemap.
+      expect(
+        detail.documents.filter((document) => document.published),
+      ).toHaveLength(snapshotOf().listing.length)
       for (const document of detail.documents) {
         expect(twins.has(markdownFileName(document.path)), document.path).toBe(
           true,

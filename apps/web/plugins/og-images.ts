@@ -19,7 +19,7 @@ const FONTS_DIRECTORY = 'src/features/og/fonts'
 
 /**
  * Renders every page's social card to a PNG at build time, at the path
- * `ogImagePath` gives it (the page's `ogImage`) (`/og/blog/what-is-mcp.png`), so no request ever runs
+ * in its `ogImage` (`/og/blog/what-is-mcp.png`), so no request ever runs
  * the renderer. The prerender pass cannot produce these: it reads every
  * response as text, which corrupts a binary body.
  *
