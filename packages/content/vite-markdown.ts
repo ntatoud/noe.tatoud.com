@@ -4,7 +4,8 @@ import type { Plugin } from 'vite'
 
 import { contentFilePath } from './content-url.ts'
 import type { MarkdownFilesOptions, ResolveAsset } from './markdown.ts'
-import { markdownFileName, renderMarkdownFiles } from './markdown.ts'
+import { renderMarkdownFiles } from './markdown.ts'
+import { markdownFileName } from './paths.ts'
 import { readContent } from './snapshot.ts'
 
 /**

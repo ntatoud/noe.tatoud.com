@@ -60,6 +60,7 @@ export const blog = defineContentCollection({
       path: post.url,
       title: post.title,
       description: post.description,
+      lastmod: post.date,
       details: [
         `- Published: ${post.date}`,
         `- Author: ${post.author}`,

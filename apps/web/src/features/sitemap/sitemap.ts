@@ -1,15 +1,14 @@
-import { blogPosts, projects, talks } from 'virtual:content'
+import { sitePages } from '@ntatoud/content/inventory'
+
+import { contentPages } from 'virtual:content'
 
 import { SITE_URL, STATIC_PAGES } from '@/lib/site'
 import { escapeXml } from '@/lib/xml'
 
 /** Every indexable page: static ones, then published documents (no drafts). */
-const URLS: ReadonlyArray<{ path: string; lastmod?: string | undefined }> = [
-  ...Object.values(STATIC_PAGES).map(({ path }) => ({ path })),
-  ...blogPosts.map((post) => ({ path: post.url, lastmod: post.date })),
-  ...projects.map((project) => ({ path: project.path, lastmod: project.date })),
-  ...talks.map((talk) => ({ path: talk.path, lastmod: talk.events[0]?.date })),
-]
+const URLS = sitePages(contentPages, STATIC_PAGES).filter(
+  (page) => page.published,
+)
 
 /** A sitemap 0.9 document (https://www.sitemaps.org/protocol.html). */
 export const sitemapResponse = (): Response =>

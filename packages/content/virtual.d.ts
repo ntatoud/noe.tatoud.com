@@ -8,6 +8,7 @@ declare module 'virtual:content' {
   import type {
     BlogPost,
     BlogPostDetail,
+    ContentPages,
     Experience,
     Project,
     ProjectDetail,
@@ -36,4 +37,11 @@ declare module 'virtual:content' {
   export const loadTalk: Readonly<
     Record<string, (() => Promise<{ default: TalkDetail }>) | undefined>
   >
+
+  /**
+   * Every content document's page (drafts included, flagged by `published`)
+   * and every listing page, as `@ntatoud/content/pages` reads them at build
+   * time. The sitemap reads them from here.
+   */
+  export const contentPages: ContentPages
 }

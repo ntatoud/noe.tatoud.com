@@ -7,6 +7,7 @@ import { blog } from '../catalog/blog.ts'
 import { projects as projectsEntry } from '../catalog/projects.ts'
 import { talks as talksEntry } from '../catalog/talks.ts'
 import { contentRoot } from '../content-url.ts'
+import { readContentPages } from '../pages.ts'
 import { createPlugin, readDeclaredExports } from './helpers.ts'
 
 /**
@@ -134,6 +135,15 @@ describe('virtual:content', () => {
 
     const dates = exports.blogPosts.map((post: { date: string }) => post.date)
     expect(dates).toEqual([...dates].sort().reverse())
+  })
+
+  // The sitemap reads its documents from here, since nothing reads the
+  // filesystem at runtime (ADR-0008).
+  it('exports the content pages the build reads from disk', async () => {
+    const { generate } = createPlugin()
+    const { exports } = evaluateModule(await generate('virtual:content'))
+
+    expect(exports.contentPages).toEqual(await readContentPages())
   })
 
   it('resolves every frontmatter image to a file that exists', async () => {

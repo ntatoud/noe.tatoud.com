@@ -1,3 +1,4 @@
+import { sitePages } from '@ntatoud/content/inventory'
 import { readContentPages } from '@ntatoud/content/pages'
 import { content } from '@ntatoud/content/vite'
 import { contentMarkdown } from '@ntatoud/content/vite-markdown'
@@ -22,7 +23,7 @@ import {
 export default defineConfig(async () => {
   // Every page on the site, drafts included: what gets prerendered and what
   // gets a social card.
-  const pages = [...Object.values(STATIC_PAGES), ...(await readContentPages())]
+  const pages = sitePages(await readContentPages(), STATIC_PAGES)
 
   return {
     resolve: {

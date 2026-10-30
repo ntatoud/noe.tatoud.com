@@ -1,8 +1,9 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { catalog } from '../catalog/index.ts'
-import { markdownFileName, renderMarkdownFiles } from '../markdown.ts'
+import { renderMarkdownFiles } from '../markdown.ts'
 import { readContentPages, type ContentPage } from '../pages.ts'
+import { markdownFileName } from '../paths.ts'
 import {
   collectionsOf,
   readContent,
@@ -35,7 +36,7 @@ beforeAll(async () => {
     }).map((file) => [file.fileName, file.source]),
   )
 
-  pages = await readContentPages()
+  pages = (await readContentPages()).documents
 
   const code = await createPlugin().generate('virtual:content')
   virtualExports = [...code.matchAll(/^export const (\w+) = /gm)].map(

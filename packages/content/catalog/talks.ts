@@ -62,6 +62,7 @@ export const talks = defineContentCollection({
       path: talk.path,
       title: talk.title,
       description: talk.description,
+      lastmod: talk.events[0]?.date,
       details: [
         `- Kind: ${talk.kind}`,
         talk.resource ? `- ${talk.resource.kind}: ${talk.resource.url}` : null,

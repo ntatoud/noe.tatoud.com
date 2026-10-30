@@ -1,11 +1,10 @@
 import type { CSSProperties } from 'react'
 
+import type { PageKind } from '@ntatoud/content'
+
 // This card is rendered at build time by `plugins/og-images.ts`, which the Vite
 // config imports. Nothing here may use the app's path alias or a Vite-only
 // import, because the config loader resolves neither.
-
-/** The content kinds a card can carry a badge for. */
-export type OgKind = 'blog' | 'project' | 'talk'
 
 /** The family the build registers the card's fonts under. */
 export const OG_FONT_FAMILY = 'Atkinson Hyperlegible Next'
@@ -13,7 +12,8 @@ export const OG_FONT_FAMILY = 'Atkinson Hyperlegible Next'
 /** Takumi's flowing-text clamp — not part of the standard CSSProperties type. */
 type ClampStyle = CSSProperties & { lineClamp?: number }
 
-const KIND_LABELS: Record<OgKind, string> = {
+/** The badge text for each of the Content Catalog's page kinds. */
+const KIND_LABELS: Record<PageKind, string> = {
   blog: 'Blog',
   project: 'Project',
   talk: 'Talk',
@@ -22,7 +22,7 @@ const KIND_LABELS: Record<OgKind, string> = {
 export type OgCardProps = {
   title: string
   description?: string
-  kind?: OgKind
+  kind?: PageKind | undefined
 }
 
 export function OgCard({ title, description, kind }: OgCardProps) {

@@ -8,7 +8,7 @@ import { talks } from '../catalog/talks.ts'
 import { readContentPages } from '../pages.ts'
 
 const readContentPaths = async () =>
-  (await readContentPages()).map((page) => page.path)
+  (await readContentPages()).documents.map((page) => page.path)
 
 /**
  * Pins the list handed to the prerender pass against the real `content/`
@@ -63,21 +63,47 @@ describe('readContentPages', () => {
   // Each page's title is what its social card shows, so an empty one is a
   // blank card rather than an error.
   it('gives every page a non-empty title', async () => {
-    for (const page of await readContentPages()) {
+    for (const page of (await readContentPages()).documents) {
       expect(page.title.trim(), `${page.path}: empty title`).not.toBe('')
     }
   })
 
   it('gives every page the kind its path belongs to', async () => {
-    for (const page of await readContentPages()) {
+    for (const page of (await readContentPages()).documents) {
       const prefix = page.path.split('/')[1] as keyof typeof KIND_BY_PREFIX
       expect(page.kind, page.path).toBe(KIND_BY_PREFIX[prefix])
     }
   })
 
   it('omits the description key rather than setting it to undefined', async () => {
-    for (const page of await readContentPages()) {
+    for (const page of (await readContentPages()).documents) {
       if ('description' in page) expect(page.description).toBeTruthy()
     }
+  })
+})
+
+describe('readContentPages sitemap data', () => {
+  const page = async (path: string) =>
+    (await readContentPages()).documents.find((page) => page.path === path)
+
+  it('dates a document by its own frontmatter date', async () => {
+    expect(await page('/blog/what-is-mcp')).toMatchObject({
+      lastmod: '2025-06-25',
+      published: true,
+    })
+  })
+
+  it('dates a talk by its latest event', async () => {
+    expect(
+      await page('/talks/build-your-first-game-with-kaplay'),
+    ).toMatchObject({ lastmod: '2025-12-20' })
+  })
+
+  it('gives each listing page the kind of the documents it lists', async () => {
+    expect((await readContentPages()).listings).toEqual([
+      { name: 'blog', path: '/blog', kind: 'blog' },
+      { name: 'projects', path: '/projects', kind: 'project' },
+      { name: 'talks', path: '/talks', kind: 'talk' },
+    ])
   })
 })

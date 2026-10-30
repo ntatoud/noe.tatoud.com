@@ -4,6 +4,7 @@ import type { Plugin } from 'vite'
 
 import { contentFilePath, contentRoot, contentUrl } from './content-url.ts'
 import { bodyImageUrl } from './markdown.ts'
+import { contentPagesOf } from './pages.ts'
 import {
   collectionsOf,
   readContent,
@@ -158,7 +159,8 @@ export function content(): Plugin {
 
   const loadIndex = async () => {
     const assets = createAssets()
-    const collections = collectionsOf(await getSnapshot())
+    const content = await getSnapshot()
+    const collections = collectionsOf(content)
 
     const lines = collections.map(
       ({ key, listing }) =>
@@ -175,6 +177,11 @@ export function content(): Plugin {
       })
       lines.push(`export const ${detail.loader} = {${entries.join(',')}}`)
     }
+
+    // Plain strings and booleans, no images, so JSON is enough.
+    lines.push(
+      `export const contentPages = ${JSON.stringify(contentPagesOf(content))}`,
+    )
 
     return assets.emit(...lines)
   }
