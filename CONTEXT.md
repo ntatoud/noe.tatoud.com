@@ -25,6 +25,10 @@ _Avoid_: collection (alone — too generic), content type
 The ordered list of Content Collections, each declaring its Reader, its pages (listing, detail) and its markdown twin. The build iterates it instead of naming collections, so adding a collection is one catalog entry. Its order is the output order of `/index.md`, `llms.txt` and the content pages.
 _Avoid_: registry, manifest
 
+**Page Inventory**:
+Every page of the site, with its title, description and derived files (its OG card and markdown twin). Built by `sitePages` from the Content Catalog's pages and the app's static pages. Prerendering, OG images, the sitemap, `check:static` and every route's meta tags read from it.
+_Avoid_: route list, sitemap, manifest
+
 **Reader**:
 A Content Catalog entry's `reader`: the function that turns a collection's documents into its typed, ready-to-use listing. Readers encapsulate filtering, sorting, and shape-mapping. The pipeline behind them is an implementation detail of the package.
 _Avoid_: loader, getter, fetcher

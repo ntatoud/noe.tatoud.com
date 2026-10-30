@@ -14,8 +14,8 @@
  * only emits and serves what {@link renderMarkdownFiles} returns.
  */
 
-import type { ListingName } from './catalog/index.ts'
 import { contentUrl } from './content-url.ts'
+import type { StaticPage, StaticPages } from './inventory.ts'
 import { markdownFileName, markdownPath } from './paths.ts'
 import { collectionsOf, type ContentSnapshot } from './snapshot.ts'
 
@@ -229,6 +229,25 @@ export function renderIndex(options: {
 }
 
 /**
+ * The twin of a page the app adds on its own, the styleguide say: its body is
+ * React, not markdown, so all the twin can honestly carry is the page's title
+ * and description, and a way back to the rest of the site.
+ */
+function renderStaticPage(options: {
+  readonly site: SiteConfig
+  readonly page: StaticPage
+}): string {
+  const { site, page } = options
+
+  return `${block(
+    `# ${page.title}`,
+    page.description ? `> ${page.description}` : null,
+    `- Canonical: ${absolute(site, page.path)}`,
+    `More of this site, as markdown: [llms.txt](${absolute(site, '/llms.txt')})`,
+  )}\n`
+}
+
+/**
  * `/llms.txt`, in the layout llmstxt.org specifies: an H1, a blockquoted
  * summary, then H2 sections of links.
  *
@@ -263,10 +282,11 @@ export interface MarkdownFile {
 
 export interface MarkdownFilesOptions {
   readonly site: SiteConfig
-  /** The listing and home pages, whose descriptions head their markdown. */
-  readonly pages: Readonly<
-    Record<'home' | ListingName, { readonly description: string }>
-  >
+  /**
+   * The app's static pages. The home and listing pages' descriptions head their
+   * markdown; any other page gets a twin of its own.
+   */
+  readonly pages: StaticPages
   /** Extra links to advertise under llms.txt's `## Optional` heading. */
   readonly optionalLinks?:
     | ReadonlyArray<{ readonly title: string; readonly path: string }>
@@ -276,8 +296,8 @@ export interface MarkdownFilesOptions {
 }
 
 /**
- * Every markdown file the build publishes: a twin of each document and listing,
- * the home page's, and `/llms.txt`.
+ * Every markdown file the build publishes: a twin of each document, listing and
+ * other static page, the home page's, and `/llms.txt`.
  */
 export function renderMarkdownFiles(
   content: ContentSnapshot,
@@ -299,6 +319,18 @@ export function renderMarkdownFiles(
     },
   }))
   const sections = listed.map(({ section }) => section)
+
+  // Pages the app adds beyond home and the listings, in the order it declares
+  // them. `/index.md` mirrors the home page, which does not link to them, so
+  // only `/llms.txt` lists them.
+  const listingNames = new Set<string>(
+    collections.flatMap(({ listingPage }) =>
+      listingPage ? [listingPage.name] : [],
+    ),
+  )
+  const otherPages = Object.entries(pages)
+    .filter(([name]) => name !== 'home' && !listingNames.has(name))
+    .map(([, page]) => page)
 
   return [
     // Drafts included, matching the detail pages `content()` generates: an
@@ -333,6 +365,10 @@ export function renderMarkdownFiles(
           ]
         : [],
     ),
+    ...otherPages.map((page) => ({
+      fileName: markdownFileName(page.path),
+      source: renderStaticPage({ site, page }),
+    })),
     {
       fileName: markdownFileName('/'),
       source: renderIndex({
@@ -347,7 +383,17 @@ export function renderMarkdownFiles(
       fileName: 'llms.txt',
       source: renderLlmsTxt({
         site,
-        sections,
+        sections: [
+          ...sections,
+          {
+            title: 'Other pages',
+            entries: otherPages.map((page) => ({
+              title: page.title,
+              routePath: page.path,
+              description: page.description,
+            })),
+          },
+        ],
         optional: options.optionalLinks?.map(
           (link) => `- [${link.title}](${site.url}${link.path})`,
         ),

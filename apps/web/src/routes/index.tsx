@@ -3,9 +3,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { blogPosts, experiences, projects, talks } from 'virtual:content'
 
 import { HomePage } from '@/features/home/home-page'
+import { pageMeta } from '@/features/og/metadata'
+import { STATIC_PAGES } from '@/lib/site'
 
 export const Route = createFileRoute('/')({
   component: HomePageRoute,
+  head: () => ({ meta: pageMeta(STATIC_PAGES.home.path) }),
 })
 
 function HomePageRoute() {
