@@ -115,12 +115,12 @@ CONTEXT.md            # domain glossary
 
 ## Git hooks (lefthook)
 
-- **pre-commit**: oxfmt formats staged files, auto-stages fixes.
+- **pre-commit**: oxfmt formats staged files, auto-stages fixes; gitleaks scans the staged diff for secrets (skipped with a warning if gitleaks is not installed).
 - **pre-push**: oxlint + tsc typecheck + `fallow audit` (findings introduced by the branch).
 
 ## CI (GitHub Actions)
 
-Runs on push/PR to `main`, as two parallel jobs: format check + lint + fallow + typecheck + tests, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
+Runs on push/PR to `main`, as three parallel jobs: format check + lint + fallow + typecheck + tests, a gitleaks secret scan of the history, and a full `pnpm run build` (which is what exercises the content plugin and the prerender pass).
 
 ## Deployment
 

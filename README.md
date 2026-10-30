@@ -16,3 +16,9 @@ pnpm run build
 
 See `CLAUDE.md` for the architecture, `CONTEXT.md` for the domain vocabulary
 and `docs/adr/` for the decisions behind it.
+
+## License
+
+The source code is licensed under the [MIT License](LICENSE). The content in
+`content/` (articles, write-ups, photos) is licensed under
+[CC BY-NC 4.0](content/LICENSE); third-party logos belong to their owners.

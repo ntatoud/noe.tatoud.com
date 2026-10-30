@@ -43,6 +43,19 @@ jobs:
       - name: 🧪 Test
         run: pnpm run test
 
+  # The repo is public, so a leaked secret is a published secret.
+  secrets:
+    name: 🔐 Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # Content is baked into the bundle at build time (ADR-0008), so a bad document
   # is a broken build rather than a broken request. The unit tests above cover
   # the plugin's output on its own; this covers the whole chain it feeds —
