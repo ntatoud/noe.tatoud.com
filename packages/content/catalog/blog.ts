@@ -13,10 +13,7 @@ const collection = defineCollection({
   name: 'blogPosts',
   directory: path.join(contentRoot, 'blog'),
   schema: BlogPostSchema,
-  // `externalUrl` is normalized to `null` rather than left absent so that
-  // "no external link" has one representation across the derived data, matching
-  // `hero`: the App branches on it, so flipping it to `undefined` here would
-  // silently mark every post as external.
+  // `null`, not `undefined`: the App branches on it, and `undefined` would mark every post external.
   transform: ({ hero, externalUrl, ...data }, meta) => ({
     ...data,
     slug: meta.slug,
@@ -30,14 +27,12 @@ const collection = defineCollection({
 export type BlogPost = CollectionData<typeof collection>
 
 export type BlogPostDetail = BlogPost & {
-  /** The rendered body, as HTML. */
   html: string
 }
 
 export const blog = defineContentCollection({
   key: 'blogPosts',
   collection,
-  // Published posts, newest first.
   reader: (documents) =>
     documents
       .map((doc) => doc.data)

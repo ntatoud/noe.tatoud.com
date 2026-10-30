@@ -17,7 +17,6 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const isContribution = project.kind === 'contribution'
-  // Contributions link out to the project they went into, when it has a site.
   const externalUrl = isContribution ? project.url : undefined
 
   return (

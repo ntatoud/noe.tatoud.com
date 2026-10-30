@@ -5,7 +5,6 @@ import { ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
 
 type SliceProps = {
-  /** `data-slot` of the section. */
   slot: string
   title: string
   seeAllHref?: RouteTo

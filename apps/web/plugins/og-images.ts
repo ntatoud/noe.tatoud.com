@@ -12,26 +12,17 @@ import type { Plugin } from 'vite'
 
 import { OG_FONT_FAMILY, OgCard } from '../src/features/og/og-card.tsx'
 
-/** A page that gets a social card: where it goes, and what the card shows. */
 type OgPage = Pick<SitePage, 'ogImage' | 'title' | 'description' | 'kind'>
 
 const FONTS_DIRECTORY = 'src/features/og/fonts'
 
-/**
- * Renders every page's social card to a PNG at build time, at the path
- * in its `ogImage` (`/og/blog/what-is-mcp.png`), so no request ever runs
- * the renderer. The prerender pass cannot produce these: it reads every
- * response as text, which corrupts a binary body.
- *
- * Does nothing in `pnpm dev`: the meta tags point at absolute production URLs.
- */
+// Emitted as files: the prerender pass reads responses as text and would corrupt PNGs.
 export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
   let root = ''
 
   return {
     name: 'ntatoud:og-images',
 
-    // Only the client build's output is published.
     applyToEnvironment: (environment) => environment.name === 'client',
 
     configResolved(config) {
@@ -39,8 +30,7 @@ export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
     },
 
     async generateBundle() {
-      // Read from the app root rather than relative to `import.meta.url`: the
-      // config loader bundles this file somewhere else before running it.
+      // Not relative to `import.meta.url`: the config loader bundles this file elsewhere.
       const font = (weight: number) =>
         fs.readFileSync(
           path.join(
@@ -50,10 +40,7 @@ export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
           ),
         )
 
-      // Fonts are registered on the `Renderer` itself. Passing them through
-      // `takumi-js`'s `fonts` render option instead is a no-op in v2.3.0
-      // (verified: byte-identical output), and the card silently falls back
-      // to the default face.
+      // Register fonts on the `Renderer`: takumi-js's `fonts` render option is a no-op in v2.3.0.
       const fonts: FontDetails[] = [
         { name: OG_FONT_FAMILY, weight: 700, data: font(700) },
         { name: OG_FONT_FAMILY, weight: 400, data: font(400) },
@@ -68,8 +55,7 @@ export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
         )
         this.emitFile({
           type: 'asset',
-          // `fileName` rather than `name`: the meta tags point at this exact
-          // path, so it must not go through `assetFileNames` hashing.
+          // `fileName`, not `name`: the meta tags need the unhashed path.
           fileName: ogImage.slice(1),
           source,
         })

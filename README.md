@@ -14,7 +14,7 @@ pnpm test
 pnpm run build
 ```
 
-See `CLAUDE.md` for the architecture, `CONTEXT.md` for the domain vocabulary
+See `AGENTS.md` for the conventions, `CONTEXT.md` for the domain vocabulary
 and `docs/adr/` for the decisions behind it.
 
 ## License

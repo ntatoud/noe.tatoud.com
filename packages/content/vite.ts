@@ -12,60 +12,22 @@ import {
   type ContentSnapshot,
 } from './snapshot.ts'
 
-/**
- * Reads every collection at build time and serves the result as a virtual
- * module, so no page needs a serverless function to display content.
- *
- * Content is data in the repo: it can only change on deploy. Reading it per
- * request (ADR-0006) meant every client-side navigation paid an RPC into a
- * Netlify function, and a cold instance spent seconds loading the markdown and
- * highlighting stack before it could answer. This plugin moves that work to the
- * build — see ADR-0008.
- *
- * Two shapes are emitted, matching the two ways pages read content:
- *
- * - `virtual:content` — the listing arrays, eagerly. They carry only frontmatter
- *   for a handful of documents, so they are cheap to ship in the entry bundle.
- * - `virtual:content/detail/<collection>/<slug>` — one module per document,
- *   holding its rendered `html`. Reached exclusively through the `load*` maps as
- *   a dynamic import, so Rollup gives each document its own chunk and a detail
- *   page downloads only its own body.
- */
-
 const VIRTUAL_ID = 'virtual:content'
 const DETAIL_PREFIX = `${VIRTUAL_ID}/detail/`
 
-// Rollup convention: the resolved id of a module with no file on disk is
-// prefixed with NUL, marking it as owned by a plugin so nothing else tries to
-// read it off the filesystem.
+// Rollup convention: NUL-prefixed ids mark modules with no file on disk.
 const RESOLVED_PREFIX = '\0'
 
-/**
- * Image extensions worth turning into a real `?url` import, so Vite hashes,
- * emits and fingerprints the file — and so an image nothing references stays out
- * of the bundle. A string that merely looks like an image but is not a content
- * URL (an external `logo` on a talk event, say) is rejected by `ref` below.
- */
 const IMAGE_EXTENSION = /\.(?:avif|gif|jpe?g|png|svg|webp)$/i
 
 type AssetRef = (publicUrl: string) => string | null
 
-/**
- * Collects the asset imports a generated module needs.
- *
- * `emit` is the only way out: it prepends the imports for everything `ref`
- * registered, so the imports cannot be generated before the code that
- * references them. That ordering used to be the caller's job, and getting it
- * wrong produced a `ReferenceError` inside a generated module — see the test.
- */
 function createAssets() {
   const identifiers = new Map<string, string>()
 
   const ref: AssetRef = (publicUrl) => {
     const absolute = contentFilePath(publicUrl)
-    // A missing file would otherwise fail the whole build over a typo in
-    // frontmatter or a body image. Leave the original src in place and warn
-    // instead — a broken image is not worth a red deploy.
+    // A missing image warns instead of failing the build.
     if (!absolute || !fs.existsSync(absolute)) return null
     const existing = identifiers.get(absolute)
     if (existing) return existing
@@ -87,13 +49,7 @@ function createAssets() {
   return { ref, emit }
 }
 
-/**
- * Serializes decoded frontmatter to a JS expression, swapping content image
- * paths for the identifier of their import. Hand-rolled rather than
- * `JSON.stringify` precisely because of that substitution — every schema field
- * decodes to a string, boolean, array or struct, so there is nothing else to
- * preserve.
- */
+// Not `JSON.stringify`: image paths are swapped for the identifier of their import.
 function serialize(value: unknown, ref: AssetRef): string {
   if (typeof value === 'string' && IMAGE_EXTENSION.test(value)) {
     return ref(value) ?? JSON.stringify(value)
@@ -108,14 +64,6 @@ function serialize(value: unknown, ref: AssetRef): string {
   return `{${fields.join(',')}}`
 }
 
-/**
- * Rewrites the relative image srcs in a rendered body into asset imports,
- * yielding an expression that concatenates the untouched HTML around them.
- *
- * Body images are authored relative to the document (`![](./diagram.png)`), so
- * the raw HTML carries srcs a browser would resolve against the page URL. This
- * replaces the per-request regex the server function used to run.
- */
 function serializeHtml(
   html: string,
   documentUrl: string,
@@ -137,8 +85,6 @@ function serializeHtml(
       continue
     }
 
-    // Splice around the attribute's value, keeping the surrounding markup —
-    // the `src="` included — as an opaque literal.
     const valueStart = match.index + match[0].indexOf('"') + 1
     chunks.push(JSON.stringify(html.slice(cursor, valueStart)))
     chunks.push(identifier)
@@ -152,8 +98,7 @@ function serializeHtml(
 export function content(): Plugin {
   let warn: (message: string) => void = () => {}
 
-  // One read per build. In dev the watcher below drops it, so an edit is
-  // picked up by the next module load.
+  // One read per build; in dev the watcher below drops it.
   let snapshot: Promise<ContentSnapshot> | undefined
   const getSnapshot = () => (snapshot ??= readContent())
 
@@ -167,8 +112,7 @@ export function content(): Plugin {
         `export const ${key} = ${serialize(listing, assets.ref)}`,
     )
 
-    // Every document gets a page, drafts included; only the listings above
-    // apply the `published` filter.
+    // Every document gets a page, drafts included; only the listings filter on `published`.
     for (const { key, detail } of collections) {
       if (!detail) continue
       const entries = detail.documents.map(({ slug }) => {
@@ -178,7 +122,6 @@ export function content(): Plugin {
       lines.push(`export const ${detail.loader} = {${entries.join(',')}}`)
     }
 
-    // Plain strings and booleans, no images, so JSON is enough.
     lines.push(
       `export const contentInventory = ${JSON.stringify(contentInventoryOf(content))}`,
     )
@@ -216,8 +159,7 @@ export function content(): Plugin {
 
   return {
     name: 'ntatoud:content',
-    // Ahead of Vite's own resolvers so `virtual:` ids are claimed here, and so
-    // the `?url` imports this emits are still seen by the asset pipeline.
+    // Ahead of Vite's resolvers so `virtual:` ids are claimed here and `?url` imports reach the asset pipeline.
     enforce: 'pre',
 
     configResolved(config) {
@@ -248,7 +190,6 @@ export function content(): Plugin {
     },
 
     // Content sits outside the Vite root, so it is not watched by default.
-    // Adding it keeps `pnpm dev` reflecting document edits immediately.
     configureServer(server) {
       server.watcher.add(contentRoot)
 
@@ -256,9 +197,6 @@ export function content(): Plugin {
         if (!changed.startsWith(contentRoot)) return
         snapshot = undefined
 
-        // Drop every generated module: which document changed is not worth
-        // tracking for a content set this size, and the listings depend on all
-        // of them anyway.
         for (const [id, module_] of server.moduleGraph.idToModuleMap) {
           if (id.startsWith(RESOLVED_PREFIX + VIRTUAL_ID)) {
             server.moduleGraph.invalidateModule(module_)

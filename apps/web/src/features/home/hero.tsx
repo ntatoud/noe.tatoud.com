@@ -9,7 +9,6 @@ const tagline =
   'Fullstack developer crafting pixel-perfect interfaces and thoughtful web experiences.'
 
 type HeroProps = {
-  /** The ongoing role, shown as a status line above the name. */
   current?: Experience
 }
 
