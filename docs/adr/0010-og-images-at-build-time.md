@@ -1,5 +1,7 @@
 # ADR-0010: OG images are rendered at build time
 
+> Amended on 2026-10-30 by [#190](https://github.com/ntatoud/noe.tatoud.com/issues/190): meta tags now come from `pageMeta(path)` in `apps/web/src/features/og/metadata.ts`, which reads the page's `ogImage` from the Page Inventory (`sitePages`, whose paths come from `ogImagePath` in `packages/content/paths.ts`); `toMetaTags` is internal to it. The root route emits only site-wide tags, so no page inherits the home card: `/styleguide` is a `STATIC_PAGES` entry with a card of its own, and the trade-off below about it no longer holds.
+
 Social cards used to come from `/api/og`, a server route that rendered whatever `title`, `description` and `kind` its query string carried. That route is gone. A Vite plugin, `apps/web/plugins/og-images.ts`, renders one PNG per page during the client build and emits it at a fixed path; the meta tags point at those files. No request renders an image any more.
 
 ## Why

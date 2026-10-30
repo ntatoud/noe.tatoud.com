@@ -328,7 +328,7 @@ export function renderMarkdownFiles(
       listingPage ? [listingPage.name] : [],
     ),
   )
-  const others = Object.entries(pages)
+  const otherPages = Object.entries(pages)
     .filter(([name]) => name !== 'home' && !listingNames.has(name))
     .map(([, page]) => page)
 
@@ -365,7 +365,7 @@ export function renderMarkdownFiles(
           ]
         : [],
     ),
-    ...others.map((page) => ({
+    ...otherPages.map((page) => ({
       fileName: markdownFileName(page.path),
       source: renderStaticPage({ site, page }),
     })),
@@ -387,7 +387,7 @@ export function renderMarkdownFiles(
           ...sections,
           {
             title: 'Other pages',
-            entries: others.map((page) => ({
+            entries: otherPages.map((page) => ({
               title: page.title,
               routePath: page.path,
               description: page.description,

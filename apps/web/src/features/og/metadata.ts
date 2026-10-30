@@ -37,7 +37,7 @@ export const BASE_META_TAGS: MetaTag[] = [
   { name: 'viewport', content: 'width=device-width, initial-scale=1' },
 ]
 
-const PAGES = new Map(
+const PAGES_BY_PATH = new Map(
   sitePages(contentInventory, STATIC_PAGES).map((page) => [page.path, page]),
 )
 
@@ -80,7 +80,7 @@ const toMetaTags = ({
  * instead of shipping without its tags.
  */
 export const pageMeta = (pathname: string): MetaTag[] => {
-  const page = PAGES.get(pathname.replace(/(.)\/+$/, '$1'))
+  const page = PAGES_BY_PATH.get(pathname.replace(/(.)\/+$/, '$1'))
   if (!page) {
     throw new Error(`[page meta] ${pathname} is not in the Page Inventory`)
   }

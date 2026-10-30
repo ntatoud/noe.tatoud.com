@@ -5,10 +5,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { pageMeta } from '@/features/og/metadata'
+import { STATIC_PAGES } from '@/lib/site'
 
 export const Route = createFileRoute('/styleguide')({
   component: StyleguidePage,
-  head: () => ({ meta: pageMeta('/styleguide') }),
+  head: () => ({ meta: pageMeta(STATIC_PAGES.styleguide.path) }),
 })
 
 function StyleguidePage() {
