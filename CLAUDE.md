@@ -129,6 +129,8 @@ Runs on push/PR to `main`, as two parallel jobs: format check + lint + fallow + 
 
 ## Agent skills
 
+The engineering skills (`/triage`, `/to-spec`, `/tdd`, `/grill-with-docs`, …) are vendored from [mattpocock/skills](https://github.com/mattpocock/skills) v1.3.1 into `.claude/skills/`, so every worktree loads them without a plugin install. Update by re-copying from upstream; do not reformat them (oxfmt ignores the directory).
+
 ### Issue tracker
 
 GitHub issues (via `gh` CLI). External PRs are not a triage surface. See `docs/agents/issue-tracker.md`.
