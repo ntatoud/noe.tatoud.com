@@ -7,13 +7,12 @@ import handler, {
 } from '../../../netlify/edge-functions/markdown-negotiation.ts'
 import {
   bodyImageUrl,
-  markdownFileName,
-  markdownPath,
   renderDocument,
   renderIndex,
   renderLlmsTxt,
   renderMarkdownFiles,
 } from '../markdown.ts'
+import { markdownFileName, markdownPath } from '../paths.ts'
 import { readContent } from '../snapshot.ts'
 import { estimateTokens, prefersMarkdown } from '../vite-markdown.ts'
 import { PAGES } from './helpers.ts'

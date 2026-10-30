@@ -1,8 +1,9 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { catalog } from '../catalog/index.ts'
-import { markdownFileName, renderMarkdownFiles } from '../markdown.ts'
+import { renderMarkdownFiles } from '../markdown.ts'
 import { readContentPages, type ContentPage } from '../pages.ts'
+import { markdownFileName } from '../paths.ts'
 import {
   collectionsOf,
   readContent,
@@ -35,7 +36,7 @@ beforeAll(async () => {
     }).map((file) => [file.fileName, file.source]),
   )
 
-  pages = await readContentPages()
+  pages = (await readContentPages()).documents
 
   const code = await createPlugin().generate('virtual:content')
   virtualExports = [...code.matchAll(/^export const (\w+) = /gm)].map(
@@ -86,6 +87,11 @@ describe.each(catalog.map((entry) => [entry.key, entry] as const))(
       expect(declaredExports).toContain(entry.detail.loader)
 
       expect(detail.documents.length).toBeGreaterThan(0)
+      // `published` is the Reader's listing, matched by identity: a Reader
+      // that copied its documents would silently empty the sitemap.
+      expect(
+        detail.documents.filter((document) => document.published),
+      ).toHaveLength(snapshotOf().listing.length)
       for (const document of detail.documents) {
         expect(twins.has(markdownFileName(document.path)), document.path).toBe(
           true,

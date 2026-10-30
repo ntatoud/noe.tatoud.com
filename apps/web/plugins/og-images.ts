@@ -3,28 +3,23 @@ import * as path from 'node:path'
 
 import { createElement } from 'react'
 
+import type { SitePage } from '@ntatoud/content/inventory'
+
 import { Renderer } from '@takumi-rs/core'
 import type { FontDetails } from '@takumi-rs/core'
 import { render } from 'takumi-js'
 import type { Plugin } from 'vite'
 
 import { OG_FONT_FAMILY, OgCard } from '../src/features/og/og-card.tsx'
-import type { OgKind } from '../src/features/og/og-card.tsx'
-import { ogImagePath } from '../src/lib/site.ts'
 
-/** A page that gets a social card, and what the card shows. */
-export interface OgPage {
-  readonly path: string
-  readonly title: string
-  readonly description?: string
-  readonly kind?: OgKind
-}
+/** A page that gets a social card: where it goes, and what the card shows. */
+type OgPage = Pick<SitePage, 'ogImage' | 'title' | 'description' | 'kind'>
 
 const FONTS_DIRECTORY = 'src/features/og/fonts'
 
 /**
  * Renders every page's social card to a PNG at build time, at the path
- * `ogImagePath` gives it (`/og/blog/what-is-mcp.png`), so no request ever runs
+ * in its `ogImage` (`/og/blog/what-is-mcp.png`), so no request ever runs
  * the renderer. The prerender pass cannot produce these: it reads every
  * response as text, which corrupts a binary body.
  *
@@ -66,12 +61,7 @@ export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
       const renderer = new Renderer()
       for (const face of fonts) await renderer.registerFont(face)
 
-      for (const {
-        path: pagePath,
-        title,
-        description,
-        kind,
-      } of options.pages) {
+      for (const { ogImage, title, description, kind } of options.pages) {
         const source = await render(
           createElement(OgCard, { title, description, kind }),
           { width: 1200, height: 630, format: 'png', renderer },
@@ -80,7 +70,7 @@ export function ogImages(options: { pages: ReadonlyArray<OgPage> }): Plugin {
           type: 'asset',
           // `fileName` rather than `name`: the meta tags point at this exact
           // path, so it must not go through `assetFileNames` hashing.
-          fileName: ogImagePath(pagePath).slice(1),
+          fileName: ogImage.slice(1),
           source,
         })
       }

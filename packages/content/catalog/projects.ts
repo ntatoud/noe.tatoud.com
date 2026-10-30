@@ -55,6 +55,7 @@ export const projects = defineContentCollection({
       path: project.path,
       title: project.title,
       description: project.description,
+      lastmod: project.date,
       details: [
         `- Date: ${project.date}`,
         `- Kind: ${project.kind}`,

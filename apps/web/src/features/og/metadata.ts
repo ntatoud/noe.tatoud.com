@@ -1,4 +1,6 @@
-import { SITE_NAME, SITE_URL, ogImagePath } from '@/lib/site'
+import { ogImagePath } from '@ntatoud/content/paths'
+
+import { SITE_NAME, SITE_URL } from '@/lib/site'
 
 /**
  * Meta tags for this site's pages. The images the tags point at are rendered

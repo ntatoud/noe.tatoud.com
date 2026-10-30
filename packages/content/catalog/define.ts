@@ -10,6 +10,8 @@ export interface DetailPage {
   readonly path: string
   readonly title: string
   readonly description?: string | undefined
+  /** The sitemap's `<lastmod>`: when the document last changed, as a date. */
+  readonly lastmod?: string | undefined
   /** The twin's metadata lines, already formatted as `- Key: value`. */
   readonly details: ReadonlyArray<string | null>
 }
@@ -30,7 +32,11 @@ interface ContentCollectionDefinition<
   /** The `virtual:content` export holding the listing, and the detail ids' segment. */
   readonly key: K
   readonly collection: Collection<S, A>
-  /** The Reader: filters and orders the published documents for listings. */
+  /**
+   * The Reader: filters and orders the published documents for listings. It
+   * returns the documents' own `data` objects, not copies: a document counts
+   * as published when its `data` is in the listing.
+   */
   readonly reader: (
     documents: ReadonlyArray<DocumentMeta<A>>,
   ) => ReadonlyArray<A>
@@ -53,6 +59,8 @@ interface ContentCollectionDefinition<
 
 export interface DetailDocument<A> extends DetailPage {
   readonly slug: string
+  /** Whether the Reader lists it; a draft keeps its page but is not listed. */
+  readonly published: boolean
   readonly source: string
   readonly data: A
 }
@@ -110,6 +118,7 @@ export const defineContentCollection = <
     documents: ReadonlyArray<DocumentMeta<A>>,
   ): CollectionSnapshot<K, A, Kind, L> => {
     const listing = reader(documents)
+    const listed = new Set<A>(listing)
     return {
       key,
       directory: collection.directory,
@@ -123,6 +132,7 @@ export const defineContentCollection = <
           slug,
           source,
           data,
+          published: listed.has(data),
           ...detail.page(data),
         })),
       },

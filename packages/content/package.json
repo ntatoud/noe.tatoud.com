@@ -7,6 +7,8 @@
     "./vite": "./vite.ts",
     "./vite-markdown": "./vite-markdown.ts",
     "./pages": "./pages.ts",
+    "./inventory": "./inventory.ts",
+    "./paths": "./paths.ts",
     "./virtual": "./virtual.d.ts"
   },
   "scripts": {

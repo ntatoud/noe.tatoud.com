@@ -16,6 +16,7 @@
 
 import type { ListingName } from './catalog/index.ts'
 import { contentUrl } from './content-url.ts'
+import { markdownFileName, markdownPath } from './paths.ts'
 import { collectionsOf, type ContentSnapshot } from './snapshot.ts'
 
 /** Srcs a client already resolves on its own, so they are never rewritten. */
@@ -44,21 +45,6 @@ export interface SiteConfig {
   readonly name: string
   readonly description: string
 }
-
-/**
- * The public URL of a page's markdown twin.
- *
- * One rule, mirrored by the edge function: a page at `/blog/foo` has its
- * markdown at `/blog/foo.md`, and the home page's lives at `/index.md`. Keeping
- * it derivable means the negotiating edge function needs a single fetch and no
- * manifest, and it leaves every `.md` URL fetchable by hand.
- */
-export const markdownPath = (routePath: string): string =>
-  routePath === '/' ? '/index.md' : `${routePath.replace(/\/+$/, '')}.md`
-
-/** The same mapping as a build-output file name (no leading slash). */
-export const markdownFileName = (routePath: string): string =>
-  markdownPath(routePath).slice(1)
 
 const absolute = (site: SiteConfig, routePath: string) =>
   `${site.url}${routePath}`
