@@ -13,14 +13,7 @@ import { ts } from '@tanstack/highlight/languages/ts'
 import { tsx } from '@tanstack/highlight/languages/tsx'
 import { yaml } from '@tanstack/highlight/languages/yaml'
 
-/**
- * The grammars a code fence in this repo's content may ask for.
- *
- * TanStack Highlight bundles nothing implicitly — a language costs bundle size
- * only once it is listed here, and a fence tagged with anything absent falls
- * back to `plaintext` rather than throwing. Aliases resolve automatically, so
- * ```bash finds `shell` and ```typescript finds `ts`.
- */
+// Nothing is bundled implicitly: a language absent here falls back to plaintext.
 export const highlighter = createHighlighter({
   fallbackLanguage: 'plaintext',
   languages: [

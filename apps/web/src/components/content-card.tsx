@@ -19,16 +19,12 @@ type CardLink =
 type ContentCardProps = {
   slot: string
   link: CardLink
-  /** Lift and cast a shadow on hover; the blog card only recolours its border. */
   lift?: boolean
-  /** Rendered edge to edge above the padded body, e.g. a hero image. */
   media?: ReactNode
-  /** Span the whole grid row and, from `md` up, sit the media beside the body. */
   featured?: boolean
   children: ReactNode
 }
 
-/** The linked card shell shared by the blog, project and talk grids. */
 export function ContentCard({
   slot,
   link,
@@ -135,7 +131,6 @@ export function CardDescription({
   )
 }
 
-/** The first three tags. Pinned to the bottom of the card unless told not to. */
 export function CardTags({
   tags,
   pinToBottom = true,

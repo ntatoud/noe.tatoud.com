@@ -18,8 +18,6 @@ export function BlogPostPage({ post }: BlogPostPageProps) {
       tags={post.tags}
       html={post.html}
     >
-      {/* `hero` is already a hashed asset URL — the content plugin turns the
-          frontmatter path into a real Vite import at build time. */}
       {post.hero && (
         <img
           src={post.hero}

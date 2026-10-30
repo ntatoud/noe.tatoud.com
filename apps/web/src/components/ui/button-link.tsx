@@ -15,8 +15,7 @@ type ButtonLinkProps = Omit<
     ref?: React.Ref<HTMLAnchorElement>
   }
 
-// A link is not a button, so it doesn't go through base-ui's `Button`
-// (which would add `role="button"`).
+// Not base-ui's `Button`, which would add `role="button"` to a link.
 function ButtonLinkComponent({
   variant,
   size,

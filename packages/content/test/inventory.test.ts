@@ -52,8 +52,7 @@ describe('sitePages', () => {
     expect(home).not.toHaveProperty('kind')
   })
 
-  // The route and its meta tags use the app's path, the markdown twin uses the
-  // catalog's: a mismatch would publish a twin for a page that does not exist.
+  // The route uses the app's path, the twin the catalog's: a mismatch publishes a twin for a missing page.
   it("refuses a listing whose path is not the catalog's", () => {
     const moved = { ...STATIC, blog: { ...STATIC.blog, path: '/posts' } }
     expect(() => sitePages(CONTENT, moved)).toThrow(/blog/)

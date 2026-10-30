@@ -1,6 +1,3 @@
-// The blog's RSS 2.0, Atom 1.0 and JSON Feed 1.1 documents. Their routes run
-// once, during the build's prerender pass (ADR-0011), and read the published
-// posts straight from `virtual:content`.
 import { blogPosts, loadBlogPost } from 'virtual:content'
 
 import { FEEDS, FEED_TITLE, SITE_URL } from '@/lib/site'
@@ -24,17 +21,13 @@ interface FeedItem {
 
 const absolute = (value: string): string => new URL(value, SITE_URL).toString()
 
-/**
- * Every published post, newest first. Posts hosted here embed their rendered
- * body; cross-posts link out to their canonical URL while keeping a stable,
- * on-domain GUID. `new Date` cannot yield `NaN`: the content schema rejects a
- * date it cannot parse (`DateString`).
- */
+// Cross-posts link out to their canonical URL but keep a stable on-domain GUID.
 const readItems = (): Promise<ReadonlyArray<FeedItem>> =>
   Promise.all(
     blogPosts.map(async (post): Promise<FeedItem> => {
       const base = {
         title: post.title,
+        // Never `NaN`: `DateString` rejects a date it cannot parse.
         date: new Date(post.date),
         description: post.description,
         categories: post.tags ?? [],
@@ -47,8 +40,7 @@ const readItems = (): Promise<ReadonlyArray<FeedItem>> =>
           id: `${SITE_URL}${post.url}`,
         }
       }
-      // The slug comes from the listing, so the chunk always exists; an absent
-      // one would be a bug in the content plugin rather than a missing post.
+      // The slug comes from the listing, so a missing chunk is a content plugin bug, not a missing post.
       const load = loadBlogPost[post.slug]
       if (!load) throw new Error(`No content chunk for blog post: ${post.slug}`)
       const url = absolute(post.url)
@@ -56,18 +48,14 @@ const readItems = (): Promise<ReadonlyArray<FeedItem>> =>
     }),
   )
 
-/** Wrap arbitrary HTML in a CDATA section, escaping any nested terminator. */
 const cdata = (value: string): string =>
   `<![CDATA[${value.replaceAll(']]>', ']]]]><![CDATA[>')}]]>`
 
-/** Newest item date, or `undefined` for an empty feed. */
 const latestDate = (items: ReadonlyArray<FeedItem>): Date | undefined =>
   items.reduce<Date | undefined>(
     (max, item) => (max === undefined || item.date > max ? item.date : max),
     undefined,
   )
-
-// --- RSS 2.0 ---------------------------------------------------------------
 
 const rssItem = (item: FeedItem): ReadonlyArray<string> => [
   '    <item>',
@@ -105,8 +93,6 @@ const renderRss = (items: ReadonlyArray<FeedItem>): string => {
     '</rss>',
   ].join('\n')
 }
-
-// --- Atom 1.0 --------------------------------------------------------------
 
 const atomAuthor = (indent: string): ReadonlyArray<string> => [
   `${indent}<author>`,
@@ -153,8 +139,6 @@ const renderAtom = (items: ReadonlyArray<FeedItem>): string => {
   ].join('\n')
 }
 
-// --- JSON Feed 1.1 ---------------------------------------------------------
-
 const renderJson = (items: ReadonlyArray<FeedItem>): string =>
   JSON.stringify(
     {
@@ -184,7 +168,6 @@ const renderJson = (items: ReadonlyArray<FeedItem>): string =>
 
 const RENDERERS = { rss: renderRss, atom: renderAtom, json: renderJson }
 
-/** The response a feed route serves. */
 export const feedResponse = async (
   format: keyof typeof FEEDS,
 ): Promise<Response> =>

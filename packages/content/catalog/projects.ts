@@ -22,14 +22,12 @@ const collection = defineCollection({
 export type Project = CollectionData<typeof collection>
 
 export type ProjectDetail = Project & {
-  /** The rendered body, as HTML. */
   html: string
 }
 
 export const projects = defineContentCollection({
   key: 'projects',
   collection,
-  // Published projects, personal ones before contributions.
   reader: (documents) =>
     documents
       .map((doc) => doc.data)

@@ -1,46 +1,10 @@
 import type { Config } from '@netlify/edge-functions'
 
-/**
- * Serves a page's markdown twin to any client that asks for
- * `Accept: text/markdown`, and leaves everyone else with HTML. See ADR-0009.
- *
- * This has to run at the edge rather than in the app. Pages are prerendered and
- * published as static files, and static file serving sits at step 12 of Netlify's
- * request chain while edge functions sit at step 5 — so a request for `/blog/foo`
- * is answered off the CDN and never reaches any application code that could look
- * at the `Accept` header. The edge is the first place in the chain that can.
- *
- * The markdown itself is emitted at build time by `@ntatoud/content/vite-markdown`
- * next to the HTML, so this function only routes: it maps `/blog/foo` onto
- * `/blog/foo.md`, fetches it, and re-labels the response. Nothing is converted per
- * request.
- */
+// Static files are served before app code, so negotiation must happen at the edge (ADR-0009).
 
 const MARKDOWN_TYPE = 'text/markdown; charset=utf-8'
 
-/**
- * Whether this client would rather have markdown than HTML.
- *
- * Deliberately not a substring test on the header. A browser sends
- * `text/html,application/xhtml+xml,application/xml;q=0.9,*\/*;q=0.8`, and a client
- * is entitled to rank markdown *below* HTML — `text/markdown;q=0.5, text/html`
- * must still get HTML. So q-values are parsed and compared.
- *
- * `*\/*` is deliberately not counted as a vote for HTML: an agent sending
- * `Accept: text/markdown, *\/*` named markdown and nothing else, and should get it.
- *
- * Kept in sync with `prefersMarkdown` in `packages/content/vite-markdown.ts`,
- * which drives the dev server, and pinned against it by
- * `packages/content/test/markdown.test.ts`.
- *
- * Duplicated rather than imported: this file is the one thing in the repo that
- * does not run on Node — Netlify runs edge functions on Deno — and
- * `@ntatoud/content` is a private pnpm workspace package, symlinked outside the
- * deploy root, whose graph pulls in `effect` and `NodeFileSystem`. Importing a
- * shared leaf module by relative path would probably work, but "probably" is only
- * discoverable at deploy time, and the parity test closes the drift risk that
- * duplication actually creates.
- */
+// Duplicated from `vite-markdown.ts` (Deno cannot import this workspace); `test/markdown.test.ts` pins them together.
 export function prefersMarkdown(accept: string | null): boolean {
   if (!accept) return false
 
@@ -66,26 +30,17 @@ export function prefersMarkdown(accept: string | null): boolean {
     }
   }
 
+  // `>=` on a tie, and `*/*` is not a vote for HTML: `text/markdown, */*` wins.
   return markdown > 0 && markdown >= html
 }
 
-/**
- * A route's markdown twin: `/` → `/index.md`, `/blog/foo` → `/blog/foo.md`.
- *
- * The single derivable rule is what lets this function work without a manifest
- * and with one fetch. It is the same rule `markdownPath` applies when emitting.
- */
+// Same rule as `markdownPath` in `paths.ts`.
 export function markdownPath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '')
   return trimmed === '' ? '/index.md' : `${trimmed}.md`
 }
 
-/**
- * Four characters per token — the usual rough ratio, and enough for the one thing
- * `x-markdown-tokens` is for: letting an agent size a fetch against its context
- * window before committing to it. Labelled an estimate rather than dressed up as a
- * real tokenizer count, which would mean shipping one model's vocabulary here.
- */
+// Rough estimate: four characters per token.
 const estimateTokens = (text: string): number => Math.ceil(text.length / 4)
 
 export default async function handler(
@@ -95,9 +50,7 @@ export default async function handler(
 
   const url = new URL(request.url)
 
-  // The `.md` files are real, fetchable URLs. A request that already names one is
-  // served by the static handler as-is — and skipping it here is also what keeps
-  // the fetch below from re-entering this function.
+  // Skips `.md` requests, which also keeps the fetch below from re-entering this function.
   if (url.pathname.endsWith('.md')) return
 
   const target = new URL(markdownPath(url.pathname), url.origin)
@@ -105,9 +58,7 @@ export default async function handler(
     headers: { accept: 'text/plain' },
   })
 
-  // No markdown twin for this route — a page that is not content-backed, or a URL
-  // that does not exist. Either way, fall through and let the normal chain answer,
-  // so a 404 stays a 404 rendered by the app.
+  // No twin: fall through so a 404 stays a 404 rendered by the app.
   if (!markdown.ok) return
 
   const body = await markdown.text()
@@ -117,37 +68,20 @@ export default async function handler(
     headers: {
       'content-type': MARKDOWN_TYPE,
       'x-markdown-tokens': String(estimateTokens(body)),
-      // Two representations live at this URL, so any cache between here and the
-      // client has to key on the header that chose between them.
+      // Two representations share this URL, so caches must key on `Accept`.
       vary: 'Accept',
       'cache-control': 'public, max-age=0, must-revalidate',
-      // Points back at the HTML this is a representation of, per RFC 6596.
       link: `<${url.origin}${url.pathname}>; rel="canonical"`,
     },
   })
 }
 
-/**
- * Netlify reads this at deploy time to decide when to run the function, so
- * nothing in the repo imports it.
- *
- * @public
- */
+/** @public Read by Netlify at deploy time, so nothing imports it. */
 export const config: Config = {
   path: '/*',
-  /**
-   * A cheap pre-filter, evaluated by Netlify *before* the function is invoked: a
-   * request whose `Accept` never mentions markdown skips it entirely, at no cost.
-   * Browsers never send it, so browser traffic pays nothing for this feature —
-   * page HTML keeps coming straight off the CDN with no edge hop.
-   *
-   * This is a necessary condition, not the decision. It is a substring-ish regex
-   * and cannot weigh q-values, so `text/markdown;q=0.5, text/html` still matches
-   * here and is then correctly turned away by `prefersMarkdown`.
-   */
+  // Pre-filter run before invocation: it may over-match (`prefersMarkdown` decides) but must never under-match.
   header: { accept: 'text/(x-)?markdown' },
-  // Keeps the function off everything that could not have a markdown twin: hashed
-  // bundles, images, the feeds, and the already-markdown files themselves.
+  // Skips hashed bundles, images, feeds and the `.md` files themselves.
   excludedPath: [
     '/assets/*',
     '/.netlify/*',
