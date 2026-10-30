@@ -7,6 +7,16 @@ pre-commit:
         - 'pnpm-lock.yaml'
       run: pnpm exec oxfmt {staged_files}
       stage_fixed: true
+    # The repo is public: refuse a commit that stages a secret. Skipped with a
+    # warning when gitleaks is not installed (`brew install gitleaks`); CI
+    # scans every push either way.
+    secrets:
+      run: |
+        if ! command -v gitleaks >/dev/null; then
+          echo 'gitleaks not installed, skipping the secret scan'
+          exit 0
+        fi
+        gitleaks git --pre-commit --staged --redact --no-banner
 
 pre-push:
   commands:
