@@ -134,7 +134,7 @@ export function contentMarkdown(options: ContentMarkdownOptions): Plugin {
 
         const file = files.find((candidate) => candidate.fileName === fileName)
         if (!file) {
-          // No twin for this route — `/styleguide`, say. In production the edge
+          // No twin for this route: `/404`, say. In production the edge
           // function bows out and Netlify serves the prerendered HTML, which
           // ignores `Accept` entirely. Here the request would instead reach
           // TanStack's SSR handler, which answers a non-HTML `Accept` with the

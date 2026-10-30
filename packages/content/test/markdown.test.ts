@@ -514,3 +514,58 @@ describe('renderMarkdownFiles', () => {
     )
   })
 })
+
+describe('renderMarkdownFiles with a page the app adds', () => {
+  const render = async () =>
+    renderMarkdownFiles(await readContent(), {
+      site: SITE,
+      pages: {
+        ...PAGES,
+        styleguide: {
+          path: '/styleguide',
+          title: 'Styleguide',
+          description: 'The design system.',
+        },
+      },
+      resolveAsset: noAssets,
+      warn: noWarnings,
+    })
+
+  it('gives it a twin that names it and points back to llms.txt', async () => {
+    const twin = (await render()).find(
+      (file) => file.fileName === 'styleguide.md',
+    )
+    expect(twin?.source).toBe(
+      [
+        '# Styleguide',
+        '> The design system.',
+        '- Canonical: https://example.com/styleguide',
+        'More of this site, as markdown: [llms.txt](https://example.com/llms.txt)',
+      ].join('\n\n') + '\n',
+    )
+  })
+
+  it('lists it in llms.txt under Other pages', async () => {
+    const llms = (await render()).find((file) => file.fileName === 'llms.txt')
+    expect(llms?.source).toContain(
+      '## Other pages\n\n- [Styleguide](https://example.com/styleguide.md): The design system.',
+    )
+  })
+
+  it('leaves the home twin alone', async () => {
+    const [withPage, without] = await Promise.all([
+      render(),
+      readContent().then((content) =>
+        renderMarkdownFiles(content, {
+          site: SITE,
+          pages: PAGES,
+          resolveAsset: noAssets,
+          warn: noWarnings,
+        }),
+      ),
+    ])
+    const home = (files: typeof without) =>
+      files.find((file) => file.fileName === 'index.md')?.source
+    expect(home(withPage)).toBe(home(without))
+  })
+})
