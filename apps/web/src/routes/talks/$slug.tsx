@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { loadTalk } from 'virtual:content'
 
-import { toMetaTags } from '@/features/og/metadata'
+import { pageMeta } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
 import { loadDocument } from '@/lib/load-document'
 
@@ -11,17 +11,7 @@ export const Route = createFileRoute('/talks/$slug')({
   loader: async ({ params }) => ({
     talk: await loadDocument(loadTalk, params.slug),
   }),
-  head: ({ loaderData, match }) => {
-    if (!loaderData) return {}
-    const { talk } = loaderData
-    return {
-      meta: toMetaTags({
-        title: talk.title,
-        description: talk.description,
-        path: match.pathname,
-      }),
-    }
-  },
+  head: ({ match }) => ({ meta: pageMeta(match.pathname) }),
 })
 
 function TalkPageRoute() {

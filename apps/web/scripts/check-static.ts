@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { sitePages } from '@ntatoud/content/inventory'
 import { readContentPages } from '@ntatoud/content/pages'
 
-import { FILE_ROUTES, STATIC_PAGES } from '../src/lib/site.ts'
+import { FILE_ROUTES, SITE_URL, STATIC_PAGES } from '../src/lib/site.ts'
 
 // Files that are not pages, so they have no social card.
 const REQUIRED_FILES = [
@@ -28,6 +28,15 @@ const FORBIDDEN_PATHS = ['.netlify/v1/functions']
 
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47]
 
+// The `content` of a page's `<meta property="...">` tag, if it has exactly one.
+const metaProperty = (html: string, property: string) => {
+  const tags = html.match(/<meta\b[^>]*>/g) ?? []
+  const values = tags
+    .filter((tag) => tag.includes(`property="${property}"`))
+    .map((tag) => /\bcontent="([^"]*)"/.exec(tag)?.[1])
+  return values.length === 1 ? values[0] : undefined
+}
+
 const app = new URL('../', import.meta.url)
 const client = new URL('dist/client/', app)
 const file = (relative: string) => fileURLToPath(new URL(relative, client))
@@ -39,14 +48,32 @@ const forbidden = FORBIDDEN_PATHS.filter((name) =>
 )
 
 // Every page must have been prerendered, drafts included, and must have its
-// markdown twin and the social card its meta tags point at.
+// markdown twin and the social card its meta tags point at. Its meta tags must
+// name the page itself, not a parent route's page.
 const pages = sitePages(await readContentPages(), STATIC_PAGES)
+const wrongMeta: string[] = []
 
 for (const { path, ogImage, markdown } of pages) {
   const trimmed = path.replace(/^\/+|\/+$/g, '')
   const html = trimmed ? `${trimmed}/index.html` : 'index.html'
   for (const name of [html, markdown.slice(1)]) {
     if (!existsSync(file(name))) missing.push(name)
+  }
+
+  if (existsSync(file(html))) {
+    const document = readFileSync(file(html), 'utf8')
+    const expected = {
+      'og:url': SITE_URL + path,
+      'og:image': SITE_URL + ogImage,
+    }
+    for (const [property, value] of Object.entries(expected)) {
+      const actual = metaProperty(document, property)
+      if (actual !== value) {
+        wrongMeta.push(
+          `${html}: ${property} is ${actual ?? 'not set once'}, expected ${value}`,
+        )
+      }
+    }
   }
 
   const image = ogImage.slice(1)
@@ -60,9 +87,10 @@ for (const { path, ogImage, markdown } of pages) {
   }
 }
 
-if (missing.length > 0 || forbidden.length > 0) {
+if (missing.length > 0 || forbidden.length > 0 || wrongMeta.length > 0) {
   for (const name of missing) console.error(`missing: dist/client/${name}`)
   for (const name of forbidden) console.error(`unexpected: ${name}`)
+  for (const message of wrongMeta) console.error(`wrong meta: ${message}`)
   process.exit(1)
 }
 
