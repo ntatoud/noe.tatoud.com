@@ -34,6 +34,12 @@ export const STATIC_PAGES = {
     title: 'Talks | Noé Tatoud',
     description: 'Conference talks and workshops.',
   },
+  styleguide: {
+    path: '/styleguide',
+    title: 'Clay Design System | Noé Tatoud',
+    description:
+      'Clay is the design system for noe.tatoud.com. Soft warmth through sand, terracotta and olive, a friendly serif, and generous spacing.',
+  },
 } as const satisfies StaticPages
 
 export const FEED_TITLE = 'Noé Tatoud — Blog'
