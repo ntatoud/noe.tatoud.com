@@ -36,10 +36,10 @@ export const readDeclaredExports = (): ReadonlyArray<string> =>
       .matchAll(/^\s*export const (\w+):/gm),
   ].map(([, name]) => name!)
 
-/** Descriptions for the home and listing pages, as the app passes them. */
+/** The home and listing pages, as the app passes them. */
 export const PAGES = {
-  home: { description: 'Home.' },
-  blog: { description: 'Posts.' },
-  projects: { description: 'Projects.' },
-  talks: { description: 'Talks.' },
+  home: { path: '/', title: 'Home', description: 'Home.' },
+  blog: { path: '/blog', title: 'Blog', description: 'Posts.' },
+  projects: { path: '/projects', title: 'Projects', description: 'Projects.' },
+  talks: { path: '/talks', title: 'Talks', description: 'Talks.' },
 }

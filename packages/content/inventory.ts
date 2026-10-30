@@ -14,10 +14,15 @@ export interface StaticPage {
   readonly description?: string
 }
 
-/** The home page and one page per catalog listing, keyed by listing name. */
+/**
+ * The home page and one page per catalog listing, keyed by listing name, plus
+ * any page the app adds on its own (the styleguide, say), keyed by any other
+ * name.
+ */
 export type StaticPages = { readonly home: StaticPage } & Readonly<
   Record<ListingName, StaticPage>
->
+> &
+  Readonly<Record<string, StaticPage>>
 
 /** One page of the site and every file derived from it. */
 export interface SitePage {
