@@ -21,7 +21,8 @@ export interface ListingPage {
   readonly kind?: PageKind
 }
 
-export interface ContentPages {
+/** The Content Catalog's half of the site's pages; `sitePages` adds the app's. */
+export interface ContentInventory {
   /** Every content document's page, drafts included, in catalog order. */
   readonly documents: ReadonlyArray<ContentPage>
   readonly listings: ReadonlyArray<ListingPage>
@@ -32,7 +33,9 @@ export interface ContentPages {
  * (ADR-0008: a draft keeps a reachable page). Optional fields are omitted
  * rather than set to `undefined`, so the result serializes as-is.
  */
-export const contentPagesOf = (content: ContentSnapshot): ContentPages => {
+export const contentInventoryOf = (
+  content: ContentSnapshot,
+): ContentInventory => {
   const collections = collectionsOf(content)
   return {
     documents: collections.flatMap(({ detail }) =>
@@ -63,5 +66,5 @@ export const contentPagesOf = (content: ContentSnapshot): ContentPages => {
  * elsewhere have cards that link off-site); the OG image build and
  * `check:static` need every one of them too.
  */
-export const readContentPages = async (): Promise<ContentPages> =>
-  contentPagesOf(await readContent())
+export const readContentPages = async (): Promise<ContentInventory> =>
+  contentInventoryOf(await readContent())

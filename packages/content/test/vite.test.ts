@@ -143,7 +143,7 @@ describe('virtual:content', () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
 
-    expect(exports.contentPages).toEqual(await readContentPages())
+    expect(exports.contentInventory).toEqual(await readContentPages())
   })
 
   it('resolves every frontmatter image to a file that exists', async () => {

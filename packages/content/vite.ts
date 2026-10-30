@@ -4,7 +4,7 @@ import type { Plugin } from 'vite'
 
 import { contentFilePath, contentRoot, contentUrl } from './content-url.ts'
 import { bodyImageUrl } from './markdown.ts'
-import { contentPagesOf } from './pages.ts'
+import { contentInventoryOf } from './pages.ts'
 import {
   collectionsOf,
   readContent,
@@ -180,7 +180,7 @@ export function content(): Plugin {
 
     // Plain strings and booleans, no images, so JSON is enough.
     lines.push(
-      `export const contentPages = ${JSON.stringify(contentPagesOf(content))}`,
+      `export const contentInventory = ${JSON.stringify(contentInventoryOf(content))}`,
     )
 
     return assets.emit(...lines)

@@ -1,5 +1,5 @@
 import type { ListingName, PageKind } from './catalog/index.ts'
-import type { ContentPages } from './pages.ts'
+import type { ContentInventory } from './pages.ts'
 import { markdownPath, ogImagePath } from './paths.ts'
 
 // The site's page inventory. Pure, and imports nothing at runtime but
@@ -47,7 +47,7 @@ const withFiles = (page: Omit<SitePage, 'ogImage' | 'markdown'>): SitePage => ({
  * app declares them, then the content documents in catalog order.
  */
 export const sitePages = (
-  content: ContentPages,
+  content: ContentInventory,
   staticPages: StaticPages,
 ): ReadonlyArray<SitePage> => {
   const listings = new Map(
@@ -59,7 +59,7 @@ export const sitePages = (
       const listing = listings.get(name as ListingName)
       if (listing && listing.path !== page.path) {
         throw new Error(
-          `[pages] the ${name} listing is at ${listing.path} in the catalog but ${page.path} in the app`,
+          `[inventory] the ${name} listing is at ${listing.path} in the catalog but ${page.path} in the app`,
         )
       }
       const kind = listing?.kind

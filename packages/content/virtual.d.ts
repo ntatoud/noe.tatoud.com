@@ -8,7 +8,7 @@ declare module 'virtual:content' {
   import type {
     BlogPost,
     BlogPostDetail,
-    ContentPages,
+    ContentInventory,
     Experience,
     Project,
     ProjectDetail,
@@ -43,5 +43,5 @@ declare module 'virtual:content' {
    * and every listing page, as `@ntatoud/content/pages` reads them at build
    * time. The sitemap reads them from here.
    */
-  export const contentPages: ContentPages
+  export const contentInventory: ContentInventory
 }

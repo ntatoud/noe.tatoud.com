@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { sitePages } from '../inventory.ts'
-import type { ContentPages } from '../pages.ts'
+import type { ContentInventory } from '../pages.ts'
 
 const STATIC = {
   home: { path: '/', title: 'Home', description: 'Welcome.' },
@@ -10,7 +10,7 @@ const STATIC = {
   talks: { path: '/talks', title: 'Talks', description: 'Talks.' },
 }
 
-const CONTENT: ContentPages = {
+const CONTENT: ContentInventory = {
   documents: [
     {
       path: '/blog/hello',
