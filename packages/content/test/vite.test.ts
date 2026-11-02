@@ -10,28 +10,9 @@ import { contentRoot } from '../content-url.ts'
 import { readContentPages } from '../pages.ts'
 import { createPlugin, readDeclaredExports } from './helpers.ts'
 
-/**
- * Pins the Vite plugin against the real `content/` directory: it is the only
- * thing standing between a content file and a broken deploy now that pages read
- * baked data instead of the filesystem.
- *
- * The generated modules are **evaluated**, not just string-matched. A module can
- * be perfectly plausible text and still throw — the first version of this plugin
- * emitted its asset imports before the frontmatter had registered the hero, so
- * every post with a hero image died with `__asset0 is not defined`. That only
- * surfaced during prerender, as `Failed to fetch /blog/…: Internal Server Error`.
- * Evaluating here turns that class of bug into a named assertion failure.
- */
+// Generated modules are evaluated, not string-matched: a plausible module can still throw `ReferenceError`.
 
-/**
- * Runs a generated module and returns what it exported.
- *
- * Asset imports are rebound to the file path they point at — the real value is a
- * hashed URL only Vite can produce, and every assertion here cares about *which*
- * file was imported, not what it was renamed to. An identifier that was
- * referenced but never imported is simply absent from the parameter list, so the
- * body throws `ReferenceError` exactly as it did in the browser.
- */
+// Asset imports are rebound to their file path; an identifier never imported is absent, so the body throws as in the browser.
 function evaluateModule(code: string) {
   const imports = [...code.matchAll(/^import (\w+) from "([^"]+)"$/gm)]
   const assets = imports.map(([, , specifier]) =>
@@ -53,13 +34,7 @@ function evaluateModule(code: string) {
   return { exports, assets }
 }
 
-/**
- * Document directories on disk, which is what a slug is.
- *
- * Deliberately a second implementation of the plugin's own `readSlugs`, not an
- * import of it: this is the oracle the loader maps are checked against, and
- * sharing the code under test would make that assertion tautological.
- */
+// A second implementation of the plugin's `readSlugs`: the oracle must not share the code under test.
 const slugsOnDisk = (directory: string) =>
   fs
     .readdirSync(directory, { withFileTypes: true })
@@ -93,13 +68,7 @@ describe('virtual:content', () => {
     }
   })
 
-  /**
-   * `virtual.d.ts` is a hand-written claim about code the plugin generates, and
-   * nothing links the two: the export names come from string literals in
-   * `vite.ts`, so a typo there (`loadBlogPst`) still typechecks, still builds,
-   * and only fails as `undefined is not a function` when a visitor opens the
-   * page. This is the assertion that closes that hole.
-   */
+  // Closes the hole where a typo in a generated export name still typechecks but fails at runtime.
   it('exports exactly the names virtual.d.ts declares', async () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
@@ -125,8 +94,6 @@ describe('virtual:content', () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
 
-    // The listing filter and ordering live in the readers; this pins that the
-    // plugin does not bypass them.
     for (const name of LISTINGS) {
       for (const document of exports[name]) {
         if ('published' in document) expect(document.published).toBe(true)
@@ -137,8 +104,6 @@ describe('virtual:content', () => {
     expect(dates).toEqual([...dates].sort().reverse())
   })
 
-  // The sitemap reads its documents from here, since nothing reads the
-  // filesystem at runtime (ADR-0008).
   it('exports the content pages the build reads from disk', async () => {
     const { generate } = createPlugin()
     const { exports } = evaluateModule(await generate('virtual:content'))
@@ -181,8 +146,6 @@ describe('virtual:content detail modules', () => {
       }
     }
 
-    // A body image the plugin could not resolve is warned about and left as a
-    // relative src, which 404s in the browser. Treat it as a failure here.
     expect(warnings).toEqual([])
   })
 
@@ -196,9 +159,7 @@ describe('virtual:content detail modules', () => {
         const html: string = exports.default.html
 
         for (const [, src] of html.matchAll(/<img[^>]*\bsrc="([^"]*)"/g)) {
-          // Deliberately stricter than the plugin's own `ABSOLUTE_SRC`, which
-          // also skips root-relative srcs: no content image should ever come out
-          // as `/…`, because nothing serves `content/` at runtime any more.
+          // Stricter than the plugin's `ABSOLUTE_SRC`: nothing serves `content/` at runtime, so no image may come out as `/...`.
           if (/^(?:https?:|\/\/|data:)/.test(src!)) continue
           expect(
             assets,
@@ -228,16 +189,12 @@ describe('virtual:content detail modules', () => {
       }),
     )
 
-    // Distinct modules, not one shared blob — that is what makes the per-document
-    // chunking real rather than incidental.
     expect(new Set(bodies).size).toBe(bodies.length)
   })
 })
 
 describe('content on disk', () => {
-  // The name `index.mdx` is a leftover: bodies have been plain markdown since
-  // ADR-0007. It is what `@ntatoud/effect-collections` reads, so a document
-  // directory without one is invisible to every reader.
+  // `index.mdx` is what `@ntatoud/effect-collections` reads: a directory without one is invisible to every reader.
   it('gives every document an index.mdx', () => {
     for (const collection of [blogPosts, projects, talks]) {
       for (const slug of slugsOnDisk(collection.directory)) {

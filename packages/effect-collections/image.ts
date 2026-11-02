@@ -9,11 +9,6 @@ import {
 } from 'effect'
 import { imageSize } from 'image-size'
 
-/**
- * The absolute directory of the document currently being decoded. Provided
- * per-document by `Collections` so `Image` fields can resolve a path
- * relative to the file that referenced them.
- */
 export class DocumentDirectory extends Context.Service<
   DocumentDirectory,
   string
@@ -52,10 +47,6 @@ const readDimensions = (relativePath: string) =>
     return { path: absolutePath, width, height }
   })
 
-/**
- * Decodes a frontmatter image path (e.g. `hero.png`) into its pixel
- * dimensions, resolved relative to the containing document's directory.
- */
 export const Image = Schema.String.pipe(
   Schema.decodeTo(ImageStruct, {
     decode: SchemaGetter.transformEffect(readDimensions),

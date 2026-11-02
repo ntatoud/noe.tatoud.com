@@ -9,10 +9,7 @@ type Theme = 'light' | 'dark'
 
 const STORAGE_KEY = 'theme'
 
-// The `dark` class on <html> is the source of truth: the inline script in
-// __root.tsx sets it before hydration, so the DOM already holds the theme by
-// the time React runs. Reading it through a store keeps the button in sync
-// with that external state without a mount effect.
+// The `dark` class on <html> is the source of truth (set before hydration by __root.tsx).
 const listeners = new Set<() => void>()
 
 function subscribe(onStoreChange: () => void) {
@@ -35,7 +32,7 @@ function applyTheme(theme: Theme) {
   try {
     localStorage.setItem(STORAGE_KEY, theme)
   } catch {
-    // localStorage unavailable (private mode, disabled storage) — theme just won't persist
+    // localStorage unavailable (private mode, disabled storage): the theme just won't persist.
   }
   for (const listener of listeners) listener()
 }

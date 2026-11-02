@@ -23,13 +23,10 @@ const collection = defineCollection({
 
 export type Experience = CollectionData<typeof collection>
 
-// Experiences have no page of their own (they only ever render inline on the
-// home page), so they are indexed without a link rather than pointed at a
-// markdown twin that would 404.
+// No page of their own, so they are indexed without a link.
 export const experiences = defineContentCollection({
   key: 'experiences',
   collection,
-  // Every experience, most recently started first.
   reader: (documents) =>
     documents
       .map((doc) => doc.data)

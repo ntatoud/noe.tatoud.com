@@ -1,14 +1,4 @@
-/* Syntax highlighting theme for @tanstack/highlight.
-
-   The highlighter emits semantic classes (`th-token th-keyword`) rather than
-   inline colors — the palette lives here, so recoloring never means
-   re-highlighting. Values are the `github-light` / `github-dark` themes; the
-   token list is exhaustive (`themeTokenClasses`) so an unstyled token class
-   can't silently fall back to the prose color.
-
-   Both schemes are defined: code blocks sit on `--color-muted`, which is
-   near-white in light mode, so the dark palette's pastel blues are unreadable
-   there. Keep the two lists in sync — every token needs an entry in both. */
+/* Every token class in `themeTokenClasses` needs an entry in both palettes: code sits on `--color-muted`, so the dark pastels are unreadable in light mode. */
 
 :root {
   --th-token: #24292f;
@@ -123,11 +113,7 @@
   color: var(--th-variable);
 }
 
-/* Line wrappers only appear on fences that ask for line highlighting (via
-   ```ts {1,4}). They stay inline: the newline that follows each one is what
-   breaks the line inside `pre`, so making them blocks would double-space the
-   code. The marker is therefore a left rule plus a tinted background rather
-   than a full-width band. */
+/* Line wrappers stay inline: the newline after each breaks the line in `pre`, so blocks would double-space. */
 .th-line--highlighted {
   background-color: color-mix(in oklab, var(--th-token) 12%, transparent);
   box-shadow: -0.5em 0 0 color-mix(in oklab, var(--th-token) 12%, transparent);

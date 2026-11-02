@@ -8,11 +8,6 @@ import { experiences as experiencesEntry } from '../catalog/experiences.ts'
 import { projects as projectsEntry } from '../catalog/projects.ts'
 import { talks as talksEntry } from '../catalog/talks.ts'
 
-/**
- * Splits a derived public image URL into its directory prefix and filename, so
- * assertions can compare the prefix exactly rather than interpolating a slug
- * (which may contain regex metacharacters) into a pattern.
- */
 const splitImageUrl = (url: string) => {
   const at = url.lastIndexOf('/')
   return { prefix: url.slice(0, at + 1), file: url.slice(at + 1) }
@@ -24,12 +19,7 @@ const descending = (times: ReadonlyArray<number>) =>
 const asTimes = (dates: ReadonlyArray<string>) =>
   dates.map((date) => new Date(date).getTime())
 
-// These assertions run against the repo's real Content Collections, so they
-// describe invariants of the pipeline rather than the contents of any one
-// document — adding or editing content must not break them.
-//
-// Each collection is read once per test: splitting assertions across
-// `it.effect` blocks would re-read and re-measure every image file.
+// Runs against the real collections: assert pipeline invariants, not the contents of any one document.
 layer(CollectionsLive)('content readers', (it) => {
   it.effect(
     'blog reader derives portable hero URLs and sorts newest first',
@@ -60,9 +50,7 @@ layer(CollectionsLive)('content readers', (it) => {
           expect(post.heroDimensions).toBeNull()
         }
 
-        // The App branches on `externalUrl` to decide whether a post links
-        // off-site, so "no external link" must stay `null` — leaving the key
-        // absent would make every post look external.
+        // Must stay `null`: an absent key would make every post look external.
         expect(posts.some((post) => post.externalUrl === null)).toBe(true)
         expect(posts.some((post) => typeof post.externalUrl === 'string')).toBe(
           true,
@@ -140,7 +128,6 @@ layer(CollectionsLive)('content readers', (it) => {
       )
       expect(descending(latest)).toBe(true)
 
-      // Each talk's own events are newest first, so `events[0]` is the latest.
       for (const talk of talks) {
         expect(
           descending(asTimes(talk.events.map((event) => event.date))),

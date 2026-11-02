@@ -16,8 +16,6 @@
   }
 }
 
-/* Soften the body text slightly in dark mode only. In light mode the docs
-   inherit the theme foreground (near-black) so text stays legible. */
 .dark .typeset-docs {
   --color-foreground: oklch(0.9 0.012 75);
 }
@@ -25,7 +23,6 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Clay Design System — Light Mode */
   --background: oklch(0.965 0.014 75);
   --foreground: oklch(0.25 0.02 45);
   --card: oklch(0.985 0.01 75);
@@ -54,7 +51,6 @@
 }
 
 .dark {
-  /* Clay Design System — Dark Mode */
   --background: oklch(0.19 0.012 50);
   --foreground: oklch(0.93 0.015 75);
   --card: oklch(0.23 0.014 50);
@@ -104,11 +100,8 @@
 }
 
 @theme {
-  /* 10px step, below Tailwind's text-xs (12px). Used by the compact
-     initials inside event logos. */
   --text-2xs: 0.625rem;
 
-  /* Clay tonal palette — terracotta, the primary color */
   --color-clay-50: oklch(0.97 0.015 50);
   --color-clay-100: oklch(0.93 0.035 48);
   --color-clay-200: oklch(0.87 0.065 45);
@@ -121,7 +114,6 @@
   --color-clay-900: oklch(0.27 0.05 38);
   --color-clay-950: oklch(0.2 0.03 40);
 
-  /* Olive tonal palette — secondary color */
   --color-olive-50: oklch(0.97 0.015 120);
   --color-olive-100: oklch(0.93 0.03 120);
   --color-olive-200: oklch(0.87 0.05 122);
@@ -160,8 +152,6 @@
 }
 
 @layer components {
-  /* Home hero monogram: a giant outlined initial bleeding off the right
-     edge, the typographic stand-in for a portrait. */
   .hero-monogram {
     position: absolute;
     top: 50%;
@@ -177,9 +167,7 @@
     user-select: none;
   }
 
-  /* A logo's brand color (`--brand`) as a fill. Logos are drawn for dark
-     grounds more often than not, so on the light theme the color is capped in
-     lightness: a neon yellow would vanish into the sand background. */
+  /* Capped in lightness on the light theme: a neon yellow would vanish into the sand. */
   .brand-fill {
     background-color: var(--brand);
     background-color: oklch(from var(--brand) min(l, 0.72) c h);

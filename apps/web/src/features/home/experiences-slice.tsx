@@ -14,15 +14,10 @@ type ExperiencesSliceProps = {
   experiences: readonly Experience[]
 }
 
-/** The site is static: "today" is the day it was built (see `vite.config.ts`). */
 const today = import.meta.env.BUILD_DATE
 
 const time = (date: string) => new Date(date).getTime()
 
-/**
- * One row of the timeline: every role held at one organization, oldest first,
- * so a progression (internship, then a job) reads along a single line.
- */
 type Lane = {
   organization: string
   roles: Experience[]
@@ -35,8 +30,6 @@ function lanes(roles: readonly Experience[]): Lane[] {
     lane.push(role)
     byOrganization.set(role.organization, lane)
   }
-  // Latest organization on top, school at the bottom: the chart climbs from
-  // the bottom left to the current role in the top right.
   const isSchool = (lane: Experience[]) =>
     lane.every((role) => role.kind === 'education')
   return [...byOrganization]
@@ -45,27 +38,20 @@ function lanes(roles: readonly Experience[]): Lane[] {
     .sort((a, b) => Number(isSchool(a.roles)) - Number(isSchool(b.roles)))
 }
 
-/** A linear time scale from the earliest experience to today. */
 function timeScale(experiences: readonly Experience[]) {
-  // A milestone (a graduation, a release) is a point in time; everything
-  // with a duration (an exchange semester included) is a bar.
   const isMilestone = (exp: Experience) =>
     exp.kind === 'milestone' ||
     (exp.kind === 'education' &&
       (!exp.endDate || exp.endDate === exp.startDate))
-  // Oldest first, so consecutive milestones alternate label rows.
   const milestones = experiences.filter(isMilestone).reverse()
-  // Oldest first, so each lane lists its roles left to right.
   const roles = experiences.filter((exp) => !isMilestone(exp)).reverse()
 
   const origin = Math.min(...experiences.map((exp) => time(exp.startDate)))
   const end = time(today)
 
-  /** Percentage of the scale's width, clamped to it. */
   const position = (date: string) =>
     Math.min(100, Math.max(0, ((time(date) - origin) / (end - origin)) * 100))
 
-  // A tick at every month boundary inside the scale, labelled on January.
   const ticks: { date: string; year?: number }[] = []
   const cursor = new Date(origin)
   cursor.setUTCDate(1)
@@ -127,22 +113,12 @@ function ExperienceLogo({ experience }: { experience: Experience }) {
   )
 }
 
-/** Where a link's preview card opens, relative to the link. */
 type PreviewPlacement = {
   side: 'above' | 'below'
   align: 'start' | 'end'
 }
 
-/**
- * A link to an experience's website that previews it on hover (or keyboard
- * focus) with the site's Open Graph image, stored alongside the entry (see
- * `preview` in the schema).
- *
- * The card is plain CSS, not a popover component: the timeline knows where
- * every link sits, so it picks a side that stays inside the chart instead of
- * measuring the viewport. The card is `display: none` until shown, which also
- * keeps its lazy image from loading before the first hover.
- */
+// Plain CSS card, `display: none` until shown so its lazy image waits for the first hover.
 function ExperienceLink({
   experience,
   placement,
@@ -153,7 +129,6 @@ function ExperienceLink({
   experience: Experience
   placement: PreviewPlacement
   className?: string
-  /** Accessible name, for a link with no text of its own (a bar). */
   label?: string
   children?: ReactNode
 }) {
@@ -201,10 +176,8 @@ function ExperienceLink({
   )
 }
 
-/** Maps a date to a percentage of the timeline's width. */
 type Position = (date: string) => number
 
-/** The bar's fill: a brand color when the entry has one, else by kind. */
 function roleFill(exp: Experience) {
   if (exp.color) return 'brand-fill'
   return exp.kind === 'work' || exp.kind === 'internship'
@@ -222,12 +195,8 @@ function TimelineMilestone({
   position: Position
 }) {
   const date = exp.endDate ?? exp.startDate
-  // Every other milestone drops a row, so two close milestones never print
-  // their labels over each other.
   const lower = index % 2 === 1
   const at = position(date)
-  // In the right half the label hangs off the icon's left side, so it never
-  // runs past the scale.
   const alignEnd = at > 50
   return (
     <div
@@ -245,11 +214,8 @@ function TimelineMilestone({
       />
       <ExperienceLink
         experience={exp}
-        // Milestones sit above every lane: their card opens below.
         placement={{ side: 'below', align: alignEnd ? 'end' : 'start' }}
-        // Shifted by half the icon, so the icon sits on the line. Lifted over
-        // the lanes, which come later in the page and would otherwise paint
-        // over its card.
+        // Lifted over the lanes, which come later and would paint over the card.
         className={cn(
           'absolute z-10 flex w-max items-center gap-2',
           alignEnd
@@ -295,7 +261,6 @@ function TimelineRole({
   position,
 }: {
   experience: Experience
-  /** The following role on the same lane, if any. */
   next: Experience | undefined
   side: PreviewPlacement['side']
   alignEnd: boolean
@@ -303,9 +268,6 @@ function TimelineRole({
 }) {
   const from = position(exp.startDate)
   const to = position(exp.endDate ?? today)
-  // A label stops short of the next role on its lane and wraps instead of
-  // running into it. The width is a share of this role's own box, which is
-  // the label's parent.
   const room =
     next && to > from
       ? `calc(${((position(next.startDate) - from) / (to - from)) * 100}% - 0.75rem)`
@@ -327,8 +289,7 @@ function TimelineRole({
         placement={{ side, align: from > 50 ? 'end' : 'start' }}
         className="relative block h-full"
       >
-        {/* The fill is its own element: opacity or a filter on the link would
-            also apply to, and trap, its preview card. */}
+        {/* Own element: opacity or a filter on the link would also hit its preview card. */}
         <span
           className={cn(
             'block h-full rounded-full transition group-hover:brightness-110',
@@ -366,8 +327,6 @@ function TimelineLane({
   const last = roles.at(-1) ?? first
   const start = position(first.startDate)
   const end = position(last.endDate ?? today)
-  // A lane in the right half hangs its labels off its end, so the text never
-  // runs past the scale.
   const alignEnd = start > 50
 
   return (
@@ -479,8 +438,7 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
               <TimelineLane
                 key={lane.organization}
                 lane={lane}
-                // Cards open toward the middle of the chart, never off an edge
-                // of its scroll container, which would clip them.
+                // Open toward the middle: an edge of the scroll container would clip the card.
                 side={laneIndex < lanes.length / 2 ? 'below' : 'above'}
                 position={position}
               />

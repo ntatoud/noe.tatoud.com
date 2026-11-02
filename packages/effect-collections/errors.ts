@@ -1,10 +1,5 @@
 import { Schema } from 'effect'
 
-/**
- * A collection directory or document that could not be read. `path` is the
- * directory or file involved, so a failed build names what to fix instead of
- * printing an empty message.
- */
 export class CollectionError extends Schema.TaggedError<CollectionError>()(
   'effect-collections/CollectionError',
   {

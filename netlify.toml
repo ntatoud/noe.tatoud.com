@@ -1,6 +1,4 @@
-# The publish directory is the entire site: every page, feed and image is
-# prerendered into it, and there is no serverless function (ADR-0011). The
-# markdown-negotiation edge function is the only code that runs per request.
+# The publish directory is the whole site; the edge function is the only per-request code (ADR-0011).
 [build]
 command = "pnpm run build"
 publish = "apps/web/dist/client"
@@ -9,8 +7,7 @@ edge_functions = "netlify/edge-functions"
 [build.environment]
 NODE_VERSION = "24"
 
-# Public static assets at the site root (favicon, logos, manifest, OG images)
-# Declared first so the more specific rules below can override for /assets/*.
+# Declared first so the /assets/* rule below can override these.
 [[headers]]
 for = "/*.png"
 [headers.values]
@@ -31,29 +28,24 @@ for = "/*.ico"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 
-# Content images — cache for 1 day
 [[headers]]
 for = "/content/*"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 
-# Markdown twins (ADR-0009). Served directly by URL as well as through content
-# negotiation, so they get the same revalidate policy the edge function sets.
+# Markdown twins: same revalidate policy as the edge function's responses.
 [[headers]]
 for = "/*.md"
 [headers.values]
 Content-Type = "text/markdown; charset=utf-8"
 Cache-Control = "public, max-age=0, must-revalidate"
 
-# Social cards, rendered at build time (ADR-0010). Not `immutable`: the file
-# names are stable across deploys, so a changed title must replace the image.
+# Not `immutable`: file names are stable across deploys.
 [[headers]]
 for = "/og/*"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 
-# Feeds and the sitemap are prerendered to static files by TanStack Start, not
-# served by a function, so their types and cache policy are set here.
 [[headers]]
 for = "/rss.xml"
 [headers.values]
@@ -78,45 +70,22 @@ for = "/sitemap.xml"
 Content-Type = "application/xml; charset=utf-8"
 Cache-Control = "public, max-age=0, must-revalidate"
 
-# Netlify image CDN — content-addressed by URL params, safe to cache long-term
-# Note: Netlify forces a 1-day browser Cache-Control on /.netlify/images
-# responses; this override only takes effect if Netlify lifts that restriction.
+# Content-addressed by URL; Netlify forces a 1-day browser Cache-Control here, so this only applies if that is lifted.
 [[headers]]
 for = "/.netlify/images*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
-# Hashed Vite bundles — safe to cache forever (declared last so it wins over
-# the generic /*.png and /*.svg rules above for files inside /assets/).
+# Hashed Vite bundles; declared after /*.png and /*.svg so it wins for files inside /assets/.
 [[headers]]
 for = "/assets/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
-# Agent discovery — RFC 8288 Link relation headers (RFC 9727 §3).
-# `/llms.txt` is generated into the client build by `@ntatoud/content/vite-markdown`.
+# Agent discovery: RFC 8288 Link headers (RFC 9727 §3).
 [[headers]]
 for = "/"
 [headers.values]
 Link = '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml", </index.md>; rel="alternate"; type="text/markdown"'
 
-# Note: page HTML deliberately does *not* carry `Vary: Accept`.
-#
-# Two representations do live at every page URL, so `Vary: Accept` looks like the
-# textbook answer — but Netlify folds the standard `Vary` header into its cache
-# key, and browsers each send a different `Accept` string (Chrome, Firefox and
-# Safari all differ). That splits one cached page into several entries per edge
-# location and lowers the hit rate on every browser page load, forever. Netlify's
-# own `Netlify-Vary` refuses high-cardinality request headers for this exact
-# reason.
-#
-# It is not needed to keep the two representations apart here either: the edge
-# function runs *before* the edge cache and returns markdown directly, so markdown
-# is never stored under the page URL, and HTML entries are only ever created by
-# requests that skipped the function. The markdown response does send
-# `Vary: Accept` itself (see the edge function), which is what a downstream cache
-# needs in order not to replay markdown to a browser.
-#
-# Residual gap: an agent-side cache that fetched a page as HTML and later asks for
-# markdown. If that shows up in practice, add `Vary = "Accept"` back on the page
-# routes and accept the fragmentation.
+# Page HTML deliberately has no `Vary: Accept` (ADR-0009); if an agent cache replays HTML for markdown, add `Vary = "Accept"` to page routes.

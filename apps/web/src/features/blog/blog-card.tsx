@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils'
 
 type BlogCardProps = {
   post: BlogPost
-  /** The most recent post: a full-width, side-by-side card with a larger title. */
   featured?: boolean
 }
 

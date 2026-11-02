@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 type ListingPageProps = {
-  /** `data-slot` of the page; its grid gets `<slot>-list`. */
   slot: string
   title: string
   subtitle: string
@@ -11,7 +10,6 @@ type ListingPageProps = {
   children: ReactNode
 }
 
-/** The page shell shared by the blog, projects and talks listings. */
 export function ListingPage({
   slot,
   title,

@@ -18,13 +18,8 @@ export const ExperienceSchema = Schema.Struct({
     'milestone',
   ]),
   logo: Schema.optionalKey(Image),
-  /**
-   * `url`'s Open Graph image (a screenshot when the site has none), shown when
-   * the entry is hovered on the timeline. Stored with the entry rather than
-   * fetched at build time, so the build never depends on third-party sites.
-   */
+  // Stored with the entry so the build never depends on third-party sites.
   preview: Schema.optionalKey(Image),
-  /** The logo's brand color, as `#rrggbb`: the role's bar on the timeline. */
   color: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter(

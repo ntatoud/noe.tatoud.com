@@ -21,11 +21,7 @@ const KINDS = {
   website: { label: 'Website', icon: Globe02Icon, frame: 'aspect-[4/3]' },
 } satisfies Record<StageResource['kind'], unknown>
 
-/**
- * A talk's slides, docs or website, embedded in a browser-like frame so it can
- * be browsed without leaving the page. Every resource must allow framing (no
- * `X-Frame-Options` / `frame-ancestors`), or the frame renders empty.
- */
+// Every resource must allow framing (no `X-Frame-Options` / `frame-ancestors`), or the frame renders empty.
 export function TalkResourcePreview({ kind, url }: StageResource) {
   const frame = useRef<HTMLIFrameElement>(null)
   const { label, icon, frame: aspect } = KINDS[kind]

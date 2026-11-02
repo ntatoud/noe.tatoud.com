@@ -5,21 +5,8 @@ import { contentInventory } from 'virtual:content'
 
 import { SITE_NAME, SITE_URL, STATIC_PAGES } from '@/lib/site'
 
-/**
- * Meta tags for this site's pages, read from the Page Inventory so a page's
- * tags, its social card (ADR-0010) and its markdown twin (ADR-0009) cannot
- * describe it differently.
- *
- * Kept dependency-free (no `effect`): `head` also runs on client-side
- * navigation, so this module and the inventory ship in the client bundle.
- */
+// Dependency-free (no `effect`): `head` runs on client navigation, so this module and the inventory ship in the client bundle.
 
-/**
- * A single `<meta>`/`<title>` descriptor. Modeled as a union so every tag
- * emitted by {@link pageMeta} is a fully-typed member rather than an
- * anonymous JSON object. The shapes line up with what TanStack Router's
- * `head`/`meta` API accepts.
- */
 type MetaTag =
   | { title: string }
   | { charSet: string }
@@ -31,7 +18,6 @@ const TWITTER_CARD = 'summary_large_image'
 const IMAGE_WIDTH = 1200
 const IMAGE_HEIGHT = 630
 
-/** Site-wide tags for the root document, never repeated per page. */
 export const BASE_META_TAGS: MetaTag[] = [
   { charSet: 'utf-8' },
   { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -41,7 +27,6 @@ const PAGES_BY_PATH = new Map(
   sitePages(contentInventory, STATIC_PAGES).map((page) => [page.path, page]),
 )
 
-/** Derive the full, deduplicated set of meta tags for a page. */
 const toMetaTags = ({
   title,
   description,
@@ -74,11 +59,7 @@ const toMetaTags = ({
   ]
 }
 
-/**
- * Every meta tag of the page at `pathname`. A path missing from the Page
- * Inventory throws, so an undeclared route fails the prerender (ADR-0011)
- * instead of shipping without its tags.
- */
+// An unknown path throws, so an undeclared route fails the prerender (ADR-0011).
 export const pageMeta = (pathname: string): MetaTag[] => {
   const page = PAGES_BY_PATH.get(pathname.replace(/(.)\/+$/, '$1'))
   if (!page) {

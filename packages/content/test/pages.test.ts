@@ -10,13 +10,6 @@ import { readContentPages } from '../pages.ts'
 const readContentPaths = async () =>
   (await readContentPages()).documents.map((page) => page.path)
 
-/**
- * Pins the list handed to the prerender pass against the real `content/`
- * directory. A document missing from it is not a build error: it is simply
- * not prerendered, so it 404s in production (ADR-0011).
- */
-
-/** Document directories on disk, which is what a slug is. */
 const slugsOnDisk = (directory: string) =>
   fs
     .readdirSync(directory, { withFileTypes: true })
@@ -36,8 +29,7 @@ describe('readContentPages paths', () => {
     expect(new Set(paths).size).toBe(paths.length)
   })
 
-  // The three documents the link crawler never reaches, because their cards
-  // link off-site.
+  // Their cards link off-site, so the link crawler never reaches them.
   it('includes the documents nothing links to', async () => {
     const paths = await readContentPaths()
 
@@ -60,8 +52,6 @@ const KIND_BY_PREFIX = {
 } as const
 
 describe('readContentPages', () => {
-  // Each page's title is what its social card shows, so an empty one is a
-  // blank card rather than an error.
   it('gives every page a non-empty title', async () => {
     for (const page of (await readContentPages()).documents) {
       expect(page.title.trim(), `${page.path}: empty title`).not.toBe('')

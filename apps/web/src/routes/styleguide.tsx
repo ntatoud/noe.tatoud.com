@@ -15,7 +15,6 @@ export const Route = createFileRoute('/styleguide')({
 function StyleguidePage() {
   return (
     <main id="main" className="mx-auto max-w-4xl px-4 py-16">
-      {/* Hero */}
       <section className="mb-24">
         <Badge className="mb-4" variant="outline">
           Design System v1
@@ -27,7 +26,6 @@ function StyleguidePage() {
         </p>
       </section>
 
-      {/* Color Palette */}
       <section className="mb-24">
         <h2 className="mb-8 font-serif text-3xl">Color Palette</h2>
 
@@ -120,7 +118,6 @@ function StyleguidePage() {
         </div>
       </section>
 
-      {/* Typography */}
       <section className="mb-24">
         <h2 className="mb-8 font-serif text-3xl">Typography</h2>
 
@@ -193,7 +190,6 @@ function StyleguidePage() {
         </div>
       </section>
 
-      {/* Buttons */}
       <section className="mb-24">
         <h2 className="mb-8 font-serif text-3xl">Buttons</h2>
 
@@ -246,7 +242,6 @@ function StyleguidePage() {
         </div>
       </section>
 
-      {/* Spacing & Radius */}
       <section className="mb-24">
         <h2 className="mb-8 font-serif text-3xl">Spacing & Radius</h2>
 
@@ -286,7 +281,6 @@ function StyleguidePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <section className="border-t pt-8">
         <p className="text-sm text-muted-foreground">
           Clay Design System v1.0 — Built with soft warmth.

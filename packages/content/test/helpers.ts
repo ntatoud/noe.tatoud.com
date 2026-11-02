@@ -7,7 +7,6 @@ import { content } from '../vite.ts'
 
 type Hook = (...args: any[]) => any
 
-/** The content plugin, with its hooks reachable as plain functions. */
 export function createPlugin() {
   const warnings: string[] = []
   const plugin = content() as unknown as {
@@ -28,7 +27,6 @@ export function createPlugin() {
   return { generate, warnings }
 }
 
-/** The export names `virtual.d.ts` declares for `virtual:content`. */
 export const readDeclaredExports = (): ReadonlyArray<string> =>
   [
     ...fs
@@ -36,7 +34,6 @@ export const readDeclaredExports = (): ReadonlyArray<string> =>
       .matchAll(/^\s*export const (\w+):/gm),
   ].map(([, name]) => name!)
 
-/** The home and listing pages, as the app passes them. */
 export const PAGES = {
   home: { path: '/', title: 'Home', description: 'Home.' },
   blog: { path: '/blog', title: 'Blog', description: 'Posts.' },

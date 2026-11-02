@@ -17,18 +17,7 @@ import { readContent } from '../snapshot.ts'
 import { estimateTokens, prefersMarkdown } from '../vite-markdown.ts'
 import { PAGES } from './helpers.ts'
 
-/**
- * Covers the markdown twins served for `Accept: text/markdown` (ADR-0009).
- *
- * Two things here are load-bearing beyond the rendering itself:
- *
- * - the route→file mapping, which the build and the edge function each implement
- *   separately and must agree on, and
- * - the `Accept` decision, which is duplicated into the edge function because
- *   Deno at Netlify's edge cannot import from this workspace.
- *
- * Both are pinned against the edge function's own source below.
- */
+// The route mapping and `Accept` decision are duplicated in the edge function and pinned against its source below (ADR-0009).
 
 const SITE = {
   url: 'https://example.com',
@@ -94,16 +83,10 @@ describe('prefersMarkdown', () => {
     expect(prefersMarkdown(' TEXT/MARKDOWN ')).toBe(true)
   })
 
-  /**
-   * The reason this is a q-value parser and not `accept.includes('text/markdown')`.
-   * A client that ranks HTML above markdown has asked for HTML, and saying
-   * otherwise would hand plain text to something expecting a page.
-   */
   it('honours q-values in both directions', () => {
     expect(prefersMarkdown('text/markdown;q=0.5, text/html')).toBe(false)
     expect(prefersMarkdown('text/html;q=0.9, text/markdown')).toBe(true)
     expect(prefersMarkdown('text/markdown;q=0, text/html')).toBe(false)
-    // A tie goes to markdown: the client named it without ranking it below HTML.
     expect(prefersMarkdown('text/html, text/markdown')).toBe(true)
   })
 })
@@ -152,15 +135,9 @@ describe('renderDocument', () => {
     expect(output).toContain('- Published: 2025-06-25')
     expect(output).toContain('- Author: Someone')
     expect(output).toContain('- Canonical: https://example.com/blog/a-post')
-    // The `null` detail must not leave an empty bullet behind.
     expect(output).not.toMatch(/^-\s*$/m)
   })
 
-  /**
-   * `resolveAsset` hands back the finished URL — the plugin builds an absolute one
-   * so that markdown stays valid wherever an agent copies it to, and this asserts
-   * `renderDocument` substitutes it verbatim rather than re-deriving anything.
-   */
   it('points body images at the URL that serves them', () => {
     const output = render({
       resolveAsset: (url) =>
@@ -174,11 +151,6 @@ describe('renderDocument', () => {
     expect(output).not.toContain('./diagram.png')
   })
 
-  /**
-   * A body image that resolves to nothing is left alone and warned about rather
-   * than failing the build — the same call `vite.ts` makes for the HTML path. The
-   * warning is what the build-level test asserts is empty.
-   */
   it('warns and leaves an unresolvable image alone', () => {
     const warnings: string[] = []
     const output = render({ warn: (message) => warnings.push(message) })
@@ -240,11 +212,6 @@ describe('renderIndex', () => {
     ],
   })
 
-  /**
-   * Entries link to markdown, not HTML: an agent that lands on a listing should be
-   * able to keep following markdown down to a document without re-negotiating on
-   * every hop.
-   */
   it('links entries to their markdown twin', () => {
     expect(output).toContain(
       '- [A post](https://example.com/blog/a-post.md): 2025-06-25 — About things.',
@@ -279,7 +246,6 @@ describe('renderLlmsTxt', () => {
     optional: ['- [Sitemap](https://example.com/sitemap.xml)'],
   })
 
-  /** llmstxt.org: an H1, then a blockquoted summary, then H2 sections of links. */
   it('opens with the H1 and blockquote the format specifies', () => {
     expect(output.startsWith('# example.com\n\n> A site.\n\n')).toBe(true)
   })
@@ -301,18 +267,11 @@ describe('renderLlmsTxt', () => {
   })
 })
 
-/**
- * The response contract an agent actually sees. The headers asserted here are the
- * observable part of the feature — `Content-Type: text/markdown` is what makes a
- * client treat the body as markdown at all, and `Vary` is what stops a cache from
- * replaying it to a browser.
- */
 describe('edge function handler', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
   })
 
-  /** Stubs the origin so the handler's own fetch resolves without a network. */
   const stubOrigin = (
     responses: Readonly<Record<string, string>>,
   ): { requested: Array<string> } => {
@@ -362,10 +321,6 @@ describe('edge function handler', () => {
     expect(requested).toEqual(['/index.md'])
   })
 
-  /**
-   * Returning `undefined` hands the request back to Netlify's chain, which is what
-   * leaves HTML the default. A browser must never reach the fetch at all.
-   */
   it('stays out of the way of a browser', async () => {
     const { requested } = stubOrigin({ '/index.md': '# Home\n' })
     const response = await get(
@@ -381,10 +336,6 @@ describe('edge function handler', () => {
     expect(await get('/styleguide', 'text/markdown')).toBeUndefined()
   })
 
-  /**
-   * The guard that keeps the handler's own fetch from re-entering it. Without it a
-   * request for `/blog/a-post.md` would look up `/blog/a-post.md.md` forever.
-   */
   it('passes through a request that already names a .md file', async () => {
     const { requested } = stubOrigin({ '/blog/a-post.md': '# A post\n' })
     expect(await get('/blog/a-post.md', 'text/markdown')).toBeUndefined()
@@ -400,17 +351,7 @@ describe('estimateTokens', () => {
   })
 })
 
-/**
- * The edge function carries its own copy of the `Accept` decision and the route
- * mapping (it deploys to Netlify's Deno edge runtime, separately from this Node
- * workspace — see the note in the function itself). Nothing but this test stops the
- * two from drifting, and drift is silent: the dev server would keep serving
- * markdown while production quietly stopped, or the edge would fetch a path the
- * build never emitted.
- *
- * Importing it here works because its only import is `import type`, which is
- * erased, and nothing at module scope touches a Deno global.
- */
+// The Deno edge function duplicates this logic; only this test stops drift (importable: its only import is `import type`).
 describe('edge function parity', () => {
   const CASES: ReadonlyArray<string | null> = [
     null,
@@ -435,16 +376,7 @@ describe('edge function parity', () => {
     }
   })
 
-  /**
-   * `config.header` is a pre-filter Netlify evaluates before invoking the
-   * function, so it keeps browser traffic from paying for this feature at all.
-   * That makes it load-bearing in the dangerous direction: anything it rejects
-   * never reaches `prefersMarkdown`, so a regex that is too narrow silently
-   * disables markdown for the clients it excludes — with no error anywhere.
-   *
-   * The invariant is one-way. The regex may over-match (the handler then turns the
-   * request away properly); it must never under-match.
-   */
+  // The regex may over-match (the handler turns the request away) but must never under-match, which would silently disable markdown.
   it('never pre-filters away a request that should get markdown', () => {
     const pattern = edgeConfig.header?.accept
     expect(typeof pattern).toBe('string')

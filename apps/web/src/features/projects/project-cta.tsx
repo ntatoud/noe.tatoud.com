@@ -5,10 +5,6 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonAnchor } from '@/components/ui/button-link'
 
-/**
- * A project's closing call-to-action, e.g. "Want Cowat for your team?". Driven
- * by the project's `cta` frontmatter — see `ProjectCtaSchema`.
- */
 export function ProjectCta({
   title,
   description,

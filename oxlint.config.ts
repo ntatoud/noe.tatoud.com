@@ -5,14 +5,11 @@ export default defineConfig({
     'typescript',
     'import',
     'unicorn',
-    'import',
     'react',
     'react-perf',
     'promise',
   ],
-  // `@shadcn/lint` reads `apps/web/components.json` for the UI directory and
-  // the Tailwind theme.
-  jsPlugins: ['@shadcn/lint'],
+  jsPlugins: ['@shadcn/lint', './packages/oxlint-plugin/index.ts'],
   categories: {
     correctness: 'error',
   },
@@ -25,14 +22,12 @@ export default defineConfig({
   rules: {
     'unicorn/filename-case': ['error', { case: 'kebabCase' }],
     'no-rest-spread-properties': 'off',
+    'ntatoud/one-line-comments': 'error',
 
-    // Pages may place a component (margin, width, flex) but not restyle it.
-    // Color, typography, spacing, shape, effects and motion belong to the
-    // component, as a variant in `components/ui/`.
+    // Pages may place a component but not restyle it: styling is a variant in `components/ui/`.
     'shadcn/no-restyle': ['error', { allow: ['layout'] }],
     'shadcn/no-raw-colors': 'error',
-    // `2lh` reserves two lines of text so cards in a grid align. It is a CSS
-    // unit, not a magic number, and has no equivalent on the spacing scale.
+    // `2lh` reserves two lines of text; no spacing-scale equivalent.
     'shadcn/no-arbitrary-values': ['error', { allow: ['min-h-[2lh]'] }],
     'shadcn/no-inline-styles': 'error',
     'shadcn/no-unknown-classes': 'error',
@@ -40,24 +35,21 @@ export default defineConfig({
   },
   overrides: [
     {
-      // Vendored shadcn/base-nova primitives. Their arbitrary values are
-      // upstream's; rewriting them would fork us off the `shadcn` CLI.
+      // Vendored shadcn primitives: rewriting them would fork us off the CLI.
       files: ['apps/web/src/components/ui/**'],
       rules: {
         'shadcn/no-arbitrary-values': 'off',
       },
     },
     {
-      // OG images render through Takumi, not the browser: no Tailwind, no
-      // stylesheet, inline styles are the only styling channel.
+      // OG images render through Takumi: inline styles are the only channel.
       files: ['apps/web/src/features/og/**'],
       rules: {
         'shadcn/no-inline-styles': 'off',
       },
     },
     {
-      // Decorative viewport-relative artwork (vh/vw sizes, blur radii,
-      // squircle radii). None of it maps onto a design token.
+      // Decorative viewport-relative artwork, no design token fits.
       files: ['apps/web/src/components/background-glows.tsx'],
       rules: {
         'shadcn/no-arbitrary-values': 'off',

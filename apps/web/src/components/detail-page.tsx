@@ -8,7 +8,6 @@ import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
 
 type DetailPageProps = {
-  /** Prefix of the page's `data-slot` hooks: `<slot>-page`, `<slot>-content`. */
   slot: 'blog-post' | 'project' | 'talk'
   back: { to: RouteTo; label: string }
   title: string
@@ -16,15 +15,11 @@ type DetailPageProps = {
   byline?: ReactNode
   description?: string
   tags?: ReadonlyArray<string>
-  /** The document body, already rendered to HTML at build time. */
   html: string
-  /** Page-specific blocks between the tags and the body. */
   children?: ReactNode
-  /** Rendered after the body. */
   footer?: ReactNode
 }
 
-/** The article shell shared by the blog, project and talk detail pages. */
 export function DetailPage({
   slot,
   back,
@@ -83,7 +78,6 @@ export function DetailPage({
   )
 }
 
-/** A ghost button opening an external resource in a new tab. */
 export function ExternalLinkButton({
   children,
   ...props

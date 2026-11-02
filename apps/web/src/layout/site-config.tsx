@@ -13,7 +13,6 @@ export type NavItem = {
   href: RouteTo
 }
 
-/** Primary header navigation, in display order. */
 export const navItems: readonly NavItem[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Projects', href: '/projects' },
@@ -27,7 +26,6 @@ export type SocialLink = {
   icon: typeof Github01Icon
 }
 
-/** Social links, in display order. GitHub → LinkedIn → Bluesky → X → email. */
 export const socialLinks: readonly SocialLink[] = [
   {
     id: 'github',

@@ -2,11 +2,7 @@ import { Effect, Schema } from 'effect'
 
 import { DateString } from './date.ts'
 
-/**
- * A closing call-to-action for a project page. Lives in frontmatter rather than
- * in the body because the body is plain markdown — it has no way to name a
- * React component.
- */
+// In frontmatter because the body is plain markdown and cannot name a React component.
 const ProjectCtaSchema = Schema.Struct({
   title: Schema.String,
   description: Schema.optionalKey(Schema.String),

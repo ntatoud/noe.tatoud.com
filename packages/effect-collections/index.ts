@@ -6,10 +6,6 @@ import { Context, Effect, FileSystem, Layer, Path, Schema } from 'effect'
 import { CollectionError } from './errors.ts'
 import { DocumentDirectory } from './image.ts'
 
-/**
- * Curried `mapError` that tags a boundary failure with the operation that
- * produced it and the file or directory it was working on.
- */
 const collectionError =
   (operation: string, path: string) =>
   <A, E, R>(
@@ -33,44 +29,24 @@ export interface Collection<S extends Schema.Constraint, A> {
   readonly name: string
   readonly directory: string
   readonly schema: S
-  /** Derives a document's final data from its decoded frontmatter. */
   readonly transform: (data: S['Type'], meta: CollectionMeta) => A
 }
 
-/**
- * The shape a document's `data` takes once the collection's `transform` has
- * run — i.e. what `getAll` hands back. Lets consumers name a
- * collection's output type without restating it, so it cannot drift from the
- * schema and transform that actually produce it.
- *
- * `C` is deliberately unconstrained: `transform` takes `S['Type']` as a
- * parameter, so a `C extends Collection<Schema.Constraint, unknown>` bound
- * rejects every real collection under `strictFunctionTypes`. The cost is that
- * passing a non-collection resolves to `never` here instead of erroring, which
- * surfaces as a missing-property error at the consumer.
- */
+// Unconstrained: a `Collection<Schema.Constraint, unknown>` bound rejects every real collection under `strictFunctionTypes`.
 export type CollectionData<C> =
   C extends Collection<infer _S, infer A> ? A : never
 
-/** Identity at runtime; exists so `S` and `A` are inferred from the literal. */
 export const defineCollection = <S extends Schema.Constraint, A>(
   collection: Collection<S, A>,
 ): Collection<S, A> => collection
 
-/**
- * A document without its rendered body. `getAll` returns these: rendering the
- * body (block parsing + syntax highlighting) is by far the most expensive step
- * of reading a document, and list views only ever need the frontmatter.
- */
 export interface DocumentMeta<A> {
   readonly slug: string
   readonly data: A
   readonly source: string
 }
 
-// `Collections` provides `DocumentDirectory`, `FileSystem` and `Path` to every
-// decode itself (the `Image` schema needs all three), so they never leak into
-// what callers must provide. Only services a schema needs beyond those remain.
+// `Collections` provides these to every decode itself, so callers need not.
 type ExternalDecodingServices<S extends Schema.Constraint> = Exclude<
   S['DecodingServices'],
   DocumentDirectory | FileSystem.FileSystem | Path.Path
@@ -124,9 +100,7 @@ const make = Layer.effect(
         })
       })
 
-    // Frontmatter-only read: skips rendering the body, which dominates the
-    // cost of reading a document and which `getAll` callers render themselves
-    // when they need it.
+    // Skips rendering the body, which dominates the cost of reading a document.
     const readDocumentMeta = <S extends Schema.Constraint, A>(
       collection: Collection<S, A>,
       slug: string,

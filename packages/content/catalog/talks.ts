@@ -17,8 +17,7 @@ const collection = defineCollection({
     ...data,
     slug: meta.slug,
     path: `/talks/${meta.slug}`,
-    // Newest first, so "the latest event" is always `events[0]` for every
-    // consumer (cards, sitemap, listing order, markdown twins).
+    // Newest first, so the latest event is always `events[0]`.
     events: events
       .map(({ logo, ...event }) => ({
         ...event,
@@ -31,14 +30,12 @@ const collection = defineCollection({
 export type StageItem = CollectionData<typeof collection>
 
 export type TalkDetail = StageItem & {
-  /** The rendered body, as HTML. */
   html: string
 }
 
 export const talks = defineContentCollection({
   key: 'talks',
   collection,
-  // Every talk, ordered by its most recent event (`events[0]`), newest first.
   reader: (documents) =>
     documents
       .map((doc) => doc.data)

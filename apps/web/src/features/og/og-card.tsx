@@ -2,17 +2,12 @@ import type { CSSProperties } from 'react'
 
 import type { PageKind } from '@ntatoud/content'
 
-// This card is rendered at build time by `plugins/og-images.ts`, which the Vite
-// config imports. Nothing here may use the app's path alias or a Vite-only
-// import, because the config loader resolves neither.
+// Imported by the Vite config via plugins/og-images.ts: no `@/` alias or Vite-only imports.
 
-/** The family the build registers the card's fonts under. */
 export const OG_FONT_FAMILY = 'Atkinson Hyperlegible Next'
 
-/** Takumi's flowing-text clamp — not part of the standard CSSProperties type. */
 type ClampStyle = CSSProperties & { lineClamp?: number }
 
-/** The badge text for each of the Content Catalog's page kinds. */
 const KIND_LABELS: Record<PageKind, string> = {
   blog: 'Blog',
   project: 'Project',

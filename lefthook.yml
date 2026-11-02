@@ -7,9 +7,7 @@ pre-commit:
         - 'pnpm-lock.yaml'
       run: pnpm exec oxfmt {staged_files}
       stage_fixed: true
-    # The repo is public: refuse a commit that stages a secret. Skipped with a
-    # warning when gitleaks is not installed (`brew install gitleaks`); CI
-    # scans every push either way.
+    # Skipped with a warning when gitleaks is missing; CI scans every push anyway.
     secrets:
       run: |
         if ! command -v gitleaks >/dev/null; then
@@ -24,6 +22,5 @@ pre-push:
       run: pnpm run lint
     typecheck:
       run: pnpm run typecheck
-    # Only the findings this branch introduces, against its merge-base.
     fallow:
       run: pnpm exec fallow audit --quiet

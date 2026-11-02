@@ -1,6 +1,4 @@
-// The app reads content from `virtual:content` (ADR-0008), so this entry only
-// carries the types its pages are written against. The Content Catalog itself
-// runs at build time, read by `snapshot.ts`.
+// Types only: the catalog runs at build time (ADR-0008).
 export type { BlogPost, BlogPostDetail } from './catalog/blog.ts'
 export type { Experience } from './catalog/experiences.ts'
 export type { Project, ProjectDetail } from './catalog/projects.ts'

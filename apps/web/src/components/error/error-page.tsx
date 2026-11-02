@@ -1,8 +1,4 @@
-/**
- * Shown when a route loader fails for any reason other than missing content.
- * Deliberately says nothing about the underlying error, which can carry absolute
- * server paths that must not reach a visitor.
- */
+// Says nothing about the error: it can carry absolute server paths.
 export function ErrorPage() {
   return (
     <main id="main" className="mx-auto max-w-2xl px-6 py-16">

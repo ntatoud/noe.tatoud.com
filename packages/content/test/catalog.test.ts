@@ -11,12 +11,6 @@ import {
 } from '../snapshot.ts'
 import { createPlugin, PAGES, readDeclaredExports } from './helpers.ts'
 
-/**
- * The Content Catalog's contract: every entry yields everything the build
- * promises for it, whichever consumer emits it. Adding a collection is one
- * catalog entry, so this is the test that says the entry was enough.
- */
-
 let collections: ReadonlyArray<AnyCollectionSnapshot>
 let twins: Map<string, string>
 let pages: ReadonlyArray<ContentPage>
@@ -87,8 +81,7 @@ describe.each(catalog.map((entry) => [entry.key, entry] as const))(
       expect(declaredExports).toContain(entry.detail.loader)
 
       expect(detail.documents.length).toBeGreaterThan(0)
-      // `published` is the Reader's listing, matched by identity: a Reader
-      // that copied its documents would silently empty the sitemap.
+      // Matched by identity: a Reader that copied its documents would silently empty the sitemap.
       expect(
         detail.documents.filter((document) => document.published),
       ).toHaveLength(snapshotOf().listing.length)

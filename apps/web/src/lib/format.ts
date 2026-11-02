@@ -24,7 +24,6 @@ const monthFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: 'UTC',
 })
 
-/** "Mar – Aug 2024" within one year, "Mar 2024 – Sep 2026" across years. */
 export function formatMonthRange(start: string, end: string): [string, string] {
   const sameYear =
     new Date(start).getUTCFullYear() === new Date(end).getUTCFullYear()
@@ -34,7 +33,6 @@ export function formatMonthRange(start: string, end: string): [string, string] {
   ]
 }
 
-/** First letter of the first two words, e.g. "DevQuest 2026" -> "DQ". */
 export function initials(text: string): string {
   const words = text.match(/\p{L}+/gu) ?? []
   return words
