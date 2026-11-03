@@ -1,8 +1,11 @@
-import { ogImagePath } from '@ntatoud/content/paths'
+import { sitePages } from '@ntatoud/content/inventory'
+import type { SitePage } from '@ntatoud/content/inventory'
 
-import { SITE_NAME, SITE_URL } from '@/lib/site'
+import { contentInventory } from 'virtual:content'
 
-// Dependency-free (no `effect`): imported by the root route, so it ships in every client bundle.
+import { SITE_NAME, SITE_URL, STATIC_PAGES } from '@/lib/site'
+
+// Dependency-free (no `effect`): `head` runs on client navigation, so this module and the inventory ship in the client bundle.
 
 type MetaTag =
   | { title: string }
@@ -15,24 +18,23 @@ const TWITTER_CARD = 'summary_large_image'
 const IMAGE_WIDTH = 1200
 const IMAGE_HEIGHT = 630
 
-interface PageMetadataInput {
-  title: string
-  description?: string
-  path?: string
-}
-
 export const BASE_META_TAGS: MetaTag[] = [
   { charSet: 'utf-8' },
   { name: 'viewport', content: 'width=device-width, initial-scale=1' },
 ]
 
-export const toMetaTags = ({
+const PAGES_BY_PATH = new Map(
+  sitePages(contentInventory, STATIC_PAGES).map((page) => [page.path, page]),
+)
+
+const toMetaTags = ({
   title,
   description,
-  path = '/',
-}: PageMetadataInput): MetaTag[] => {
+  path,
+  ogImage,
+}: SitePage): MetaTag[] => {
   const url = `${SITE_URL}${path}`
-  const image = `${SITE_URL}${ogImagePath(path)}`
+  const image = `${SITE_URL}${ogImage}`
 
   return [
     { title },
@@ -55,4 +57,13 @@ export const toMetaTags = ({
       : []),
     { name: 'twitter:image', content: image },
   ]
+}
+
+// An unknown path throws, so an undeclared route fails the prerender (ADR-0011).
+export const pageMeta = (pathname: string): MetaTag[] => {
+  const page = PAGES_BY_PATH.get(pathname.replace(/(.)\/+$/, '$1'))
+  if (!page) {
+    throw new Error(`[page meta] ${pathname} is not in the Page Inventory`)
+  }
+  return toMetaTags(page)
 }

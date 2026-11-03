@@ -4,19 +4,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { pageMeta } from '@/features/og/metadata'
+import { STATIC_PAGES } from '@/lib/site'
 
 export const Route = createFileRoute('/styleguide')({
   component: StyleguidePage,
-  head: () => ({
-    meta: [
-      { title: 'Clay Design System — Noé Tatoud' },
-      {
-        name: 'description',
-        content:
-          'Clay is the design system for noe.tatoud.com. Soft warmth through sand, terracotta and olive, a friendly serif, and generous spacing.',
-      },
-    ],
-  }),
+  head: () => ({ meta: pageMeta(STATIC_PAGES.styleguide.path) }),
 })
 
 function StyleguidePage() {

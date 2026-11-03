@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { sitePages } from '../inventory.ts'
+import { sitePages, type StaticPages } from '../inventory.ts'
 import type { ContentInventory } from '../pages.ts'
 
 const STATIC = {
@@ -52,10 +52,28 @@ describe('sitePages', () => {
     expect(home).not.toHaveProperty('kind')
   })
 
-  // The route uses the app's path, the twin the catalog's: a mismatch publishes a twin for a missing page.
+  it('lists a page the app adds beyond home and the listings', () => {
+    const withStyleguide: StaticPages = {
+      ...STATIC,
+      styleguide: { path: '/styleguide', title: 'Styleguide' },
+    }
+    expect(
+      sitePages(CONTENT, withStyleguide).find((p) => p.path === '/styleguide'),
+    ).toEqual({
+      path: '/styleguide',
+      title: 'Styleguide',
+      published: true,
+      ogImage: '/og/styleguide.png',
+      markdown: '/styleguide.md',
+    })
+  })
+
+  // The route and its meta tags use the app's path, the twin the catalog's: a mismatch publishes a twin for a missing page.
   it("refuses a listing whose path is not the catalog's", () => {
     const moved = { ...STATIC, blog: { ...STATIC.blog, path: '/posts' } }
     expect(() => sitePages(CONTENT, moved)).toThrow(/blog/)
+    const extra = { ...moved, styleguide: { path: '/styleguide', title: 'S' } }
+    expect(() => sitePages(CONTENT, extra)).toThrow(/blog/)
   })
 
   it('names every page its social card and markdown twin', () => {

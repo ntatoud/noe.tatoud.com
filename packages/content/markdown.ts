@@ -1,5 +1,5 @@
-import type { ListingName } from './catalog/index.ts'
 import { contentUrl } from './content-url.ts'
+import type { StaticPage, StaticPages } from './inventory.ts'
 import { markdownFileName, markdownPath } from './paths.ts'
 import { collectionsOf, type ContentSnapshot } from './snapshot.ts'
 
@@ -159,6 +159,21 @@ export function renderIndex(options: {
   )}\n`
 }
 
+// An app-only page's body is React, so its twin carries only the title, description and a way back.
+function renderStaticPage(options: {
+  readonly site: SiteConfig
+  readonly page: StaticPage
+}): string {
+  const { site, page } = options
+
+  return `${block(
+    `# ${page.title}`,
+    page.description ? `> ${page.description}` : null,
+    `- Canonical: ${absolute(site, page.path)}`,
+    `More of this site, as markdown: [llms.txt](${absolute(site, '/llms.txt')})`,
+  )}\n`
+}
+
 export function renderLlmsTxt(options: {
   readonly site: SiteConfig
   readonly sections: ReadonlyArray<IndexSection>
@@ -185,9 +200,7 @@ export interface MarkdownFile {
 
 export interface MarkdownFilesOptions {
   readonly site: SiteConfig
-  readonly pages: Readonly<
-    Record<'home' | ListingName, { readonly description: string }>
-  >
+  readonly pages: StaticPages
   readonly optionalLinks?:
     | ReadonlyArray<{ readonly title: string; readonly path: string }>
     | undefined
@@ -214,6 +227,16 @@ export function renderMarkdownFiles(
     },
   }))
   const sections = listed.map(({ section }) => section)
+
+  // Only `/llms.txt` lists app-only pages: `/index.md` mirrors the home page, which does not link to them.
+  const listingNames = new Set<string>(
+    collections.flatMap(({ listingPage }) =>
+      listingPage ? [listingPage.name] : [],
+    ),
+  )
+  const otherPages = Object.entries(pages)
+    .filter(([name]) => name !== 'home' && !listingNames.has(name))
+    .map(([, page]) => page)
 
   return [
     // Drafts included: an unpublished document keeps a reachable page, so it keeps its twin.
@@ -247,6 +270,10 @@ export function renderMarkdownFiles(
           ]
         : [],
     ),
+    ...otherPages.map((page) => ({
+      fileName: markdownFileName(page.path),
+      source: renderStaticPage({ site, page }),
+    })),
     {
       fileName: markdownFileName('/'),
       source: renderIndex({
@@ -261,7 +288,17 @@ export function renderMarkdownFiles(
       fileName: 'llms.txt',
       source: renderLlmsTxt({
         site,
-        sections,
+        sections: [
+          ...sections,
+          {
+            title: 'Other pages',
+            entries: otherPages.map((page) => ({
+              title: page.title,
+              routePath: page.path,
+              description: page.description,
+            })),
+          },
+        ],
         optional: options.optionalLinks?.map(
           (link) => `- [${link.title}](${site.url}${link.path})`,
         ),

@@ -35,8 +35,8 @@ export const readDeclaredExports = (): ReadonlyArray<string> =>
   ].map(([, name]) => name!)
 
 export const PAGES = {
-  home: { description: 'Home.' },
-  blog: { description: 'Posts.' },
-  projects: { description: 'Projects.' },
-  talks: { description: 'Talks.' },
+  home: { path: '/', title: 'Home', description: 'Home.' },
+  blog: { path: '/blog', title: 'Blog', description: 'Posts.' },
+  projects: { path: '/projects', title: 'Projects', description: 'Projects.' },
+  talks: { path: '/talks', title: 'Talks', description: 'Talks.' },
 }

@@ -1,3 +1,5 @@
 # 0005 — Route inventory for the rebuild
 
+> Amended on 2026-10-30 by [#190](https://github.com/ntatoud/noe.tatoud.com/issues/190): `/styleguide` is not dev-only. Like every route it is prerendered and deployed (ADR-0011), and it is a Page Inventory entry with its own meta tags, OG card, markdown twin and sitemap entry.
+
 Decided the top-level route set for the rebuilt site: `/`, `/blog` + `/blog/$slug`, `/projects` (list only), `/experiences` (list only), `/talks` + `/talks/$slug`, `/achievements`, plus utility routes (`/llms.txt`, `/sitemap.xml`, `/robots.txt`, `/api/og`, dev-only `/styleguide`). No `/about` route. The legacy `/stage` route is renamed to `/talks`. The legacy standalone `events` collection is dropped; its content is represented by the `events[]` field nested inside each Talk. Projects and Experiences are promoted to their own list routes (legacy kept them as home-page sections only) but neither gets a detail route — projects link out to external `url`/`repo` and experiences are timeline entries. Shrine, command palette, and the pixel sound engine are not ported from legacy.

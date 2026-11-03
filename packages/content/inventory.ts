@@ -12,7 +12,8 @@ export interface StaticPage {
 
 export type StaticPages = { readonly home: StaticPage } & Readonly<
   Record<ListingName, StaticPage>
->
+> &
+  Readonly<Record<string, StaticPage>>
 
 export interface SitePage {
   readonly path: string

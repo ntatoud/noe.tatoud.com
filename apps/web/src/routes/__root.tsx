@@ -7,10 +7,10 @@ import youngSerifLatin from '@fontsource/young-serif/files/young-serif-latin-400
 
 import { ErrorPage } from '@/components/error/error-page'
 import { NotFound } from '@/components/error/not-found'
-import { BASE_META_TAGS, toMetaTags } from '@/features/og/metadata'
+import { BASE_META_TAGS } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
-import { FEEDS, FEED_TITLE, STATIC_PAGES } from '@/lib/site'
+import { FEEDS, FEED_TITLE } from '@/lib/site'
 
 import appCss from '@/styles/index.css?url'
 
@@ -19,7 +19,7 @@ export const Route = createRootRoute({
   errorComponent: ErrorPage,
 
   head: () => ({
-    meta: [...BASE_META_TAGS, ...toMetaTags(STATIC_PAGES.home)],
+    meta: BASE_META_TAGS,
     links: [
       { rel: 'stylesheet', href: appCss },
       {

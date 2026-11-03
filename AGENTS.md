@@ -17,7 +17,9 @@ Personal site and blog, noe.tatoud.com. pnpm monorepo, TanStack Start on Vite, E
 
 ## Static site
 
-Production is only the files in `apps/web/dist/client` (ADR-0011): a route that is not prerendered is a 404 there. A page without a document goes into `STATIC_PAGES`, a server route into `FILE_ROUTES` (`apps/web/src/lib/site.ts`). `pnpm --filter @ntatoud/web check:static` after a build proves every page, OG image and markdown twin exists.
+Production is only the files in `apps/web/dist/client` (ADR-0011): a route that is not prerendered is a 404 there. A page without a document goes into `STATIC_PAGES`, a server route into `FILE_ROUTES` (`apps/web/src/lib/site.ts`). `pnpm --filter @ntatoud/web check:static` after a build proves every page, OG image and markdown twin exists, that each page's `og:url`/`og:image` match its entry, and that every route in `routeTree.gen.ts` is an inventory page, a file route or `/404`.
+
+Meta tags come from the Page Inventory: every route's `head` calls `pageMeta(path)` from `@/features/og/metadata`, and the root route emits only `BASE_META_TAGS`. An unknown path throws. A new standalone page is one `STATIC_PAGES` entry, which brings its meta tags, OG card, markdown twin and sitemap entry. `/404` is the one exception, with a hand-written `noindex` `head`.
 
 Every page has a markdown twin served on `Accept: text/markdown` (ADR-0009). The negotiation logic exists twice, in `packages/content/vite-markdown.ts` and `netlify/edge-functions/markdown-negotiation.ts` (Deno, deployed separately); change both.
 
