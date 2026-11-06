@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as R404RouteImport } from './routes/404'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as FeedDotjsonRouteImport } from './routes/feed[.]json'
+import { Route as NowRouteImport } from './routes/now'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
@@ -41,6 +42,11 @@ const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
 const FeedDotjsonRoute = FeedDotjsonRouteImport.update({
   id: '/feed.json',
   path: '/feed.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NowRoute = NowRouteImport.update({
+  id: '/now',
+  path: '/now',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof R404Route
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/now': typeof NowRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/404': typeof R404Route
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/now': typeof NowRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/404': typeof R404Route
   '/atom.xml': typeof AtomDotxmlRoute
   '/feed.json': typeof FeedDotjsonRoute
+  '/now': typeof NowRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/styleguide': typeof StyleguideRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/atom.xml'
     | '/feed.json'
+    | '/now'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/styleguide'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/atom.xml'
     | '/feed.json'
+    | '/now'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/styleguide'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/atom.xml'
     | '/feed.json'
+    | '/now'
     | '/rss.xml'
     | '/sitemap.xml'
     | '/styleguide'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   R404Route: typeof R404Route
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   FeedDotjsonRoute: typeof FeedDotjsonRoute
+  NowRoute: typeof NowRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StyleguideRoute: typeof StyleguideRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/feed.json'
       fullPath: '/feed.json'
       preLoaderRoute: typeof FeedDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/now': {
+      id: '/now'
+      path: '/now'
+      fullPath: '/now'
+      preLoaderRoute: typeof NowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rss.xml': {
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   R404Route: R404Route,
   AtomDotxmlRoute: AtomDotxmlRoute,
   FeedDotjsonRoute: FeedDotjsonRoute,
+  NowRoute: NowRoute,
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StyleguideRoute: StyleguideRoute,

@@ -26,6 +26,12 @@ export const STATIC_PAGES = {
     title: 'Talks | Noé Tatoud',
     description: 'Conference talks and workshops.',
   },
+  now: {
+    path: '/now',
+    title: 'Now | Noé Tatoud',
+    description:
+      'What Noé Tatoud is working on, learning and wondering about right now.',
+  },
   styleguide: {
     path: '/styleguide',
     title: 'Clay Design System | Noé Tatoud',

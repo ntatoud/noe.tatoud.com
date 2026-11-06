@@ -17,6 +17,7 @@ export const navItems: readonly NavItem[] = [
   { label: 'Blog', href: '/blog' },
   { label: 'Projects', href: '/projects' },
   { label: 'Talks', href: '/talks' },
+  { label: 'Now', href: '/now' },
 ] as const
 
 export const CONTACT_EMAIL = 'noe@bearstudio.fr'

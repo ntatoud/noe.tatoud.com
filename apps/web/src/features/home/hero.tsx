@@ -49,7 +49,12 @@ export function Hero() {
               with{' '}
               <a href="https://www.forkit.community" className={inlineLink}>
                 Fork it!
-              </a>
+              </a>{' '}
+              Here is{' '}
+              <Link to="/now" className={inlineLink}>
+                what I am up to these days
+              </Link>
+              .
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-3">
