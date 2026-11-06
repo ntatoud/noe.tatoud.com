@@ -4,6 +4,11 @@ export const NOW_UPDATED = '2026-11-06'
 export type NowEntry = {
   heading: string
   body: string
+  source?: {
+    label: string
+    to: '/blog/$slug' | '/talks/$slug'
+    slug: string
+  }
 }
 
 export const NOW: ReadonlyArray<NowEntry> = [
@@ -13,7 +18,12 @@ export const NOW: ReadonlyArray<NowEntry> = [
   },
   {
     heading: 'Learning',
-    body: 'To work with coding agents as my main way of writing code: specs and tests first, then reviewing every diff the way I would review a colleague’s pull request.',
+    body: "To get better at working with coding agents: specs and tests first, then reviewing every diff the way I would review a colleague's pull request.",
+    source: {
+      label: 'How AI is changing the way I work',
+      to: '/blog/$slug',
+      slug: 'how-is-ai-changing-the-way-i-work-as-a-developer',
+    },
   },
   {
     heading: 'Doubting',
@@ -22,9 +32,19 @@ export const NOW: ReadonlyArray<NowEntry> = [
   {
     heading: 'Giving back',
     body: 'Volunteering with the Fork it! Community, where I help kids aged 14 to 16 build their first game in the browser.',
+    source: {
+      label: 'The workshop',
+      to: '/talks/$slug',
+      slug: 'build-your-first-game-with-kaplay',
+    },
   },
   {
     heading: 'Curious about',
     body: 'Server Components in TanStack Start, and whether this site ever needs them.',
+    source: {
+      label: 'Why I moved this site to TanStack Start',
+      to: '/blog/$slug',
+      slug: 'why-i-migrated-from-astro-to-tanstack-start',
+    },
   },
 ]

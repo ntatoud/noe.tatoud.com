@@ -1,5 +1,9 @@
+import { Link } from '@tanstack/react-router'
+
 import { SayHello } from '@/components/say-hello'
 import { formatDate } from '@/lib/format'
+import { inlineLink } from '@/lib/link-styles'
+import { cn } from '@/lib/utils'
 
 import { NOW, NOW_UPDATED } from './now'
 
@@ -18,16 +22,23 @@ export function NowPage() {
         </time>
         .
       </p>
-      <dl className="mt-10 flex flex-col gap-8">
+      <div className="mt-10 flex flex-col gap-8">
         {NOW.map((entry) => (
-          <div key={entry.heading} className="flex flex-col gap-2">
-            <dt className="font-serif text-2xl">{entry.heading}</dt>
-            <dd className="max-w-xl text-lg/relaxed text-pretty">
-              {entry.body}
-            </dd>
-          </div>
+          <section key={entry.heading} className="flex flex-col gap-2">
+            <h2 className="text-2xl">{entry.heading}</h2>
+            <p className="max-w-xl text-lg/relaxed text-pretty">{entry.body}</p>
+            {entry.source && (
+              <Link
+                to={entry.source.to}
+                params={{ slug: entry.source.slug }}
+                className={cn(inlineLink, 'self-start text-sm')}
+              >
+                {entry.source.label}
+              </Link>
+            )}
+          </section>
         ))}
-      </dl>
+      </div>
       <SayHello
         title="Doing something similar?"
         className="mt-16"

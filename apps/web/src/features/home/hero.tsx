@@ -5,8 +5,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import { startHerePost } from '@/features/blog/start-here'
+import { NOW_UPDATED } from '@/features/now/now'
 import { emailHref } from '@/layout/site-config'
-import { SocialLinks } from '@/layout/social-links'
+import { formatMonthYear } from '@/lib/format'
 import { inlineLink } from '@/lib/link-styles'
 
 export function Hero() {
@@ -19,19 +20,22 @@ export function Hero() {
       >
         N
       </span>
-      <div className="mx-auto max-w-5xl px-4 pt-16 pb-4 sm:pt-24 sm:pb-16">
+      <div className="mx-auto max-w-5xl px-4 pt-10 pb-4 sm:pt-24 sm:pb-16">
         <div className="max-w-2xl">
           <h1
             className="text-5xl leading-none tracking-tight text-balance sm:text-7xl"
             data-slot="hero-name"
           >
             Hi, I'm <span className="text-primary">Noé</span>
-            <span className="text-secondary">.</span>
+            <span className="hero-dot text-secondary">
+              <span className="hero-dot-hop">.</span>
+            </span>
           </h1>
           <div className="mt-6 flex flex-col gap-4 text-lg text-pretty text-muted-foreground sm:text-xl">
             <p className="text-foreground">
-              I'm a fullstack developer who has always loved writing code. These
-              days agents write most of it, and that has not been an easy shift.
+              I'm a developer who loves the satisfaction of solving a tricky
+              problem myself. These days agents write most of my code, so I am
+              learning to put that care into the thinking behind it instead.
             </p>
             <p>
               <Link
@@ -41,19 +45,18 @@ export function Hero() {
               >
                 I wrote about that shift
               </Link>
-              , a good place to start. I also give{' '}
-              <Link to="/talks" className={inlineLink}>
-                talks and workshops
-              </Link>
-              , from growing a React component library to teaching kids to code
-              with{' '}
-              <a href="https://www.forkit.community" className={inlineLink}>
-                Fork it!
-              </a>{' '}
-              Here is{' '}
+              , a good place to start. I also give talks, and with Fork it! I
+              teach kids to build their first browser game. Here is{' '}
               <Link to="/now" className={inlineLink}>
-                what I am up to these days
-              </Link>
+                what I am up to now
+              </Link>{' '}
+              <span className="text-sm whitespace-nowrap">
+                (updated{' '}
+                <time dateTime={NOW_UPDATED}>
+                  {formatMonthYear(NOW_UPDATED)}
+                </time>
+                )
+              </span>
               .
             </p>
           </div>
@@ -80,7 +83,6 @@ export function Hero() {
               Say hello
             </ButtonAnchor>
           </div>
-          <SocialLinks className="mt-6 -ml-2" withEmail={false} />
         </div>
       </div>
     </section>

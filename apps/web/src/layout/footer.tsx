@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { formatMonthYear } from '@/lib/format'
+import { inlineLink } from '@/lib/link-styles'
 import { FEEDS } from '@/lib/site'
 
 import { latestActivity } from './latest-activity'
@@ -24,10 +25,7 @@ export function Footer() {
           <p className="max-w-md text-muted-foreground">
             Something on your mind about a post, a talk or a project? Write to
             me at{' '}
-            <a
-              href={emailHref()}
-              className="rounded-sm text-primary underline decoration-primary/40 underline-offset-4 outline-none hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring"
-            >
+            <a href={emailHref()} className={inlineLink}>
               {CONTACT_EMAIL}
             </a>
             .

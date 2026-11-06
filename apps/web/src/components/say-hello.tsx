@@ -57,19 +57,35 @@ export function SayHello({
 }
 
 function CopyEmailButton() {
-  const [copied, setCopied] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'copied' | 'failed'>('idle')
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL)
+      setStatus('copied')
+    } catch {
+      setStatus('failed')
+    }
+    setTimeout(() => setStatus('idle'), 2500)
+  }
+
   return (
-    <Button
-      variant="ghost"
-      size="icon-sm"
-      aria-label={copied ? 'Email address copied' : 'Copy email address'}
-      onClick={() => {
-        void navigator.clipboard.writeText(CONTACT_EMAIL).then(() => {
-          setCopied(true)
-        })
-      }}
-    >
-      <HugeiconsIcon icon={copied ? Tick02Icon : Copy01Icon} size={16} />
-    </Button>
+    <>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        aria-label="Copy email address"
+        onClick={() => void copy()}
+      >
+        <HugeiconsIcon
+          icon={status === 'copied' ? Tick02Icon : Copy01Icon}
+          size={16}
+        />
+      </Button>
+      <span role="status" className="text-xs">
+        {status === 'copied' && 'Copied'}
+        {status === 'failed' && 'Select the address to copy it'}
+      </span>
+    </>
   )
 }

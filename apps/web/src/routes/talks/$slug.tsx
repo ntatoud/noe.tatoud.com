@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { loadTalk, talks } from 'virtual:content'
+import { blogPosts, loadTalk, talks } from 'virtual:content'
 
+import { relatedPosts } from '@/features/blog/related-posts'
 import { pageMeta } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
 import { loadDocument } from '@/lib/load-document'
@@ -19,5 +20,6 @@ function TalkPageRoute() {
   const moreTalks = talks
     .filter((other) => other.slug !== talk.slug)
     .slice(0, 2)
-  return <TalkPage talk={talk} moreTalks={moreTalks} />
+  const writing = relatedPosts(talk, blogPosts, 2, { requireOverlap: true })
+  return <TalkPage talk={talk} moreTalks={moreTalks} relatedWriting={writing} />
 }

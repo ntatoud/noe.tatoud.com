@@ -69,7 +69,7 @@ export function DetailPage({
                   <Link
                     to="/blog"
                     search={{ tag }}
-                    className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring [&>span]:hover:border-primary [&>span]:hover:text-foreground"
+                    className="inline-flex min-h-6 items-center rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring [&>span]:hover:border-primary [&>span]:hover:text-foreground"
                   >
                     <Badge variant="outline">{tag}</Badge>
                   </Link>

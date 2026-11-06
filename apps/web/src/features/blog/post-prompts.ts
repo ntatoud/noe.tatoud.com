@@ -4,6 +4,8 @@ export const POST_PROMPTS: Readonly<Record<string, string>> = {
     'Did you leave a framework for similar reasons, or did Astro win you back? Tell me how it went.',
   'how-is-ai-changing-the-way-i-work-as-a-developer':
     'How have agents changed the way you work, especially if you are early in your career? I would like to hear your side.',
+  'fork-it-for-kids-2-interview':
+    'Run coding workshops for kids, or want to help at the next Fork it! For Kids? Tell me how it went or what you need.',
   'what-is-mcp':
     'Built an MCP server of your own, or hit a wall trying? Tell me what you made.',
 }

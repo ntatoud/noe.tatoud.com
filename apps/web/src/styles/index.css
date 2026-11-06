@@ -169,6 +169,20 @@
       scroll-behavior: smooth;
     }
   }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  /* Set by the head script in __root.tsx until the tag filter hydrates, so the unfiltered list never flashes. */
+  html[data-filtering]
+    :is([data-slot='blog-page-list'], [data-slot='blog-intro']) {
+    visibility: hidden;
+  }
   body {
     @apply h-full bg-background font-sans text-foreground;
     overscroll-behavior-y: none;
@@ -186,6 +200,36 @@
 }
 
 @layer components {
+  .hero-dot,
+  .hero-dot-hop {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-dot {
+      animation: hero-dot-drop 900ms cubic-bezier(0.3, 1.6, 0.5, 1) 400ms both;
+    }
+    [data-slot='hero-name']:hover .hero-dot-hop {
+      animation: hero-dot-hop 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+    }
+  }
+
+  @keyframes hero-dot-drop {
+    from {
+      translate: 0 -1.5em;
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-dot-hop {
+    50% {
+      translate: 0 -0.35em;
+    }
+  }
+
   .hero-monogram {
     position: absolute;
     top: 50%;

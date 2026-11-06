@@ -29,6 +29,6 @@ const activities: Activity[] = [
   ),
 ]
 
-export const latestActivity: Activity | undefined = activities.sort((a, b) =>
-  b.date.localeCompare(a.date),
-)[0]
+export const latestActivity: Activity | undefined = activities
+  .filter((activity) => activity.date <= import.meta.env.BUILD_DATE)
+  .sort((a, b) => b.date.localeCompare(a.date))[0]

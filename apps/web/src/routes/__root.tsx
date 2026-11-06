@@ -57,7 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');document.documentElement.classList.toggle('dark',t?t==='dark':!matchMedia('(prefers-color-scheme: light)').matches)}catch(e){}",
+              "var t=null;try{t=localStorage.getItem('theme')}catch(e){}var d=document.documentElement;d.classList.toggle('dark',t?t==='dark':!matchMedia('(prefers-color-scheme: light)').matches);if(location.pathname.indexOf('/blog')===0&&/[?&]tag=/.test(location.search))d.dataset.filtering='';",
           }}
         />
         <HeadContent />

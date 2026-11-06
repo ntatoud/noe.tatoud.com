@@ -35,7 +35,11 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
       footer={
         <>
           <SayHello
-            title="What do you think?"
+            title={
+              post.externalUrl
+                ? 'Read it? Tell me what you think'
+                : 'What do you think?'
+            }
             subject={`About "${post.title}"`}
             className="mt-16"
           >
@@ -58,7 +62,7 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
           width={post.heroDimensions?.width}
           height={post.heroDimensions?.height}
           fetchPriority="high"
-          className="mt-8 max-h-80 w-full rounded-2xl border border-border object-cover"
+          className="mt-8 max-h-80 w-full rounded-2xl border border-border object-cover dark:brightness-90"
           data-slot="blog-post-hero"
         />
       )}

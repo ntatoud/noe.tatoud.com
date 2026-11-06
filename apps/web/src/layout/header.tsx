@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 
 import { Mail01Icon, Menu01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -20,13 +20,17 @@ import { cn } from '@/lib/utils'
 import { emailHref, navItems } from './site-config'
 
 export function Header() {
+  // The home hero already offers "Say hello" on the same screen.
+  const onHome = useRouterState({
+    select: (state) => state.location.pathname === '/',
+  })
   return (
     <header className="w-full" data-slot="header">
       <div className="mx-auto flex h-16 max-w-5xl items-center gap-6 px-4">
         <Logo />
         <PrimaryNav className="hidden md:flex" />
         <div className="ml-auto hidden items-center gap-2 md:flex">
-          <SayHelloButton />
+          {!onHome && <SayHelloButton />}
           <ThemeToggle />
         </div>
         <MobileMenu className="md:hidden" />

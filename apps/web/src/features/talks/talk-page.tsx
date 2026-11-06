@@ -1,8 +1,9 @@
-import type { StageItem, TalkDetail } from '@ntatoud/content'
+import type { BlogPost, StageItem, TalkDetail } from '@ntatoud/content'
 
 import { DetailPage } from '@/components/detail-page'
 import { MoreSection } from '@/components/more-section'
 import { SayHello } from '@/components/say-hello'
+import { BlogCard } from '@/features/blog/blog-card'
 import { formatDate } from '@/lib/format'
 
 import { eventPlace } from './event-place'
@@ -12,9 +13,10 @@ import { TalkResourcePreview } from './talk-resource-preview'
 type TalkPageProps = {
   talk: TalkDetail
   moreTalks: readonly StageItem[]
+  relatedWriting: readonly BlogPost[]
 }
 
-export function TalkPage({ talk, moreTalks }: TalkPageProps) {
+export function TalkPage({ talk, moreTalks, relatedWriting }: TalkPageProps) {
   const forKids = talk.tags?.includes('kids') ?? false
   return (
     <DetailPage
@@ -38,6 +40,13 @@ export function TalkPage({ talk, moreTalks }: TalkPageProps) {
                 : `If this ${talk.kind} would suit your meetup or conference, tell me about your audience and we can see if it fits.`}
             </p>
           </SayHello>
+          {relatedWriting.length > 0 && (
+            <MoreSection title="Related writing" slot="related-writing">
+              {relatedWriting.map((post) => (
+                <BlogCard key={post.slug} post={post} />
+              ))}
+            </MoreSection>
+          )}
           {moreTalks.length > 0 && (
             <MoreSection title="More talks and workshops" slot="more-talks">
               {moreTalks.map((other) => (
