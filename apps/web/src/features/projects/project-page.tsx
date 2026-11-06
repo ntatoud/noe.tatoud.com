@@ -37,13 +37,12 @@ export function ProjectPage({ project, moreProjects }: ProjectPageProps) {
               </p>
             </SayHello>
           )}
-          {moreProjects.length > 0 && (
-            <MoreSection title="More projects" slot="more-projects">
-              {moreProjects.map((other) => (
-                <ProjectCard key={other.slug} project={other} />
-              ))}
-            </MoreSection>
-          )}
+          <MoreSection
+            title="More projects"
+            slot="more-projects"
+            items={moreProjects}
+            render={(other) => <ProjectCard key={other.slug} project={other} />}
+          />
         </>
       }
     >

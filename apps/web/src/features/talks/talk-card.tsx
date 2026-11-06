@@ -63,12 +63,17 @@ export function TalkCard({ talk }: TalkCardProps) {
   )
 }
 
+export const TALK_KIND_LABEL: Record<StageItem['kind'], string> = {
+  talk: 'Talk',
+  workshop: 'Workshop',
+}
+
 export function TalkKindChip({ kind }: { kind: StageItem['kind'] }) {
   const isWorkshop = kind === 'workshop'
   return (
     <KindChip
       icon={isWorkshop ? Wrench01Icon : Mic01Icon}
-      label={isWorkshop ? 'Workshop' : 'Talk'}
+      label={TALK_KIND_LABEL[kind]}
       tone={isWorkshop ? 'clay' : 'olive'}
     />
   )

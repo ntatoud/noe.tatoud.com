@@ -10,6 +10,7 @@ import { NotFound } from '@/components/error/not-found'
 import { BASE_META_TAGS } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
+import { HEAD_SCRIPT } from '@/lib/head-script'
 import { FEEDS, FEED_TITLE } from '@/lib/site'
 
 import appCss from '@/styles/index.css?url'
@@ -56,8 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              "var t=null;try{t=localStorage.getItem('theme')}catch(e){}var d=document.documentElement;d.classList.toggle('dark',t?t==='dark':!matchMedia('(prefers-color-scheme: light)').matches);if(location.pathname.indexOf('/blog')===0&&/[?&]tag=/.test(location.search))d.dataset.filtering='';",
+            __html: HEAD_SCRIPT,
           }}
         />
         <HeadContent />

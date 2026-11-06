@@ -12,12 +12,14 @@ import { formatDate, readingMinutes } from '@/lib/format'
 import { inlineLink } from '@/lib/link-styles'
 
 import { BlogCard } from './blog-card'
-import { DEFAULT_POST_PROMPT, POST_PROMPTS } from './post-prompts'
 
 type BlogPostPageProps = {
   post: BlogPostDetail
   morePosts: readonly BlogPost[]
 }
+
+const DEFAULT_PROMPT =
+  'If this post sparked a thought, a question or a disagreement, I would like to hear it.'
 
 const languageNames = new Intl.DisplayNames('en', { type: 'language' })
 
@@ -43,15 +45,14 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
             subject={`About "${post.title}"`}
             className="mt-16"
           >
-            <p>{POST_PROMPTS[post.slug] ?? DEFAULT_POST_PROMPT}</p>
+            <p>{post.prompt ?? DEFAULT_PROMPT}</p>
           </SayHello>
-          {morePosts.length > 0 && (
-            <MoreSection title="Keep reading" slot="more-posts">
-              {morePosts.map((other) => (
-                <BlogCard key={other.slug} post={other} />
-              ))}
-            </MoreSection>
-          )}
+          <MoreSection
+            title="Keep reading"
+            slot="more-posts"
+            items={morePosts}
+            render={(other) => <BlogCard key={other.slug} post={other} />}
+          />
         </>
       }
     >

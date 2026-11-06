@@ -5,6 +5,7 @@ import { loadProject, projects } from 'virtual:content'
 import { pageMeta } from '@/features/og/metadata'
 import { ProjectPage } from '@/features/projects/project-page'
 import { loadDocument } from '@/lib/load-document'
+import { others } from '@/lib/more'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ProjectPageRoute,
@@ -16,8 +17,10 @@ export const Route = createFileRoute('/projects/$slug')({
 
 function ProjectPageRoute() {
   const { project } = Route.useLoaderData()
-  const moreProjects = projects
-    .filter((other) => other.slug !== project.slug)
-    .slice(0, 2)
-  return <ProjectPage project={project} moreProjects={moreProjects} />
+  return (
+    <ProjectPage
+      project={project}
+      moreProjects={others(projects, project.slug)}
+    />
+  )
 }

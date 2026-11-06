@@ -4,8 +4,9 @@ import type { BlogPost } from '@ntatoud/content'
 import { Link } from '@tanstack/react-router'
 
 import { ListingPage } from '@/components/listing-page'
-import { Badge } from '@/components/ui/badge'
+import { TagLink } from '@/components/tag-link'
 import { useHydrated } from '@/hooks/use-hydrated'
+import { TAG_FILTERING_FLAG } from '@/lib/head-script'
 import { inlineLink } from '@/lib/link-styles'
 
 import { BlogCard } from './blog-card'
@@ -29,7 +30,7 @@ export function BlogPage({ posts, tag }: BlogPageProps) {
   )
 
   useEffect(() => {
-    if (hydrated) delete document.documentElement.dataset.filtering
+    if (hydrated) delete document.documentElement.dataset[TAG_FILTERING_FLAG]
   }, [hydrated])
 
   return (
@@ -50,33 +51,29 @@ export function BlogPage({ posts, tag }: BlogPageProps) {
                 </Link>
               </>
             ) : (
-              <>
-                New here? Start with{' '}
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: startHerePost.slug }}
-                  className={inlineLink}
-                >
-                  {startHerePost.title}
-                </Link>
-                .
-              </>
+              startHerePost && (
+                <>
+                  New here? Start with{' '}
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: startHerePost.slug }}
+                    className={inlineLink}
+                  >
+                    {startHerePost.title}
+                  </Link>
+                  .
+                </>
+              )
             )}
           </p>
           <nav aria-label="Tags">
             <ul className="flex flex-wrap gap-1.5">
               {allTags.map((name) => (
                 <li key={name}>
-                  <Link
-                    to="/blog"
-                    search={{ tag: name }}
-                    aria-current={
-                      activeTag && sameTag(name, activeTag) ? 'page' : undefined
-                    }
-                    className="inline-flex min-h-6 items-center rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring aria-[current=page]:[&>span]:border-primary aria-[current=page]:[&>span]:text-foreground [&>span]:hover:border-primary [&>span]:hover:text-foreground"
-                  >
-                    <Badge variant="outline">{name}</Badge>
-                  </Link>
+                  <TagLink
+                    tag={name}
+                    current={!!activeTag && sameTag(name, activeTag)}
+                  />
                 </li>
               ))}
             </ul>

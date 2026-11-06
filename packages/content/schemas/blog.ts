@@ -18,4 +18,8 @@ export const BlogPostSchema = Schema.Struct({
   tags: Schema.optionalKey(Schema.Array(Schema.String)),
   externalUrl: Schema.optionalKey(Schema.String),
   hero: Schema.optionalKey(Image),
+  prompt: Schema.optionalKey(Schema.String),
+  startHere: Schema.Boolean.pipe(
+    Schema.withDecodingDefaultTypeKey(Effect.succeed(false)),
+  ),
 })

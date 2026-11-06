@@ -7,7 +7,7 @@ import { BlogCard } from '@/features/blog/blog-card'
 import { formatDate } from '@/lib/format'
 
 import { eventPlace } from './event-place'
-import { TalkCard, TalkKindChip } from './talk-card'
+import { TALK_KIND_LABEL, TalkCard, TalkKindChip } from './talk-card'
 import { TalkResourcePreview } from './talk-resource-preview'
 
 type TalkPageProps = {
@@ -31,7 +31,7 @@ export function TalkPage({ talk, moreTalks, relatedWriting }: TalkPageProps) {
         <>
           <SayHello
             title="Want this at your event?"
-            subject={`${talk.kind === 'workshop' ? 'Workshop' : 'Talk'}: ${talk.title}`}
+            subject={`${TALK_KIND_LABEL[talk.kind]}: ${talk.title}`}
             className="mt-16"
           >
             <p>
@@ -40,20 +40,18 @@ export function TalkPage({ talk, moreTalks, relatedWriting }: TalkPageProps) {
                 : `If this ${talk.kind} would suit your meetup or conference, tell me about your audience and we can see if it fits.`}
             </p>
           </SayHello>
-          {relatedWriting.length > 0 && (
-            <MoreSection title="Related writing" slot="related-writing">
-              {relatedWriting.map((post) => (
-                <BlogCard key={post.slug} post={post} />
-              ))}
-            </MoreSection>
-          )}
-          {moreTalks.length > 0 && (
-            <MoreSection title="More talks and workshops" slot="more-talks">
-              {moreTalks.map((other) => (
-                <TalkCard key={other.slug} talk={other} />
-              ))}
-            </MoreSection>
-          )}
+          <MoreSection
+            title="Related writing"
+            slot="related-writing"
+            items={relatedWriting}
+            render={(post) => <BlogCard key={post.slug} post={post} />}
+          />
+          <MoreSection
+            title="More talks and workshops"
+            slot="more-talks"
+            items={moreTalks}
+            render={(other) => <TalkCard key={other.slug} talk={other} />}
+          />
         </>
       }
     >

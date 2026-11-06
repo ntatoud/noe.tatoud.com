@@ -6,6 +6,7 @@ import { relatedPosts } from '@/features/blog/related-posts'
 import { pageMeta } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
 import { loadDocument } from '@/lib/load-document'
+import { others } from '@/lib/more'
 
 export const Route = createFileRoute('/talks/$slug')({
   component: TalkPageRoute,
@@ -17,9 +18,11 @@ export const Route = createFileRoute('/talks/$slug')({
 
 function TalkPageRoute() {
   const { talk } = Route.useLoaderData()
-  const moreTalks = talks
-    .filter((other) => other.slug !== talk.slug)
-    .slice(0, 2)
-  const writing = relatedPosts(talk, blogPosts, 2, { requireOverlap: true })
-  return <TalkPage talk={talk} moreTalks={moreTalks} relatedWriting={writing} />
+  return (
+    <TalkPage
+      talk={talk}
+      moreTalks={others(talks, talk.slug)}
+      relatedWriting={relatedPosts(talk, blogPosts, { requireOverlap: true })}
+    />
+  )
 }

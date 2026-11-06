@@ -1,10 +1,9 @@
 import { Link } from '@tanstack/react-router'
 
-import { formatMonthYear } from '@/lib/format'
 import { inlineLink } from '@/lib/link-styles'
 import { FEEDS } from '@/lib/site'
 
-import { latestActivity } from './latest-activity'
+import { LatestActivity } from './latest-activity'
 import { CONTACT_EMAIL, emailHref, navItems } from './site-config'
 import { SocialLinks } from './social-links'
 
@@ -70,35 +69,7 @@ export function Footer() {
         </nav>
         <p className="w-full text-xs text-muted-foreground">
           © {buildYear} Noé Tatoud
-          {latestActivity && (
-            <>
-              {' '}
-              · Latest {latestActivity.kind}:{' '}
-              {latestActivity.link.external ? (
-                <a
-                  href={latestActivity.link.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={footerLink}
-                >
-                  {latestActivity.title}
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              ) : (
-                <Link
-                  to={latestActivity.link.to}
-                  params={{ slug: latestActivity.link.slug }}
-                  className={footerLink}
-                >
-                  {latestActivity.title}
-                </Link>
-              )}
-              ,{' '}
-              <time dateTime={latestActivity.date}>
-                {formatMonthYear(latestActivity.date)}
-              </time>
-            </>
-          )}
+          <LatestActivity linkClassName={footerLink} />
         </p>
       </div>
     </footer>

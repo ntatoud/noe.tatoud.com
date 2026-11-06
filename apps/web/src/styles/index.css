@@ -178,7 +178,7 @@
       transition-duration: 0.01ms !important;
     }
   }
-  /* Set by the head script in __root.tsx until the tag filter hydrates, so the unfiltered list never flashes. */
+  /* Set by HEAD_SCRIPT (lib/head-script.ts) until the tag filter hydrates, so the unfiltered list never flashes. */
   html[data-filtering]
     :is([data-slot='blog-page-list'], [data-slot='blog-intro']) {
     visibility: hidden;

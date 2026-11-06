@@ -4,17 +4,16 @@ import { Moon02Icon, Sun01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Button } from '@/components/ui/button'
+import { THEME_STORAGE_KEY } from '@/lib/head-script'
 
 type Theme = 'light' | 'dark'
 
-const STORAGE_KEY = 'theme'
-
-// The `dark` class on <html> is the source of truth (set before hydration by __root.tsx).
+// The `dark` class on <html> is the source of truth (set before hydration by HEAD_SCRIPT).
 const listeners = new Set<() => void>()
 
 function storedTheme(): string | null {
   try {
-    return localStorage.getItem(STORAGE_KEY)
+    return localStorage.getItem(THEME_STORAGE_KEY)
   } catch {
     return null
   }
@@ -49,8 +48,8 @@ function applyTheme(theme: Theme) {
     const systemTheme = matchMedia('(prefers-color-scheme: light)').matches
       ? 'light'
       : 'dark'
-    if (theme === systemTheme) localStorage.removeItem(STORAGE_KEY)
-    else localStorage.setItem(STORAGE_KEY, theme)
+    if (theme === systemTheme) localStorage.removeItem(THEME_STORAGE_KEY)
+    else localStorage.setItem(THEME_STORAGE_KEY, theme)
   } catch {
     // localStorage unavailable (private mode, disabled storage): the theme just won't persist.
   }

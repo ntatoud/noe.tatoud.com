@@ -1,10 +1,9 @@
 import type { ComponentProps, ReactNode } from 'react'
 
-import { Link } from '@tanstack/react-router'
-
 import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { TagLink } from '@/components/tag-link'
 import { Badge } from '@/components/ui/badge'
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
@@ -66,13 +65,7 @@ export function DetailPage({
             {tags.map((tag) => (
               <li key={tag}>
                 {linkTags ? (
-                  <Link
-                    to="/blog"
-                    search={{ tag }}
-                    className="inline-flex min-h-6 items-center rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring [&>span]:hover:border-primary [&>span]:hover:text-foreground"
-                  >
-                    <Badge variant="outline">{tag}</Badge>
-                  </Link>
+                  <TagLink tag={tag} />
                 ) : (
                   <Badge variant="outline">{tag}</Badge>
                 )}
