@@ -19,6 +19,13 @@ export const navItems: readonly NavItem[] = [
   { label: 'Talks', href: '/talks' },
 ] as const
 
+export const CONTACT_EMAIL = 'noe@bearstudio.fr'
+
+export function emailHref(subject?: string) {
+  const query = subject ? `?subject=${encodeURIComponent(subject)}` : ''
+  return `mailto:${CONTACT_EMAIL}${query}`
+}
+
 export type SocialLink = {
   id: string
   label: string
@@ -54,7 +61,7 @@ export const socialLinks: readonly SocialLink[] = [
   {
     id: 'email',
     label: 'Email',
-    href: 'mailto:noe@bearstudio.fr',
+    href: emailHref(),
     icon: Mail01Icon,
   },
 ] as const

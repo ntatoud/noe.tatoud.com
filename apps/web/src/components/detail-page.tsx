@@ -35,10 +35,10 @@ export function DetailPage({
   return (
     <main
       id="main"
-      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
+      className="mx-auto w-full max-w-2xl min-w-0 px-4 pt-8 pb-20 sm:pt-12"
       data-slot={`${slot}-page`}
     >
-      <ButtonLink to={back.to} variant="ghost" size="sm">
+      <ButtonLink to={back.to} variant="muted" size="sm" className="-ml-3">
         <HugeiconsIcon
           icon={ArrowLeft02Icon}
           size={16}
@@ -46,29 +46,38 @@ export function DetailPage({
         />
         {back.label}
       </ButtonLink>
-      <div className="mt-6 flex items-center gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        {badge && <Badge>{badge}</Badge>}
-      </div>
-      {byline && <p className="mt-2 text-sm text-muted-foreground">{byline}</p>}
-      {description && (
-        <p className="mt-2 text-muted-foreground">{description}</p>
-      )}
-
-      {tags && tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="outline">
-              {tag}
+      <header className="mt-8 flex flex-col gap-4">
+        {badge && (
+          <span className="self-start">
+            <Badge variant="outline">
+              {badge.charAt(0).toUpperCase() + badge.slice(1)}
             </Badge>
-          ))}
-        </div>
-      )}
+          </span>
+        )}
+        <h1 className="text-4xl leading-tight tracking-tight text-balance sm:text-5xl">
+          {title}
+        </h1>
+        {description && (
+          <p className="text-lg text-pretty text-muted-foreground sm:text-xl">
+            {description}
+          </p>
+        )}
+        {byline}
+        {tags && tags.length > 0 && (
+          <ul className="flex flex-wrap gap-1.5" aria-label="Tags">
+            {tags.map((tag) => (
+              <li key={tag}>
+                <Badge variant="outline">{tag}</Badge>
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
 
       {children}
 
       <div
-        className="typeset typeset-docs mt-8"
+        className="typeset typeset-docs mt-10"
         data-slot={`${slot}-content`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
@@ -86,7 +95,7 @@ export function ExternalLinkButton({
     <ButtonAnchor
       target="_blank"
       rel="noopener noreferrer"
-      variant="ghost"
+      variant="outline"
       size="sm"
       {...props}
     >

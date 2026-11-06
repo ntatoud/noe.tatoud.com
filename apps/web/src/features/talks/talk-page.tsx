@@ -27,7 +27,7 @@ export function TalkPage({ talk }: TalkPageProps) {
               key={`${event.event}-${event.date}`}
               className="text-sm text-muted-foreground"
             >
-              {event.event} — {event.city} · {formatDate(event.date)}
+              {event.event}, {event.city} · {formatDate(event.date)}
             </li>
           ))}
         </ul>

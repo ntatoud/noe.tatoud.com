@@ -12,7 +12,12 @@ export function TalksSlice({ talks }: TalksSliceProps) {
   const recent = talks.slice(0, 2)
 
   return (
-    <Slice title="Talks" seeAllHref="/talks" slot="talks-slice">
+    <Slice
+      title="Talks"
+      description="Talks and hands-on workshops I have given."
+      seeAllHref="/talks"
+      slot="talks-slice"
+    >
       <ul
         className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         data-slot="talks-slice-list"

@@ -13,10 +13,10 @@ export function ProjectCta({
 }: ProjectCtaFrontmatter) {
   return (
     <aside
-      className="mt-10 rounded-lg border border-border bg-card p-6"
+      className="mt-12 rounded-2xl border border-border bg-card p-6"
       data-slot="project-cta"
     >
-      <p className="text-lg font-semibold tracking-tight">{title}</p>
+      <p className="font-serif text-xl">{title}</p>
       {description && (
         <div className="mt-2 text-sm text-muted-foreground">{description}</div>
       )}

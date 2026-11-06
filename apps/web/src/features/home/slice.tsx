@@ -7,18 +7,33 @@ import type { RouteTo } from '@/lib/routes'
 type SliceProps = {
   slot: string
   title: string
+  description?: string
   seeAllHref?: RouteTo
   children: React.ReactNode
 }
 
-export function Slice({ slot, title, seeAllHref, children }: SliceProps) {
+export function Slice({
+  slot,
+  title,
+  description,
+  seeAllHref,
+  children,
+}: SliceProps) {
   return (
     <section className="mx-auto max-w-5xl px-4 py-12 sm:py-16" data-slot={slot}>
-      <div className="mb-8 flex items-baseline justify-between">
-        <h2 className="text-3xl">{title}</h2>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-3xl sm:text-4xl">{title}</h2>
+          {description && (
+            <p className="max-w-xl text-pretty text-muted-foreground">
+              {description}
+            </p>
+          )}
+        </div>
         {seeAllHref && (
           <ButtonLink
             to={seeAllHref}
+            aria-label={`See all ${title.toLowerCase()}`}
             variant="muted"
             size="sm"
             data-slot="slice-see-all"

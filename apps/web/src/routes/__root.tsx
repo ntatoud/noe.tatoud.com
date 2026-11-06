@@ -57,7 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{document.documentElement.classList.toggle('dark',localStorage.getItem('theme')!=='light')}catch(e){}",
+              "try{var t=localStorage.getItem('theme');document.documentElement.classList.toggle('dark',t?t==='dark':!matchMedia('(prefers-color-scheme: light)').matches)}catch(e){}",
           }}
         />
         <HeadContent />

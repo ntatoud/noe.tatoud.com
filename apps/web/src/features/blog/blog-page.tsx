@@ -13,7 +13,7 @@ export function BlogPage({ posts }: BlogPageProps) {
     <ListingPage
       slot="blog-page"
       title="Blog"
-      subtitle="Long-form posts on frontend, tooling, and craft."
+      subtitle="What I learn while building for the web: frontend, tooling, AI and the craft around it. Grab a coffee, pick one."
       columns={2}
     >
       {posts.map((post, index) => (

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { loadBlogPost } from 'virtual:content'
+import { blogPosts, loadBlogPost } from 'virtual:content'
 
 import { BlogPostPage } from '@/features/blog/blog-post-page'
 import { pageMeta } from '@/features/og/metadata'
@@ -16,5 +16,8 @@ export const Route = createFileRoute('/blog/$slug')({
 
 function BlogPostPageRoute() {
   const { post } = Route.useLoaderData()
-  return <BlogPostPage post={post} />
+  const morePosts = blogPosts
+    .filter((other) => other.slug !== post.slug)
+    .slice(0, 2)
+  return <BlogPostPage post={post} morePosts={morePosts} />
 }

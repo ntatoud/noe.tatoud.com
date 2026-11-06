@@ -12,7 +12,12 @@ export function BlogSlice({ posts }: BlogSliceProps) {
   const latest = posts.slice(0, 3)
 
   return (
-    <Slice title="Blog" seeAllHref="/blog" slot="blog-slice">
+    <Slice
+      title="Blog"
+      description="Notes on what I build, what I learn, and how the way I work keeps changing."
+      seeAllHref="/blog"
+      slot="blog-slice"
+    >
       <ul
         className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         data-slot="blog-slice-list"

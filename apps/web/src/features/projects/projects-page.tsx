@@ -12,7 +12,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
     <ListingPage
       slot="projects-page"
       title="Projects"
-      subtitle="Things I've built and shipped."
+      subtitle="Things I have built for fun, and open-source projects I am lucky to contribute to."
       columns={3}
     >
       {projects.map((project) => (
