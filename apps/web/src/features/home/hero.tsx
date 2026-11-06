@@ -1,5 +1,3 @@
-import type { Experience } from '@ntatoud/content'
-
 import { ArrowRight02Icon, Mail01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
@@ -7,11 +5,7 @@ import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import { emailHref } from '@/layout/site-config'
 import { SocialLinks } from '@/layout/social-links'
 
-type HeroProps = {
-  current?: Experience
-}
-
-export function Hero({ current }: HeroProps) {
+export function Hero() {
   return (
     <section className="relative isolate overflow-hidden" data-slot="home-hero">
       <span
@@ -23,23 +17,8 @@ export function Hero({ current }: HeroProps) {
       </span>
       <div className="mx-auto max-w-5xl px-4 pt-16 pb-16 sm:pt-24 sm:pb-24">
         <div className="max-w-2xl">
-          {current && (
-            <p
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-sm text-muted-foreground backdrop-blur-sm"
-              data-slot="hero-status"
-            >
-              <span className="relative flex size-2" aria-hidden>
-                <span className="absolute inline-flex size-full rounded-full bg-secondary opacity-60 motion-safe:animate-ping" />
-                <span className="relative inline-flex size-2 rounded-full bg-secondary" />
-              </span>
-              Currently {current.title} at{' '}
-              <span className="font-medium text-foreground">
-                {current.organization}
-              </span>
-            </p>
-          )}
           <h1
-            className="mt-6 text-5xl leading-none tracking-tight text-balance sm:text-7xl"
+            className="text-5xl leading-none tracking-tight text-balance sm:text-7xl"
             data-slot="hero-name"
           >
             Hi, I'm <span className="text-primary">Noé</span>
