@@ -14,7 +14,7 @@ export type NowEntry = {
 export const NOW: ReadonlyArray<NowEntry> = [
   {
     heading: 'Working',
-    body: 'Software engineer at Peinture since June 2026.',
+    body: 'Software engineer at Peinture since June 2026, and still a fullstack developer at BearStudio, where I started as an intern in 2023.',
   },
   {
     heading: 'Learning',
