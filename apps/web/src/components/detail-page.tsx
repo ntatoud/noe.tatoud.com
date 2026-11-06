@@ -1,5 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react'
 
+import { Link } from '@tanstack/react-router'
+
 import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
@@ -15,6 +17,7 @@ type DetailPageProps = {
   byline?: ReactNode
   description?: string
   tags?: ReadonlyArray<string>
+  linkTags?: boolean
   html: string
   children?: ReactNode
   footer?: ReactNode
@@ -28,6 +31,7 @@ export function DetailPage({
   byline,
   description,
   tags,
+  linkTags = false,
   html,
   children,
   footer,
@@ -48,7 +52,7 @@ export function DetailPage({
       </ButtonLink>
       <header className="mt-8 flex flex-col gap-4">
         {badge && <div className="self-start">{badge}</div>}
-        <h1 className="text-4xl leading-tight tracking-tight text-balance sm:text-5xl">
+        <h1 className="text-3xl leading-tight tracking-tight text-balance sm:text-5xl">
           {title}
         </h1>
         {description && (
@@ -61,7 +65,17 @@ export function DetailPage({
           <ul className="flex flex-wrap gap-1.5" aria-label="Tags">
             {tags.map((tag) => (
               <li key={tag}>
-                <Badge variant="outline">{tag}</Badge>
+                {linkTags ? (
+                  <Link
+                    to="/blog"
+                    search={{ tag }}
+                    className="rounded-full outline-none focus-visible:ring-3 focus-visible:ring-ring [&>span]:hover:border-primary [&>span]:hover:text-foreground"
+                  >
+                    <Badge variant="outline">{tag}</Badge>
+                  </Link>
+                ) : (
+                  <Badge variant="outline">{tag}</Badge>
+                )}
               </li>
             ))}
           </ul>

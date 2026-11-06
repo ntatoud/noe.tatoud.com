@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { loadProject } from 'virtual:content'
+import { loadProject, projects } from 'virtual:content'
 
 import { pageMeta } from '@/features/og/metadata'
 import { ProjectPage } from '@/features/projects/project-page'
@@ -16,5 +16,8 @@ export const Route = createFileRoute('/projects/$slug')({
 
 function ProjectPageRoute() {
   const { project } = Route.useLoaderData()
-  return <ProjectPage project={project} />
+  const moreProjects = projects
+    .filter((other) => other.slug !== project.slug)
+    .slice(0, 2)
+  return <ProjectPage project={project} moreProjects={moreProjects} />
 }

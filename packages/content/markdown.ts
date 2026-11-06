@@ -123,7 +123,7 @@ const renderEntry = (site: SiteConfig, entry: IndexEntry) => {
     entry.routePath === null
       ? `- **${entry.title}**`
       : `- [${entry.title}](${absolute(site, markdownPath(entry.routePath))})`
-  const tail = [entry.note, entry.description].filter(Boolean).join(' — ')
+  const tail = [entry.note, entry.description].filter(Boolean).join(': ')
   return tail ? `${head}: ${tail}` : head
 }
 

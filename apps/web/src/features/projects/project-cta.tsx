@@ -16,7 +16,7 @@ export function ProjectCta({
       className="mt-12 rounded-2xl border border-border bg-card p-6"
       data-slot="project-cta"
     >
-      <p className="font-serif text-xl">{title}</p>
+      <h2 className="text-xl">{title}</h2>
       {description && (
         <div className="mt-2 text-sm text-muted-foreground">{description}</div>
       )}

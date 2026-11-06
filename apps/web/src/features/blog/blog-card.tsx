@@ -73,7 +73,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       </div>
       <CardTitle
         external={external}
-        className={cn(featured && 'text-2xl sm:text-3xl md:line-clamp-3')}
+        className={cn(featured && 'text-2xl sm:text-3xl')}
       >
         {post.title}
       </CardTitle>

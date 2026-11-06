@@ -13,8 +13,8 @@ export function ProjectsSlice({ projects }: ProjectsSliceProps) {
 
   return (
     <Slice
-      title="Projects"
-      description="Side projects I tinker with and open-source work I contribute to."
+      title="Things I have built"
+      description="Side projects I tinker with and work I contribute to."
       seeAll={{ href: '/projects', label: 'All projects' }}
       slot="projects-slice"
     >

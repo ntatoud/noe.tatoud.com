@@ -416,7 +416,7 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
 
   return (
     <Slice
-      title="Experiences"
+      title="Where I have been"
       description="Where I have worked, studied and volunteered so far."
       slot="experiences-slice"
     >

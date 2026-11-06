@@ -13,7 +13,7 @@ export function TalksSlice({ talks }: TalksSliceProps) {
 
   return (
     <Slice
-      title="Talks"
+      title="On stage"
       description="Talks and hands-on workshops I have given."
       seeAll={{ href: '/talks', label: 'All talks' }}
       slot="talks-slice"

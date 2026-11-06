@@ -13,6 +13,7 @@ export function TalksPage({ talks }: TalksPageProps) {
       slot="talks-page"
       title="Talks"
       subtitle="Talks and hands-on workshops I have given."
+      listTitle="All talks"
       columns={3}
     >
       {talks.map((talk) => (

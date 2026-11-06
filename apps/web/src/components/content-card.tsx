@@ -95,7 +95,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        'line-clamp-2 min-h-[2lh] text-xl leading-snug text-foreground decoration-primary/50 underline-offset-4 group-hover:underline',
+        'text-xl leading-snug text-balance text-foreground decoration-primary/50 underline-offset-4 group-hover:underline',
         className,
       )}
     >
@@ -108,6 +108,7 @@ export function CardTitle({
           aria-hidden="true"
         />
       )}
+      {external && <span className="sr-only"> (opens in a new tab)</span>}
     </h3>
   )
 }

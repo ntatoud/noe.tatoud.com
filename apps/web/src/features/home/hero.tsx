@@ -4,19 +4,16 @@ import { ArrowRight02Icon, Mail01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
+import { startHerePost } from '@/features/blog/start-here'
 import { emailHref } from '@/layout/site-config'
 import { SocialLinks } from '@/layout/social-links'
-
-const START_HERE = 'how-is-ai-changing-the-way-i-work-as-a-developer'
-
-const inlineLink =
-  'rounded-sm text-foreground underline decoration-primary/50 underline-offset-4 outline-none hover:decoration-primary focus-visible:ring-3 focus-visible:ring-ring'
+import { inlineLink } from '@/lib/link-styles'
 
 export function Hero() {
   return (
     <section className="relative isolate overflow-hidden" data-slot="home-hero">
       <span
-        className="hero-monogram pointer-events-none -z-10 hidden md:block"
+        className="hero-monogram pointer-events-none -z-10 hidden lg:block"
         aria-hidden
         data-slot="hero-monogram"
       >
@@ -32,14 +29,14 @@ export function Hero() {
             <span className="text-secondary">.</span>
           </h1>
           <div className="mt-6 flex flex-col gap-4 text-lg text-pretty text-muted-foreground sm:text-xl">
-            <p>
+            <p className="text-foreground">
               I'm a fullstack developer who has always loved writing code. These
               days agents write most of it, and that has not been an easy shift.
             </p>
             <p>
               <Link
                 to="/blog/$slug"
-                params={{ slug: START_HERE }}
+                params={{ slug: startHerePost.slug }}
                 className={inlineLink}
               >
                 I wrote about that shift

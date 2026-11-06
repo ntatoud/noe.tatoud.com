@@ -214,7 +214,7 @@ describe('renderIndex', () => {
 
   it('links entries to their markdown twin', () => {
     expect(output).toContain(
-      '- [A post](https://example.com/blog/a-post.md): 2025-06-25 — About things.',
+      '- [A post](https://example.com/blog/a-post.md): 2025-06-25: About things.',
     )
   })
 

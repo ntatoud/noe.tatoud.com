@@ -11,6 +11,8 @@ import {
 import { KindChip } from '@/components/kind-chip'
 import { formatMonthYear, initials } from '@/lib/format'
 
+import { eventPlace } from './event-place'
+
 type TalkCardProps = {
   talk: StageItem
 }
@@ -39,7 +41,7 @@ export function TalkCard({ talk }: TalkCardProps) {
       <CardTags tags={talk.tags} pinToBottom={false} />
       {event && (
         <div className="mt-auto flex items-center gap-2 border-t border-border/50 pt-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-clay-500 to-olive-500 text-2xs font-bold text-white transition-transform duration-200 ease-out motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-muted text-2xs text-muted-foreground transition-transform duration-200 ease-out motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3">
             {event.logo ? (
               <img
                 src={event.logo}
@@ -53,7 +55,7 @@ export function TalkCard({ talk }: TalkCardProps) {
             )}
           </span>
           <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
-            {event.event} · {event.city}
+            {eventPlace(event)}
           </span>
         </div>
       )}

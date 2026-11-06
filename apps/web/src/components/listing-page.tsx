@@ -6,6 +6,8 @@ type ListingPageProps = {
   slot: string
   title: string
   subtitle: string
+  listTitle: string
+  intro?: ReactNode
   columns: 2 | 3
   children: ReactNode
 }
@@ -14,6 +16,8 @@ export function ListingPage({
   slot,
   title,
   subtitle,
+  listTitle,
+  intro,
   columns,
   children,
 }: ListingPageProps) {
@@ -27,6 +31,8 @@ export function ListingPage({
       <p className="mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
         {subtitle}
       </p>
+      {intro}
+      <h2 className="sr-only">{listTitle}</h2>
       <ul
         className={cn(
           'mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2',

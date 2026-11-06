@@ -1,8 +1,9 @@
-import { useId, type ReactNode } from 'react'
+import { useId, useState, type ReactNode } from 'react'
 
-import { Mail01Icon } from '@hugeicons/core-free-icons'
+import { Copy01Icon, Mail01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { Button } from '@/components/ui/button'
 import { ButtonAnchor } from '@/components/ui/button-link'
 import { CONTACT_EMAIL, emailHref } from '@/layout/site-config'
 import { cn } from '@/lib/utils'
@@ -43,16 +44,32 @@ export function SayHello({
           <HugeiconsIcon icon={Mail01Icon} size={18} data-icon="inline-start" />
           Write to me
         </ButtonAnchor>
-        <a
-          href={href}
-          className="rounded-sm text-sm text-muted-foreground underline decoration-border underline-offset-4 outline-none hover:text-foreground hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring"
-        >
-          {CONTACT_EMAIL}
-        </a>
+        <span className="flex items-center gap-1 text-sm text-muted-foreground">
+          <span className="select-all">{CONTACT_EMAIL}</span>
+          <CopyEmailButton />
+        </span>
       </div>
       <p className="text-sm text-muted-foreground">
         I read every message and usually answer within a few days.
       </p>
     </aside>
+  )
+}
+
+function CopyEmailButton() {
+  const [copied, setCopied] = useState(false)
+  return (
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      aria-label={copied ? 'Email address copied' : 'Copy email address'}
+      onClick={() => {
+        void navigator.clipboard.writeText(CONTACT_EMAIL).then(() => {
+          setCopied(true)
+        })
+      }}
+    >
+      <HugeiconsIcon icon={copied ? Tick02Icon : Copy01Icon} size={16} />
+    </Button>
   )
 }

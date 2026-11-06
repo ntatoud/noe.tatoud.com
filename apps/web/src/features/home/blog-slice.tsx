@@ -13,7 +13,7 @@ export function BlogSlice({ posts }: BlogSliceProps) {
 
   return (
     <Slice
-      title="Blog"
+      title="Recent writing"
       description="Notes on what I build, what I learn, and how the way I work keeps changing."
       seeAll={{ href: '/blog', label: 'All posts' }}
       slot="blog-slice"

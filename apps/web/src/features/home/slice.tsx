@@ -33,6 +33,7 @@ export function Slice({
         {seeAll && (
           <ButtonLink
             to={seeAll.href}
+            className="-ml-3 sm:ml-0"
             variant="muted"
             size="sm"
             data-slot="slice-see-all"

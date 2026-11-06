@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { loadTalk } from 'virtual:content'
+import { loadTalk, talks } from 'virtual:content'
 
 import { pageMeta } from '@/features/og/metadata'
 import { TalkPage } from '@/features/talks/talk-page'
@@ -16,5 +16,8 @@ export const Route = createFileRoute('/talks/$slug')({
 
 function TalkPageRoute() {
   const { talk } = Route.useLoaderData()
-  return <TalkPage talk={talk} />
+  const moreTalks = talks
+    .filter((other) => other.slug !== talk.slug)
+    .slice(0, 2)
+  return <TalkPage talk={talk} moreTalks={moreTalks} />
 }

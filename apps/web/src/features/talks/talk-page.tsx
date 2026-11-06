@@ -1,17 +1,21 @@
-import type { TalkDetail } from '@ntatoud/content'
+import type { StageItem, TalkDetail } from '@ntatoud/content'
 
 import { DetailPage } from '@/components/detail-page'
+import { MoreSection } from '@/components/more-section'
 import { SayHello } from '@/components/say-hello'
 import { formatDate } from '@/lib/format'
 
-import { TalkKindChip } from './talk-card'
+import { eventPlace } from './event-place'
+import { TalkCard, TalkKindChip } from './talk-card'
 import { TalkResourcePreview } from './talk-resource-preview'
 
 type TalkPageProps = {
   talk: TalkDetail
+  moreTalks: readonly StageItem[]
 }
 
-export function TalkPage({ talk }: TalkPageProps) {
+export function TalkPage({ talk, moreTalks }: TalkPageProps) {
+  const forKids = talk.tags?.includes('kids') ?? false
   return (
     <DetailPage
       slot="talk"
@@ -22,16 +26,26 @@ export function TalkPage({ talk }: TalkPageProps) {
       tags={talk.tags}
       html={talk.html}
       footer={
-        <SayHello
-          title="Want this at your event?"
-          subject={`${talk.kind === 'workshop' ? 'Workshop' : 'Talk'}: ${talk.title}`}
-          className="mt-16"
-        >
-          <p>
-            If you think this {talk.kind} would suit your meetup or conference,
-            tell me about your audience and we can see if it fits.
-          </p>
-        </SayHello>
+        <>
+          <SayHello
+            title="Want this at your event?"
+            subject={`${talk.kind === 'workshop' ? 'Workshop' : 'Talk'}: ${talk.title}`}
+            className="mt-16"
+          >
+            <p>
+              {forKids
+                ? `If this ${talk.kind} would suit your school, club or event, tell me about the kids and we can see if it fits.`
+                : `If this ${talk.kind} would suit your meetup or conference, tell me about your audience and we can see if it fits.`}
+            </p>
+          </SayHello>
+          {moreTalks.length > 0 && (
+            <MoreSection title="More talks and workshops" slot="more-talks">
+              {moreTalks.map((other) => (
+                <TalkCard key={other.slug} talk={other} />
+              ))}
+            </MoreSection>
+          )}
+        </>
       }
     >
       {talk.events.length > 0 && (
@@ -41,10 +55,8 @@ export function TalkPage({ talk }: TalkPageProps) {
               key={`${event.event}-${event.date}`}
               className="text-sm text-muted-foreground"
             >
-              {event.event.includes(event.city.split(',')[0] ?? '')
-                ? event.event
-                : `${event.event}, ${event.city}`}{' '}
-              · <time dateTime={event.date}>{formatDate(event.date)}</time>
+              {eventPlace(event)} ·{' '}
+              <time dateTime={event.date}>{formatDate(event.date)}</time>
             </li>
           ))}
         </ul>

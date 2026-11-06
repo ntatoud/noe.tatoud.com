@@ -1,16 +1,13 @@
 import { Link } from '@tanstack/react-router'
 
-import { blogPosts } from 'virtual:content'
-
 import { formatMonthYear } from '@/lib/format'
 import { FEEDS } from '@/lib/site'
 
+import { latestActivity } from './latest-activity'
 import { CONTACT_EMAIL, emailHref, navItems } from './site-config'
 import { SocialLinks } from './social-links'
 
 const buildYear = import.meta.env.BUILD_DATE.slice(0, 4)
-
-const latestPost = blogPosts[0]
 
 const footerLink =
   'rounded-sm underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-3 focus-visible:ring-ring'
@@ -25,7 +22,8 @@ export function Footer() {
         <div className="flex flex-col gap-3">
           <p className="font-serif text-2xl">Thanks for stopping by.</p>
           <p className="max-w-md text-muted-foreground">
-            Questions, ideas, or just want to chat about the web? Write to me at{' '}
+            Something on your mind about a post, a talk or a project? Write to
+            me at{' '}
             <a
               href={emailHref()}
               className="rounded-sm text-primary underline decoration-primary/40 underline-offset-4 outline-none hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring"
@@ -74,19 +72,32 @@ export function Footer() {
         </nav>
         <p className="w-full text-xs text-muted-foreground">
           © {buildYear} Noé Tatoud
-          {latestPost && (
+          {latestActivity && (
             <>
               {' '}
-              · Latest post:{' '}
-              <a
-                href={latestPost.externalUrl ?? latestPost.url}
-                className={footerLink}
-              >
-                {latestPost.title}
-              </a>
+              · Latest {latestActivity.kind}:{' '}
+              {latestActivity.link.external ? (
+                <a
+                  href={latestActivity.link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={footerLink}
+                >
+                  {latestActivity.title}
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : (
+                <Link
+                  to={latestActivity.link.to}
+                  params={{ slug: latestActivity.link.slug }}
+                  className={footerLink}
+                >
+                  {latestActivity.title}
+                </Link>
+              )}
               ,{' '}
-              <time dateTime={latestPost.date}>
-                {formatMonthYear(latestPost.date)}
+              <time dateTime={latestActivity.date}>
+                {formatMonthYear(latestActivity.date)}
               </time>
             </>
           )}
