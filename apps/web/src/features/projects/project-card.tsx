@@ -10,6 +10,7 @@ import {
 } from '@/components/content-card'
 import { KindChip } from '@/components/kind-chip'
 import { formatMonthYear } from '@/lib/format'
+import { sharedElement } from '@/lib/view-transition'
 
 type ProjectCardProps = {
   project: Project
@@ -30,7 +31,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {formatMonthYear(project.date)}
         </time>
       </div>
-      <CardTitle>{project.title}</CardTitle>
+      <CardTitle transition={sharedElement('title', 'projects', project.slug)}>
+        {project.title}
+      </CardTitle>
       {project.description && (
         <CardDescription>{project.description}</CardDescription>
       )}

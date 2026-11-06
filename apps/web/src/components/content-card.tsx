@@ -7,6 +7,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import type { sharedElement } from '@/lib/view-transition'
 
 type CardLink =
   | { external: true; href: string }
@@ -87,13 +88,16 @@ export function CardTitle({
   children,
   external = false,
   className,
+  transition,
 }: {
   children: ReactNode
   external?: boolean
   className?: string
+  transition?: ReturnType<typeof sharedElement>
 }) {
   return (
     <h3
+      {...transition}
       className={cn(
         'text-xl leading-snug text-balance text-foreground decoration-primary/50 underline-offset-4 group-hover:underline',
         className,

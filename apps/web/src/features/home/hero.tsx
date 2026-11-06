@@ -27,9 +27,7 @@ export function Hero() {
             data-slot="hero-name"
           >
             Hi, I'm <span className="text-primary">Noé</span>
-            <span className="hero-dot text-secondary">
-              <span className="hero-dot-hop">.</span>
-            </span>
+            <span className="text-secondary">.</span>
           </h1>
           <div className="mt-6 flex flex-col gap-4 text-lg text-pretty text-muted-foreground sm:text-xl">
             <p className="text-foreground">

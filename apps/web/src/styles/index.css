@@ -200,36 +200,6 @@
 }
 
 @layer components {
-  .hero-dot,
-  .hero-dot-hop {
-    display: inline-block;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-dot {
-      animation: hero-dot-drop 900ms cubic-bezier(0.3, 1.6, 0.5, 1) 400ms both;
-    }
-    [data-slot='hero-name']:hover .hero-dot-hop {
-      animation: hero-dot-hop 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
-    }
-  }
-
-  @keyframes hero-dot-drop {
-    from {
-      translate: 0 -1.5em;
-      opacity: 0;
-    }
-    40% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes hero-dot-hop {
-    50% {
-      translate: 0 -0.35em;
-    }
-  }
-
   .hero-monogram {
     position: absolute;
     top: 50%;
@@ -253,5 +223,121 @@
 
   .dark .brand-fill {
     background-color: var(--brand);
+  }
+}
+
+/* View transitions: header and footer stay put, the page glides by depth, cards morph into their page. */
+[data-slot='header'] {
+  view-transition-name: site-header;
+}
+[data-slot='footer'] {
+  view-transition-name: site-footer;
+}
+[data-vt='title'] {
+  view-transition-class: vt-title;
+}
+[data-vt='hero'] {
+  view-transition-class: vt-hero;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(site-footer) {
+  animation: none;
+}
+
+::view-transition-group(*) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:active-view-transition-type(forward) {
+  &::view-transition-old(root) {
+    animation-name: vt-out-left;
+  }
+  &::view-transition-new(root) {
+    animation-name: vt-in-right;
+  }
+}
+
+html:active-view-transition-type(back) {
+  &::view-transition-old(root) {
+    animation-name: vt-out-right;
+  }
+  &::view-transition-new(root) {
+    animation-name: vt-in-left;
+  }
+}
+
+html:active-view-transition-type(across) {
+  &::view-transition-old(root) {
+    animation-name: vt-fade-out;
+  }
+  &::view-transition-new(root) {
+    animation-name: vt-rise-in;
+  }
+}
+
+/* Snapshots keep their aspect ratio, so a small card title grows into the page heading instead of stretching. */
+::view-transition-old(.vt-title),
+::view-transition-new(.vt-title) {
+  width: auto;
+  height: 100%;
+  object-fit: none;
+  object-position: left top;
+}
+
+::view-transition-old(.vt-hero),
+::view-transition-new(.vt-hero) {
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes vt-out-left {
+  to {
+    opacity: 0;
+    translate: -2rem 0;
+  }
+}
+@keyframes vt-in-right {
+  from {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+}
+@keyframes vt-out-right {
+  to {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+}
+@keyframes vt-in-left {
+  from {
+    opacity: 0;
+    translate: -2rem 0;
+  }
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-rise-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

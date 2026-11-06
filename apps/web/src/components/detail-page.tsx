@@ -8,11 +8,13 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Badge } from '@/components/ui/badge'
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
+import type { sharedElement } from '@/lib/view-transition'
 
 type DetailPageProps = {
   slot: 'blog-post' | 'project' | 'talk'
   back: { to: RouteTo; label: string }
   title: string
+  titleTransition?: ReturnType<typeof sharedElement>
   badge?: ReactNode
   byline?: ReactNode
   description?: string
@@ -27,6 +29,7 @@ export function DetailPage({
   slot,
   back,
   title,
+  titleTransition,
   badge,
   byline,
   description,
@@ -52,7 +55,10 @@ export function DetailPage({
       </ButtonLink>
       <header className="mt-8 flex flex-col gap-4">
         {badge && <div className="self-start">{badge}</div>}
-        <h1 className="text-3xl leading-tight tracking-tight text-balance sm:text-5xl">
+        <h1
+          {...titleTransition}
+          className="text-3xl leading-tight tracking-tight text-balance sm:text-5xl"
+        >
           {title}
         </h1>
         {description && (

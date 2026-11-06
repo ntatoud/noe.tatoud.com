@@ -11,6 +11,7 @@ import {
 } from '@/components/content-card'
 import { formatDate } from '@/lib/format'
 import { cn } from '@/lib/utils'
+import { sharedElement } from '@/lib/view-transition'
 
 type BlogCardProps = {
   post: BlogPost
@@ -39,6 +40,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
         >
           {post.hero ? (
             <img
+              {...(!external && sharedElement('hero', 'blog', post.slug))}
               src={post.hero}
               alt=""
               width={post.heroDimensions?.width}
@@ -73,6 +75,9 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       </div>
       <CardTitle
         external={external}
+        transition={
+          external ? undefined : sharedElement('title', 'blog', post.slug)
+        }
         className={cn(featured && 'text-2xl sm:text-3xl')}
       >
         {post.title}

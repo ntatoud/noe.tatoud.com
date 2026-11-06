@@ -5,6 +5,7 @@ import { MoreSection } from '@/components/more-section'
 import { SayHello } from '@/components/say-hello'
 import { BlogCard } from '@/features/blog/blog-card'
 import { formatDate } from '@/lib/format'
+import { sharedElement } from '@/lib/view-transition'
 
 import { eventPlace } from './event-place'
 import { TalkCard, TalkKindChip } from './talk-card'
@@ -23,6 +24,7 @@ export function TalkPage({ talk, moreTalks, relatedWriting }: TalkPageProps) {
       slot="talk"
       back={{ to: '/talks', label: 'Talks' }}
       title={talk.title}
+      titleTransition={sharedElement('title', 'talks', talk.slug)}
       badge={<TalkKindChip kind={talk.kind} />}
       description={talk.description}
       tags={talk.tags}
