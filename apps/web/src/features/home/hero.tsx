@@ -16,7 +16,7 @@ export function Hero() {
   return (
     <section className="relative isolate overflow-hidden" data-slot="home-hero">
       <span
-        className="hero-monogram pointer-events-none -z-10 hidden lg:block"
+        className="hero-monogram pointer-events-none -z-10 hidden md:block"
         aria-hidden
         data-slot="hero-monogram"
       >
