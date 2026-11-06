@@ -20,7 +20,7 @@ export const navItems: readonly NavItem[] = [
   { label: 'Now', href: '/now' },
 ] as const
 
-export const CONTACT_EMAIL = 'noe@bearstudio.fr'
+export const CONTACT_EMAIL = 'noe.tatoud@gmail.com'
 
 export function emailHref(subject?: string) {
   const query = subject ? `?subject=${encodeURIComponent(subject)}` : ''
