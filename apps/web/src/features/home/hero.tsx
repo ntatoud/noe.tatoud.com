@@ -1,9 +1,16 @@
+import { Link } from '@tanstack/react-router'
+
 import { ArrowRight02Icon, Mail01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import { emailHref } from '@/layout/site-config'
 import { SocialLinks } from '@/layout/social-links'
+
+const START_HERE = 'how-is-ai-changing-the-way-i-work-as-a-developer'
+
+const inlineLink =
+  'rounded-sm text-foreground underline decoration-primary/50 underline-offset-4 outline-none hover:decoration-primary focus-visible:ring-3 focus-visible:ring-ring'
 
 export function Hero() {
   return (
@@ -15,7 +22,7 @@ export function Hero() {
       >
         N
       </span>
-      <div className="mx-auto max-w-5xl px-4 pt-16 pb-16 sm:pt-24 sm:pb-24">
+      <div className="mx-auto max-w-5xl px-4 pt-16 pb-4 sm:pt-24 sm:pb-16">
         <div className="max-w-2xl">
           <h1
             className="text-5xl leading-none tracking-tight text-balance sm:text-7xl"
@@ -26,14 +33,26 @@ export function Hero() {
           </h1>
           <div className="mt-6 flex flex-col gap-4 text-lg text-pretty text-muted-foreground sm:text-xl">
             <p>
-              I'm a fullstack developer who cares about interfaces that feel
-              good to use, down to the last pixel.
+              I'm a fullstack developer who has always loved writing code. These
+              days agents write most of it, and that has not been an easy shift.
             </p>
             <p>
-              Here I write about what I learn along the way: tooling, AI in my
-              daily work, and the talks and workshops I give, from growing a
-              React component library to teaching kids to code with the{' '}
-              <span className="text-foreground">Fork it!</span> community.
+              <Link
+                to="/blog/$slug"
+                params={{ slug: START_HERE }}
+                className={inlineLink}
+              >
+                I wrote about that shift
+              </Link>
+              , a good place to start. I also give{' '}
+              <Link to="/talks" className={inlineLink}>
+                talks and workshops
+              </Link>
+              , from growing a React component library to teaching kids to code
+              with{' '}
+              <a href="https://www.forkit.community" className={inlineLink}>
+                Fork it!
+              </a>
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -59,7 +78,7 @@ export function Hero() {
               Say hello
             </ButtonAnchor>
           </div>
-          <SocialLinks className="mt-6 -ml-2" />
+          <SocialLinks className="mt-6 -ml-2" withEmail={false} />
         </div>
       </div>
     </section>

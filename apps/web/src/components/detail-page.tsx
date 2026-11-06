@@ -11,7 +11,7 @@ type DetailPageProps = {
   slot: 'blog-post' | 'project' | 'talk'
   back: { to: RouteTo; label: string }
   title: string
-  badge?: string
+  badge?: ReactNode
   byline?: ReactNode
   description?: string
   tags?: ReadonlyArray<string>
@@ -47,13 +47,7 @@ export function DetailPage({
         {back.label}
       </ButtonLink>
       <header className="mt-8 flex flex-col gap-4">
-        {badge && (
-          <span className="self-start">
-            <Badge variant="outline">
-              {badge.charAt(0).toUpperCase() + badge.slice(1)}
-            </Badge>
-          </span>
-        )}
+        {badge && <div className="self-start">{badge}</div>}
         <h1 className="text-4xl leading-tight tracking-tight text-balance sm:text-5xl">
           {title}
         </h1>

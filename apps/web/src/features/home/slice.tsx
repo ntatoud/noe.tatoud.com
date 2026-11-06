@@ -8,7 +8,7 @@ type SliceProps = {
   slot: string
   title: string
   description?: string
-  seeAllHref?: RouteTo
+  seeAll?: { href: RouteTo; label: string }
   children: React.ReactNode
 }
 
@@ -16,7 +16,7 @@ export function Slice({
   slot,
   title,
   description,
-  seeAllHref,
+  seeAll,
   children,
 }: SliceProps) {
   return (
@@ -30,15 +30,14 @@ export function Slice({
             </p>
           )}
         </div>
-        {seeAllHref && (
+        {seeAll && (
           <ButtonLink
-            to={seeAllHref}
-            aria-label={`See all ${title.toLowerCase()}`}
+            to={seeAll.href}
             variant="muted"
             size="sm"
             data-slot="slice-see-all"
           >
-            See all
+            {seeAll.label}
             <HugeiconsIcon
               icon={ArrowRight02Icon}
               size={16}

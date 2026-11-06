@@ -1,15 +1,19 @@
 import { Link } from '@tanstack/react-router'
 
+import { blogPosts } from 'virtual:content'
+
 import { formatMonthYear } from '@/lib/format'
 import { FEEDS } from '@/lib/site'
 
 import { CONTACT_EMAIL, emailHref, navItems } from './site-config'
 import { SocialLinks } from './social-links'
 
-const buildDate = import.meta.env.BUILD_DATE
+const buildYear = import.meta.env.BUILD_DATE.slice(0, 4)
+
+const latestPost = blogPosts[0]
 
 const footerLink =
-  'rounded-sm underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-3 focus-visible:ring-ring/50'
+  'rounded-sm underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-3 focus-visible:ring-ring'
 
 export function Footer() {
   return (
@@ -24,13 +28,13 @@ export function Footer() {
             Questions, ideas, or just want to chat about the web? Write to me at{' '}
             <a
               href={emailHref()}
-              className="rounded-sm text-primary underline decoration-primary/40 underline-offset-4 outline-none hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="rounded-sm text-primary underline decoration-primary/40 underline-offset-4 outline-none hover:decoration-current focus-visible:ring-3 focus-visible:ring-ring"
             >
               {CONTACT_EMAIL}
             </a>
             .
           </p>
-          <SocialLinks className="-ml-2" />
+          <SocialLinks className="-ml-2" withEmail={false} />
         </div>
         <nav
           aria-label="Footer"
@@ -69,8 +73,23 @@ export function Footer() {
           </ul>
         </nav>
         <p className="w-full text-xs text-muted-foreground">
-          © {buildDate.slice(0, 4)} Noé Tatoud · Last updated{' '}
-          <time dateTime={buildDate}>{formatMonthYear(buildDate)}</time>
+          © {buildYear} Noé Tatoud
+          {latestPost && (
+            <>
+              {' '}
+              · Latest post:{' '}
+              <a
+                href={latestPost.externalUrl ?? latestPost.url}
+                className={footerLink}
+              >
+                {latestPost.title}
+              </a>
+              ,{' '}
+              <time dateTime={latestPost.date}>
+                {formatMonthYear(latestPost.date)}
+              </time>
+            </>
+          )}
         </p>
       </div>
     </footer>

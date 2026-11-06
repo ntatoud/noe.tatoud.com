@@ -2,7 +2,7 @@ import type { BlogPost, BlogPostDetail } from '@ntatoud/content'
 
 import { DetailPage } from '@/components/detail-page'
 import { Monogram } from '@/components/monogram'
-import { SayHello } from '@/layout/say-hello'
+import { SayHello } from '@/components/say-hello'
 import { formatDate, readingMinutes } from '@/lib/format'
 
 import { BlogCard } from './blog-card'
@@ -25,14 +25,13 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
       footer={
         <>
           <SayHello
-            title="Thanks for reading!"
+            title="What did you think?"
             subject={`About "${post.title}"`}
             className="mt-16"
           >
             <p>
               If this post sparked a thought, a question or a disagreement, I'd
-              genuinely like to hear it. Replies to posts are my favourite
-              emails.
+              like to hear it.
             </p>
           </SayHello>
           {morePosts.length > 0 && (

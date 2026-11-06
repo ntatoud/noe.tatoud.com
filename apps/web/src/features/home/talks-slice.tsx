@@ -15,7 +15,7 @@ export function TalksSlice({ talks }: TalksSliceProps) {
     <Slice
       title="Talks"
       description="Talks and hands-on workshops I have given."
-      seeAllHref="/talks"
+      seeAll={{ href: '/talks', label: 'All talks' }}
       slot="talks-slice"
     >
       <ul

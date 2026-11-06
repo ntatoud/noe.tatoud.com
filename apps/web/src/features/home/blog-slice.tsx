@@ -15,7 +15,7 @@ export function BlogSlice({ posts }: BlogSliceProps) {
     <Slice
       title="Blog"
       description="Notes on what I build, what I learn, and how the way I work keeps changing."
-      seeAllHref="/blog"
+      seeAll={{ href: '/blog', label: 'All posts' }}
       slot="blog-slice"
     >
       <ul

@@ -1,7 +1,5 @@
 import type { BlogPost, Experience, Project, StageItem } from '@ntatoud/content'
 
-import { SayHello } from '@/layout/say-hello'
-
 import { BlogSlice } from './blog-slice'
 import { ExperiencesSlice } from './experiences-slice'
 import { Hero } from './hero'
@@ -28,15 +26,6 @@ export function HomePage({
       <ProjectsSlice projects={projects} />
       <TalksSlice talks={talks} />
       <ExperiencesSlice experiences={experiences} />
-      <section className="mx-auto max-w-5xl px-4 pt-4 pb-20">
-        <SayHello title="Let's talk">
-          <p>
-            Working on something similar, curious about a post, or looking for
-            someone to speak at your meetup? I'd love to hear from you, even if
-            it's just to say hi.
-          </p>
-        </SayHello>
-      </section>
     </main>
   )
 }

@@ -40,7 +40,7 @@ function Logo() {
     <Link
       to="/"
       aria-label="Noé Tatoud, home"
-      className="-ml-1 flex items-center gap-2.5 rounded-full py-1 pr-2 pl-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="-ml-1 flex items-center gap-2.5 rounded-full py-1 pr-2 pl-1 outline-none focus-visible:ring-3 focus-visible:ring-ring"
       data-slot="logo"
     >
       <Monogram className="size-8 text-base" />

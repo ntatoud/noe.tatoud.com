@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import './typeset.css';
 @import './highlight.css';
-@import '@fontsource/atkinson-hyperlegible-next/400.css';
 @import '@fontsource-variable/dm-sans';
 @import '@fontsource/young-serif';
 
@@ -9,10 +8,9 @@
   --typeset-font-body: var(--font-sans);
   --typeset-font-heading: var(--font-serif);
   --typeset-font-mono: var(--font-code);
-  --typeset-size: 1.125rem;
   --typeset-leading: 1.7;
 
-  /* The vendored typeset scales mobile text up by 1.125: 17px there, 18px from tablets up. */
+  /* Overrides the vendored typeset, which scales phone text up by 1.125. */
   font-size: 1.0625rem;
   @media (min-width: 48rem) {
     font-size: 1.125rem;
@@ -48,7 +46,7 @@
   --card-foreground: oklch(0.25 0.02 45);
   --popover: oklch(0.985 0.01 75);
   --popover-foreground: oklch(0.25 0.02 45);
-  --primary: oklch(0.58 0.14 38);
+  --primary: oklch(0.54 0.14 38);
   --primary-foreground: oklch(0.98 0.01 75);
   --secondary: oklch(0.55 0.08 125);
   --secondary-foreground: oklch(0.98 0.01 75);
@@ -59,12 +57,12 @@
   --destructive: oklch(0.55 0.2 25);
   --border: oklch(0.87 0.02 65);
   --input: oklch(0.87 0.02 65);
-  --ring: oklch(0.58 0.14 38);
+  --ring: oklch(0.54 0.14 38);
 
   --font-sans: 'DM Sans Variable', sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-serif: 'Young Serif', serif;
-  --font-code: 'Atkinson Hyperlegible Next', ui-monospace, monospace;
+  --font-code: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --radius: 1rem;
 }
 
@@ -125,7 +123,7 @@
   --color-clay-200: oklch(0.87 0.065 45);
   --color-clay-300: oklch(0.79 0.1 43);
   --color-clay-400: oklch(0.7 0.13 42);
-  --color-clay-500: oklch(0.58 0.14 38);
+  --color-clay-500: oklch(0.54 0.14 38);
   --color-clay-600: oklch(0.5 0.13 36);
   --color-clay-700: oklch(0.43 0.11 35);
   --color-clay-800: oklch(0.35 0.08 35);

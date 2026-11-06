@@ -7,17 +7,20 @@ import { socialLinks, type SocialLink } from './site-config'
 
 type SocialLinksProps = {
   className?: string
+  withEmail?: boolean
 }
 
-export function SocialLinks({ className }: SocialLinksProps) {
+export function SocialLinks({ className, withEmail = true }: SocialLinksProps) {
   return (
     <div
       className={cn('flex items-center gap-1', className)}
       data-slot="social-links"
     >
-      {socialLinks.map((link) => (
-        <SocialLinkButton key={link.id} link={link} />
-      ))}
+      {socialLinks
+        .filter((link) => withEmail || link.id !== 'email')
+        .map((link) => (
+          <SocialLinkButton key={link.id} link={link} />
+        ))}
     </div>
   )
 }
