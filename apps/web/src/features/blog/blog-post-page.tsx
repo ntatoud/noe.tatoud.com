@@ -28,7 +28,7 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
       slot="blog-post"
       back={{ to: '/blog', label: 'All posts' }}
       title={post.title}
-      titleTransition={sharedElement('title', 'blog', post.slug)}
+      titleTransition={sharedElement('title', 'blog', post.slug, 'page')}
       byline={<Byline post={post} />}
       description={post.description}
       tags={post.tags}
@@ -59,7 +59,7 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
     >
       {post.hero && (
         <img
-          {...sharedElement('hero', 'blog', post.slug)}
+          {...sharedElement('hero', 'blog', post.slug, 'page')}
           src={post.hero}
           alt=""
           width={post.heroDimensions?.width}

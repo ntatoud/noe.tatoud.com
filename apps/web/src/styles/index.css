@@ -226,12 +226,17 @@
   }
 }
 
-/* View transitions: header and footer stay put, the page glides by depth, cards morph into their page. */
+/* View transitions: header and footer stay put, pages cross-fade, and a clicked card grows into its page. */
 [data-slot='header'] {
   view-transition-name: site-header;
 }
 [data-slot='footer'] {
   view-transition-name: site-footer;
+}
+
+:active-view-transition-type(forward, across)
+  :is([data-vt-active] [data-vt], [data-vt-page]) {
+  view-transition-name: var(--vt-name);
 }
 [data-vt='title'] {
   view-transition-class: vt-title;
@@ -246,41 +251,15 @@
 }
 
 ::view-transition-group(*) {
-  animation-duration: 450ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-::view-transition-old(root),
+::view-transition-old(root) {
+  animation: 160ms ease-out both vt-fade-out;
+}
 ::view-transition-new(root) {
-  animation-duration: 320ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html:active-view-transition-type(forward) {
-  &::view-transition-old(root) {
-    animation-name: vt-out-left;
-  }
-  &::view-transition-new(root) {
-    animation-name: vt-in-right;
-  }
-}
-
-html:active-view-transition-type(back) {
-  &::view-transition-old(root) {
-    animation-name: vt-out-right;
-  }
-  &::view-transition-new(root) {
-    animation-name: vt-in-left;
-  }
-}
-
-html:active-view-transition-type(across) {
-  &::view-transition-old(root) {
-    animation-name: vt-fade-out;
-  }
-  &::view-transition-new(root) {
-    animation-name: vt-rise-in;
-  }
+  animation: 260ms cubic-bezier(0.25, 1, 0.5, 1) 60ms both vt-fade-in;
 }
 
 /* Snapshots keep their aspect ratio, so a small card title grows into the page heading instead of stretching. */
@@ -291,46 +270,31 @@ html:active-view-transition-type(across) {
   object-fit: none;
   object-position: left top;
 }
+::view-transition-old(.vt-title) {
+  animation: 120ms ease-out both vt-fade-out;
+}
+::view-transition-new(.vt-title) {
+  animation: 240ms ease-out 80ms both vt-fade-in;
+}
 
 ::view-transition-old(.vt-hero),
 ::view-transition-new(.vt-hero) {
   height: 100%;
   object-fit: cover;
+  animation: none;
+}
+::view-transition-old(.vt-hero) {
+  display: none;
 }
 
-@keyframes vt-out-left {
-  to {
-    opacity: 0;
-    translate: -2rem 0;
-  }
-}
-@keyframes vt-in-right {
-  from {
-    opacity: 0;
-    translate: 2rem 0;
-  }
-}
-@keyframes vt-out-right {
-  to {
-    opacity: 0;
-    translate: 2rem 0;
-  }
-}
-@keyframes vt-in-left {
-  from {
-    opacity: 0;
-    translate: -2rem 0;
-  }
-}
 @keyframes vt-fade-out {
   to {
     opacity: 0;
   }
 }
-@keyframes vt-rise-in {
+@keyframes vt-fade-in {
   from {
     opacity: 0;
-    translate: 0 0.75rem;
   }
 }
 

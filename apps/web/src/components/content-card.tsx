@@ -75,6 +75,9 @@ export function ContentCard({
           to={link.to}
           params={{ slug: link.slug }}
           preload="intent"
+          onClick={(event) => {
+            event.currentTarget.dataset.vtActive = ''
+          }}
           className={className}
         >
           {body}

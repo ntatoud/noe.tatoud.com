@@ -37,7 +37,9 @@ export function TalkCard({ talk }: TalkCardProps) {
           </time>
         )}
       </div>
-      <CardTitle transition={sharedElement('title', 'talks', talk.slug)}>
+      <CardTitle
+        transition={sharedElement('title', 'talks', talk.slug, 'card')}
+      >
         {talk.title}
       </CardTitle>
       <CardDescription>{talk.description}</CardDescription>
