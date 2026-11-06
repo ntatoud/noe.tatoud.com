@@ -2,22 +2,15 @@ import type { CSSProperties } from 'react'
 
 type Shared = 'title' | 'hero'
 type Collection = 'blog' | 'projects' | 'talks'
-type Side = 'card' | 'page'
 
-// A card and its page share a name; index.css applies it only to the clicked card and the page, so nothing else gets its own layer.
+// A card and its detail page share these names, so the browser morphs one into the other on navigation.
 export function sharedElement(
   shared: Shared,
   collection: Collection,
   slug: string,
-  side: Side,
-): {
-  style: CSSProperties
-  'data-vt': Shared
-  'data-vt-page'?: ''
-} {
+): { style: CSSProperties; 'data-vt': Shared } {
   return {
-    style: { '--vt-name': `${shared}-${collection}-${slug}` } as CSSProperties,
+    style: { viewTransitionName: `${shared}-${collection}-${slug}` },
     'data-vt': shared,
-    ...(side === 'page' ? { 'data-vt-page': '' as const } : {}),
   }
 }

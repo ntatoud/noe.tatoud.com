@@ -18,7 +18,7 @@ export function ProjectPage({ project, moreProjects }: ProjectPageProps) {
       slot="project"
       back={{ to: '/projects', label: 'Projects' }}
       title={project.title}
-      titleTransition={sharedElement('title', 'projects', project.slug, 'page')}
+      titleTransition={sharedElement('title', 'projects', project.slug)}
       badge={<ProjectKindChip kind={project.kind} />}
       description={project.description}
       tags={project.tags}

@@ -24,7 +24,7 @@ export function TalkPage({ talk, moreTalks, relatedWriting }: TalkPageProps) {
       slot="talk"
       back={{ to: '/talks', label: 'Talks' }}
       title={talk.title}
-      titleTransition={sharedElement('title', 'talks', talk.slug, 'page')}
+      titleTransition={sharedElement('title', 'talks', talk.slug)}
       badge={<TalkKindChip kind={talk.kind} />}
       description={talk.description}
       tags={talk.tags}

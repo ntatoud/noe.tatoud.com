@@ -40,8 +40,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
         >
           {post.hero ? (
             <img
-              {...(!external &&
-                sharedElement('hero', 'blog', post.slug, 'card'))}
+              {...(!external && sharedElement('hero', 'blog', post.slug))}
               src={post.hero}
               alt=""
               width={post.heroDimensions?.width}
@@ -77,9 +76,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       <CardTitle
         external={external}
         transition={
-          external
-            ? undefined
-            : sharedElement('title', 'blog', post.slug, 'card')
+          external ? undefined : sharedElement('title', 'blog', post.slug)
         }
         className={cn(featured && 'text-2xl sm:text-3xl')}
       >

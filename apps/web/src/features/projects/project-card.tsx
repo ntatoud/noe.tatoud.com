@@ -31,9 +31,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {formatMonthYear(project.date)}
         </time>
       </div>
-      <CardTitle
-        transition={sharedElement('title', 'projects', project.slug, 'card')}
-      >
+      <CardTitle transition={sharedElement('title', 'projects', project.slug)}>
         {project.title}
       </CardTitle>
       {project.description && (
