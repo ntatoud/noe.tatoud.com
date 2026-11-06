@@ -10,7 +10,6 @@ import {
 } from '@/components/content-card'
 import { KindChip } from '@/components/kind-chip'
 import { formatMonthYear, initials } from '@/lib/format'
-import { sharedElement } from '@/lib/view-transition'
 
 import { eventPlace } from './event-place'
 
@@ -37,9 +36,7 @@ export function TalkCard({ talk }: TalkCardProps) {
           </time>
         )}
       </div>
-      <CardTitle transition={sharedElement('title', 'talks', talk.slug)}>
-        {talk.title}
-      </CardTitle>
+      <CardTitle>{talk.title}</CardTitle>
       <CardDescription>{talk.description}</CardDescription>
       <CardTags tags={talk.tags} pinToBottom={false} />
       {event && (

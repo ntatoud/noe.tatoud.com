@@ -5,7 +5,6 @@ import { MoreSection } from '@/components/more-section'
 import { SayHello } from '@/components/say-hello'
 import { ProjectCard, ProjectKindChip } from '@/features/projects/project-card'
 import { ProjectCta } from '@/features/projects/project-cta'
-import { sharedElement } from '@/lib/view-transition'
 
 type ProjectPageProps = {
   project: ProjectDetail
@@ -18,7 +17,6 @@ export function ProjectPage({ project, moreProjects }: ProjectPageProps) {
       slot="project"
       back={{ to: '/projects', label: 'Projects' }}
       title={project.title}
-      titleTransition={sharedElement('title', 'projects', project.slug)}
       badge={<ProjectKindChip kind={project.kind} />}
       description={project.description}
       tags={project.tags}

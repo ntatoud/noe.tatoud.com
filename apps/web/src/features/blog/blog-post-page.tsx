@@ -10,7 +10,6 @@ import { SayHello } from '@/components/say-hello'
 import { ButtonAnchor } from '@/components/ui/button-link'
 import { formatDate, readingMinutes } from '@/lib/format'
 import { inlineLink } from '@/lib/link-styles'
-import { sharedElement } from '@/lib/view-transition'
 
 import { BlogCard } from './blog-card'
 import { DEFAULT_POST_PROMPT, POST_PROMPTS } from './post-prompts'
@@ -28,7 +27,6 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
       slot="blog-post"
       back={{ to: '/blog', label: 'All posts' }}
       title={post.title}
-      titleTransition={sharedElement('title', 'blog', post.slug)}
       byline={<Byline post={post} />}
       description={post.description}
       tags={post.tags}
@@ -59,7 +57,6 @@ export function BlogPostPage({ post, morePosts }: BlogPostPageProps) {
     >
       {post.hero && (
         <img
-          {...sharedElement('hero', 'blog', post.slug)}
           src={post.hero}
           alt=""
           width={post.heroDimensions?.width}
