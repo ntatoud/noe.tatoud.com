@@ -1,14 +1,8 @@
-import { Link } from '@tanstack/react-router'
-
 import { ArrowRight02Icon, Mail01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
-import { startHerePost } from '@/features/blog/start-here'
-import { NOW_UPDATED } from '@/features/now/now'
 import { emailHref } from '@/layout/site-config'
-import { formatMonthYear } from '@/lib/format'
-import { inlineLink } from '@/lib/link-styles'
 
 export function Hero() {
   return (
@@ -34,28 +28,6 @@ export function Hero() {
               I'm a developer who loves the satisfaction of solving a tricky
               problem myself. These days agents write most of my code, so I am
               learning to put that care into the thinking behind it instead.
-            </p>
-            <p>
-              <Link
-                to="/blog/$slug"
-                params={{ slug: startHerePost.slug }}
-                className={inlineLink}
-              >
-                I wrote about that shift
-              </Link>
-              , a good place to start. I also give talks, and with Fork it! I
-              teach kids to build their first browser game. Here is{' '}
-              <Link to="/now" className={inlineLink}>
-                what I am up to now
-              </Link>{' '}
-              <span className="text-sm whitespace-nowrap">
-                (updated{' '}
-                <time dateTime={NOW_UPDATED}>
-                  {formatMonthYear(NOW_UPDATED)}
-                </time>
-                )
-              </span>
-              .
             </p>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-3">
