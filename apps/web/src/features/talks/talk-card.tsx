@@ -11,13 +11,14 @@ import {
 import { KindChip } from '@/components/kind-chip'
 import { formatMonthYear, initials } from '@/lib/format'
 
+import { eventPlace } from './event-place'
+
 type TalkCardProps = {
   talk: StageItem
 }
 
 export function TalkCard({ talk }: TalkCardProps) {
   const event = talk.events[0]
-  const isWorkshop = talk.kind === 'workshop'
 
   return (
     <ContentCard
@@ -25,11 +26,7 @@ export function TalkCard({ talk }: TalkCardProps) {
       link={{ to: '/talks/$slug', slug: talk.slug }}
     >
       <div className="flex items-center justify-between gap-2">
-        <KindChip
-          icon={isWorkshop ? Wrench01Icon : Mic01Icon}
-          label={isWorkshop ? 'Workshop' : 'Talk'}
-          tone={isWorkshop ? 'clay' : 'olive'}
-        />
+        <TalkKindChip kind={talk.kind} />
         {event && (
           <time
             dateTime={event.date}
@@ -44,7 +41,7 @@ export function TalkCard({ talk }: TalkCardProps) {
       <CardTags tags={talk.tags} pinToBottom={false} />
       {event && (
         <div className="mt-auto flex items-center gap-2 border-t border-border/50 pt-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-gradient-to-br from-clay-500 to-olive-500 text-2xs font-bold text-white transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border/50 bg-muted text-2xs text-muted-foreground transition-transform duration-200 ease-out motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3">
             {event.logo ? (
               <img
                 src={event.logo}
@@ -58,10 +55,26 @@ export function TalkCard({ talk }: TalkCardProps) {
             )}
           </span>
           <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
-            {event.event} · {event.city}
+            {eventPlace(event)}
           </span>
         </div>
       )}
     </ContentCard>
+  )
+}
+
+export const TALK_KIND_LABEL: Record<StageItem['kind'], string> = {
+  talk: 'Talk',
+  workshop: 'Workshop',
+}
+
+export function TalkKindChip({ kind }: { kind: StageItem['kind'] }) {
+  const isWorkshop = kind === 'workshop'
+  return (
+    <KindChip
+      icon={isWorkshop ? Wrench01Icon : Mic01Icon}
+      label={TALK_KIND_LABEL[kind]}
+      tone={isWorkshop ? 'clay' : 'olive'}
+    />
   )
 }

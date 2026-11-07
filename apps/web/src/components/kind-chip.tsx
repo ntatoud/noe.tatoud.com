@@ -21,7 +21,7 @@ export function KindChip({ icon, label, tone }: KindChipProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-transform duration-200 ease-out group-hover:scale-105',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-transform duration-200 ease-out motion-safe:group-hover:scale-105',
         toneClasses[tone],
       )}
       data-slot="kind-chip"

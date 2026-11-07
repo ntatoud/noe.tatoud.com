@@ -6,6 +6,8 @@ type ListingPageProps = {
   slot: string
   title: string
   subtitle: string
+  listTitle: string
+  intro?: ReactNode
   columns: 2 | 3
   children: ReactNode
 }
@@ -14,16 +16,26 @@ export function ListingPage({
   slot,
   title,
   subtitle,
+  listTitle,
+  intro,
   columns,
   children,
 }: ListingPageProps) {
   return (
-    <main id="main" className="mx-auto max-w-5xl px-4 py-12" data-slot={slot}>
-      <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-      <p className="mt-2 text-muted-foreground">{subtitle}</p>
+    <main
+      id="main"
+      className="mx-auto max-w-5xl px-4 pt-12 pb-20 sm:pt-16"
+      data-slot={slot}
+    >
+      <h1 className="text-4xl tracking-tight sm:text-5xl">{title}</h1>
+      <p className="mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
+        {subtitle}
+      </p>
+      {intro}
+      <h2 className="sr-only">{listTitle}</h2>
       <ul
         className={cn(
-          'mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2',
+          'mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2',
           columns === 3 && 'lg:grid-cols-3',
         )}
         data-slot={`${slot}-list`}

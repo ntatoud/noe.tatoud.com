@@ -4,18 +4,33 @@ import { Moon02Icon, Sun01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
 import { Button } from '@/components/ui/button'
+import { THEME_STORAGE_KEY } from '@/lib/head-script'
 
 type Theme = 'light' | 'dark'
 
-const STORAGE_KEY = 'theme'
-
-// The `dark` class on <html> is the source of truth (set before hydration by __root.tsx).
+// The `dark` class on <html> is the source of truth (set before hydration by HEAD_SCRIPT).
 const listeners = new Set<() => void>()
+
+function storedTheme(): string | null {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
 
 function subscribe(onStoreChange: () => void) {
   listeners.add(onStoreChange)
+  const prefersLight = matchMedia('(prefers-color-scheme: light)')
+  const followSystem = () => {
+    if (storedTheme()) return
+    document.documentElement.classList.toggle('dark', !prefersLight.matches)
+    onStoreChange()
+  }
+  prefersLight.addEventListener('change', followSystem)
   return () => {
     listeners.delete(onStoreChange)
+    prefersLight.removeEventListener('change', followSystem)
   }
 }
 
@@ -30,7 +45,11 @@ function getServerSnapshot(): Theme {
 function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle('dark', theme === 'dark')
   try {
-    localStorage.setItem(STORAGE_KEY, theme)
+    const systemTheme = matchMedia('(prefers-color-scheme: light)').matches
+      ? 'light'
+      : 'dark'
+    if (theme === systemTheme) localStorage.removeItem(THEME_STORAGE_KEY)
+    else localStorage.setItem(THEME_STORAGE_KEY, theme)
   } catch {
     // localStorage unavailable (private mode, disabled storage): the theme just won't persist.
   }
@@ -45,7 +64,9 @@ export function ThemeToggle({ className }: { className?: string }) {
       variant="ghost"
       size="icon"
       className={className}
-      aria-label="Toggle theme"
+      aria-label={
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+      }
       data-slot="theme-toggle"
       onClick={() => {
         applyTheme(theme === 'dark' ? 'light' : 'dark')

@@ -63,7 +63,7 @@ describe('virtual:content', () => {
       expect(exports[name], `missing export: ${name}`).toBeInstanceOf(Array)
       expect(
         exports[name].length,
-        `${name} is empty — the collection did not read`,
+        `${name} is empty: the collection did not read`,
       ).toBeGreaterThan(0)
     }
   })

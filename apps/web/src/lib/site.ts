@@ -34,7 +34,7 @@ export const STATIC_PAGES = {
   },
 } as const satisfies StaticPages
 
-export const FEED_TITLE = 'Noé Tatoud — Blog'
+export const FEED_TITLE = 'Noé Tatoud | Blog'
 
 export const FEEDS = {
   rss: { path: '/rss.xml', type: 'application/rss+xml', label: 'RSS' },

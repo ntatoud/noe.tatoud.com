@@ -9,7 +9,6 @@ catalog:
   '@effect/platform-node': 4.0.6
   '@effect/vitest': 4.0.6
   '@fontsource-variable/dm-sans': 5.3.0
-  '@fontsource/atkinson-hyperlegible-next': 5.3.0
   '@fontsource/young-serif': 5.3.0
   '@hugeicons/core-free-icons': 4.3.5
   '@hugeicons/react': 1.1.10

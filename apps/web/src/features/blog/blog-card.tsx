@@ -44,7 +44,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
               width={post.heroDimensions?.width}
               height={post.heroDimensions?.height}
               loading="lazy"
-              className="size-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+              className="size-full object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-105 dark:brightness-90"
             />
           ) : (
             <div
@@ -73,7 +73,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
       </div>
       <CardTitle
         external={external}
-        className={cn(featured && 'text-2xl sm:text-3xl md:line-clamp-3')}
+        className={cn(featured && 'text-2xl sm:text-3xl')}
       >
         {post.title}
       </CardTitle>

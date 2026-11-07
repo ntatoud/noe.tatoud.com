@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 
-import { Menu01Icon } from '@hugeicons/core-free-icons'
+import { Mail01Icon, Menu01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { Monogram } from '@/components/monogram'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
-import { ButtonLink } from '@/components/ui/button-link'
+import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import {
   Sheet,
   SheetContent,
@@ -16,17 +17,20 @@ import {
 } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
-import { navItems } from './site-config'
-
-const logoLabel = 'noe.tatoud.com — home'
+import { emailHref, navItems } from './site-config'
 
 export function Header() {
+  // The home hero already offers "Say hello" on the same screen.
+  const onHome = useRouterState({
+    select: (state) => state.location.pathname === '/',
+  })
   return (
     <header className="w-full" data-slot="header">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
+      <div className="mx-auto flex h-16 max-w-5xl items-center gap-6 px-4">
         <Logo />
         <PrimaryNav className="hidden md:flex" />
-        <div className="ml-auto hidden items-center gap-1 md:flex">
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          {!onHome && <SayHelloButton />}
           <ThemeToggle />
         </div>
         <MobileMenu className="md:hidden" />
@@ -39,12 +43,28 @@ function Logo() {
   return (
     <Link
       to="/"
-      aria-label={logoLabel}
-      className="font-mono text-sm font-bold tracking-tight"
+      aria-label="Noé Tatoud, home"
+      className="-ml-1 flex items-center gap-2.5 rounded-full py-1 pr-2 pl-1 outline-none focus-visible:ring-3 focus-visible:ring-ring"
       data-slot="logo"
     >
-      noe.tatoud.com
+      <Monogram className="size-8 text-base" />
+      <span className="font-serif text-lg leading-none">Noé Tatoud</span>
     </Link>
+  )
+}
+
+function SayHelloButton({ className }: { className?: string }) {
+  return (
+    <ButtonAnchor
+      href={emailHref()}
+      variant="outline"
+      size="sm"
+      className={className}
+      data-slot="header-say-hello"
+    >
+      <HugeiconsIcon icon={Mail01Icon} size={16} data-icon="inline-start" />
+      Say hello
+    </ButtonAnchor>
   )
 }
 
@@ -56,7 +76,6 @@ function PrimaryNav({ className }: { className?: string }) {
           key={item.href}
           to={item.href}
           variant="nav"
-          size="sm"
           data-nav={item.label.toLowerCase()}
         >
           {item.label}
@@ -97,7 +116,7 @@ function MobileMenu({ className }: { className?: string }) {
                   key={item.href}
                   to={item.href}
                   variant="nav"
-                  size="sm"
+                  size="lg"
                   className="w-full justify-start"
                   onClick={() => setOpen(false)}
                   data-nav={item.label.toLowerCase()}
@@ -107,7 +126,8 @@ function MobileMenu({ className }: { className?: string }) {
               ))}
             </nav>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-between gap-2 border-t border-border pt-4">
+              <SayHelloButton />
               <ThemeToggle />
             </div>
           </div>

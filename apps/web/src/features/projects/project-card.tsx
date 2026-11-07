@@ -16,24 +16,13 @@ type ProjectCardProps = {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const isContribution = project.kind === 'contribution'
-  const externalUrl = isContribution ? project.url : undefined
-
   return (
     <ContentCard
       slot="project-card"
-      link={
-        externalUrl
-          ? { external: true, href: externalUrl }
-          : { to: '/projects/$slug', slug: project.slug }
-      }
+      link={{ to: '/projects/$slug', slug: project.slug }}
     >
       <div className="flex items-center justify-between gap-2">
-        <KindChip
-          icon={isContribution ? HandshakeIcon : Rocket01Icon}
-          label={isContribution ? 'Contribution' : 'Personal'}
-          tone={isContribution ? 'olive' : 'clay'}
-        />
+        <ProjectKindChip kind={project.kind} />
         <time
           dateTime={project.date}
           className="text-xs text-muted-foreground tabular-nums"
@@ -41,11 +30,22 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {formatMonthYear(project.date)}
         </time>
       </div>
-      <CardTitle external={!!externalUrl}>{project.title}</CardTitle>
+      <CardTitle>{project.title}</CardTitle>
       {project.description && (
         <CardDescription>{project.description}</CardDescription>
       )}
       <CardTags tags={project.tags} />
     </ContentCard>
+  )
+}
+
+export function ProjectKindChip({ kind }: { kind: Project['kind'] }) {
+  const isContribution = kind === 'contribution'
+  return (
+    <KindChip
+      icon={isContribution ? HandshakeIcon : Rocket01Icon}
+      label={isContribution ? 'Contribution' : 'Personal'}
+      tone={isContribution ? 'olive' : 'clay'}
+    />
   )
 }

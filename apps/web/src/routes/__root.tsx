@@ -10,6 +10,7 @@ import { NotFound } from '@/components/error/not-found'
 import { BASE_META_TAGS } from '@/features/og/metadata'
 import { Footer } from '@/layout/footer'
 import { Header } from '@/layout/header'
+import { HEAD_SCRIPT } from '@/lib/head-script'
 import { FEEDS, FEED_TITLE } from '@/lib/site'
 
 import appCss from '@/styles/index.css?url'
@@ -56,8 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              "try{document.documentElement.classList.toggle('dark',localStorage.getItem('theme')!=='light')}catch(e){}",
+            __html: HEAD_SCRIPT,
           }}
         />
         <HeadContent />
@@ -65,7 +65,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="flex min-h-full flex-col">
         <a
           href="#main"
-          className="sr-only rounded-lg border border-ring bg-background px-4 py-2 text-foreground outline-none ring-ring/50 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:ring-3"
+          className="sr-only rounded-lg border border-ring bg-background px-4 py-2 text-foreground outline-none ring-ring focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:ring-3"
         >
           Skip to content
         </a>

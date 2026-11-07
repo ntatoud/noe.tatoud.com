@@ -13,15 +13,17 @@ export function ProjectCta({
 }: ProjectCtaFrontmatter) {
   return (
     <aside
-      className="mt-10 rounded-lg border border-border bg-card p-6"
+      className="mt-16 flex flex-col gap-3 rounded-3xl border border-clay-200/70 bg-clay-50 p-6 sm:p-8 dark:border-clay-900 dark:bg-clay-950/60"
       data-slot="project-cta"
     >
-      <p className="text-lg font-semibold tracking-tight">{title}</p>
+      <h2 className="text-2xl sm:text-3xl">{title}</h2>
       {description && (
-        <div className="mt-2 text-sm text-muted-foreground">{description}</div>
+        <div className="max-w-prose text-base text-pretty text-muted-foreground sm:text-lg">
+          {description}
+        </div>
       )}
-      <div className="mt-4">
-        <ButtonAnchor href={href} variant="default" size="sm">
+      <div className="mt-2">
+        <ButtonAnchor href={href} size="lg">
           {buttonLabel}
           <HugeiconsIcon
             icon={ArrowRight02Icon}

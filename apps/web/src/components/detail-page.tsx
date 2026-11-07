@@ -3,6 +3,7 @@ import type { ComponentProps, ReactNode } from 'react'
 import { ArrowLeft02Icon, ArrowRight02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { TagLink } from '@/components/tag-link'
 import { Badge } from '@/components/ui/badge'
 import { ButtonAnchor, ButtonLink } from '@/components/ui/button-link'
 import type { RouteTo } from '@/lib/routes'
@@ -11,10 +12,11 @@ type DetailPageProps = {
   slot: 'blog-post' | 'project' | 'talk'
   back: { to: RouteTo; label: string }
   title: string
-  badge?: string
+  badge?: ReactNode
   byline?: ReactNode
   description?: string
   tags?: ReadonlyArray<string>
+  linkTags?: boolean
   html: string
   children?: ReactNode
   footer?: ReactNode
@@ -28,6 +30,7 @@ export function DetailPage({
   byline,
   description,
   tags,
+  linkTags = false,
   html,
   children,
   footer,
@@ -35,10 +38,10 @@ export function DetailPage({
   return (
     <main
       id="main"
-      className="mx-auto w-full min-w-0 max-w-3xl px-4 py-12"
+      className="mx-auto w-full max-w-2xl min-w-0 px-4 pt-8 pb-20 sm:pt-12"
       data-slot={`${slot}-page`}
     >
-      <ButtonLink to={back.to} variant="ghost" size="sm">
+      <ButtonLink to={back.to} variant="muted" size="sm" className="-ml-3">
         <HugeiconsIcon
           icon={ArrowLeft02Icon}
           size={16}
@@ -46,29 +49,36 @@ export function DetailPage({
         />
         {back.label}
       </ButtonLink>
-      <div className="mt-6 flex items-center gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        {badge && <Badge>{badge}</Badge>}
-      </div>
-      {byline && <p className="mt-2 text-sm text-muted-foreground">{byline}</p>}
-      {description && (
-        <p className="mt-2 text-muted-foreground">{description}</p>
-      )}
-
-      {tags && tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="outline">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
+      <header className="mt-8 flex flex-col gap-4">
+        {badge && <div className="self-start">{badge}</div>}
+        <h1 className="text-3xl leading-tight tracking-tight text-balance sm:text-5xl">
+          {title}
+        </h1>
+        {description && (
+          <p className="text-lg text-pretty text-muted-foreground sm:text-xl">
+            {description}
+          </p>
+        )}
+        {byline}
+        {tags && tags.length > 0 && (
+          <ul className="flex flex-wrap gap-1.5" aria-label="Tags">
+            {tags.map((tag) => (
+              <li key={tag}>
+                {linkTags ? (
+                  <TagLink tag={tag} />
+                ) : (
+                  <Badge variant="outline">{tag}</Badge>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
 
       {children}
 
       <div
-        className="typeset typeset-docs mt-8"
+        className="typeset typeset-docs mt-10"
         data-slot={`${slot}-content`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
@@ -86,7 +96,7 @@ export function ExternalLinkButton({
     <ButtonAnchor
       target="_blank"
       rel="noopener noreferrer"
-      variant="ghost"
+      variant="outline"
       size="sm"
       {...props}
     >

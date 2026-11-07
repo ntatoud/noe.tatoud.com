@@ -95,7 +95,7 @@ function ExperienceDateRange({ experience }: { experience: Experience }) {
 function ExperienceLogo({ experience }: { experience: Experience }) {
   return (
     <span
-      className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background text-2xs text-muted-foreground transition-transform duration-200 ease-out group-hover:scale-110 group-hover:rotate-3"
+      className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background text-2xs text-muted-foreground transition-transform duration-200 ease-out motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3"
       aria-hidden
     >
       {experience.logo ? (
@@ -415,7 +415,11 @@ export function ExperiencesSlice({ experiences }: ExperiencesSliceProps) {
   const { origin, lanes, milestones, ticks, position } = timeScale(experiences)
 
   return (
-    <Slice title="Experiences" slot="experiences-slice">
+    <Slice
+      title="Where I have been"
+      description="Where I have worked, studied and volunteered so far."
+      slot="experiences-slice"
+    >
       <div className="-mx-4 overflow-x-auto px-4 pb-2">
         <div
           className={cn(

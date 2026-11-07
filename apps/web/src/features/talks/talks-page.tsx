@@ -12,7 +12,8 @@ export function TalksPage({ talks }: TalksPageProps) {
     <ListingPage
       slot="talks-page"
       title="Talks"
-      subtitle="Conference talks and stage sessions."
+      subtitle="Talks and hands-on workshops I have given."
+      listTitle="All talks"
       columns={3}
     >
       {talks.map((talk) => (

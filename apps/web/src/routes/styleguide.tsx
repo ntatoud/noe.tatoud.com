@@ -31,7 +31,7 @@ function StyleguidePage() {
 
         <div className="mb-12">
           <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-            Clay Tones — Primary
+            Clay Tones: Primary
           </h3>
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-11">
             <ColorSwatch name="50" className="bg-clay-50" />
@@ -50,7 +50,7 @@ function StyleguidePage() {
 
         <div className="mb-12">
           <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-            Olive Tones — Secondary
+            Olive Tones: Secondary
           </h3>
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-11">
             <ColorSwatch name="50" className="bg-olive-50" />
@@ -97,7 +97,7 @@ function StyleguidePage() {
               <p>
                 <strong className="text-foreground">Olive (secondary)</strong>{' '}
                 is the warm counterpoint. Use for secondary actions, badges, and
-                highlights — like olive leaves against terracotta.
+                highlights, like olive leaves against terracotta.
               </p>
               <p>
                 <strong className="text-foreground">
@@ -111,7 +111,7 @@ function StyleguidePage() {
               </p>
               <p>
                 <strong className="text-foreground">Never</strong> use pure
-                black or white — always tint toward sand.
+                black or white: always tint toward sand.
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@ function StyleguidePage() {
         <div className="space-y-12">
           <div>
             <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-              Display — Young Serif
+              Display: Young Serif
             </h3>
             <div className="space-y-4">
               <TypeSpecimen label="Heading 1" className="font-serif text-5xl">
@@ -144,7 +144,7 @@ function StyleguidePage() {
 
           <div>
             <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-              Body — DM Sans
+              Body: DM Sans
             </h3>
             <div className="space-y-4">
               <TypeSpecimen label="Body Large" className="text-lg">
@@ -283,7 +283,7 @@ function StyleguidePage() {
 
       <section className="border-t pt-8">
         <p className="text-sm text-muted-foreground">
-          Clay Design System v1.0 — Built with soft warmth.
+          Clay Design System v1.0. Built with soft warmth.
         </p>
       </section>
     </main>

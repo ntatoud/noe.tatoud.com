@@ -66,7 +66,7 @@ The design philosophy behind Clay. Earthy, sunlit tones (sand, terracotta, olive
 _Avoid_: friendly, casual, playful
 
 **Terracotta**:
-The signature color of the Clay design system (`oklch(0.58 0.14 38)` in light mode, `oklch(0.7 0.13 42)` in dark mode), exposed as the `clay-*` tonal palette. Serves as the primary accent. Never use pure black or white: always tint toward sand.
+The signature color of the Clay design system (`oklch(0.54 0.14 38)` in light mode, `oklch(0.7 0.13 42)` in dark mode), exposed as the `clay-*` tonal palette. Serves as the primary accent. Never use pure black or white: always tint toward sand.
 _Avoid_: primary color, accent color, brand color, orange
 
 **Olive**:

@@ -1,18 +1,39 @@
 @import 'tailwindcss';
 @import './typeset.css';
 @import './highlight.css';
-@import '@fontsource/atkinson-hyperlegible-next/200.css';
 @import '@fontsource-variable/dm-sans';
 @import '@fontsource/young-serif';
 
 .typeset-docs {
   --typeset-font-body: var(--font-sans);
   --typeset-font-heading: var(--font-serif);
-  --typeset-font-mono: var(--font-atkinson-next-light);
-  --typeset-size: 16px;
+  --typeset-font-mono: var(--font-code);
+  --typeset-leading: 1.7;
 
-  & :where(pre, :not(pre) > code) {
-    font-weight: 200;
+  /* Overrides the vendored typeset, which scales phone text up by 1.125. */
+  font-size: 1.0625rem;
+  @media (min-width: 48rem) {
+    font-size: 1.125rem;
+  }
+
+  & > * {
+    max-width: 36rem;
+  }
+
+  & :where(p, li) {
+    text-wrap: pretty;
+  }
+
+  & :where(a) {
+    color: var(--primary);
+    text-decoration-color: color-mix(in oklch, var(--primary) 40%, transparent);
+    text-underline-offset: 0.2em;
+  }
+
+  & :where(blockquote) {
+    border-inline-start-color: var(--primary);
+    color: var(--muted-foreground);
+    font-style: italic;
   }
 }
 
@@ -29,7 +50,7 @@
   --card-foreground: oklch(0.25 0.02 45);
   --popover: oklch(0.985 0.01 75);
   --popover-foreground: oklch(0.25 0.02 45);
-  --primary: oklch(0.58 0.14 38);
+  --primary: oklch(0.54 0.14 38);
   --primary-foreground: oklch(0.98 0.01 75);
   --secondary: oklch(0.55 0.08 125);
   --secondary-foreground: oklch(0.98 0.01 75);
@@ -40,13 +61,12 @@
   --destructive: oklch(0.55 0.2 25);
   --border: oklch(0.87 0.02 65);
   --input: oklch(0.87 0.02 65);
-  --ring: oklch(0.58 0.14 38);
+  --ring: oklch(0.54 0.14 38);
 
   --font-sans: 'DM Sans Variable', sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-serif: 'Young Serif', serif;
-  --font-atkinson-next-light:
-    'Atkinson Hyperlegible Next', ui-monospace, monospace;
+  --font-code: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --radius: 1rem;
 }
 
@@ -107,7 +127,7 @@
   --color-clay-200: oklch(0.87 0.065 45);
   --color-clay-300: oklch(0.79 0.1 43);
   --color-clay-400: oklch(0.7 0.13 42);
-  --color-clay-500: oklch(0.58 0.14 38);
+  --color-clay-500: oklch(0.54 0.14 38);
   --color-clay-600: oklch(0.5 0.13 36);
   --color-clay-700: oklch(0.43 0.11 35);
   --color-clay-800: oklch(0.35 0.08 35);
@@ -134,6 +154,34 @@
   html {
     @apply h-full;
     overscroll-behavior-y: none;
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  /* Set by HEAD_SCRIPT (lib/head-script.ts) until the tag filter hydrates, so the unfiltered list never flashes. */
+  html[data-filtering]
+    :is([data-slot='blog-page-list'], [data-slot='blog-intro']) {
+    visibility: hidden;
   }
   body {
     @apply h-full bg-background font-sans text-foreground;

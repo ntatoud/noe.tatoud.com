@@ -40,3 +40,14 @@ export function initials(text: string): string {
     .map((word) => word[0]?.toUpperCase())
     .join('')
 }
+
+const WORDS_PER_MINUTE = 230
+
+export function readingMinutes(html: string): number {
+  const words = html
+    .replace(/<pre[\s\S]*?<\/pre>/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean).length
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE))
+}
